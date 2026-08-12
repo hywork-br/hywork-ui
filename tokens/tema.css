@@ -1,0 +1,22 @@
+/**
+ * Ponto de entrada — é isto que o consumidor importa.
+ *
+ *   @import "@hywork/ui/tokens/tema.css";
+ *
+ * Traz as três camadas na ordem certa: primitivo (o que a marca é) → semântico
+ * (que papel cada um faz) → superfície (densidade de admin e de portal).
+ *
+ * As duas superfícies convivem: o mesmo bundle serve os dois consumidores, e
+ * cada aplicação escolhe a sua pelo atributo no elemento raiz.
+ *
+ *   <html data-superficie="admin">   ou   <html data-superficie="portal">
+ *
+ * Funciona em Tailwind v3 e v4 sem tradução, porque são CSS variables e nada
+ * mais. Quem está em v4 e quiser os utilitários automáticos importa também o
+ * tailwind-v4.css.
+ */
+
+@import "./primitivos.css";
+@import "./semantico.css";
+@import "./admin.css";
+@import "./portal.css";

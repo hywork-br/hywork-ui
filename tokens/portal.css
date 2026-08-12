@@ -1,0 +1,43 @@
+/**
+ * Camada 3 — SUPERFÍCIE PORTAL
+ *
+ * O colaborador da empresa cliente: feed, comunicado, campanha. Muitas vezes no
+ * celular, no meio do expediente, com pressa. Densidade baixa, alvo grande,
+ * texto confortável.
+ *
+ * Mesmas regras da camada admin: densidade e tamanho sim, cor e forma não.
+ *
+ * Aplicar com [data-superficie="portal"] no elemento raiz da aplicação.
+ */
+
+[data-superficie="portal"],
+.hw-portal {
+  /**
+   * WCAG 2.5.8 (AA) pede 24px de alvo. Adotamos 44px como padrão porque é
+   * interface de dedo em movimento — 24px é o piso legal, não o confortável.
+   */
+  --alvo-minimo: 44px;
+  --altura-controle: 48px;
+  --altura-controle-sm: 40px;
+
+  /* Mais respiro entre blocos: leitura, não operação */
+  --espaco-linha: var(--hw-espaco-4);
+  --espaco-celula-x: var(--hw-espaco-4);
+  --espaco-secao: var(--hw-espaco-8);
+  --espaco-campo: var(--hw-espaco-4);
+
+  /* Corpo em 16px — abaixo disso o iOS dá zoom no foco de input */
+  --texto-corpo: var(--hw-texto-base);
+  --texto-rotulo: var(--hw-texto-sm);
+  --texto-titulo-pagina: var(--hw-texto-3xl);
+
+  --leading-corpo: var(--hw-leading-corpo);
+
+  /* Cantos generosos, como pede o guideline para peça de comunicação */
+  --raio-controle: var(--hw-raio-md);
+  --raio-card: var(--hw-raio-lg);
+
+  /* O portal é branco; a cor entra no conteúdo, não no chrome */
+  --color-chrome: var(--hw-white);
+  --color-chrome-fg: var(--hw-navy);
+}

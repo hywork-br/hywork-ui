@@ -1,0 +1,26 @@
+{
+  "name": "@hywork/ui",
+  "version": "0.1.0",
+  "description": "Design system da Hywork — tokens de marca em CSS variables, para Tailwind v3 e v4",
+  "private": true,
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hywork-br/hywork-ui.git"
+  },
+  "files": [
+    "tokens",
+    "AGENTS.md"
+  ],
+  "exports": {
+    "./tokens/tema.css": "./tokens/tema.css",
+    "./tokens/tailwind-v4.css": "./tokens/tailwind-v4.css",
+    "./tokens/primitivos.css": "./tokens/primitivos.css",
+    "./tokens/semantico.css": "./tokens/semantico.css",
+    "./tokens/admin.css": "./tokens/admin.css",
+    "./tokens/portal.css": "./tokens/portal.css"
+  },
+  "scripts": {
+    "check": "node scripts/check-tokens.mjs"
+  }
+}

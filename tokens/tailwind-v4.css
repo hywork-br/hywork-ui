@@ -1,0 +1,62 @@
+/**
+ * Ponte opcional para consumidores em Tailwind v4.
+ *
+ * O @theme do v4 transforma cada token em variável CSS E em utilitário
+ * (--color-primary vira bg-primary, text-primary, border-primary). Quem está em
+ * v3 simplesmente não importa este arquivo e usa as variáveis direto — por isso
+ * ele mora separado do tema.css.
+ *
+ *   @import "@hywork/ui/tokens/tema.css";
+ *   @import "@hywork/ui/tokens/tailwind-v4.css";
+ *
+ * Os valores referenciam a camada semântica, nunca primitivo: quem muda a cara
+ * do produto é a decisão em semantico.css, e este arquivo só a expõe ao
+ * Tailwind.
+ */
+
+@theme inline {
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-primary-fg: var(--color-primary-fg);
+  --color-primary-suave: var(--color-primary-suave);
+
+  --color-secondary: var(--color-secondary);
+  --color-secondary-hover: var(--color-secondary-hover);
+  --color-secondary-fg: var(--color-secondary-fg);
+  --color-secondary-suave: var(--color-secondary-suave);
+
+  --color-surface: var(--color-surface);
+  --color-surface-fg: var(--color-surface-fg);
+  --color-surface-sutil: var(--color-surface-sutil);
+  --color-surface-inversa: var(--color-surface-inversa);
+  --color-surface-inversa-fg: var(--color-surface-inversa-fg);
+  --color-surface-destaque: var(--color-surface-destaque);
+
+  --color-texto: var(--color-texto);
+  --color-texto-secundario: var(--color-texto-secundario);
+  --color-texto-suave: var(--color-texto-suave);
+  --color-texto-inverso: var(--color-texto-inverso);
+
+  --color-borda: var(--color-borda);
+  --color-borda-forte: var(--color-borda-forte);
+  --color-foco: var(--color-foco);
+
+  --color-sucesso: var(--color-sucesso);
+  --color-atencao: var(--color-atencao);
+  --color-erro: var(--color-erro);
+  --color-neutro: var(--color-neutro);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+
+  --font-titulo: var(--fonte-titulo);
+  --font-corpo: var(--fonte-corpo);
+
+  --radius-sm: var(--hw-raio-sm);
+  --radius-md: var(--hw-raio-md);
+  --radius-lg: var(--hw-raio-lg);
+}

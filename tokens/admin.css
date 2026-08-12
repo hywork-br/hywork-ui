@@ -1,0 +1,46 @@
+/**
+ * Camada 3 — SUPERFÍCIE ADMIN
+ *
+ * Quem administra a comunicação: tabelas, formulários, dashboards. Trabalha
+ * sentado, com mouse, e vê muita informação por tela. Densidade alta.
+ *
+ * O que esta camada PODE mudar: densidade, tamanho, espaçamento.
+ * O que ela NÃO pode: cor, forma, papel semântico. Isso é comum às duas
+ * superfícies, e bifurcar aqui é como se recriam dois design systems.
+ *
+ * Aplicar com [data-superficie="admin"] no elemento raiz da aplicação.
+ */
+
+[data-superficie="admin"],
+.hw-admin {
+  /* Alvos de toque menores — é interface de mouse e teclado */
+  --alvo-minimo: 32px;
+  --altura-controle: 36px;
+  --altura-controle-sm: 28px;
+
+  /* Densidade de tabela e lista */
+  --espaco-linha: var(--hw-espaco-2);
+  --espaco-celula-x: var(--hw-espaco-3);
+  --espaco-secao: var(--hw-espaco-6);
+  --espaco-campo: var(--hw-espaco-3);
+
+  /* Tipografia mais compacta: o corpo padrão é 14px, não 16px */
+  --texto-corpo: var(--hw-texto-sm);
+  --texto-rotulo: var(--hw-texto-xs);
+  --texto-titulo-pagina: var(--hw-texto-2xl);
+
+  --leading-corpo: 1.45;
+
+  /* Cantos mais discretos em interface densa */
+  --raio-controle: var(--hw-raio-sm);
+  --raio-card: var(--hw-raio-md);
+
+  /**
+   * O chrome do admin é neutro. A cor primária é ACENTO — item ativo do menu,
+   * botão de ação principal — nunca campo de fundo. Medição de 06/08 no Labs:
+   * 47% dos usos da primária eram área, e é daí que vinha a impressão de "ficou
+   * tudo colorido".
+   */
+  --color-chrome: var(--hw-blue-tint);
+  --color-chrome-fg: var(--hw-navy);
+}

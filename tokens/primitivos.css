@@ -1,0 +1,83 @@
+/**
+ * Camada 1 — PRIMITIVOS
+ *
+ * As 12 cores da marca Hywork, verbatim do guideline (hw_Guidelines_2025.pdf),
+ * mais os derivados de interface que o guideline não traz.
+ *
+ * Esta camada é FATO, não decisão: nomeia o que a marca é. Nenhum componente
+ * consome daqui direto — quem escolhe papel é a camada semântica.
+ *
+ * Regra: nunca adicione cor aqui sem que ela exista no guideline. Cor nova de
+ * interface é derivada (ver o bloco de derivados) e precisa de justificativa.
+ */
+
+:root {
+  /* Laranjas — a escala de energia da marca */
+  --hw-orange: #e9501b;
+  --hw-orange-mid: #ea7623;
+  --hw-amber: #f09c26;
+  --hw-peach: #f3b16f;
+  --hw-rust: #d44d1c;
+
+  /* Azuis — a escala de base e apoio */
+  --hw-navy: #092938;
+  --hw-blue-deep: #104a74;
+  --hw-blue-mid: #1e72a1;
+  --hw-blue-steel: #6492b7;
+  --hw-blue-lavender: #8ea1c7;
+
+  /* Neutros */
+  --hw-gray: #8c8c8c;
+  --hw-white: #ffffff;
+
+  /**
+   * Derivados de interface — não estão no guideline, seguem a lógica dele.
+   * Percentuais indicam a mistura com o branco (ou com o navy, nos dois últimos).
+   */
+  --hw-amber-tint: #fdf2e2;
+  --hw-blue-tint: #edf1f5;
+  --hw-hairline-claro: #e3e8ec;
+  --hw-navy-card: #0d3347;
+  --hw-hairline-navy: #1d4356;
+
+  /* Tipografia — famílias */
+  --hw-fonte-titulo: "LT Wave", "Plus Jakarta Sans", Arial, sans-serif;
+  --hw-fonte-corpo: "Noto Sans", Arial, sans-serif;
+
+  /* Escala tipográfica */
+  --hw-texto-xs: 0.75rem;
+  --hw-texto-sm: 0.875rem;
+  --hw-texto-base: 1rem;
+  --hw-texto-lg: 1.125rem;
+  --hw-texto-xl: 1.25rem;
+  --hw-texto-2xl: 1.5rem;
+  --hw-texto-3xl: 1.875rem;
+  --hw-texto-4xl: 2.25rem;
+
+  /* Entrelinha — corpo respira mais que título, por decisão do guideline */
+  --hw-leading-titulo: 1.15;
+  --hw-leading-corpo: 1.6;
+
+  /* Espaçamento — base 4px */
+  --hw-espaco-1: 0.25rem;
+  --hw-espaco-2: 0.5rem;
+  --hw-espaco-3: 0.75rem;
+  --hw-espaco-4: 1rem;
+  --hw-espaco-6: 1.5rem;
+  --hw-espaco-8: 2rem;
+  --hw-espaco-12: 3rem;
+  --hw-espaco-16: 4rem;
+
+  /* Raio — o guideline pede cantos generosos */
+  --hw-raio-sm: 0.5rem;
+  --hw-raio-md: 1rem;
+  --hw-raio-lg: 1.5rem;
+  --hw-raio-full: 9999px;
+
+  /* Movimento — curto e discreto; sem parallax, sem animação demonstrativa */
+  --hw-duracao-rapida: 120ms;
+  --hw-duracao-media: 160ms;
+  --hw-duracao-lenta: 200ms;
+  --hw-easing-padrao: cubic-bezier(0.4, 0, 0.2, 1);
+  --hw-easing-saida: cubic-bezier(0.4, 0, 1, 1);
+}
