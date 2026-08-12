@@ -7,37 +7,37 @@
  *
  * Mesmas regras da camada admin: densidade e tamanho sim, cor e forma não.
  *
- * Aplicar com [data-superficie="portal"] no elemento raiz da aplicação.
+ * Aplicar com [data-surface="portal"] no elemento raiz da aplicação.
  */
 
-[data-superficie="portal"],
+[data-surface="portal"],
 .hw-portal {
   /**
    * WCAG 2.5.8 (AA) pede 24px de alvo. Adotamos 44px como padrão porque é
    * interface de dedo em movimento — 24px é o piso legal, não o confortável.
    */
-  --alvo-minimo: 44px;
-  --altura-controle: 48px;
-  --altura-controle-sm: 40px;
+  --hw-target-min: 44px;
+  --hw-control-height: 48px;
+  --hw-control-height-sm: 40px;
 
   /* Mais respiro entre blocos: leitura, não operação */
-  --espaco-linha: var(--hw-espaco-4);
-  --espaco-celula-x: var(--hw-espaco-4);
-  --espaco-secao: var(--hw-espaco-8);
-  --espaco-campo: var(--hw-espaco-4);
+  --hw-row-gap: var(--hw-space-4);
+  --hw-cell-padding-x: var(--hw-space-4);
+  --hw-section-gap: var(--hw-space-8);
+  --hw-field-gap: var(--hw-space-4);
 
-  /* Corpo em 16px — abaixo disso o iOS dá zoom no foco de input */
-  --texto-corpo: var(--hw-texto-base);
-  --texto-rotulo: var(--hw-texto-sm);
-  --texto-titulo-pagina: var(--hw-texto-3xl);
+  /* Corpo em 16px — abaixo disso o iOS dá zoom ao focar um input */
+  --hw-body-size: var(--hw-text-base);
+  --hw-label-size: var(--hw-text-sm);
+  --hw-page-title-size: var(--hw-text-3xl);
 
-  --leading-corpo: var(--hw-leading-corpo);
+  --hw-body-leading: var(--hw-leading-body);
 
   /* Cantos generosos, como pede o guideline para peça de comunicação */
-  --raio-controle: var(--hw-raio-md);
-  --raio-card: var(--hw-raio-lg);
+  --hw-control-radius: var(--hw-radius-md);
+  --hw-card-radius: var(--hw-radius-lg);
 
   /* O portal é branco; a cor entra no conteúdo, não no chrome */
-  --color-chrome: var(--hw-white);
-  --color-chrome-fg: var(--hw-navy);
+  --hw-chrome: var(--hw-white);
+  --hw-chrome-fg: var(--hw-navy);
 }

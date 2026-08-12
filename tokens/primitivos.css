@@ -32,52 +32,63 @@
 
   /**
    * Derivados de interface — não estão no guideline, seguem a lógica dele.
-   * Percentuais indicam a mistura com o branco (ou com o navy, nos dois últimos).
+   * Os dois primeiros são mistura com branco; os dois últimos, com o navy.
    */
   --hw-amber-tint: #fdf2e2;
   --hw-blue-tint: #edf1f5;
-  --hw-hairline-claro: #e3e8ec;
+  --hw-hairline-light: #e3e8ec;
   --hw-navy-card: #0d3347;
   --hw-hairline-navy: #1d4356;
 
+  /**
+   * Azul aço escurecido, para TEXTO de apoio em base clara. Existe porque a
+   * paleta do guideline não tem nenhum tom médio que passe em contraste de
+   * texto: o `--hw-blue-steel` (#6492b7) dá 3,31:1 sobre branco, e o cinza
+   * #8c8c8c dá 3,36:1 — os dois reprovam o piso de 4,5:1. O guideline os
+   * descreve como "apoio e decorativo", nunca como texto; este derivado é a
+   * versão utilizável, com o mesmo matiz e 4,51:1.
+   * Achado pelo check-tokens, não no olho.
+   */
+  --hw-blue-steel-text: #4b7ba2;
+
   /* Tipografia — famílias */
-  --hw-fonte-titulo: "LT Wave", "Plus Jakarta Sans", Arial, sans-serif;
-  --hw-fonte-corpo: "Noto Sans", Arial, sans-serif;
+  --hw-font-family-heading: "LT Wave", "Plus Jakarta Sans", Arial, sans-serif;
+  --hw-font-family-body: "Noto Sans", Arial, sans-serif;
 
   /* Escala tipográfica */
-  --hw-texto-xs: 0.75rem;
-  --hw-texto-sm: 0.875rem;
-  --hw-texto-base: 1rem;
-  --hw-texto-lg: 1.125rem;
-  --hw-texto-xl: 1.25rem;
-  --hw-texto-2xl: 1.5rem;
-  --hw-texto-3xl: 1.875rem;
-  --hw-texto-4xl: 2.25rem;
+  --hw-text-xs: 0.75rem;
+  --hw-text-sm: 0.875rem;
+  --hw-text-base: 1rem;
+  --hw-text-lg: 1.125rem;
+  --hw-text-xl: 1.25rem;
+  --hw-text-2xl: 1.5rem;
+  --hw-text-3xl: 1.875rem;
+  --hw-text-4xl: 2.25rem;
 
   /* Entrelinha — corpo respira mais que título, por decisão do guideline */
-  --hw-leading-titulo: 1.15;
-  --hw-leading-corpo: 1.6;
+  --hw-leading-heading: 1.15;
+  --hw-leading-body: 1.6;
 
   /* Espaçamento — base 4px */
-  --hw-espaco-1: 0.25rem;
-  --hw-espaco-2: 0.5rem;
-  --hw-espaco-3: 0.75rem;
-  --hw-espaco-4: 1rem;
-  --hw-espaco-6: 1.5rem;
-  --hw-espaco-8: 2rem;
-  --hw-espaco-12: 3rem;
-  --hw-espaco-16: 4rem;
+  --hw-space-1: 0.25rem;
+  --hw-space-2: 0.5rem;
+  --hw-space-3: 0.75rem;
+  --hw-space-4: 1rem;
+  --hw-space-6: 1.5rem;
+  --hw-space-8: 2rem;
+  --hw-space-12: 3rem;
+  --hw-space-16: 4rem;
 
   /* Raio — o guideline pede cantos generosos */
-  --hw-raio-sm: 0.5rem;
-  --hw-raio-md: 1rem;
-  --hw-raio-lg: 1.5rem;
-  --hw-raio-full: 9999px;
+  --hw-radius-sm: 0.5rem;
+  --hw-radius-md: 1rem;
+  --hw-radius-lg: 1.5rem;
+  --hw-radius-full: 9999px;
 
   /* Movimento — curto e discreto; sem parallax, sem animação demonstrativa */
-  --hw-duracao-rapida: 120ms;
-  --hw-duracao-media: 160ms;
-  --hw-duracao-lenta: 200ms;
-  --hw-easing-padrao: cubic-bezier(0.4, 0, 0.2, 1);
-  --hw-easing-saida: cubic-bezier(0.4, 0, 1, 1);
+  --hw-duration-fast: 120ms;
+  --hw-duration-base: 160ms;
+  --hw-duration-slow: 200ms;
+  --hw-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --hw-ease-out: cubic-bezier(0.4, 0, 1, 1);
 }

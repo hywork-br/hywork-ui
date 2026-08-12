@@ -16,3 +16,7 @@ jobs:
       # Sem dependências: o check é Node puro, de propósito. Design system que
       # precisa de build pra validar token demora a rodar e para de ser rodado.
       - run: node scripts/check-tokens.mjs
+      # Gerado que não é verificado vira gerado que ninguém regenera.
+      - run: node scripts/gerar-preset-v3.mjs --check
+      # O preset precisa carregar de verdade, não só existir.
+      - run: node -e "const p=require('./tailwind/v3-preset.cjs'); if(!p.theme.extend.colors.primary) { console.error('FAIL: preset sem a cor primária'); process.exit(1) }"

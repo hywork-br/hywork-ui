@@ -2,15 +2,20 @@
  * Camada 2 — SEMÂNTICA
  *
  * Aqui mora a DECISÃO: qual primitivo faz qual papel na interface. É a única
- * camada que os componentes consomem, e é por isso que trocar a cor primária do
+ * camada que componente consome, e é por isso que trocar a cor primária do
  * produto inteiro é editar uma linha deste arquivo.
  *
- * Duas regras que fazem esta camada valer a pena:
+ * Três regras que fazem esta camada valer a pena:
  *
- * 1. Todo token de superfície vem em PAR bg/fg. Isso é o que torna dark mode
- *    barato no futuro (redefinir os pares, não caçar 3.581 hex).
+ * 1. Todo token de superfície vem em PAR bg/fg. É o que torna dark mode barato
+ *    depois: redefinir os pares, não caçar milhares de hex.
  * 2. Nenhum valor literal aqui. Só referência a primitivo. Hex escrito nesta
  *    camada é primitivo que faltou.
+ * 3. Tudo sob o prefixo --hw-. O namespace nu (--color-primary) pertence ao
+ *    TEMA DO TENANT no produto white-label: é a cor que o cliente escolhe,
+ *    gravada em workspace_themes e aplicada em runtime. Se o design system
+ *    reivindicasse esse nome, importar os tokens depois do tema do cliente
+ *    apagaria a marca dele. O contrato entre os dois está em white-label.css.
  */
 
 :root {
@@ -22,93 +27,93 @@
    * aponta o laranja #E9501B como cor de ação, mas ele reprova contraste para
    * texto pequeno sobre branco (3,73:1) enquanto o azul passa.
    *
-   * A escolha está na pauta da call com engenharia de 12/08. Trocar é editar as
-   * quatro linhas abaixo — nenhuma tela é reescrita. Esse é o teste de que a
-   * camada semântica está fazendo o trabalho dela.
-   *
-   * Nota: o cliente white-label sobrescreve --color-primary em runtime. Este é
-   * o DEFAULT, não a única resposta possível.
+   * Na pauta da call com engenharia de 12/08. Trocar é editar as quatro linhas
+   * abaixo — nenhuma tela é reescrita. Esse é o teste de que esta camada está
+   * fazendo o trabalho dela, e o check-tokens reprova a troca se o par de
+   * contraste não passar.
    */
-  --color-primary: var(--hw-blue-mid);
-  --color-primary-hover: var(--hw-blue-deep);
-  --color-primary-fg: var(--hw-white);
-  --color-primary-suave: var(--hw-blue-tint);
+  --hw-primary: var(--hw-blue-mid);
+  --hw-primary-hover: var(--hw-blue-deep);
+  --hw-primary-fg: var(--hw-white);
+  --hw-primary-soft: var(--hw-blue-tint);
 
   /* Secundária — o acento de alta energia da marca */
-  --color-secondary: var(--hw-orange);
-  --color-secondary-hover: var(--hw-rust);
-  --color-secondary-fg: var(--hw-white);
-  --color-secondary-suave: var(--hw-amber-tint);
+  --hw-secondary: var(--hw-orange);
+  --hw-secondary-hover: var(--hw-rust);
+  --hw-secondary-fg: var(--hw-white);
+  --hw-secondary-soft: var(--hw-amber-tint);
 
   /* Superfícies — sempre em par com a tinta que vai por cima */
-  --color-surface: var(--hw-white);
-  --color-surface-fg: var(--hw-navy);
-  --color-surface-sutil: var(--hw-blue-tint);
-  --color-surface-sutil-fg: var(--hw-navy);
-  --color-surface-inversa: var(--hw-navy);
-  --color-surface-inversa-fg: var(--hw-white);
-  --color-surface-destaque: var(--hw-amber-tint);
-  --color-surface-destaque-fg: var(--hw-navy);
+  --hw-surface: var(--hw-white);
+  --hw-surface-fg: var(--hw-navy);
+  --hw-surface-subtle: var(--hw-blue-tint);
+  --hw-surface-subtle-fg: var(--hw-navy);
+  --hw-surface-inverse: var(--hw-navy);
+  --hw-surface-inverse-fg: var(--hw-white);
+  --hw-surface-accent: var(--hw-amber-tint);
+  --hw-surface-accent-fg: var(--hw-navy);
 
   /* Texto */
-  --color-texto: var(--hw-navy);
-  --color-texto-secundario: var(--hw-blue-deep);
-  --color-texto-suave: var(--hw-blue-steel);
-  --color-texto-inverso: var(--hw-white);
-  --color-texto-inverso-secundario: var(--hw-blue-lavender);
+  --hw-text: var(--hw-navy);
+  --hw-text-secondary: var(--hw-blue-deep);
+  /* Apoio: usa o derivado escurecido — o blue-steel do guideline reprova
+     contraste como texto (3,31:1). Ele segue válido para borda e dataviz. */
+  --hw-text-muted: var(--hw-blue-steel-text);
+  --hw-text-inverse: var(--hw-white);
+  --hw-text-inverse-secondary: var(--hw-blue-lavender);
 
   /* Bordas e divisores */
-  --color-borda: var(--hw-hairline-claro);
-  --color-borda-forte: var(--hw-blue-steel);
+  --hw-border: var(--hw-hairline-light);
+  --hw-border-strong: var(--hw-blue-steel);
 
   /**
-   * Foco — 2px com offset, e o contraste do anel precisa ficar acima de 3:1
-   * contra o fundo adjacente (WCAG 2.4.11). O anel padrão que vem do shadcn
-   * fica abaixo disso; é por isso que este token existe em vez de herdarmos.
+   * Foco — 2px com offset. O anel precisa passar de 3:1 contra o fundo
+   * adjacente (WCAG 2.4.11); o anel padrão do shadcn fica abaixo disso, e é por
+   * isso que este token existe em vez de herdarmos o default.
    */
-  --color-foco: var(--hw-orange);
-  --largura-foco: 2px;
-  --offset-foco: 2px;
+  --hw-focus: var(--hw-orange);
+  --hw-focus-width: 2px;
+  --hw-focus-offset: 2px;
 
   /**
-   * Estado. Sem verde e sem vermelho no guideline da marca, então:
-   * sucesso e erro emprestam os azuis e laranjas, e a COR NUNCA É O ÚNICO
-   * CANAL — todo estado carrega ícone ou rótulo junto.
+   * Estado. O guideline da marca não tem verde nem vermelho, então sucesso e
+   * erro emprestam os azuis e laranjas — e COR NUNCA É O ÚNICO CANAL: todo
+   * estado carrega ícone ou rótulo junto.
    */
-  --color-sucesso: var(--hw-blue-mid);
-  --color-sucesso-fg: var(--hw-white);
-  --color-atencao: var(--hw-amber);
-  --color-atencao-fg: var(--hw-navy);
-  --color-erro: var(--hw-rust);
-  --color-erro-fg: var(--hw-white);
-  --color-neutro: var(--hw-gray);
-  --color-neutro-fg: var(--hw-white);
+  --hw-success: var(--hw-blue-mid);
+  --hw-success-fg: var(--hw-white);
+  --hw-warning: var(--hw-amber);
+  --hw-warning-fg: var(--hw-navy);
+  --hw-danger: var(--hw-rust);
+  --hw-danger-fg: var(--hw-white);
+  --hw-muted: var(--hw-gray);
+  --hw-muted-fg: var(--hw-white);
 
   /**
    * Data-viz — escala laranja contra escala azul. O par já é seguro para
    * deuteranopia e protanopia comuns, mas cor nunca é canal único: manter
    * rótulo sempre.
    */
-  --chart-1: var(--hw-blue-mid);
-  --chart-2: var(--hw-orange);
-  --chart-3: var(--hw-blue-steel);
-  --chart-4: var(--hw-amber);
-  --chart-5: var(--hw-blue-deep);
-  --chart-6: var(--hw-peach);
+  --hw-chart-1: var(--hw-blue-mid);
+  --hw-chart-2: var(--hw-orange);
+  --hw-chart-3: var(--hw-blue-steel);
+  --hw-chart-4: var(--hw-amber);
+  --hw-chart-5: var(--hw-blue-deep);
+  --hw-chart-6: var(--hw-peach);
 
   /* Tipografia aplicada */
-  --fonte-titulo: var(--hw-fonte-titulo);
-  --fonte-corpo: var(--hw-fonte-corpo);
+  --hw-font-heading: var(--hw-font-family-heading);
+  --hw-font-body: var(--hw-font-family-body);
 }
 
 /**
  * Movimento reduzido é preferência de acessibilidade, não enfeite: quem pediu
- * para o sistema reduzir animação está dizendo que animação lhe faz mal.
+ * ao sistema para reduzir animação está dizendo que animação lhe faz mal.
  */
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --hw-duracao-rapida: 1ms;
-    --hw-duracao-media: 1ms;
-    --hw-duracao-lenta: 1ms;
+    --hw-duration-fast: 1ms;
+    --hw-duration-base: 1ms;
+    --hw-duration-slow: 1ms;
   }
 }

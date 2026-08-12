@@ -8,32 +8,32 @@
  * O que ela NÃO pode: cor, forma, papel semântico. Isso é comum às duas
  * superfícies, e bifurcar aqui é como se recriam dois design systems.
  *
- * Aplicar com [data-superficie="admin"] no elemento raiz da aplicação.
+ * Aplicar com [data-surface="admin"] no elemento raiz da aplicação.
  */
 
-[data-superficie="admin"],
+[data-surface="admin"],
 .hw-admin {
-  /* Alvos de toque menores — é interface de mouse e teclado */
-  --alvo-minimo: 32px;
-  --altura-controle: 36px;
-  --altura-controle-sm: 28px;
+  /* Alvos menores — é interface de mouse e teclado */
+  --hw-target-min: 32px;
+  --hw-control-height: 36px;
+  --hw-control-height-sm: 28px;
 
   /* Densidade de tabela e lista */
-  --espaco-linha: var(--hw-espaco-2);
-  --espaco-celula-x: var(--hw-espaco-3);
-  --espaco-secao: var(--hw-espaco-6);
-  --espaco-campo: var(--hw-espaco-3);
+  --hw-row-gap: var(--hw-space-2);
+  --hw-cell-padding-x: var(--hw-space-3);
+  --hw-section-gap: var(--hw-space-6);
+  --hw-field-gap: var(--hw-space-3);
 
   /* Tipografia mais compacta: o corpo padrão é 14px, não 16px */
-  --texto-corpo: var(--hw-texto-sm);
-  --texto-rotulo: var(--hw-texto-xs);
-  --texto-titulo-pagina: var(--hw-texto-2xl);
+  --hw-body-size: var(--hw-text-sm);
+  --hw-label-size: var(--hw-text-xs);
+  --hw-page-title-size: var(--hw-text-2xl);
 
-  --leading-corpo: 1.45;
+  --hw-body-leading: 1.45;
 
   /* Cantos mais discretos em interface densa */
-  --raio-controle: var(--hw-raio-sm);
-  --raio-card: var(--hw-raio-md);
+  --hw-control-radius: var(--hw-radius-sm);
+  --hw-card-radius: var(--hw-radius-md);
 
   /**
    * O chrome do admin é neutro. A cor primária é ACENTO — item ativo do menu,
@@ -41,6 +41,6 @@
    * 47% dos usos da primária eram área, e é daí que vinha a impressão de "ficou
    * tudo colorido".
    */
-  --color-chrome: var(--hw-blue-tint);
-  --color-chrome-fg: var(--hw-navy);
+  --hw-chrome: var(--hw-blue-tint);
+  --hw-chrome-fg: var(--hw-navy);
 }

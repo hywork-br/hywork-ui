@@ -1,0 +1,41 @@
+/**
+ * CONTRATO DE WHITE-LABEL — a fronteira entre o design system e o tenant.
+ *
+ * No produto, cada cliente escolhe cores próprias (gravadas em
+ * `workspace_themes`) e elas são aplicadas em runtime. Isso cria dois donos para
+ * "a cor primária desta tela", e sem contrato explícito eles se atropelam:
+ * importar os tokens do design system depois do tema do cliente apagaria a
+ * marca dele — bug visível para o cliente, causado por ordem de import.
+ *
+ * O contrato é simples:
+ *
+ *   --hw-*      pertence ao DESIGN SYSTEM. Nunca sobrescrever no consumidor.
+ *   --color-*   pertence à APLICAÇÃO. O tenant escreve aqui em runtime.
+ *
+ * Este arquivo liga um ao outro: publica o default do design system no
+ * namespace da aplicação, de onde o tenant sobrescreve por cima. Importar é
+ * OPCIONAL — só faz sentido em aplicação que tem tema de cliente. Aplicação sem
+ * white-label consome --hw-* direto e ignora este arquivo.
+ *
+ *   @import "@hywork/ui/tokens/tema.css";
+ *   @import "@hywork/ui/tokens/white-label.css";   <- só se houver tenant
+ *
+ * ⚠️ A cor do cliente NÃO passa pelo nosso check de contraste — ela chega em
+ * runtime, do banco. Validar contraste no CADASTRO do tema (onde o cliente
+ * escolhe) é responsabilidade da aplicação, e hoje não existe: o cliente pode
+ * escolher uma cor ilegível e nada avisa. Está registrado como pendência de
+ * produto no plano de design system.
+ */
+
+:root {
+  /**
+   * Sobrescrevíveis pelo tenant. Esta lista é o contrato — token fora dela é do
+   * design system e o tenant não deve tocar.
+   */
+  --color-primary: var(--hw-primary);
+  --color-primary-fg: var(--hw-primary-fg);
+  --color-secondary: var(--hw-secondary);
+  --color-secondary-fg: var(--hw-secondary-fg);
+  --color-background: var(--hw-surface);
+  --color-text: var(--hw-surface-fg);
+}

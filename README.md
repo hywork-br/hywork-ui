@@ -12,7 +12,7 @@ consolidar.
 Distribuído por **tag git**, como o `@hywork/eslint-config`. Sem npm registry.
 
 ```bash
-npm i github:hywork-br/hywork-ui#v0.1.0
+npm i github:hywork-br/hywork-ui#v0.2.0
 ```
 
 ## Usar
@@ -26,40 +26,48 @@ No CSS global da aplicação:
 E no elemento raiz, declare qual superfície é esta aplicação:
 
 ```html
-<html data-superficie="admin">   <!-- ou "portal" -->
+<html data-surface="admin">   <!-- ou "portal" -->
 ```
 
-Pronto. As variáveis estão disponíveis em qualquer lugar:
+Pronto:
 
 ```css
 .meu-botao {
-  background: var(--color-primary);
-  color: var(--color-primary-fg);
-  border-radius: var(--raio-controle);
-  min-height: var(--altura-controle);
-  transition: background var(--hw-duracao-media) var(--hw-easing-padrao);
+  background: var(--hw-primary);
+  color: var(--hw-primary-fg);
+  border-radius: var(--hw-control-radius);
+  min-height: var(--hw-control-height);
+  transition: background var(--hw-duration-base) var(--hw-ease-standard);
 }
 ```
 
-### Tailwind v4 (opcional)
+### Tailwind v3 (o produto, hoje)
 
-Quem está em v4 pode importar a ponte e ganhar os utilitários automáticos
-(`bg-primary`, `text-texto-suave`, `rounded-md`):
+Use o preset — ele é **gerado** da camada semântica, então não desatualiza:
+
+```ts
+// tailwind.config.ts
+presets: [require("@hywork/ui/tailwind/v3-preset.cjs")],
+```
+
+Junto com o `@import` do tema no CSS global. Aí `bg-primary`, `text-text-muted`
+e `rounded-md` funcionam.
+
+### Tailwind v4 (o Labs)
 
 ```css
 @import "@hywork/ui/tokens/tema.css";
-@import "@hywork/ui/tokens/tailwind-v4.css";
+@import "@hywork/ui/tailwind/v4.css";
 ```
 
-Quem está em **v3 não importa nada disso** — usa as variáveis direto, ou as
-referencia no `tailwind.config.ts`:
+### White-label (aplicação com tema de cliente)
 
-```ts
-colors: {
-  primary: "var(--color-primary)",
-  // ...
-}
+```css
+@import "@hywork/ui/tokens/white-label.css";
 ```
+
+Só em aplicação onde o cliente escolhe as próprias cores. Ver o contrato logo
+abaixo.
 
 ## As três camadas
 
@@ -72,8 +80,8 @@ colors: {
 A separação existe por um motivo prático: **trocar a cor primária do produto
 inteiro é editar uma linha da camada semântica.** Nenhuma tela é reescrita.
 
-Componentes consomem **só a camada semântica**. Se um componente referencia
-`--hw-blue-mid` direto, ele está pulando a decisão e vai divergir na primeira
+Componentes consomem **só a camada semântica**. Componente que referencia
+`--hw-blue-mid` direto está pulando a decisão e vai divergir na primeira
 mudança.
 
 ## Superfícies
@@ -87,16 +95,42 @@ O produto tem duas, com ergonomias diferentes:
 Elas mudam **densidade e tamanho**. Nunca cor, forma ou papel semântico — isso é
 comum às duas, e bifurcar ali é como se acabam com dois design systems.
 
+## Namespace: `--hw-*` e `--color-*`
+
+Regra que evita um bug visível para o cliente:
+
+| Prefixo | Dono | Quem escreve |
+|---|---|---|
+| `--hw-*` | o design system | só este repositório |
+| `--color-*` | a aplicação | o tema do tenant, em runtime |
+
+No produto white-label o cliente escolhe as próprias cores, gravadas em
+`workspace_themes` e aplicadas em runtime sob `--color-*`. Se o design system
+reivindicasse esse namespace, importar os tokens depois do tema do cliente
+**apagaria a marca dele** — e o que decidiria isso seria a ordem dos imports.
+
+`tokens/white-label.css` faz a ponte explícita: publica o default do design
+system em `--color-*`, de onde o tenant sobrescreve por cima.
+
+⚠️ A cor escolhida pelo cliente **não passa** pelo nosso check de contraste —
+ela chega do banco, em runtime. Validar no cadastro do tema é trabalho da
+aplicação, e hoje não existe.
+
 ## Verificar
 
 ```bash
 npm run check
 ```
 
-Silencioso quando está tudo certo. Ele pega hex escrito fora da camada de
-primitivos, referência a token inexistente, e **contraste abaixo do piso WCAG
-nos pares declarados** — ou seja, se alguém trocar a primária por uma cor que
-reprova, o CI avisa antes do usuário.
+Silencioso quando está tudo certo. Ele pega:
+
+- hex escrito fora da camada de primitivos;
+- referência a token inexistente, e **auto-referência** (`--x: var(--x)`), que
+  não quebra build nenhum e deixa a propriedade vazia em runtime;
+- **contraste abaixo do piso WCAG** nos pares declarados — se alguém trocar a
+  primária por uma cor que reprova, o CI avisa antes do usuário. Par que não
+  resolve é falha dura: par não verificado é pior que par reprovado;
+- preset do v3 desatualizado em relação à camada semântica.
 
 ## Regras para agentes
 
@@ -107,8 +141,4 @@ que mora em um repositório só não protege os outros.
 
 A **cor primária do tema default** está marcada em `semantico.css`. Hoje é o
 azul que o produto já executa; o guideline de marca aponta o laranja. Trocar é
-editar quatro linhas — e é assim que se sabe que a camada semântica está
-fazendo o trabalho dela.
-
-O cliente white-label sobrescreve `--color-primary` em runtime. O que está aqui
-é o default, não a única resposta.
+editar quatro linhas — e o check reprova se o par de contraste não passar.
