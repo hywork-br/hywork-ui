@@ -1,8 +1,8 @@
 /**
  * CONTRATO DE WHITE-LABEL — a fronteira entre o design system e o tenant.
  *
- * No produto, cada cliente escolhe cores próprias (gravadas em
- * `workspace_themes`) e elas são aplicadas em runtime. Isso cria dois donos para
+ * No produto, cada cliente escolhe cores próprias, aplicadas em runtime a partir
+ * da configuração dele. Isso cria dois donos para
  * "a cor primária desta tela", e sem contrato explícito eles se atropelam:
  * importar os tokens do design system depois do tema do cliente apagaria a
  * marca dele — bug visível para o cliente, causado por ordem de import.

@@ -90,6 +90,38 @@ for (const [nome, css] of [
 }
 
 /**
+ * 2b. Token citado na documentação existe de verdade.
+ *
+ * Doc que ensina `var(--token-que-nao-existe)` é pior que doc faltando: quem
+ * segue o exemplo obtém um elemento transparente e culpa o próprio código. Isso
+ * aconteceu aqui — um rename deixou o AGENTS.md ensinando quatro tokens mortos,
+ * e nada acusou, porque documentação não compila.
+ */
+const declaradosTodos = new Set(
+  [...[primitivos, semantico, admin, portal, whiteLabel]
+    .join("\n")
+    .matchAll(/^\s*(--[\w-]+):/gm)].map((m) => m[1]),
+);
+for (const doc of ["README.md", "AGENTS.md", "CONTRIBUTING.md"]) {
+  const texto = readFileSync(path.join(RAIZ, doc), "utf8");
+  const citados = [...texto.matchAll(/`(--[\w-]+)`|var\((--[\w-]+)\)/g)].map(
+    (m) => m[1] ?? m[2],
+  );
+  /* Doc pode citar --color-* (namespace da aplicação, mencionado ao explicar a
+     fronteira) e um punhado de coisas que parecem token e não são: flag de CLI
+     e placeholder de exemplo. Todo o resto tem que existir — qualquer outro
+     prefixo é resíduo de rename, que foi como quatro tokens mortos ficaram
+     documentados aqui. */
+  const NAO_SAO_TOKENS = new Set(["--x", "--check", "--fresh", "--hw-"]);
+  const mortos = [...new Set(citados)].filter(
+    (t) => !declaradosTodos.has(t) && !t.startsWith("--color-") && !NAO_SAO_TOKENS.has(t),
+  );
+  if (mortos.length) {
+    falhas.push(`${doc}: ensina token que não existe — ${mortos.join(", ")}`);
+  }
+}
+
+/**
  * Falha estrutural aborta aqui. Sem isso, um token que se auto-referencia faz a
  * resolução de valor abaixo recursar até estourar a pilha, e o operador vê um
  * stack trace em vez da causa — que já foi diagnosticada duas linhas acima.

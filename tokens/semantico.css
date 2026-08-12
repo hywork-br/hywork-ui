@@ -11,26 +11,24 @@
  *    depois: redefinir os pares, não caçar milhares de hex.
  * 2. Nenhum valor literal aqui. Só referência a primitivo. Hex escrito nesta
  *    camada é primitivo que faltou.
- * 3. Tudo sob o prefixo --hw-. O namespace nu (--color-primary) pertence ao
- *    TEMA DO TENANT no produto white-label: é a cor que o cliente escolhe,
- *    gravada em workspace_themes e aplicada em runtime. Se o design system
- *    reivindicasse esse nome, importar os tokens depois do tema do cliente
- *    apagaria a marca dele. O contrato entre os dois está em white-label.css.
+ * 3. Tudo sob o prefixo --hw-. O namespace nu (--color-primary) pertence à
+ *    APLICAÇÃO: em produto white-label é onde a cor escolhida pelo cliente é
+ *    aplicada, em runtime. Se o design system reivindicasse esse nome, importar
+ *    os tokens depois do tema do cliente apagaria a marca dele. O contrato
+ *    entre os dois está em white-label.css.
  */
 
 :root {
   /**
    * ⚠️ DECISÃO PENDENTE — cor primária do tema default.
    *
-   * Hoje: AZUL, espelhando o que o produto executa (o admin usa #1E72A1 em 67
-   * lugares; o Figma do produto declara Primary #1E72A1). O guideline de marca
+   * Hoje: AZUL, espelhando o que o produto já executa. O guideline de marca
    * aponta o laranja #E9501B como cor de ação, mas ele reprova contraste para
    * texto pequeno sobre branco (3,73:1) enquanto o azul passa.
    *
-   * Na pauta da call com engenharia de 12/08. Trocar é editar as quatro linhas
-   * abaixo — nenhuma tela é reescrita. Esse é o teste de que esta camada está
-   * fazendo o trabalho dela, e o check-tokens reprova a troca se o par de
-   * contraste não passar.
+   * Decisão em aberto. Trocar é editar as quatro linhas abaixo — nenhuma tela é
+   * reescrita. Esse é o teste de que esta camada está fazendo o trabalho dela, e
+   * o check-tokens reprova a troca se o par de contraste não passar.
    */
   --hw-primary: var(--hw-blue-mid);
   --hw-primary-hover: var(--hw-blue-deep);
@@ -68,8 +66,8 @@
 
   /**
    * Foco — 2px com offset. O anel precisa passar de 3:1 contra o fundo
-   * adjacente (WCAG 2.4.11); o anel padrão do shadcn fica abaixo disso, e é por
-   * isso que este token existe em vez de herdarmos o default.
+   * adjacente (WCAG 2.4.11); o anel que vem por padrão na maioria dos scaffolds
+   * fica abaixo disso, e é por isso que este token existe em vez de herdarmos.
    */
   --hw-focus: var(--hw-orange);
   --hw-focus-width: 2px;

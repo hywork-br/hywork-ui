@@ -37,9 +37,8 @@
 
   /**
    * O chrome do admin é neutro. A cor primária é ACENTO — item ativo do menu,
-   * botão de ação principal — nunca campo de fundo. Medição de 06/08 no Labs:
-   * 47% dos usos da primária eram área, e é daí que vinha a impressão de "ficou
-   * tudo colorido".
+   * botão de ação principal — nunca campo de fundo. Usar a primária como área é
+   * o erro que produz a impressão de interface "toda colorida".
    */
   --hw-chrome: var(--hw-blue-tint);
   --hw-chrome-fg: var(--hw-navy);

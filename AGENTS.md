@@ -10,8 +10,8 @@ não protege os outros.
 usado.**
 
 Se o que você precisa não existe, a saída não é inventar em silêncio — é dizer
-que está propondo algo novo e por quê. Propor é legítimo. Inventar calado é o
-que produziu doze implementações do mesmo badge de status num repositório só.
+que está propondo algo novo e por quê. Propor é legítimo. Inventar calado é
+como um repositório acaba com uma dúzia de versões do mesmo componente.
 
 ## Onde está a verdade, em ordem
 
@@ -21,9 +21,9 @@ que produziu doze implementações do mesmo badge de status num repositório só
    superfície.
 3. **O inventário de componentes do repositório em que você está.**
 
-O que **não** é fonte de verdade: o Figma (não é biblioteca publicada, e a base
-dele é um kit comercial de terceiro), o que outro trecho do código faz, e o
-default de qualquer biblioteca que a gente instalou.
+O que **não** é fonte de verdade: o arquivo de design (que não é biblioteca
+publicada), o que outro trecho do código faz, e o default de qualquer
+biblioteca que a gente instalou.
 
 ## Proibições
 
@@ -39,6 +39,9 @@ default de qualquer biblioteca que a gente instalou.
 - **Nunca escreva `--hw-*` fora deste repositório.** Esse prefixo é do design
   system. O namespace `--color-*` é da aplicação, e num produto white-label ele
   pertence ao tema do cliente — sobrescrever ali apaga a marca dele.
+- **Nunca escreva `--hw-*` fora deste repositório.** Esse prefixo é do design
+  system. O namespace `--color-*` é da aplicação, e num produto white-label ele
+  pertence ao tema do cliente — sobrescrever ali apaga a marca dele.
 - **Nunca deixe cor como único canal de informação.** Todo estado carrega ícone
   ou texto junto — a paleta não tem verde nem vermelho, e daltonismo não é caso
   raro.
@@ -48,12 +51,12 @@ default de qualquer biblioteca que a gente instalou.
 - **Superfície primeiro:** admin é denso (alvo 32px, corpo 14px), portal é
   confortável (alvo 44px, corpo 16px). Use os tokens de superfície em vez de
   escolher número.
-- **Foco visível sempre:** `--color-foco` com `--largura-foco` e `--offset-foco`.
-  O anel padrão que vem do shadcn não passa em contraste; por isso o token
-  existe.
+- **Foco visível sempre:** `--hw-focus` com `--hw-focus-width` e
+  `--hw-focus-offset`. O anel que vem por padrão na maioria dos scaffolds não
+  passa em contraste; por isso o token existe.
 - **Par bg/fg:** ao pintar um fundo, use a tinta que vem no par
-  (`--color-surface` com `--color-surface-fg`). Combinar fundo de um par com
-  tinta de outro é como se produz texto ilegível.
+  (`--hw-surface` com `--hw-surface-fg`). Combinar fundo de um par com tinta de
+  outro é como se produz texto ilegível.
 - **Movimento curto:** 120–200ms, e `prefers-reduced-motion` já está tratado nos
   tokens — não reintroduza duração fixa.
 

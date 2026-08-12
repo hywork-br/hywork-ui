@@ -5,12 +5,22 @@ Formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Este arquivo existe porque a distribuição é por **tag git**: o consumidor não
 tem `npm outdated` para descobrir o que mudou. Aqui é o único lugar.
 
+## [0.2.1] — 2026-08-12
+
+### Corrigido
+- `AGENTS.md` documentava quatro tokens que não existiam mais depois do rename.
+  Doc que ensina token morto é pior que doc faltando: quem segue o exemplo
+  obtém um elemento transparente e culpa o próprio código.
+
+### Adicionado
+- `check-tokens` passou a verificar **os tokens citados na documentação** — foi
+  o que pegou o item acima, e documentação não compila, então nada mais pegaria.
+
 ## [0.2.0] — 2026-08-12
 
 ### Corrigido
 - **Namespace dos tokens semânticos.** A v0.1.0 declarava `--color-primary`, que
-  no produto white-label pertence ao **tema do tenant** (`workspace_themes`,
-  aplicado em runtime). Importar os tokens depois do tema do cliente apagaria a
+  no produto white-label pertence ao **tema do tenant**, aplicado em runtime. Importar os tokens depois do tema do cliente apagaria a
   cor de marca dele. Agora tudo do design system vive sob `--hw-*`, e a ponte
   para o namespace da aplicação é explícita, em `tokens/white-label.css`.
 - **`--hw-text-muted` reprovava contraste.** O `blue-steel` do guideline dá

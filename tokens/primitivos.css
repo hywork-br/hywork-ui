@@ -1,8 +1,8 @@
 /**
  * Camada 1 — PRIMITIVOS
  *
- * As 12 cores da marca Hywork, verbatim do guideline (hw_Guidelines_2025.pdf),
- * mais os derivados de interface que o guideline não traz.
+ * As 12 cores da marca Hywork, verbatim do guideline de marca, mais os derivados
+ * de interface que o guideline não traz.
  *
  * Esta camada é FATO, não decisão: nomeia o que a marca é. Nenhum componente
  * consome daqui direto — quem escolhe papel é a camada semântica.

@@ -12,7 +12,7 @@ consolidar.
 Distribuído por **tag git**, como o `@hywork/eslint-config`. Sem npm registry.
 
 ```bash
-npm i github:hywork-br/hywork-ui#v0.2.0
+npm i github:hywork-br/hywork-ui#v0.2.1
 ```
 
 ## Usar
@@ -104,8 +104,8 @@ Regra que evita um bug visível para o cliente:
 | `--hw-*` | o design system | só este repositório |
 | `--color-*` | a aplicação | o tema do tenant, em runtime |
 
-No produto white-label o cliente escolhe as próprias cores, gravadas em
-`workspace_themes` e aplicadas em runtime sob `--color-*`. Se o design system
+No produto white-label o cliente escolhe as próprias cores, aplicadas em runtime
+sob `--color-*`. Se o design system
 reivindicasse esse namespace, importar os tokens depois do tema do cliente
 **apagaria a marca dele** — e o que decidiria isso seria a ordem dos imports.
 
