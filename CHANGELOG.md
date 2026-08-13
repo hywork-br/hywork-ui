@@ -5,6 +5,24 @@ Formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Este arquivo existe porque a distribuição é por **tag git**: o consumidor não
 tem `npm outdated` para descobrir o que mudou. Aqui é o único lugar.
 
+## [0.3.1] — 2026-08-13
+
+### Adicionado
+As duas últimas peças que faltavam para um mockup zerar cor escrita à mão:
+
+- **`--hw-danger-strong`** — erro sólido com texto pequeno. O `--hw-danger`
+  (rust da marca) mede 4,31:1 e reprova AA; este passa (5,15:1). Mesmo par que
+  `--hw-muted`/`--hw-muted-strong`: a cor da marca serve ao elemento grande, a
+  escurecida serve ao texto.
+- **`--hw-scrim`** — véu sobre imagem, e a única cor do sistema que
+  deliberadamente **não** vem da paleta. O navy da marca tem canais 9/41/56: é
+  azul de verdade e, sobre foto, tinge. Véu precisa escurecer sem colorir.
+  ⚠️ Ele **não** entra na lista de pares de contraste do check, e isso é
+  decisão, não esquecimento: o que chega ao olho é véu + foto + texto, e medir
+  "branco sobre preto sólido" daria 19,8:1 — número verdadeiro sobre uma
+  composição que não existe. Guard que mede a coisa errada é pior que guard
+  ausente.
+
 ## [0.3.0] — 2026-08-13
 
 ### Adicionado

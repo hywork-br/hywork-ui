@@ -12,7 +12,7 @@ consolidar.
 Distribuído por **tag git**, como o `@hywork/eslint-config`. Sem npm registry.
 
 ```bash
-npm i github:hywork-br/hywork-ui#v0.3.0
+npm i github:hywork-br/hywork-ui#v0.3.1
 ```
 
 ## Usar
