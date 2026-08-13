@@ -96,6 +96,27 @@
   --hw-info-fg: var(--hw-white);
 
   /**
+   * Erro SÓLIDO com texto pequeno. O --hw-danger (rust puro) mede 4,31:1 e
+   * reprova AA; este passa (5,15:1). Mesmo par que --hw-muted/--hw-muted-strong:
+   * a cor da marca serve ao elemento grande, a escurecida serve ao texto.
+   */
+  --hw-danger-strong: var(--hw-rust-text);
+  --hw-danger-strong-fg: var(--hw-white);
+
+  /**
+   * VÉU sobre imagem. O componente aplica a opacidade (o valor certo depende da
+   * foto), então este token é a TINTA do véu, não o resultado composto.
+   *
+   * Por isso ele NÃO entra na lista de pares de contraste do check: o que chega
+   * ao olho é véu + foto + texto, e medir "branco sobre preto sólido" daria
+   * 19,8:1 — um número verdadeiro sobre uma composição que não existe. Guard que
+   * mede a coisa errada é pior que guard ausente. A régua aqui é humana: o texto
+   * tem que ser legível sobre a foto MAIS CLARA que a tela aceita.
+   */
+  --hw-scrim: var(--hw-black);
+  --hw-scrim-fg: var(--hw-white);
+
+  /**
    * Pares SUAVES de estado — chip/badge com fundo claro e texto na cor. É a
    * forma que o produto real mais usa (bg-*-50 + text-*-600 do Tailwind); sem
    * estes pares, todo selo suave vira hex à mão. Cada par passa 4,5:1 (texto

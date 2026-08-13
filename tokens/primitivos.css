@@ -71,6 +71,15 @@
      o --hw-gray puro dá 3,36:1 e reprova texto de badge. */
   --hw-gray-strong: #767676;
 
+  /**
+   * Preto NEUTRO — existe só para véu sobre imagem (scrim). O navy da marca
+   * tem canais 9/41/56: é azul de verdade, e sobre foto ele TINGE. Um véu
+   * precisa escurecer sem colorir, então esta é a única cor do sistema que
+   * deliberadamente não vem da paleta. Não use como tinta de texto nem de
+   * fundo de tela — para isso o navy é a cor certa.
+   */
+  --hw-black: #0a0a0a;
+
   /* Tipografia — famílias */
   --hw-font-family-heading: "LT Wave", "Plus Jakarta Sans", Arial, sans-serif;
   --hw-font-family-body: "Noto Sans", Arial, sans-serif;

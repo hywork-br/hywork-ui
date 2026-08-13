@@ -172,6 +172,7 @@ const PARES = [
   ["--hw-warning", "--hw-warning-fg", 3.0, "estado de atenção"],
   ["--hw-success", "--hw-success-fg", 3.0, "estado de sucesso"],
   ["--hw-info", "--hw-info-fg", 3.0, "estado informativo"],
+  ["--hw-danger-strong", "--hw-danger-strong-fg", 4.5, "erro sólido com texto pequeno"],
   ["--hw-muted-strong", "--hw-muted-strong-fg", 4.5, "neutro sólido com texto pequeno"],
   ["--hw-success-soft", "--hw-success-soft-fg", 4.5, "selo suave de sucesso"],
   ["--hw-warning-soft", "--hw-warning-soft-fg", 4.5, "selo suave de atenção"],
