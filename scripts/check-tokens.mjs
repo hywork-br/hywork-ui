@@ -171,6 +171,13 @@ const PARES = [
   ["--hw-danger", "--hw-danger-fg", 3.0, "estado de erro"],
   ["--hw-warning", "--hw-warning-fg", 3.0, "estado de atenção"],
   ["--hw-success", "--hw-success-fg", 3.0, "estado de sucesso"],
+  ["--hw-info", "--hw-info-fg", 3.0, "estado informativo"],
+  ["--hw-muted-strong", "--hw-muted-strong-fg", 4.5, "neutro sólido com texto pequeno"],
+  ["--hw-success-soft", "--hw-success-soft-fg", 4.5, "selo suave de sucesso"],
+  ["--hw-warning-soft", "--hw-warning-soft-fg", 4.5, "selo suave de atenção"],
+  ["--hw-danger-soft", "--hw-danger-soft-fg", 4.5, "selo suave de erro"],
+  ["--hw-info-soft", "--hw-info-soft-fg", 4.5, "selo suave informativo"],
+  ["--hw-neutral-soft", "--hw-neutral-soft-fg", 4.5, "selo suave neutro"],
 ];
 
 for (const [bg, fg, piso, papel] of PARES) {

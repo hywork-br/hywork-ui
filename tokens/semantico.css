@@ -88,6 +88,36 @@
   --hw-muted-fg: var(--hw-white);
 
   /**
+   * Papel INFO — o quarto estado do vocabulário de badge/chip. Azul profundo,
+   * distinto do sucesso (blue-mid) por peso, não por matiz — a paleta da marca
+   * não dá um quarto matiz e inventar um seria furar o guideline.
+   */
+  --hw-info: var(--hw-blue-deep);
+  --hw-info-fg: var(--hw-white);
+
+  /**
+   * Pares SUAVES de estado — chip/badge com fundo claro e texto na cor. É a
+   * forma que o produto real mais usa (bg-*-50 + text-*-600 do Tailwind); sem
+   * estes pares, todo selo suave vira hex à mão. Cada par passa 4,5:1 (texto
+   * pequeno), verificado no check.
+   */
+  --hw-success-soft: var(--hw-blue-mid-tint);
+  --hw-success-soft-fg: var(--hw-blue-mid);
+  --hw-warning-soft: var(--hw-amber-cream);
+  --hw-warning-soft-fg: var(--hw-amber-text);
+  --hw-danger-soft: var(--hw-rust-tint);
+  --hw-danger-soft-fg: var(--hw-rust-text);
+  --hw-info-soft: var(--hw-blue-deep-tint);
+  --hw-info-soft-fg: var(--hw-blue-deep);
+  --hw-neutral-soft: var(--hw-gray-tint);
+  --hw-neutral-soft-fg: var(--hw-gray-text);
+
+  /* Sólido neutro com texto branco pequeno: o --hw-muted (gray puro) dá
+     3,36:1 e só serve a texto grande — este passa 4,5:1. */
+  --hw-muted-strong: var(--hw-gray-strong);
+  --hw-muted-strong-fg: var(--hw-white);
+
+  /**
    * Data-viz — escala laranja contra escala azul. O par já é seguro para
    * deuteranopia e protanopia comuns, mas cor nunca é canal único: manter
    * rótulo sempre.

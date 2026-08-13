@@ -51,6 +51,26 @@
    */
   --hw-blue-steel-text: #4b7ba2;
 
+  /**
+   * Tints e tintas de ESTADO — derivados, ausentes do guideline pela mesma
+   * razão dos anteriores: a marca não tem tom claro de fundo. Cada tint é a cor
+   * da marca misturada a 90% de branco; cada "-text" é a mesma cor escurecida
+   * até passar 4,5:1 SOBRE O PRÓPRIO TINT (texto pequeno de badge/chip).
+   * Valores calculados e verificados pelo check-tokens — não ajustar no olho.
+   */
+  --hw-blue-mid-tint: #e8f1f6;
+  --hw-blue-deep-tint: #e7edf1;
+  --hw-amber-cream: #fef5e9;
+  --hw-amber-text: #9a6418;
+  --hw-rust-tint: #fbede8;
+  --hw-rust-text: #bf4519;
+  --hw-gray-tint: #f4f4f4;
+  --hw-gray-text: #707070;
+
+  /* Cinza escurecido para SÓLIDO neutro com texto branco pequeno (4,54:1) —
+     o --hw-gray puro dá 3,36:1 e reprova texto de badge. */
+  --hw-gray-strong: #767676;
+
   /* Tipografia — famílias */
   --hw-font-family-heading: "LT Wave", "Plus Jakarta Sans", Arial, sans-serif;
   --hw-font-family-body: "Noto Sans", Arial, sans-serif;
