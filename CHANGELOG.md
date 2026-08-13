@@ -5,6 +5,27 @@ Formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Este arquivo existe porque a distribuição é por **tag git**: o consumidor não
 tem `npm outdated` para descobrir o que mudou. Aqui é o único lugar.
 
+## [0.3.0] — 2026-08-13
+
+### Adicionado
+Vocabulário completo de **estado** — o que faltava para um selo/badge migrar de
+cor escrita à mão sem perder acessibilidade nem inventar hex:
+
+- **Papel `info`** (`--hw-info`), o quarto estado. Azul profundo: distinto do
+  sucesso por peso, não por matiz — a paleta da marca não dá um quarto matiz, e
+  inventar um seria furar o guideline.
+- **Pares suaves** (`--hw-*-soft` + `-fg`) para sucesso, atenção, erro, info e
+  neutro. É a forma que o produto real mais usa (fundo claro + texto na cor), e
+  sem eles todo selo suave vira hex à mão.
+- **`--hw-muted-strong`** — o neutro sólido com texto branco pequeno. O
+  `--hw-muted` (cinza puro do guideline) dá 3,36:1 e só serve a texto grande;
+  migrar para ele teria feito o selo neutro **regredir** em acessibilidade.
+- Os derivados que sustentam os pares acima, em `primitivos.css`: tints a 90% de
+  branco e as tintas escurecidas até passar 4,5:1 **sobre o próprio tint**.
+
+Todos os pares novos entraram no `check-tokens` e foram provados com mutação —
+afrouxar qualquer um deles deixa o CI vermelho.
+
 ## [0.2.1] — 2026-08-12
 
 ### Corrigido
