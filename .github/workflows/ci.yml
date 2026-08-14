@@ -19,4 +19,14 @@ jobs:
       # Gerado que não é verificado vira gerado que ninguém regenera.
       - run: node scripts/gerar-preset-v3.mjs --check
       # O preset precisa carregar de verdade, não só existir.
-      - run: node -e "const p=require('./tailwind/v3-preset.cjs'); if(!p.theme.extend.colors.primary) { console.error('FAIL: preset sem a cor primária'); process.exit(1) }"
+      #
+      # ⚠️ Bloco literal (`|`), e não escalar solto. Esta linha já derrubou o CI
+      # inteiro uma vez: `'FAIL: preset…'` tem DOIS-PONTOS-ESPAÇO, que em YAML
+      # não pode aparecer num escalar sem aspas — o arquivo fica inválido e o
+      # GitHub responde com startup_failure: run de 0s, zero jobs, log
+      # inexistente. Ou seja, a falha não se parece com "o check reprovou", se
+      # parece com "o CI não existe" — e foi assim que três versões saíram sem
+      # que uma única verificação rodasse. Dentro de `|` o conteúdo é texto
+      # bruto e o problema não volta.
+      - run: |
+          node -e "const p = require('./tailwind/v3-preset.cjs'); if (!p.theme.extend.colors.primary) { console.error('FAIL: preset sem a cor primaria'); process.exit(1) }"
