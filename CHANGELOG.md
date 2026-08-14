@@ -5,6 +5,40 @@ Formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Este arquivo existe porque a distribuição é por **tag git**: o consumidor não
 tem `npm outdated` para descobrir o que mudou. Aqui é o único lugar.
 
+## [0.4.0] — 2026-08-13
+
+Nenhum valor de token muda nesta versão. O que muda é o **estado de uma
+decisão**, e por isso ela é minor e não patch: quem consome precisa ler.
+
+### Decidido
+- **A cor primária do tema default é o AZUL**, "por ora". A alternativa era o
+  laranja do guideline de marca. A decisão é revisável — o "por ora" está no
+  registro de propósito —, mas deixou de ser um limbo: o aviso de `DECISÃO
+  PENDENTE` em `semantico.css` saiu, e no lugar dele ficou quem decidiu, quando,
+  contra o quê, e o que custa desfazer.
+
+### Corrigido
+Duas afirmações que a documentação repetia e que **não sobreviveram ao teste de
+trocar de verdade**. As duas eram confortáveis, e é por isso que duraram:
+
+- **"Trocar a primária é editar uma linha / as quatro linhas abaixo."** Falso
+  por dois motivos independentes. O laranja **colide** com `--hw-secondary` e
+  `--hw-focus`, que já são a mesma cor da marca: trocada a primária, três papéis
+  passam a ter o mesmo valor, e manter os três distintos exige mover a
+  secundária junto. E cada consumidor que espelha a camada semântica em código
+  tem a linha dele — ali a guarda existe e fica vermelha, o que é o
+  comportamento certo, mas não é "nenhuma edição fora daqui".
+- **"O check reprova a troca se o par de contraste não passar."** Verdade vazia
+  para a alternativa que estava na mesa: com o laranja no lugar da primária,
+  `npm run check` **sai 0**. O par do botão é medido contra o piso de 3,0:1 e o
+  laranja sobre branco dá 3,73:1. O caso que reprovaria — primária como texto
+  pequeno, piso 4,5:1 — não é par declarado. Contraste da primária continua
+  sendo julgamento humano, e a documentação agora diz isso em vez de delegar ao
+  CI uma decisão que ele não toma.
+
+O que sobrevive da promessa original, e sobrevive medido: **nenhuma tela é
+reescrita.** A camada semântica está fazendo o trabalho dela.
+
 ## [0.3.1] — 2026-08-13
 
 ### Adicionado

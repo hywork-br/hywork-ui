@@ -3,7 +3,10 @@
  *
  * Aqui mora a DECISÃO: qual primitivo faz qual papel na interface. É a única
  * camada que componente consome, e é por isso que trocar a cor primária do
- * produto inteiro é editar uma linha deste arquivo.
+ * produto inteiro se resolve NESTE arquivo, sem reescrever tela nenhuma.
+ * Quantas linhas exatamente é outra conversa, e ela está medida no bloco da
+ * primária abaixo — "é uma linha" era o que este cabeçalho dizia antes de
+ * alguém trocar de verdade para conferir.
  *
  * Três regras que fazem esta camada valer a pena:
  *
@@ -20,15 +23,38 @@
 
 :root {
   /**
-   * ⚠️ DECISÃO PENDENTE — cor primária do tema default.
+   * Cor primária do tema default: AZUL. DECIDIDO em 13/08/2026, e decidido
+   * "por ora" — a alternativa era o laranja #E9501B do guideline de marca, e a
+   * escolha pode ser revista quando marca e produto conversarem de novo. Isto
+   * não é um fechamento definitivo; é o fim de um limbo. O valor não mudou: o
+   * que mudou é que ele deixou de estar em aberto.
    *
-   * Hoje: AZUL, espelhando o que o produto já executa. O guideline de marca
-   * aponta o laranja #E9501B como cor de ação, mas ele reprova contraste para
-   * texto pequeno sobre branco (3,73:1) enquanto o azul passa.
+   * ⚠️ O QUE CUSTA TROCAR — medido em 13/08, trocando de verdade e rodando as
+   * guardas. A versão anterior deste comentário prometia duas coisas ("é editar
+   * as quatro linhas abaixo" e "o check reprova a troca se o par não passar") e
+   * as duas eram falsas. A conta real:
    *
-   * Decisão em aberto. Trocar é editar as quatro linhas abaixo — nenhuma tela é
-   * reescrita. Esse é o teste de que esta camada está fazendo o trabalho dela, e
-   * o check-tokens reprova a troca se o par de contraste não passar.
+   * 1. O check NÃO reprova o laranja. Trocado, `npm run check` sai 0. O par
+   *    --hw-primary/--hw-primary-fg é medido contra o piso de 3.0 (botão), e o
+   *    laranja sobre branco dá 3,73:1 — passa. O caso que reprovaria é a
+   *    primária como TEXTO pequeno sobre branco (piso 4,5), e esse par não é
+   *    declarado, embora os consumidores usem a primária como texto. Contraste
+   *    da primária é decisão humana; o check não a cobre.
+   * 2. O laranja COLIDE com dois papéis vizinhos, e nada acusa: --hw-secondary
+   *    já é --hw-orange, e --hw-focus também. Trocada a primária, os três viram
+   *    o mesmo valor, os dois hovers viram o mesmo e os dois soft viram o
+   *    mesmo. Manter primária ≠ secundária ≠ foco exige mover a secundária
+   *    junto — outras quatro linhas, neste mesmo arquivo.
+   * 3. Cada consumidor que espelha esta camada em código tem a linha dele. Ali
+   *    a guarda existe e MORDE: o espelho é comparado com este arquivo e fica
+   *    vermelho, não silencioso. E onde a tinta é calculada em vez de
+   *    declarada, o cálculo escolhe quase-preto sobre o laranja (4,93:1) contra
+   *    branco (3,73:1) — a marca manda branco, então a troca reintroduz um
+   *    override que o azul dispensa.
+   *
+   * Ou seja: quatro linhas aqui, mais a secundária, mais uma por consumidor.
+   * A camada continua fazendo o trabalho dela — nenhuma TELA é reescrita —, e
+   * essa é a promessa que sobrevive à medição.
    */
   --hw-primary: var(--hw-blue-mid);
   --hw-primary-hover: var(--hw-blue-deep);

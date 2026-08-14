@@ -12,7 +12,7 @@ consolidar.
 Distribuído por **tag git**, como o `@hywork/eslint-config`. Sem npm registry.
 
 ```bash
-npm i github:hywork-br/hywork-ui#v0.3.1
+npm i github:hywork-br/hywork-ui#v0.4.0
 ```
 
 ## Usar
@@ -78,7 +78,10 @@ abaixo.
 | Superfície | `admin.css` · `portal.css` | densidade e tamanho | quase nunca |
 
 A separação existe por um motivo prático: **trocar a cor primária do produto
-inteiro é editar uma linha da camada semântica.** Nenhuma tela é reescrita.
+inteiro se resolve na camada semântica — nenhuma tela é reescrita.** Quantas
+linhas é outra pergunta, e ela está respondida com número no bloco da primária
+em `semantico.css`: são quatro linhas ali, mais a secundária (que colide), mais
+uma por consumidor que espelha a camada em código.
 
 Componentes consomem **só a camada semântica**. Componente que referencia
 `--hw-blue-mid` direto está pulando a decisão e vai divergir na primeira
@@ -137,8 +140,19 @@ Silencioso quando está tudo certo. Ele pega:
 Estão em [`AGENTS.md`](./AGENTS.md), e viajam com o pacote de propósito: regra
 que mora em um repositório só não protege os outros.
 
-## Decisão em aberto
+## A primária é o azul (decidido 13/08/2026, por ora)
 
-A **cor primária do tema default** está marcada em `semantico.css`. Hoje é o
-azul que o produto já executa; o guideline de marca aponta o laranja. Trocar é
-editar quatro linhas — e o check reprova se o par de contraste não passar.
+A **cor primária do tema default** é o azul que o produto já executa. A
+alternativa era o laranja do guideline de marca, e a decisão é **revisável** —
+"por ora" está no registro de propósito. O valor não mudou nesta versão; o que
+mudou é que ele deixou de estar em aberto.
+
+O raciocínio e o custo de uma troca futura moram no bloco da primária em
+`tokens/semantico.css`, medidos em vez de estimados. Duas coisas que vale saber
+antes de propor a troca:
+
+- **O check não decide isso por você.** O laranja no lugar da primária deixa
+  `npm run check` verde: o par do botão é medido contra 3,0:1 e o laranja dá
+  3,73:1. A primária como texto pequeno não é par declarado.
+- **A troca não é local.** O laranja colide com `--hw-secondary` e
+  `--hw-focus`, que já são a mesma cor da marca.
