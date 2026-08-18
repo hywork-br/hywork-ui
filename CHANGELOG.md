@@ -5,6 +5,36 @@ Formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Este arquivo existe porque a distribuição é por **tag git**: o consumidor não
 tem `npm outdated` para descobrir o que mudou. Aqui é o único lugar.
 
+## [0.5.0] — 2026-08-18
+
+**A tipografia do sistema é Montserrat.** Muda valor de token, então quem
+consome vê na tela: `--hw-font-heading` e `--hw-font-body` deixam de resolver em
+LT Wave / Noto Sans.
+
+### Decidido
+- **Título e corpo em Montserrat** (Vitor, 18/08). O guideline de marca pede LT
+  Wave em título e Noto Sans em corpo, e **continua valendo para peça de marca**
+  — deck, papelaria, evento, site. O que estava errado era aplicá-lo à
+  interface: os dois frontends de produção **já executam Montserrat** (`sans:
+  var(--font-montserrat)` no admin, `fontFamily` no `<body>` do portal), e o
+  tema do tenant nasce com `font_name: "Montserrat"`. O pacote existe para
+  descrever a interface; descrever outra coisa era fabricar a quinta versão da
+  verdade em vez de matar as quatro.
+- **Os dois papéis passam a resolver na mesma família.** Continuam separados:
+  hierarquia é peso e escala, e a costura sobrevive a uma divergência futura sem
+  reescrever tela.
+
+### Sabido, e declarado aqui porque não tem conserto dentro do pacote
+**Token de fonte não CARREGA fonte.** Consumidor em `next/font` precisa importar
+Montserrat e apontar a variável dele para o token — o nome literal `"Montserrat"`
+não resolve sozinho, porque o `next/font` publica a família com nome mangled e
+**cai no Arial sem erro nenhum**. Nenhuma CSS variable dispara import de build,
+então esta ligação não pode ser herdada: ela é conferida por teste do lado do
+consumidor (no Labs, `scripts/design-tokens.test.ts` compara o espelho com este
+pacote e fica vermelho quando divergem). É a mesma classe de armadilha que já
+apagou a fonte do Labs uma vez, em 07/08: `--font-sans` apontando para uma
+variável inexistente não quebra build nem lint — renderiza Times New Roman.
+
 ## [0.4.0] — 2026-08-13
 
 Nenhum valor de token muda nesta versão. O que muda é o **estado de uma

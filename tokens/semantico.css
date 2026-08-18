@@ -176,7 +176,12 @@
   --hw-chart-5: var(--hw-blue-deep);
   --hw-chart-6: var(--hw-peach);
 
-  /* Tipografia aplicada */
+  /* Tipografia aplicada
+   *
+   * Os dois papéis resolvem hoje na MESMA família (Montserrat, decidida em
+   * 18/08 — o porquê está no bloco de tipografia dos primitivos). Continuam
+   * sendo dois tokens porque quem consome escreve o papel, não a família: no
+   * dia em que título e corpo voltarem a divergir, nenhuma tela muda. */
   --hw-font-heading: var(--hw-font-family-heading);
   --hw-font-body: var(--hw-font-family-body);
 }
