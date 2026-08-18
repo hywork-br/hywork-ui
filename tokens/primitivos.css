@@ -80,9 +80,33 @@
    */
   --hw-black: #0a0a0a;
 
-  /* Tipografia — famílias */
-  --hw-font-family-heading: "LT Wave", "Plus Jakarta Sans", Arial, sans-serif;
-  --hw-font-family-body: "Noto Sans", Arial, sans-serif;
+  /* Tipografia — famílias
+   *
+   * DECIDIDO 18/08 (Vitor): a família do produto é MONTSERRAT, e é ela que os
+   * dois papéis abaixo carregam.
+   *
+   * O guideline de marca pede LT Wave em título e Noto Sans em corpo. Isso
+   * continua valendo para PEÇA DE MARCA — deck, papelaria, evento, site — e
+   * está registrado no `brand.md`. Não valia para a INTERFACE, e essa era a
+   * divergência: os dois frontends de produção já executam Montserrat (`sans:
+   * var(--font-montserrat)` no admin, `fontFamily` no `<body>` do portal) e o
+   * tema do tenant nasce com `font_name: "Montserrat"`. Este pacote serve a
+   * interface; segue o que a interface executa. A alternativa era manter um
+   * token que nenhuma tela cumpre, que é como a divergência começou.
+   *
+   * ⚠️ O token diz QUAL família, não a CARREGA. Consumidor em `next/font` tem
+   * de importar Montserrat e apontar a variável dele para cá: o nome literal
+   * "Montserrat" NÃO resolve sozinho, porque o `next/font` publica a família
+   * com nome mangled e cai calado no Arial. Nenhuma CSS variable consegue
+   * disparar um import de build — por isso a ligação com o consumidor é
+   * conferida por teste, e não por herança (no Labs, `design-tokens.test.ts`).
+   *
+   * Título e corpo compartilham a família de propósito: hierarquia aqui é peso
+   * e escala, não segunda família. Os dois tokens continuam separados para a
+   * costura sobreviver caso um dia voltem a divergir.
+   */
+  --hw-font-family-heading: "Montserrat", Arial, sans-serif;
+  --hw-font-family-body: "Montserrat", Arial, sans-serif;
 
   /* Escala tipográfica */
   --hw-text-xs: 0.75rem;
