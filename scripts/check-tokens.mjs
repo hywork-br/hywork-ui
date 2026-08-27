@@ -167,7 +167,15 @@ const PARES = [
   ["--hw-surface-inverse", "--hw-text-inverse-secondary", 4.5, "texto secundário no escuro"],
   ["--hw-surface-accent", "--hw-surface-accent-fg", 4.5, "texto sobre destaque"],
   ["--hw-surface-subtle", "--hw-surface-subtle-fg", 4.5, "texto sobre superfície sutil"],
+  ["--hw-accent", "--hw-accent-fg", 4.5, "texto sobre hover de menu"],
+  ["--hw-popover", "--hw-popover-fg", 4.5, "texto sobre superfície flutuante"],
+  ["--hw-card", "--hw-card-fg", 4.5, "texto sobre cartão"],
   ["--hw-surface", "--hw-focus", 3.0, "anel de foco (WCAG 2.4.11)"],
+  /* Borda de CONTROLE de formulário é elemento não-textual: piso 3,0 (WCAG
+     1.4.11). Entra aqui porque --hw-border, que seria a escolha ingênua, dá
+     1,23:1 — adequado para divisor, reprovado como única borda de um campo. Par
+     ausente é par não verificado, e é assim que um input inacessível passa. */
+  ["--hw-surface", "--hw-border-strong", 3.0, "borda de campo (WCAG 1.4.11)"],
   ["--hw-danger", "--hw-danger-fg", 3.0, "estado de erro"],
   ["--hw-warning", "--hw-warning-fg", 3.0, "estado de atenção"],
   ["--hw-success", "--hw-success-fg", 3.0, "estado de sucesso"],

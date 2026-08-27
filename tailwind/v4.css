@@ -38,6 +38,12 @@
   --color-text-muted: var(--hw-text-muted);
   --color-text-inverse: var(--hw-text-inverse);
   --color-text-inverse-secondary: var(--hw-text-inverse-secondary);
+  --color-accent: var(--hw-accent);
+  --color-accent-fg: var(--hw-accent-fg);
+  --color-popover: var(--hw-popover);
+  --color-popover-fg: var(--hw-popover-fg);
+  --color-card: var(--hw-card);
+  --color-card-fg: var(--hw-card-fg);
   --color-border: var(--hw-border);
   --color-border-strong: var(--hw-border-strong);
   --color-focus: var(--hw-focus);
