@@ -4,16 +4,15 @@ Cruzamento entre o catálogo público do `shadcn-ui/ui` e o que os frontends da
 Hywork já executam, para responder a uma pergunta só: **o que vale consolidar
 neste pacote.**
 
-- **Fonte shadcn:** `github.com/shadcn-ui/ui` @ `ee628d75` (medido em 25/08/2026)
-- **Estado:** metade fechada. A metade dos consumidores está **bloqueada por
-  acesso** — ver [Pendente](#pendente).
+- **Fonte shadcn:** `github.com/shadcn-ui/ui` @ `ee628d75`
+- **Consumidores:** `hywork-plataform` @ `f7fa653`, `hw-cloud-builder` @ `17e742e`
+- **Medido em:** 25/08/2026. **Completo.**
 
-> **Decidido desde este levantamento (25/08):** o alvo é a **geração nova, em
-> Tailwind v4**, e a primeira leva já está no pacote (`button`, `input`,
-> `label`, `badge` — ver `CHANGELOG` 0.6.0). Os três papéis ausentes apontados
-> abaixo — `accent`, `popover`, `card` — **foram declarados**; os dois ambíguos
-> foram resolvidos por reuso, sem token novo. O que continua valendo deste
-> documento é o catálogo, a contagem e o custo do v3.
+> **Decidido durante este levantamento:** o alvo é a **geração nova, em Tailwind
+> v4**, e a primeira leva já está no pacote (`button`, `input`, `label`, `badge`
+> — ver `CHANGELOG` 0.6.0). Os três papéis ausentes apontados abaixo — `accent`,
+> `popover`, `card` — **foram declarados**; os dois ambíguos foram resolvidos
+> por reuso, sem token novo.
 
 Números aqui são contados por script sobre o repositório clonado, não estimados.
 
@@ -21,6 +20,11 @@ Números aqui são contados por script sobre o repositório clonado, não estima
 
 ## Resumo para quem tem pressa
 
+0. **Os dois consumidores estão em Tailwind v3.4.1, geração clássica, Radix.**
+   A camada de componentes da 0.6.0 é v4: migrar o consumidor é pré-requisito
+   para usá-la. Dos 61 componentes clássicos, **32 estão nos dois**, e **17
+   desses divergem entre si** — a mesma peça mantida duas vezes, diferente.
+   Nenhum dos 32 é o upstream intocado.
 1. **Existem duas gerações de shadcn no mesmo repositório**, e elas se portam de
    maneiras completamente diferentes. Descobrir em qual cada consumidor está é a
    primeira pergunta do inventário, não um detalhe.
@@ -212,35 +216,91 @@ para `--hw-*`, e deixar os componentes caírem sem edição. Duas razões para n
 
 ---
 
-## Pendente
+## Os consumidores
 
-A metade dos consumidores. **Bloqueada por acesso**, não por esforço:
+Medido em 25/08/2026 sobre `hywork-plataform` @ `f7fa653` e `hw-cloud-builder`
+@ `17e742e`.
 
-| Repositório | Papel | Estado |
+| | platform | builder |
 |---|---|---|
-| `hywork-br/hywork-plataform` | platform | ❌ sem acesso |
-| `hywork-br/hw-cloud-builder` | builder | ❌ sem acesso |
+| Tailwind | **3.4.1** | **3.4.1** |
+| React · Next | 18.3 · 14.2.11 | 18 · 14.2.11 |
+| Geração shadcn | clássica | clássica |
+| Headless | Radix | Radix |
+| Arquivos em `components/ui` | 74 | 55 |
 
-Verificado em 25/08/2026: `add_repo` responde *"you don't have access"* para os
-dois, `list_repos` não os retorna, e `git ls-remote` pede credencial (são
-privados). A grafia `hywork-platform` foi testada também.
+### ⚠️ Os dois estão em v3
 
-**Destrava com** um owner da org `hywork-br` concedendo acesso aos dois repos ao
-Claude GitHub App em https://claude.ai/admin-settings/claude-tag — ou, se a
-autorização pessoal estiver incompleta, reconectando o GitHub em
-claude.ai → Settings → Connectors.
+Isto responde, com número, a pergunta que estava em aberto quando a primeira
+metade deste documento foi escrita — e responde contra a camada de componentes
+que a 0.6.0 entregou: **ela é v4, e nenhum dos dois consumidores é v4 hoje.**
 
-Assim que destravar, o que este documento ganha, por consumidor:
+Não é acidente, é a ordem escolhida (registrada no `CHANGELOG` 0.6.0), mas o
+custo agora está medido em vez de estimado: **migrar o consumidor para Tailwind
+v4 é pré-requisito de consumir qualquer componente daqui**, e não há caminho
+mais curto — a folha de estilo do shadcn usa ~2.700 construções que o v3 não
+compila.
 
-- [ ] **Geração e variante** — clássica ou nova; Radix, Base UI ou Aria.
-      Dedutível dos imports. É a pergunta que decide todo o resto.
-- [ ] **Tailwind v3 ou v4** — decide se a geração nova é sequer uma opção.
-- [ ] **Quais dos 62 existem** — presença de arquivo.
-- [ ] **Quais são usados de verdade** — contagem de imports em telas. Componente
-      scaffoldado e nunca usado não é sinal de nada.
-- [ ] **O que divergiu do upstream, e o que divergiu entre os dois** — é o sinal
-      mais valioso: onde os dois pagaram custo em duplicado é onde consolidar
-      paga mais.
+### A matriz
+
+Contra os **61** componentes da geração clássica:
+
+| | |
+|---|--:|
+| Presentes nos **dois** | **32** |
+| Só no platform | 2 (`carousel`, `sidebar`) |
+| Só no builder | 0 |
+| Em nenhum dos dois | 27 |
+
+**Nenhum dos 32 é o upstream intocado.** Todos divergem do shadcn — o que
+significa que "atualizar do upstream" já não é uma operação disponível em
+nenhum dos dois repositórios. É o problema que esta camada existe para resolver.
+
+E **17 dos 32 divergem também entre si** — a mesma peça, mantida duas vezes,
+diferente. É o sinal mais valioso do inventário, porque é onde o custo já está
+sendo pago em duplicado:
+
+| Componente | platform | builder |
+|---|--:|--:|
+| `input` | 1375 b · 144 usos | 728 b · 14 usos |
+| `avatar` | 1333 b · 33 usos | 4619 b · 36 usos |
+| `select` | 4823 b · 40 usos | 4186 b · 3 usos |
+| `dropdown-menu` | 7386 b · 32 usos | 6943 b · 12 usos |
+| `slider` | 1374 b · 38 usos | 990 b · 0 usos |
+| `button` | 1868 b · 209 usos | 1625 b · 66 usos |
+| `badge` | 1360 b · 79 usos | 1125 b · 11 usos |
+| `alert` · `dialog` · `pagination` · `popover` · `progress` · `skeleton` · `switch` · `table` · `tabs` · `textarea` | | |
+
+### O que mais se usa, somando os dois
+
+```
+ 275  button        158  input         114  label         90  badge
+  89  dialog         83  switch         82  card          69  avatar
+  59  accordion      44  dropdown-menu  43  select        41  skeleton
+```
+
+**A primeira leva da 0.6.0 — `button`, `input`, `label`, `badge` — é exatamente
+o topo desta lista.** Foi escolhida antes deste levantamento existir, por serem
+"os óbvios"; o inventário confirma a escolha por outro caminho. E três dos
+quatro (`button`, `input`, `badge`) estão na tabela de divergência acima, ou
+seja: são peças onde a duplicação já custa.
+
+### Duas coisas que mudam escopo
+
+- **`form` é usado nos dois** (19 no platform, 2 no builder). É o único
+  componente que a geração nova **removeu** — virou `field`. Migrar isso é
+  mexer em código de tela com `react-hook-form`, não trocar um componente.
+- **`breadcrumb` existe nos dois e tem zero import.** Scaffold morto: presença
+  de arquivo não é sinal de uso, e é por isso que este inventário conta import
+  em vez de contar arquivo.
+
+### O que não existe em nenhum dos dois
+
+27 do catálogo, entre eles os que arrastam dependência pesada (`chart`,
+`combobox`, `calendar`, `drawer`, `resizable`) e os que são novos da geração de
+2026 (`attachment`, `bubble`, `empty`, `field`, `item`, `kbd`, `marker`,
+`message`, `message-scroller`, `input-group`, `button-group`). Nenhum deles é
+candidato a consolidação — não há o que consolidar.
 
 E a coluna de veredito por componente: `consolidar` · `só um usa` · `divergiu` ·
 `não usado` · `ausente nos dois`.
