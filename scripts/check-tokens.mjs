@@ -122,6 +122,111 @@ for (const doc of ["README.md", "AGENTS.md", "CONTRIBUTING.md"]) {
 }
 
 /**
+ * 2c. VOCABULÁRIO na camada de componentes.
+ *
+ * Os componentes vêm do shadcn, que nomeia os mesmos papéis de outro jeito:
+ * `bg-background` onde aqui é `bg-surface`, `ring-ring` onde é o outline de
+ * --hw-focus, `border-input` onde é --hw-border-strong. Portar é traduzir, e
+ * a tradução se desfaz sozinha no primeiro componente colado às pressas.
+ *
+ * O que torna isso caro é o silêncio: `@apply bg-background` sem a entrada no
+ * @theme não gera utility, não quebra build e não acusa no lint. A regra some
+ * e o elemento fica transparente.
+ *
+ * Nome NU (var(--secondary), var(--radius-md)) tem um segundo problema, pior:
+ * esse namespace pertence à APLICAÇÃO, e em produto white-label é onde a cor
+ * escolhida pelo cliente é aplicada em runtime. Componente que lê dali herda a
+ * cor do tenant onde deveria usar a da marca.
+ */
+const VOCABULARIO_ALHEIO = [
+  "background",
+  "foreground",
+  "muted-foreground",
+  "accent-foreground",
+  "popover-foreground",
+  "card-foreground",
+  "primary-foreground",
+  "secondary-foreground",
+  "destructive",
+  "input",
+  "ring",
+];
+const UTILITY = "bg|text|border|ring|fill|stroke|outline|divide|from|to|via|placeholder|shadow";
+
+const arquivosDeComponente = [
+  ["tailwind/style-hywork.css", "tailwind/style-hywork.css"],
+  ...["button", "input", "label", "badge"].map((c) => [
+    `componentes/ui/${c}.tsx`,
+    `componentes/ui/${c}.tsx`,
+  ]),
+];
+
+for (const [rotulo, rel] of arquivosDeComponente) {
+  const texto = semComentarios(readFileSync(path.join(RAIZ, rel), "utf8"));
+
+  const alheias = [
+    ...new Set(
+      [...texto.matchAll(new RegExp(`\\b(?:${UTILITY})-(${VOCABULARIO_ALHEIO.join("|")})\\b`, "g"))]
+        .map((m) => m[0]),
+    ),
+  ];
+  if (alheias.length) {
+    falhas.push(
+      `${rotulo}: vocabulário do shadcn que este design system não publica — ` +
+        `${alheias.join(", ")}. A utility não existe, e a regra some sem erro.`,
+    );
+  }
+
+  /* Cor de token com modificador de opacidade: no v4 isso resolve em
+     color-mix, e o resultado não é par bg/fg verificado nenhum. Onde o upstream
+     usa /80 para hover, aqui existe token de hover declarado. */
+  const opacidade = [
+    ...new Set(
+      [...texto.matchAll(new RegExp(`\\b(?:${UTILITY})-[a-z-]+\\/\\d+`, "g"))].map((m) => m[0]),
+    ),
+  ];
+  if (opacidade.length) {
+    falhas.push(
+      `${rotulo}: cor com modificador de opacidade — ${opacidade.join(", ")}. ` +
+        `Use o token de hover declarado; opacidade não passa pelo check de contraste.`,
+    );
+  }
+
+  const nus = [
+    ...new Set(
+      [...texto.matchAll(/var\(\s*--(?!hw-)([\w-]+)\)/g)].map((m) => `--${m[1]}`),
+    ),
+  ];
+  if (nus.length) {
+    falhas.push(
+      `${rotulo}: var() com nome nu — ${nus.join(", ")}. ` +
+        `Esse namespace é da aplicação; em white-label é a cor do tenant.`,
+    );
+  }
+
+  /* Altura fixa onde a superfície manda. É o que desliga a diferença entre
+     admin (36px) e portal (48px) sem que nada acuse.
+
+     Só conta a altura do PRÓPRIO controle: o lookbehind por `:` descarta o que
+     vem atrás de variante — `file:h-6` é o botão interno do input e
+     `[&_svg]:size-4` é o ícone. Ícone não escala com densidade neste sistema
+     porque não existe token para isso; se um dia existir, é aqui que a regra
+     muda. Sem essa distinção a guarda obrigaria a inventar o token para se
+     calar, que é o oposto do que ela serve. */
+  const alturas = [
+    ...new Set(
+      [...texto.matchAll(/(?<![:\w-])(?:min-h|h|size)-\d+(?:\.\d+)?\b/g)].map((m) => m[0]),
+    ),
+  ];
+  if (alturas.length) {
+    falhas.push(
+      `${rotulo}: altura fixa — ${alturas.join(", ")}. ` +
+        `Controle usa var(--hw-control-height*); número fixo desliga a camada de superfície.`,
+    );
+  }
+}
+
+/**
  * Falha estrutural aborta aqui. Sem isso, um token que se auto-referencia faz a
  * resolução de valor abaixo recursar até estourar a pilha, e o operador vê um
  * stack trace em vez da causa — que já foi diagnosticada duas linhas acima.
@@ -167,7 +272,15 @@ const PARES = [
   ["--hw-surface-inverse", "--hw-text-inverse-secondary", 4.5, "texto secundário no escuro"],
   ["--hw-surface-accent", "--hw-surface-accent-fg", 4.5, "texto sobre destaque"],
   ["--hw-surface-subtle", "--hw-surface-subtle-fg", 4.5, "texto sobre superfície sutil"],
+  ["--hw-accent", "--hw-accent-fg", 4.5, "texto sobre hover de menu"],
+  ["--hw-popover", "--hw-popover-fg", 4.5, "texto sobre superfície flutuante"],
+  ["--hw-card", "--hw-card-fg", 4.5, "texto sobre cartão"],
   ["--hw-surface", "--hw-focus", 3.0, "anel de foco (WCAG 2.4.11)"],
+  /* Borda de CONTROLE de formulário é elemento não-textual: piso 3,0 (WCAG
+     1.4.11). Entra aqui porque --hw-border, que seria a escolha ingênua, dá
+     1,23:1 — adequado para divisor, reprovado como única borda de um campo. Par
+     ausente é par não verificado, e é assim que um input inacessível passa. */
+  ["--hw-surface", "--hw-border-strong", 3.0, "borda de campo (WCAG 1.4.11)"],
   ["--hw-danger", "--hw-danger-fg", 3.0, "estado de erro"],
   ["--hw-warning", "--hw-warning-fg", 3.0, "estado de atenção"],
   ["--hw-success", "--hw-success-fg", 3.0, "estado de sucesso"],

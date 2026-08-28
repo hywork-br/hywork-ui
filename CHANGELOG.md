@@ -5,6 +5,58 @@ Formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Este arquivo existe porque a distribuição é por **tag git**: o consumidor não
 tem `npm outdated` para descobrir o que mudou. Aqui é o único lugar.
 
+## [0.6.0] — 2026-08-25
+
+**O pacote deixa de ser só tokens.** Entram quatro componentes — `Button`,
+`Input`, `Label`, `Badge` — e com eles uma dependência nova de verdade: quem
+importar componente precisa estar em **Tailwind v4**.
+
+### Decidido
+- **Alvo é o v4, e o produto entra depois** (Luiza, 25/08). Desde jan/2026 o
+  shadcn separa componente de estilo: o `.tsx` nomeia papéis e o visual mora
+  numa folha intercambiável — upstream publica oito delas, e
+  `tailwind/style-hywork.css` é a nona. A alternativa era portar a geração
+  clássica, que roda no v3 hoje e vira dívida quando o produto migrar. Escolheu-
+  se a costura que sobrevive: o `.tsx` chega quase verbatim do upstream, e o
+  diff normalizado contra `shadcn-ui/ui @ ee628d75` é de 8 linhas no `button` e
+  **2 no `label`**. Rebase futuro é possível em vez de arqueológico.
+- **Três papéis semânticos novos:** `--hw-accent` (+`-fg`), `--hw-popover`
+  (+`-fg`) e `--hw-card` (+`-fg`). São 121 regras da folha completa que não
+  tinham onde resolver. `popover` e `card` resolvem hoje no mesmo valor de
+  `--hw-surface`, deliberadamente: papéis distintos com valor coincidente, como
+  já é o caso de `--hw-font-heading` e `--hw-font-body`.
+- **A ponte do v4 passa a ser gerada.** Era escrita à mão e tinha derivado para
+  31 das 65 entradas do preset v3.
+
+### Muda valor na tela
+Nada, para quem usa só tokens. Os tokens novos são aditivos e nenhum valor
+existente mudou.
+
+### Achado que vale mais que os componentes
+**`--hw-border` dá 1,23:1 sobre branco.** Como divisor está correto — a WCAG
+isenta elemento decorativo. Como **única borda de um controle de formulário**
+reprova o piso de 3:1 da WCAG 1.4.11, e portar o input do shadcn com
+`border-border` embarcaria um campo inacessível sem nada acusar.
+
+Não entrou token para isso: `--hw-border-strong` já é o papel "borda que se
+enxerga" e dá 3,31:1. O que entrou foi a **garantia** — o par
+`surface`/`border-strong` agora está em `PARES` e é verificado.
+
+Limite registrado: `blue-steel` sobre `blue-tint` dá 2,92:1. Campo sobre fundo
+acentuado reprova; campo mora sobre superfície clara.
+
+### Sabido, e declarado porque não tem conserto dentro do pacote
+- **O produto (v3) não consome os componentes.** Só o Labs. Não é bug, é a
+  ordem escolhida — e o custo real está medido no `INVENTARIO.md`.
+- **Os componentes não são typechecked no CI.** Rodar `tsc` exigiria instalar
+  dependências num pacote que hoje se verifica com zero instalação. Foram
+  conferidos à mão contra `@base-ui/react` 1.6 na entrada. A troca é decisão do
+  mantenedor.
+- **`transition-all` não pode voltar ao `.tsx`.** Utility vence a camada
+  `components` na cascata do v4: ele sobrescreveria a transição por token e
+  levaria junto o tratamento de `prefers-reduced-motion`, que é a única coisa
+  ali que atende a uma preferência de acessibilidade.
+
 ## [0.5.0] — 2026-08-18
 
 **A tipografia do sistema é Montserrat.** Muda valor de token, então quem

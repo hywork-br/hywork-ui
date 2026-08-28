@@ -5,12 +5,14 @@ Repo pequeno, regra curta.
 ## Antes de abrir PR
 
 ```bash
-node scripts/check-tokens.mjs      # silencioso = ok
-node scripts/gerar-preset-v3.mjs   # se mexeu em semantico.css
+npm run check    # silencioso = ok
+npm run preset   # se mexeu em semantico.css: regenera as duas pontes
 ```
 
-O CI roda os dois, e o preset é verificado com `--check`: gerado desatualizado
-reprova.
+O CI roda o `check`, e as duas pontes são verificadas com `--check`: gerado
+desatualizado reprova. **São duas** — o preset do v3 e o tema do v4 saem da mesma
+fonte, e regenerar só uma é como a ponte do v4 ficou 34 tokens atrás da
+semântica sem ninguém notar.
 
 ## Token novo
 

@@ -1,8 +1,10 @@
 /**
- * Ponte opcional para consumidores em Tailwind v4.
+ * GERADO por scripts/gerar-tema-v4.mjs — não edite à mão.
+ * A fonte é tokens/semantico.css; rode o script depois de mexer nela.
  *
- * O @theme do v4 transforma cada entrada em variável CSS E em utilitário:
- * `--color-primary` vira `bg-primary`, `text-primary`, `border-primary`.
+ * Ponte para consumidores em Tailwind v4. O @theme transforma cada entrada em
+ * variável CSS E em utilitário: `--color-primary` vira `bg-primary`,
+ * `text-primary`, `border-primary`.
  *
  *   @import "@hywork/ui/tokens/tema.css";
  *   @import "@hywork/ui/tailwind/v4.css";
@@ -19,33 +21,58 @@
   --color-primary-hover: var(--hw-primary-hover);
   --color-primary-fg: var(--hw-primary-fg);
   --color-primary-soft: var(--hw-primary-soft);
-
   --color-secondary: var(--hw-secondary);
   --color-secondary-hover: var(--hw-secondary-hover);
   --color-secondary-fg: var(--hw-secondary-fg);
   --color-secondary-soft: var(--hw-secondary-soft);
-
   --color-surface: var(--hw-surface);
   --color-surface-fg: var(--hw-surface-fg);
   --color-surface-subtle: var(--hw-surface-subtle);
+  --color-surface-subtle-fg: var(--hw-surface-subtle-fg);
   --color-surface-inverse: var(--hw-surface-inverse);
   --color-surface-inverse-fg: var(--hw-surface-inverse-fg);
   --color-surface-accent: var(--hw-surface-accent);
-
+  --color-surface-accent-fg: var(--hw-surface-accent-fg);
   --color-text: var(--hw-text);
   --color-text-secondary: var(--hw-text-secondary);
   --color-text-muted: var(--hw-text-muted);
   --color-text-inverse: var(--hw-text-inverse);
-
+  --color-text-inverse-secondary: var(--hw-text-inverse-secondary);
+  --color-accent: var(--hw-accent);
+  --color-accent-fg: var(--hw-accent-fg);
+  --color-popover: var(--hw-popover);
+  --color-popover-fg: var(--hw-popover-fg);
+  --color-card: var(--hw-card);
+  --color-card-fg: var(--hw-card-fg);
   --color-border: var(--hw-border);
   --color-border-strong: var(--hw-border-strong);
   --color-focus: var(--hw-focus);
-
   --color-success: var(--hw-success);
+  --color-success-fg: var(--hw-success-fg);
   --color-warning: var(--hw-warning);
+  --color-warning-fg: var(--hw-warning-fg);
   --color-danger: var(--hw-danger);
+  --color-danger-fg: var(--hw-danger-fg);
   --color-muted: var(--hw-muted);
-
+  --color-muted-fg: var(--hw-muted-fg);
+  --color-info: var(--hw-info);
+  --color-info-fg: var(--hw-info-fg);
+  --color-danger-strong: var(--hw-danger-strong);
+  --color-danger-strong-fg: var(--hw-danger-strong-fg);
+  --color-scrim: var(--hw-scrim);
+  --color-scrim-fg: var(--hw-scrim-fg);
+  --color-success-soft: var(--hw-success-soft);
+  --color-success-soft-fg: var(--hw-success-soft-fg);
+  --color-warning-soft: var(--hw-warning-soft);
+  --color-warning-soft-fg: var(--hw-warning-soft-fg);
+  --color-danger-soft: var(--hw-danger-soft);
+  --color-danger-soft-fg: var(--hw-danger-soft-fg);
+  --color-info-soft: var(--hw-info-soft);
+  --color-info-soft-fg: var(--hw-info-soft-fg);
+  --color-neutral-soft: var(--hw-neutral-soft);
+  --color-neutral-soft-fg: var(--hw-neutral-soft-fg);
+  --color-muted-strong: var(--hw-muted-strong);
+  --color-muted-strong-fg: var(--hw-muted-strong-fg);
   --color-chart-1: var(--hw-chart-1);
   --color-chart-2: var(--hw-chart-2);
   --color-chart-3: var(--hw-chart-3);
@@ -59,4 +86,8 @@
   --radius-sm: var(--hw-radius-sm);
   --radius-md: var(--hw-radius-md);
   --radius-lg: var(--hw-radius-lg);
+  --radius-full: var(--hw-radius-full);
+
+  --ease-standard: var(--hw-ease-standard);
+  --ease-out: var(--hw-ease-out);
 }

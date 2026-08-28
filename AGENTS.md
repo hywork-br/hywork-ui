@@ -39,12 +39,12 @@ biblioteca que a gente instalou.
 - **Nunca escreva `--hw-*` fora deste repositório.** Esse prefixo é do design
   system. O namespace `--color-*` é da aplicação, e num produto white-label ele
   pertence ao tema do cliente — sobrescrever ali apaga a marca dele.
-- **Nunca escreva `--hw-*` fora deste repositório.** Esse prefixo é do design
-  system. O namespace `--color-*` é da aplicação, e num produto white-label ele
-  pertence ao tema do cliente — sobrescrever ali apaga a marca dele.
 - **Nunca deixe cor como único canal de informação.** Todo estado carrega ícone
   ou texto junto — a paleta não tem verde nem vermelho, e daltonismo não é caso
   raro.
+- **Nunca use `--hw-border` como borda de campo.** Ela dá 1,23:1 sobre branco:
+  serve a divisor, reprova o piso de 3:1 da WCAG 1.4.11 para limite de
+  controle. Campo e botão contornado usam `--hw-border-strong`.
 
 ## Ao construir
 
@@ -59,6 +59,30 @@ biblioteca que a gente instalou.
   outro é como se produz texto ilegível.
 - **Movimento curto:** 120–200ms, e `prefers-reduced-motion` já está tratado nos
   tokens — não reintroduza duração fixa.
+
+## Ao portar componente do shadcn
+
+Existe uma camada de componentes desde a 0.6.0, e ela tem uma regra que
+resume tudo: **traduza o vocabulário, não o importe.**
+
+O shadcn nomeia os mesmos papéis de outro jeito — `bg-background` onde aqui é
+`bg-surface`, `ring-ring` onde é o outline de `--hw-focus`, `border-input` onde
+é `--hw-border-strong`. Colar sem traduzir não quebra nada: a utility não
+existe, a regra some, e o elemento fica transparente. O `npm run check` reprova
+isso, mas ele é a rede, não o plano.
+
+- **Layout no componente, visual na folha.** É o contrato do upstream. Trazer
+  layout para `style-hywork.css` funciona e afasta o `.tsx` do original a cada
+  regra movida — que é exatamente o que torna o rebase caro.
+- **Cabeçalho com origem e divergência.** Variante, sha do upstream, e o que
+  mudou e por quê. Divergência não explicada é porte com bug dentro.
+- **`var()` com nome nu é proibido** — nome sem o prefixo `--hw-`, como o
+  `secondary` e o `radius-md` que o upstream usa. Esse namespace é da
+  aplicação, e em white-label é a cor do tenant.
+- **Nada de `dark:`.** Esta camada não tem modo escuro. Quando tiver, ele entra
+  redefinindo pares em `semantico.css`, e nenhum componente muda.
+- **Tamanho sai da superfície.** `var(--hw-control-height)`, nunca `h-8`. Número
+  fixo desliga a diferença entre admin e portal sem que nada acuse.
 
 ## Para o mantenedor humano
 

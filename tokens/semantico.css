@@ -86,7 +86,52 @@
   --hw-text-inverse: var(--hw-white);
   --hw-text-inverse-secondary: var(--hw-blue-lavender);
 
-  /* Bordas e divisores */
+  /**
+   * Superfícies de COMPONENTE. Três papéis que a camada não tinha e que todo
+   * componente de menu, flutuante ou cartão exige — sem eles, 121 regras da
+   * folha de estilo não têm onde resolver.
+   *
+   * Dois deles resolvem HOJE no mesmo valor que --hw-surface, e isso é
+   * deliberado: são papéis distintos com valor coincidente, exatamente como
+   * --hw-font-heading e --hw-font-body. O dia em que um popover precisar se
+   * separar do fundo da página, muda esta linha e nenhuma TELA é reescrita. Se
+   * em vez disso a folha escrevesse bg-surface no popover, a distinção teria
+   * que ser reconstruída regra a regra.
+   */
+
+  /* Fundo de HOVER e de item ativo em menu, dropdown, command e sidebar. É o
+     único dos três com valor próprio, e é o mais usado da folha inteira.
+     Sobre ele a tinta é o navy: 13,35:1. */
+  --hw-accent: var(--hw-blue-tint);
+  --hw-accent-fg: var(--hw-navy);
+
+  /* Superfície FLUTUANTE. Branca de propósito: a separação da página vem de
+     borda e sombra, não de cor. Tingir o popover gastaria o único fundo
+     colorido que a tela tem direito, e ele pertence ao acento. */
+  --hw-popover: var(--hw-white);
+  --hw-popover-fg: var(--hw-navy);
+
+  /* Superfície de CARTÃO. Mesma lógica do popover. */
+  --hw-card: var(--hw-white);
+  --hw-card-fg: var(--hw-navy);
+
+  /**
+   * Bordas e divisores.
+   *
+   * ⚠️ --hw-border dá 1,23:1 sobre branco. Isso é ADEQUADO para divisor — a
+   * WCAG isenta elemento puramente decorativo — e REPROVA como única borda de
+   * um controle de formulário, onde o piso de 1.4.11 é 3:1. Componente de
+   * campo (input, select, textarea) usa --hw-border-strong, que dá 3,31:1 e
+   * agora tem o par verificado no check-tokens.
+   *
+   * O shadcn resolve isso com um token `input` separado. Aqui não precisa: o
+   * papel "borda que se enxerga" já existe, e criar um segundo nome para o
+   * mesmo valor seria a versão de token daquilo que o AGENTS.md descreve como
+   * uma dúzia de versões do mesmo componente.
+   *
+   * Não vale para campo sobre fundo acentuado: blue-steel sobre blue-tint dá
+   * 2,92:1 e reprova. Campo mora sobre superfície clara.
+   */
   --hw-border: var(--hw-hairline-light);
   --hw-border-strong: var(--hw-blue-steel);
 

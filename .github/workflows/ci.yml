@@ -17,7 +17,13 @@ jobs:
       # precisa de build pra validar token demora a rodar e para de ser rodado.
       - run: node scripts/check-tokens.mjs
       # Gerado que não é verificado vira gerado que ninguém regenera.
+      #
+      # São DUAS pontes, e as duas saem da mesma fonte. Verificar só uma foi
+      # como o tema do v4 ficou 34 tokens atrás da camada semântica sem que
+      # nada acusasse — `@apply text-danger-fg` sem a entrada no @theme não
+      # gera utility, não quebra o build e não aparece no lint.
       - run: node scripts/gerar-preset-v3.mjs --check
+      - run: node scripts/gerar-tema-v4.mjs --check
       # O preset precisa carregar de verdade, não só existir.
       #
       # ⚠️ Bloco literal (`|`), e não escalar solto. Esta linha já derrubou o CI

@@ -1,11 +1,12 @@
 # @hywork/ui
 
-Design system da Hywork. Nesta versão: **só tokens** — cor, tipografia,
-espaçamento, movimento e densidade por superfície, em CSS variables puras.
+Design system da Hywork: **tokens** — cor, tipografia, espaçamento, movimento e
+densidade por superfície, em CSS variables puras — e, desde a 0.6.0, uma
+**primeira leva de componentes**.
 
-Sem componente ainda, e isso é de propósito: o primeiro passo é os três
-frontends falarem a mesma língua de cor. Componente vem quando houver o que
-consolidar.
+Os tokens servem a todo mundo. Os componentes, hoje, **só a quem está em
+Tailwind v4** — o que significa o Labs, não o produto. Isso é escolha, não
+esquecimento: está explicado em [Componentes](#componentes).
 
 ## Instalar
 
@@ -59,6 +60,52 @@ e `rounded-md` funcionam.
 @import "@hywork/ui/tokens/tema.css";
 @import "@hywork/ui/tailwind/v4.css";
 ```
+
+## Componentes
+
+Quatro, por ora: `Button`, `Input`, `Label` e `Badge`. Vêm do
+[`shadcn-ui/ui`](https://github.com/shadcn-ui/ui) `@ee628d75`, variante Base UI.
+
+```tsx
+import { Button } from "@hywork/ui/componentes/ui/button";
+```
+
+```css
+@import "@hywork/ui/tokens/tema.css";
+@import "@hywork/ui/tailwind/v4.css";
+@import "@hywork/ui/tailwind/style-hywork.css";
+```
+
+Três coisas que economizam uma tarde:
+
+1. **Tailwind v4 obrigatório.** Desde jan/2026 o shadcn separa componente de
+   estilo, e a folha usa sintaxe que o v3 não compila. Por isso o produto (v3)
+   ainda não consome esta camada — ele entra quando migrar. O
+   [`INVENTARIO.md`](./INVENTARIO.md) tem a conta.
+2. **Consumidor Next.js precisa de `transpilePackages: ["@hywork/ui"]`.** A
+   distribuição é TSX fonte, e sem isso o bundler não transpila o que está em
+   `node_modules`.
+3. **As dependências são `peerDependencies` opcionais** — `react`,
+   `@base-ui/react`, `class-variance-authority`, `clsx`, `tailwind-merge`. São
+   opcionais para quem usa só tokens não ser obrigado a instalar React; se você
+   importa componente, instale-as.
+
+### Onde estes componentes divergem do shadcn
+
+Cada arquivo traz o porquê no cabeçalho. O resumo:
+
+| O quê | Aqui | Por quê |
+|---|---|---|
+| Altura | `var(--hw-control-height)` | 36px no admin, 48px no portal, **sem prop** |
+| Foco | `outline` com `--hw-focus-*` | o `ring-ring/50` do upstream reprova o piso de 3:1 da WCAG 2.4.11 |
+| Hover | token (`bg-primary-hover`) | decisão declarada, não `bg-primary/80` calculado |
+| Borda de campo | `--hw-border-strong` | `--hw-border` dá 1,23:1 e reprova a WCAG 1.4.11 |
+| `dark:` | removido | esta camada não tem modo escuro; apontar para token inexistente some sem erro |
+| Tamanhos `xs`/`lg` | fora | a superfície declara duas alturas; inventar as outras furaria o `--hw-target-min` |
+
+A guarda dessas regras é o `npm run check` — ele reprova vocabulário do shadcn
+que não publicamos, opacidade sobre cor de token, `var()` com nome nu e altura
+fixa em controle.
 
 ### White-label (aplicação com tema de cliente)
 
@@ -133,7 +180,17 @@ Silencioso quando está tudo certo. Ele pega:
 - **contraste abaixo do piso WCAG** nos pares declarados — se alguém trocar a
   primária por uma cor que reprova, o CI avisa antes do usuário. Par que não
   resolve é falha dura: par não verificado é pior que par reprovado;
-- preset do v3 desatualizado em relação à camada semântica.
+- **as duas pontes** desatualizadas em relação à camada semântica. São duas —
+  preset do v3 e tema do v4 — e as duas são geradas: foi mantendo o v4 à mão que
+  ele ficou 34 tokens atrás sem ninguém notar;
+- **vocabulário alheio na camada de componentes** — utility do shadcn que não
+  publicamos (`bg-background`, `ring-ring`, `border-input`…), cor com
+  modificador de opacidade, `var()` com nome nu e altura fixa em controle.
+
+O que ele **não** cobre, e vale saber: os componentes não são typechecked no
+CI. Rodar `tsc` exigiria instalar dependências num pacote que hoje se verifica
+com zero instalação, e essa troca é decisão do mantenedor. Foram conferidos à
+mão contra `@base-ui/react` 1.6 quando entraram.
 
 ## Regras para agentes
 
