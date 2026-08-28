@@ -8,6 +8,13 @@ neste pacote.**
 - **Estado:** metade fechada. A metade dos consumidores está **bloqueada por
   acesso** — ver [Pendente](#pendente).
 
+> **Decidido desde este levantamento (25/08):** o alvo é a **geração nova, em
+> Tailwind v4**, e a primeira leva já está no pacote (`button`, `input`,
+> `label`, `badge` — ver `CHANGELOG` 0.6.0). Os três papéis ausentes apontados
+> abaixo — `accent`, `popover`, `card` — **foram declarados**; os dois ambíguos
+> foram resolvidos por reuso, sem token novo. O que continua valendo deste
+> documento é o catálogo, a contagem e o custo do v3.
+
 Números aqui são contados por script sobre o repositório clonado, não estimados.
 
 ---
