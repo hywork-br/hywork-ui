@@ -11,9 +11,11 @@
   "files": [
     "tokens",
     "tailwind",
+    "componentes",
     "AGENTS.md",
     "README.md",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "INVENTARIO.md"
   ],
   "exports": {
     "./tokens/tema.css": "./tokens/tema.css",
@@ -23,10 +25,34 @@
     "./tokens/admin.css": "./tokens/admin.css",
     "./tokens/portal.css": "./tokens/portal.css",
     "./tailwind/v4.css": "./tailwind/v4.css",
-    "./tailwind/v3-preset.cjs": "./tailwind/v3-preset.cjs"
+    "./tailwind/v3-preset.cjs": "./tailwind/v3-preset.cjs",
+    "./tailwind/style-hywork.css": "./tailwind/style-hywork.css",
+    "./componentes/ui/button": "./componentes/ui/button.tsx",
+    "./componentes/ui/input": "./componentes/ui/input.tsx",
+    "./componentes/ui/label": "./componentes/ui/label.tsx",
+    "./componentes/ui/badge": "./componentes/ui/badge.tsx",
+    "./componentes/lib/utils": "./componentes/lib/utils.ts"
   },
   "scripts": {
     "check": "node scripts/check-tokens.mjs && node scripts/gerar-preset-v3.mjs --check && node scripts/gerar-tema-v4.mjs --check",
     "preset": "node scripts/gerar-preset-v3.mjs && node scripts/gerar-tema-v4.mjs"
+  },
+  "peerDependencies": {
+    "@base-ui/react": "^1.6.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "react": ">=19",
+    "react-dom": ">=19",
+    "tailwind-merge": "^3.6.0",
+    "tailwindcss": "^4.3.0"
+  },
+  "peerDependenciesMeta": {
+    "@base-ui/react": { "optional": true },
+    "class-variance-authority": { "optional": true },
+    "clsx": { "optional": true },
+    "react": { "optional": true },
+    "react-dom": { "optional": true },
+    "tailwind-merge": { "optional": true },
+    "tailwindcss": { "optional": true }
   }
 }

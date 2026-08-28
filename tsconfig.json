@@ -1,0 +1,18 @@
+{
+  "//": "Existe para CONFERIR tipo, não para emitir. A distribuição é TSX fonte: quem compila é o bundler do consumidor, e o `noEmit` deixa isso explícito em vez de deixar um dist/ meio pronto aparecer sem querer.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["componentes"]
+}

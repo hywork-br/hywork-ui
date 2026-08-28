@@ -1,0 +1,189 @@
+/**
+ * A folha de estilo da Hywork para os componentes do shadcn.
+ *
+ * O shadcn separa componente de estilo desde jan/2026: o .tsx só nomeia papéis
+ * (`cn-button-variant-default`) e o visual inteiro mora numa folha
+ * intercambiável. Upstream publica oito delas sobre os mesmos componentes.
+ * Esta é a nona, e é o que permite o .tsx chegar quase verbatim — e um rebase
+ * futuro contra o upstream ser possível em vez de arqueológico.
+ *
+ * Origem: shadcn-ui/ui @ ee628d75, variante `base` (Base UI).
+ *
+ * Uso (Tailwind v4 apenas):
+ *
+ *   @import "@hywork/ui/tokens/tema.css";
+ *   @import "@hywork/ui/tailwind/v4.css";
+ *   @import "@hywork/ui/tailwind/style-hywork.css";
+ *
+ * Precisa passar pelo Tailwind: usa @apply com as utilities que a ponte v4
+ * publica. Importar isto sem o v4.css não gera erro — gera regra vazia.
+ *
+ * A divisão segue o contrato do upstream: LAYOUT no componente, VISUAL aqui.
+ * Trazer layout para cá funcionaria e afastaria o .tsx do original a cada
+ * regra movida — que é justamente o que tornaria o rebase caro, e a
+ * possibilidade de rebase é a razão de ter escolhido esta geração.
+ *
+ * ─── Onde esta folha DIVERGE do upstream, e por quê ────────────────────────
+ *
+ * 1. TAMANHO vem da superfície, não de número. Upstream fixa `h-8`/`h-9`; aqui
+ *    é var(--hw-control-height). É o que faz o mesmo botão ficar denso no admin
+ *    (36px) e confortável no portal (48px) sem prop de variante. Fixar número
+ *    aqui desliga a camada de superfície inteira.
+ *
+ * 2. FOCO é outline, não ring. Upstream usa `ring-3` com `ring-ring/50` — 50%
+ *    de opacidade derruba o contraste do anel abaixo dos 3:1 que a WCAG 2.4.11
+ *    pede. Os tokens --hw-focus-* existem exatamente por isso. Outline também
+ *    não participa do layout, então não empurra vizinho.
+ *
+ * 3. HOVER é token, não opacidade. `bg-primary/80` vira bg-primary-hover: a
+ *    decisão fica declarada na camada semântica em vez de calculada aqui.
+ *
+ * 4. Sem `dark:`. Esta camada não tem modo escuro — o upstream tem 650
+ *    ocorrências de `dark:`, e todas foram removidas em vez de apontarem para
+ *    tokens que não existem. Quando o modo escuro entrar, ele entra
+ *    redefinindo os pares em semantico.css, e esta folha não muda.
+ *
+ * 5. Sem `xs` e `lg` em tamanho. A camada de superfície declara duas alturas
+ *    de controle (--hw-control-height e -sm) e um alvo mínimo. Inventar as
+ *    outras duas aqui produziria, no admin, um botão de 24px contra um
+ *    --hw-target-min de 32px — furando a própria regra da superfície. Entram
+ *    quando a camada declarar as alturas.
+ *
+ * 6. Toda cor por nome NU do upstream (var(--secondary), var(--radius-md))
+ *    virou var(--hw-*). Namespace nu pertence à aplicação: em produto
+ *    white-label é onde a cor escolhida pelo cliente é aplicada em runtime.
+ */
+
+@layer components {
+  /* MARK: Button */
+  .cn-button {
+    @apply gap-1.5 border border-transparent bg-clip-padding font-medium
+      [&_svg:not([class*='size-'])]:size-4;
+
+    border-radius: var(--hw-control-radius);
+    font-size: var(--hw-body-size);
+    transition:
+      background-color var(--hw-duration-base) var(--hw-ease-standard),
+      color var(--hw-duration-base) var(--hw-ease-standard),
+      border-color var(--hw-duration-base) var(--hw-ease-standard);
+  }
+
+  .cn-button:focus-visible,
+  .cn-badge:focus-visible,
+  .cn-input:focus-visible {
+    outline: var(--hw-focus-width) solid var(--hw-focus);
+    outline-offset: var(--hw-focus-offset);
+  }
+
+  .cn-button-variant-default {
+    @apply bg-primary text-primary-fg hover:bg-primary-hover;
+  }
+
+  /* Borda de botão é limite de componente: piso 3:1 da WCAG 1.4.11, o que
+     manda em border-strong. O --hw-border (1,23:1) é divisor, não contorno. */
+  .cn-button-variant-outline {
+    @apply border-border-strong bg-surface text-text
+      hover:bg-accent hover:text-accent-fg
+      aria-expanded:bg-accent aria-expanded:text-accent-fg;
+  }
+
+  .cn-button-variant-secondary {
+    @apply bg-secondary text-secondary-fg hover:bg-secondary-hover;
+  }
+
+  .cn-button-variant-ghost {
+    @apply hover:bg-accent hover:text-accent-fg
+      aria-expanded:bg-accent aria-expanded:text-accent-fg;
+  }
+
+  /* Suave em repouso e sólido no hover — os dois pares são declarados e
+     verificados no check (4,5:1 cada). O upstream faz isso com
+     destructive/10 → destructive/20, que aqui viraria opacidade sem token. */
+  .cn-button-variant-destructive {
+    @apply bg-danger-soft text-danger-soft-fg hover:bg-danger hover:text-danger-fg;
+  }
+
+  .cn-button-variant-link {
+    @apply text-primary underline-offset-4 hover:underline;
+  }
+
+  .cn-button-size-sm {
+    @apply gap-1 px-2.5;
+    min-height: var(--hw-control-height-sm);
+  }
+
+  .cn-button-size-default {
+    @apply px-3;
+    min-height: var(--hw-control-height);
+  }
+
+  .cn-button-size-icon-sm {
+    @apply px-0;
+    min-height: var(--hw-control-height-sm);
+    min-width: var(--hw-control-height-sm);
+  }
+
+  .cn-button-size-icon {
+    @apply px-0;
+    min-height: var(--hw-control-height);
+    min-width: var(--hw-control-height);
+  }
+
+  /* MARK: Badge */
+  .cn-badge {
+    @apply gap-1 border border-transparent px-2 py-0.5 font-medium [&>svg]:size-3;
+
+    border-radius: var(--hw-radius-full);
+    font-size: var(--hw-label-size);
+    transition:
+      background-color var(--hw-duration-base) var(--hw-ease-standard),
+      color var(--hw-duration-base) var(--hw-ease-standard);
+  }
+
+  .cn-badge-variant-default {
+    @apply bg-primary text-primary-fg [a]:hover:bg-primary-hover;
+  }
+
+  .cn-badge-variant-secondary {
+    @apply bg-secondary text-secondary-fg [a]:hover:bg-secondary-hover;
+  }
+
+  .cn-badge-variant-destructive {
+    @apply bg-danger-soft text-danger-soft-fg [a]:hover:bg-danger [a]:hover:text-danger-fg;
+  }
+
+  .cn-badge-variant-outline {
+    @apply border-border-strong text-text [a]:hover:bg-accent [a]:hover:text-accent-fg;
+  }
+
+  .cn-badge-variant-ghost {
+    @apply text-text-muted [a]:hover:bg-accent [a]:hover:text-accent-fg;
+  }
+
+  .cn-badge-variant-link {
+    @apply text-primary underline-offset-4 [a]:hover:underline;
+  }
+
+  /* MARK: Input */
+  .cn-input {
+    @apply border-border-strong bg-surface text-text border px-2.5 py-1
+      transition-colors
+      file:h-6 file:font-medium
+      aria-invalid:border-danger;
+
+    border-radius: var(--hw-control-radius);
+    min-height: var(--hw-control-height);
+    /* No portal o corpo é 16px por decisão da superfície, e isso resolve de
+       graça a regra do iOS: abaixo de 16px o Safari dá zoom ao focar o campo. */
+    font-size: var(--hw-body-size);
+  }
+
+  /* MARK: Label */
+  .cn-label {
+    @apply text-text gap-2 font-medium
+      group-data-[disabled=true]:opacity-50 peer-disabled:opacity-50;
+
+    font-size: var(--hw-label-size);
+    line-height: 1;
+  }
+}
