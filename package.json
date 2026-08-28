@@ -1,7 +1,7 @@
 {
   "name": "@hywork/ui",
-  "version": "0.5.0",
-  "description": "Design system da Hywork — tokens de marca em CSS variables, para Tailwind v3 e v4",
+  "version": "0.6.0",
+  "description": "Design system da Hywork — tokens de marca em CSS variables para Tailwind v3 e v4, e componentes para v4",
   "private": true,
   "license": "UNLICENSED",
   "repository": {
