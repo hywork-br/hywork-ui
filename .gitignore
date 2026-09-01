@@ -1,0 +1,4 @@
+debug-storybook.log
+dist/
+node_modules/
+storybook-static/

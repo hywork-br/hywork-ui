@@ -46,10 +46,11 @@
    * texto: o `--hw-blue-steel` (#6492b7) dá 3,31:1 sobre branco, e o cinza
    * #8c8c8c dá 3,36:1 — os dois reprovam o piso de 4,5:1. O guideline os
    * descreve como "apoio e decorativo", nunca como texto; este derivado é a
-   * versão utilizável, com o mesmo matiz e 4,51:1.
+   * versão utilizável, com o mesmo matiz: 5,38:1 sobre branco e 4,74:1 sobre
+   * o fundo azulado sutil.
    * Achado pelo check-tokens, não no olho.
    */
-  --hw-blue-steel-text: #4b7ba2;
+  --hw-blue-steel-text: #3f6f93;
 
   /**
    * Tints e tintas de ESTADO — derivados, ausentes do guideline pela mesma
@@ -64,6 +65,9 @@
   --hw-amber-text: #9a6418;
   --hw-rust-tint: #fbede8;
   --hw-rust-text: #bf4519;
+  /* Hover do sólido laranja acessível. Mais escuro que --hw-rust-text para
+     preservar a direção do estado e o contraste com branco. */
+  --hw-rust-strong: #9f3714;
   --hw-gray-tint: #f4f4f4;
   --hw-gray-text: #707070;
 

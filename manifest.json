@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "package": "@hywork/ui",
+  "version": "0.6.0",
+  "surfaces": ["admin", "portal"],
+  "stable": ["tokens"],
+  "beta": [
+    "Avatar",
+    "Badge",
+    "Button",
+    "Card",
+    "Dialog",
+    "AlertDialog",
+    "DropdownMenu",
+    "Field",
+    "Input",
+    "Label",
+    "Popover",
+    "Select",
+    "Skeleton",
+    "Tabs",
+    "Textarea",
+    "Tooltip"
+  ],
+  "draft": ["AdminShell", "DataTable", "FilterBar", "FocusMode", "ListPage", "Stepper"]
+}

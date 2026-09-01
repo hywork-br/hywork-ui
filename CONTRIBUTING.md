@@ -5,8 +5,8 @@ Repo pequeno, regra curta.
 ## Antes de abrir PR
 
 ```bash
-node scripts/check-tokens.mjs      # silencioso = ok
-node scripts/gerar-preset-v3.mjs   # se mexeu em semantico.css
+npm run check
+npm run build
 ```
 
 O CI roda os dois, e o preset é verificado com `--check`: gerado desatualizado
@@ -39,7 +39,15 @@ Distribuição é por **tag git**, sem npm. Ao mergear algo que consumidor perce
 3. **Nunca mova uma tag publicada** — ela é o único imutável que o consumidor
    tem. Errou, publica a próxima.
 
-## O que NÃO entra aqui
+## Componente ou padrão novo
 
-Componente React (ainda não — ver o plano de design system), ícone, e qualquer
-coisa específica de um produto. Se serve só a um consumidor, mora nele.
+1. Comece pelo teste do contrato de comportamento.
+2. Use apenas tokens `--hw-*`; literal visual novo começa no token, não no TSX.
+3. Documente estados e teclado no Storybook.
+4. Atualize `manifest.json` e o status em `governance/statuses.md`.
+5. Padrão exige evidência de pelo menos duas features com a mesma necessidade.
+
+## O que não entra aqui
+
+Autenticação, dados, query client, regra de feature, ícone específico de produto
+ou componente que serve apenas a um consumidor.

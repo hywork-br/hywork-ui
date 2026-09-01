@@ -5,6 +5,30 @@ Formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Este arquivo existe porque a distribuição é por **tag git**: o consumidor não
 tem `npm outdated` para descobrir o que mudou. Aqui é o único lugar.
 
+## [0.6.0] — 2026-09-01
+
+### Adicionado
+
+- biblioteca React com 12 famílias de componentes beta;
+- padrões draft `ListPage`, `FilterBar`, `DataTable`, `AdminShell`, `FocusMode`
+  e `Stepper`;
+- Storybook, testes de interação, tipagem e build de declarações;
+- manifesto de maturidade, ownership, ADR e inventário reproduzível dos dois
+  consumidores;
+- kit de migração somente leitura para outubro.
+
+### Corrigido
+
+- `--hw-text-muted` agora passa também sobre a superfície sutil;
+- o sólido secundário usa derivado laranja acessível para texto pequeno;
+- o fallback do Avatar tem papel `img` explícito;
+- o modo foco não herda a transição centralizada do modal comum;
+- navegação, fluxo e ações não criam overflow no breakpoint mobile.
+
+### Limite
+
+Nenhum produto foi migrado, publicado ou alterado nesta linha.
+
 ## [0.5.0] — 2026-08-18
 
 **A tipografia do sistema é Montserrat.** Muda valor de token, então quem

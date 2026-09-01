@@ -19,7 +19,8 @@ como um repositório acaba com uma dúzia de versões do mesmo componente.
    `--hw-`. É daqui que sai toda decisão visual.
 2. **`tokens/admin.css` e `tokens/portal.css`** — densidade e tamanho por
    superfície.
-3. **O inventário de componentes do repositório em que você está.**
+3. **`tokens/componentes.css`, `src/` e `manifest.json`** — execução e API.
+4. **O inventário de componentes do repositório em que você está.**
 
 O que **não** é fonte de verdade: o arquivo de design (que não é biblioteca
 publicada), o que outro trecho do código faz, e o default de qualquer
@@ -36,9 +37,6 @@ biblioteca que a gente instalou.
   mais comum aqui.
 - **Nunca redeclare token em arquivo de feature.** `const PRIMARIA = "..."` numa
   tela é um token novo nascendo fora do sistema.
-- **Nunca escreva `--hw-*` fora deste repositório.** Esse prefixo é do design
-  system. O namespace `--color-*` é da aplicação, e num produto white-label ele
-  pertence ao tema do cliente — sobrescrever ali apaga a marca dele.
 - **Nunca escreva `--hw-*` fora deste repositório.** Esse prefixo é do design
   system. O namespace `--color-*` é da aplicação, e num produto white-label ele
   pertence ao tema do cliente — sobrescrever ali apaga a marca dele.
