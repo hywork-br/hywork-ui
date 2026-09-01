@@ -11,7 +11,8 @@ O pacote é dono de:
 - layout de lista ou grade.
 
 O consumidor é dono de `items`, chave, célula/card, permissões e ações do
-domínio por `renderItem`.
+domínio por `renderItem`. Tabelas usam `renderCollection`, preservando a contagem
+e os estados da casca sem transformar linhas em cards.
 
 ## Filtros por feature
 
@@ -27,6 +28,10 @@ A gramática é compartilhada; a taxonomia não:
 
 O `FilterBar` não conhece esses campos. Ele organiza controles passados pela
 feature e oferece chips/limpeza com comportamento previsível.
+
+O consumidor serializa busca e filtros na URL. Os pilotos do Storybook usam
+query params por feature e demonstram que abrir/fechar `FocusMode` não desmonta
+a lista, não perde filtros e não move o scroll do contexto pai.
 
 ## DataTable
 
@@ -47,3 +52,8 @@ consumidor.
 Etapa futura é desabilitada. Etapa concluída pode ser reaberta via
 `onStepChange`. O texto dos CTAs continua no fluxo: o Stepper não inventa
 “Avançar” nem executa submit.
+
+## Status antes da migração
+
+Os seis padrões permanecem `draft` em setembro. Testes, stories e revisão visual
+provam o contrato no pacote; promoção a `beta` exige os pilotos reais de outubro.

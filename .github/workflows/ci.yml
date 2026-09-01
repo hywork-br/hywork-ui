@@ -15,7 +15,9 @@ jobs:
           node-version: "22"
       - run: npm ci
       - run: npm run check
+      - run: npm run smoke:consumer
       - run: npm run build
+      - run: npm audit --audit-level=high
       # O preset precisa carregar de verdade, não só existir.
       #
       # ⚠️ Bloco literal (`|`), e não escalar solto. Esta linha já derrubou o CI

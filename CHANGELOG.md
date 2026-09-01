@@ -13,6 +13,13 @@ tem `npm outdated` para descobrir o que mudou. Aqui é o único lugar.
 - padrões draft `ListPage`, `FilterBar`, `DataTable`, `AdminShell`, `FocusMode`
   e `Stepper`;
 - Storybook, testes de interação, tipagem e build de declarações;
+- contratos 10/10 e histórias executáveis para as 12 famílias, com seletor
+  admin/portal e auditoria Axe no CI;
+- pilotos isolados de TV Corporativa, Assinaturas, Academy e Conteúdos, com
+  filtros próprios e persistência por URL;
+- fixture Next 16 + Tailwind v3 consumindo os exports e o preset reais;
+- manifesto gerado com drift check, Changesets, template de PR e release
+  imutável por tag;
 - manifesto de maturidade, ownership, ADR e inventário reproduzível dos dois
   consumidores;
 - kit de migração somente leitura para outubro.
@@ -22,6 +29,8 @@ tem `npm outdated` para descobrir o que mudou. Aqui é o único lugar.
 - `--hw-text-muted` agora passa também sobre a superfície sutil;
 - o sólido secundário usa derivado laranja acessível para texto pequeno;
 - o fallback do Avatar tem papel `img` explícito;
+- `CardTitle` aceita a hierarquia completa de `h1` a `h6`, encontrada pelo
+  consumer smoke;
 - o modo foco não herda a transição centralizada do modal comum;
 - navegação, fluxo e ações não criam overflow no breakpoint mobile.
 

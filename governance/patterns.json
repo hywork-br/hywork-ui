@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "patterns": [
+    { "name": "AdminShell", "status": "draft" },
+    { "name": "DataTable", "status": "draft" },
+    { "name": "FilterBar", "status": "draft" },
+    { "name": "FocusMode", "status": "draft" },
+    { "name": "ListPage", "status": "draft" },
+    { "name": "Stepper", "status": "draft" }
+  ]
+}

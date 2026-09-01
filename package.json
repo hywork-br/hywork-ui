@@ -11,6 +11,13 @@
   },
   "files": [
     "dist",
+    "governance/component-contracts.json",
+    "governance/deprecation-policy.md",
+    "governance/pattern-contracts.md",
+    "governance/patterns.json",
+    "governance/statuses.md",
+    "specs",
+    "templates",
     "tokens",
     "tailwind",
     "manifest.json",
@@ -38,11 +45,17 @@
   "scripts": {
     "audit:consumers": "node scripts/audit-consumers.mjs",
     "audit:adoption": "node scripts/audit-adoption.mjs",
+    "audit:dependencies": "npm audit --audit-level=high",
     "build": "tsup && storybook build --quiet",
     "build:lib": "tsup",
-    "check": "npm run check:tokens && npm run test && npm run typecheck && npm run build:lib",
+    "changeset": "changeset",
+    "check": "npm run check:tokens && npm run check:manifest && npm run typecheck && npm run build:lib && npm run test",
+    "check:manifest": "node scripts/generate-manifest.mjs --check",
     "check:tokens": "node scripts/check-tokens.mjs && node scripts/gerar-preset-v3.mjs --check",
+    "manifest": "node scripts/generate-manifest.mjs",
     "preset": "node scripts/gerar-preset-v3.mjs",
+    "release:version": "changeset version",
+    "smoke:consumer": "npm run build:lib && next build fixtures/next-tailwind-v3 --webpack",
     "storybook": "storybook dev -p 6006 --no-open",
     "test": "node --test scripts/*.test.mjs && vitest run",
     "test:watch": "vitest",
@@ -64,19 +77,26 @@
     "react-dom": ">=18.3.0 <20"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.31.1",
     "@storybook/addon-a11y": "^10.5.10",
     "@storybook/addon-docs": "^10.5.10",
     "@storybook/react-vite": "^10.5.10",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.6",
+    "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
     "@vitejs/plugin-react": "^6.1.1",
+    "autoprefixer": "^10.5.4",
+    "axe-core": "^4.13.0",
     "jsdom": "^30.0.1",
+    "next": "^16.3.4",
+    "postcss": "^8.5.26",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "storybook": "^10.5.10",
+    "tailwindcss": "^3.4.19",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vite": "^8.2.2",
@@ -85,5 +105,8 @@
   "sideEffects": [
     "*.css",
     "tokens/*.css"
+  ],
+  "workspaces": [
+    "fixtures/*"
   ]
 }

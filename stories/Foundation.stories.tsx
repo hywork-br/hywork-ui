@@ -43,17 +43,16 @@ export const Componentes: Story = {
   render: () => (
     <div className="hw-catalog">
       <header className="hw-catalog__hero">
-        <Badge tone="info">Linha 0.6 · beta</Badge>
         <h1>Uma linguagem para operar e comunicar</h1>
         <p>
           Controles densos no admin, leitura confortável no portal e o mesmo contrato de foco,
           estado e hierarquia.
         </p>
+        <Badge tone="info">Linha 0.6 · beta</Badge>
       </header>
 
       <section className="hw-catalog__section">
         <div>
-          <p className="hw-catalog__index">01</p>
           <h2>Ações com peso claro</h2>
         </div>
         <div className="hw-catalog__demo hw-catalog__demo--row">
@@ -67,7 +66,6 @@ export const Componentes: Story = {
 
       <section className="hw-catalog__section">
         <div>
-          <p className="hw-catalog__index">02</p>
           <h2>Formulário que explica o próximo passo</h2>
         </div>
         <div className="hw-catalog__demo hw-catalog__form">
@@ -94,7 +92,6 @@ export const Componentes: Story = {
 
       <section className="hw-catalog__section">
         <div>
-          <p className="hw-catalog__index">03</p>
           <h2>Status que não depende só de cor</h2>
         </div>
         <div className="hw-catalog__demo hw-catalog__demo--row">
@@ -108,7 +105,6 @@ export const Componentes: Story = {
 
       <section className="hw-catalog__section">
         <div>
-          <p className="hw-catalog__index">04</p>
           <h2>Conteúdo com hierarquia previsível</h2>
         </div>
         <div className="hw-catalog__demo">

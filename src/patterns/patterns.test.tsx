@@ -38,6 +38,26 @@ describe("product patterns", () => {
     expect(screen.getByText("Nenhum resultado para estes filtros")).toBeVisible();
   });
 
+  it("renders a whole collection when the feature needs a semantic table", () => {
+    const props = {
+      items: [{ name: "Canal Matriz" }],
+      renderCollection: (items: Array<{ name: string }>) => (
+        <table aria-label="Canais de TV">
+          <tbody>
+            {items.map((item) => <tr key={item.name}><td>{item.name}</td></tr>)}
+          </tbody>
+        </table>
+      ),
+      renderItem: () => null,
+      title: "TV Corporativa",
+    };
+
+    render(<ListPage {...props} />);
+
+    expect(screen.getByRole("table", { name: "Canais de TV" })).toBeVisible();
+    expect(screen.getByText("1 item")).toBeVisible();
+  });
+
   it("offers one place to clear active filters", async () => {
     const user = userEvent.setup();
     const onClear = vi.fn();

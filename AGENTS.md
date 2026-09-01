@@ -19,7 +19,8 @@ como um repositório acaba com uma dúzia de versões do mesmo componente.
    `--hw-`. É daqui que sai toda decisão visual.
 2. **`tokens/admin.css` e `tokens/portal.css`** — densidade e tamanho por
    superfície.
-3. **`tokens/componentes.css`, `src/` e `manifest.json`** — execução e API.
+3. **`tokens/componentes.css`, `src/` e `manifest.json`** — execução e API. O
+   manifesto é gerado; rode `npm run manifest`, nunca edite à mão.
 4. **O inventário de componentes do repositório em que você está.**
 
 O que **não** é fonte de verdade: o arquivo de design (que não é biblioteca
@@ -57,6 +58,10 @@ biblioteca que a gente instalou.
   outro é como se produz texto ilegível.
 - **Movimento curto:** 120–200ms, e `prefers-reduced-motion` já está tratado nos
   tokens — não reintroduza duração fixa.
+- **Padrões preservam domínio:** `ListPage`, filtros e tabela compartilham
+  anatomia; taxonomia, células, permissões e ações continuam na feature.
+- **Até outubro não migre produto:** os pilotos do Storybook usam fixtures. Uma
+  importação em Platform ou Builder exige o gate de migração aprovado.
 
 ## Para o mantenedor humano
 

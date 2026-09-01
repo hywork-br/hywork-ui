@@ -22,7 +22,6 @@ export function FocusMode({ children, description, onExit, open, title }: FocusM
       <DialogContent className="hw-focus-mode">
         <header className="hw-focus-mode__header">
           <div>
-            <p className="hw-focus-mode__eyebrow">Modo foco</p>
             <DialogTitle>{title}</DialogTitle>
             {description ? <DialogDescription>{description}</DialogDescription> : null}
           </div>

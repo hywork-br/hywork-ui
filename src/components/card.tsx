@@ -15,7 +15,7 @@ export const Card = component<HTMLElement>("hw-card", "article");
 export const CardHeader = component<HTMLElement>("hw-card__header", "header");
 
 export interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
-  as?: "h2" | "h3" | "h4";
+  as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
 export const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(

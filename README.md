@@ -100,17 +100,29 @@ publica defaults, mas não sobrescreve a marca do cliente.
 npm install
 npm run storybook
 npm run check
+npm run smoke:consumer
 npm run build
+npm run audit:dependencies
 ```
 
-`npm run check` executa guardas de token, testes Node/React, tipagem e build da
-biblioteca. `npm run build` também compila o Storybook.
+`npm run check` executa guardas de token/manifesto, testes Node/React/Axe,
+tipagem e build da biblioteca. `smoke:consumer` compila um fixture Next +
+Tailwind v3 pela API publicada. `npm run build` também compila o Storybook.
+
+O toolbar do Storybook alterna `admin` e `portal`. As histórias em `Contracts/`
+cobrem as 12 famílias; `Pilots/` compara TV, Assinaturas, Academy e Conteúdos
+sem conexão com produto ou serviços externos.
+
+Homologação publicada: [hywork-ui-storybook.vercel.app](https://hywork-ui-storybook.vercel.app).
+O projeto Vercel é isolado dos produtos e mantém a proteção de acesso da equipe.
 
 ## Governança e migração
 
 - decisões e ownership: [`governance/`](./governance/);
+- contratos 10/10: [`specs/components/`](./specs/components/);
 - inventário reproduzível: [`INVENTARIO.md`](./INVENTARIO.md);
 - pacote de adoção para outubro: [`migration/`](./migration/);
 - regras que viajam com o pacote: [`AGENTS.md`](./AGENTS.md).
 
-Esta linha não migra nem publica nenhum produto.
+Esta linha não migra nem publica nenhum produto. Changesets preparam a versão;
+uma tag `v*` aprovada gera um tarball imutável no GitHub Release.
