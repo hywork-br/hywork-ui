@@ -16,6 +16,7 @@
     "governance/pattern-contracts.md",
     "governance/patterns.json",
     "governance/statuses.md",
+    "migration",
     "specs",
     "templates",
     "tokens",

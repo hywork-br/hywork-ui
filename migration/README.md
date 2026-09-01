@@ -23,3 +23,21 @@ Veja também:
 - [`october-checklist.md`](./october-checklist.md)
 - [`import-map.md`](./import-map.md)
 - [`consumer-scorecard.md`](./consumer-scorecard.md)
+- [`adoption-dashboard.md`](./adoption-dashboard.md) — snapshot atual, gerado pelo auditor
+
+## Dashboard de adoção
+
+O dashboard é sempre gerado a partir da leitura atual dos dois consumidores:
+
+```bash
+node scripts/audit-adoption.mjs --repo /caminho/platform --output /tmp/platform-adoption.json
+node scripts/audit-adoption.mjs --repo /caminho/builder --output /tmp/builder-adoption.json
+node scripts/render-adoption-dashboard.mjs \
+  --platform /tmp/platform-adoption.json \
+  --builder /tmp/builder-adoption.json \
+  --output migration/adoption-dashboard.md
+```
+
+O relatório marca `Não migrado` quando não há import do pacote. Em setembro,
+isso é o estado esperado: a Fase 3 está preparada, mas a adoção real não foi
+executada antes do gate de outubro.
