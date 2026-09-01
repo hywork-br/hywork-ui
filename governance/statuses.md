@@ -7,6 +7,11 @@
 | `stable` | produção | sem breaking change fora de major |
 | `deprecated` | apenas legado | alternativa e prazo obrigatórios |
 
+O plano de maturidade chamava os dois primeiros degraus de `candidate` e
+`experimental`. Para não manter duas taxonomias, o contrato público usa os
+nomes canônicos `draft` e `beta`: `candidate → draft` e
+`experimental → beta`. `stable` e `deprecated` mantêm o mesmo significado.
+
 ## Gate para `stable`
 
 - teste de comportamento e teclado;
