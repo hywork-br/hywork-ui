@@ -6,18 +6,18 @@ on:
   pull_request:
 
 jobs:
-  tokens:
+  quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: "22"
-      # Sem dependências: o check é Node puro, de propósito. Design system que
-      # precisa de build pra validar token demora a rodar e para de ser rodado.
-      - run: node scripts/check-tokens.mjs
-      # Gerado que não é verificado vira gerado que ninguém regenera.
-      - run: node scripts/gerar-preset-v3.mjs --check
+      - run: npm ci
+      - run: npm run check
+      - run: npm run smoke:consumer
+      - run: npm run build
+      - run: npm audit --audit-level=high
       # O preset precisa carregar de verdade, não só existir.
       #
       # ⚠️ Bloco literal (`|`), e não escalar solto. Esta linha já derrubou o CI

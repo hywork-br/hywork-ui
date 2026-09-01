@@ -1,0 +1,69 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import test from "node:test";
+
+const root = new URL("../", import.meta.url);
+const requiredSections = [
+  "## Propósito",
+  "## Quando usar e quando evitar",
+  "## Anatomia e slots",
+  "## API e defaults",
+  "## Variantes e estados",
+  "## Tokens consumidos",
+  "## Admin, portal e mobile",
+  "## Teclado, foco e acessibilidade",
+  "## Composição e erros comuns",
+  "## Proveniência, status, owner e migração",
+];
+
+async function read(relativePath) {
+  try {
+    return await readFile(new URL(relativePath, root), "utf8");
+  } catch (error) {
+    if (error?.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
+test("all twelve public families have a complete 10-part contract", async () => {
+  const catalogSource = await read("governance/component-contracts.json");
+  assert.ok(catalogSource, "component contract catalog must exist");
+  const catalog = JSON.parse(catalogSource);
+
+  assert.equal(catalog.families.length, 12);
+  assert.equal(new Set(catalog.families.map((family) => family.slug)).size, 12);
+
+  for (const family of catalog.families) {
+    assert.equal(family.status, "beta", `${family.slug} must be beta`);
+    assert.ok(family.owner.design, `${family.slug} needs a design owner`);
+    assert.ok(family.owner.frontend, `${family.slug} needs a frontend owner`);
+    assert.ok(
+      family.consumers.length >= 2 || family.structuralCase,
+      `${family.slug} needs two consumers or a structural case`,
+    );
+    assert.deepEqual(family.surfaces, ["admin", "portal"]);
+    assert.ok(family.viewports.includes("mobile"));
+
+    const spec = await read(family.spec);
+    assert.ok(spec, `${family.slug} spec must exist`);
+    for (const section of requiredSections) {
+      assert.match(spec, new RegExp(`^${section}$`, "m"), `${family.slug}: ${section}`);
+    }
+  }
+});
+
+test("storybook contract catalog covers every public family", async () => {
+  const catalogSource = await read("governance/component-contracts.json");
+  assert.ok(catalogSource, "component contract catalog must exist");
+  const catalog = JSON.parse(catalogSource);
+  const stories = await read("stories/Contracts.stories.tsx");
+  assert.ok(stories, "component contract stories must exist");
+
+  for (const family of catalog.families) {
+    assert.match(
+      stories,
+      new RegExp(`export const ${family.storyExport}\\b`),
+      `${family.slug} needs an executable story`,
+    );
+  }
+});

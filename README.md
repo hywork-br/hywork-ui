@@ -1,158 +1,128 @@
 # @hywork/ui
 
-Design system da Hywork. Nesta versão: **só tokens** — cor, tipografia,
-espaçamento, movimento e densidade por superfície, em CSS variables puras.
-
-Sem componente ainda, e isso é de propósito: o primeiro passo é os três
-frontends falarem a mesma língua de cor. Componente vem quando houver o que
-consolidar.
+Design system executável da Hywork: tokens de marca, componentes React e
+padrões de produto para superfícies admin e portal.
 
 ## Instalar
 
-Distribuído por **tag git**, como o `@hywork/eslint-config`. Sem npm registry.
+Distribuído por tag Git imutável, como `@hywork/eslint-config`:
 
 ```bash
-npm i github:hywork-br/hywork-ui#v0.5.0
+npm install github:hywork-br/hywork-ui#v0.6.0
 ```
+
+React 18.3 ou 19 é peer dependency.
 
 ## Usar
 
-No CSS global da aplicação:
+Importe o tema uma única vez no CSS global e marque a superfície na raiz:
 
 ```css
 @import "@hywork/ui/tokens/tema.css";
 ```
 
-E no elemento raiz, declare qual superfície é esta aplicação:
-
 ```html
-<html data-surface="admin">   <!-- ou "portal" -->
+<html data-surface="admin">
 ```
 
-Pronto:
+Depois, importe a API React:
 
-```css
-.meu-botao {
-  background: var(--hw-primary);
-  color: var(--hw-primary-fg);
-  border-radius: var(--hw-control-radius);
-  min-height: var(--hw-control-height);
-  transition: background var(--hw-duration-base) var(--hw-ease-standard);
-}
+```tsx
+import { Badge, Button, FilterBar, ListPage } from "@hywork/ui";
 ```
 
-### Tailwind v3 (o produto, hoje)
+`admin` é denso para operação com mouse e teclado. `portal` usa controles e
+texto maiores para leitura e toque. Cor, foco, estados e forma permanecem
+compartilhados.
 
-Use o preset — ele é **gerado** da camada semântica, então não desatualiza:
+## O que a linha 0.6 publica
+
+### Componentes beta
+
+Button, Field/Input/Label, Textarea, Badge, Avatar, Skeleton, Card,
+Dialog/AlertDialog, DropdownMenu/Popover, Tooltip, Select e Tabs.
+
+### Padrões draft
+
+- `ListPage`: cabeçalho, toolbar, contagem e estados de lista;
+- `FilterBar`: busca, filtros do domínio e limpeza explícita;
+- `DataTable`: semântica de tabela e ordenação nomeada;
+- `AdminShell`: navegação e área de operação;
+- `FocusMode`: fluxo fullscreen com saída nomeada e contenção de foco;
+- `Stepper`: etapas concluídas, atual e futuras.
+
+Padrão compartilhado não apaga a feature: filtros, células, ações, dados e
+renderização de Academy, Conteúdos, TV, Assinaturas ou Campanhas continuam no
+consumidor.
+
+## As quatro camadas
+
+| Camada | Fonte | Papel |
+|---|---|---|
+| Primitivos | `tokens/primitivos.css` | fatos da marca e derivados justificados |
+| Semântica | `tokens/semantico.css` | papéis, contraste e estados |
+| Superfície | `tokens/admin.css` · `tokens/portal.css` | densidade e ergonomia |
+| Componentes | `tokens/componentes.css` · `src/` | API visual e interação |
+
+Componentes consomem tokens semânticos. Hex fora de `primitivos.css` reprova o
+CI.
+
+## Tailwind
+
+### v3
 
 ```ts
 // tailwind.config.ts
-presets: [require("@hywork/ui/tailwind/v3-preset.cjs")],
+presets: [require("@hywork/ui/tailwind/v3-preset.cjs")]
 ```
 
-Junto com o `@import` do tema no CSS global. Aí `bg-primary`, `text-text-muted`
-e `rounded-md` funcionam.
-
-### Tailwind v4 (o Labs)
+### v4
 
 ```css
 @import "@hywork/ui/tokens/tema.css";
 @import "@hywork/ui/tailwind/v4.css";
 ```
 
-### White-label (aplicação com tema de cliente)
+## White-label
+
+Aplicações com tema de tenant importam também:
 
 ```css
 @import "@hywork/ui/tokens/white-label.css";
 ```
 
-Só em aplicação onde o cliente escolhe as próprias cores. Ver o contrato logo
-abaixo.
+`--hw-*` pertence ao design system; `--color-*` pertence à aplicação. O pacote
+publica defaults, mas não sobrescreve a marca do cliente.
 
-## As três camadas
-
-| Camada | Arquivo | O que é | Muda quando |
-|---|---|---|---|
-| Primitivos | `primitivos.css` | as 12 cores da marca + escalas | a marca mudar |
-| Semântica | `semantico.css` | que papel cada primitivo faz | uma decisão de produto mudar |
-| Superfície | `admin.css` · `portal.css` | densidade e tamanho | quase nunca |
-
-A separação existe por um motivo prático: **trocar a cor primária do produto
-inteiro se resolve na camada semântica — nenhuma tela é reescrita.** Quantas
-linhas é outra pergunta, e ela está respondida com número no bloco da primária
-em `semantico.css`: são quatro linhas ali, mais a secundária (que colide), mais
-uma por consumidor que espelha a camada em código.
-
-Componentes consomem **só a camada semântica**. Componente que referencia
-`--hw-blue-mid` direto está pulando a decisão e vai divergir na primeira
-mudança.
-
-## Superfícies
-
-O produto tem duas, com ergonomias diferentes:
-
-- **admin** — quem administra a comunicação. Denso: alvo de 32px, corpo 14px.
-- **portal** — o colaborador, muitas vezes no celular. Confortável: alvo de
-  44px, corpo 16px.
-
-Elas mudam **densidade e tamanho**. Nunca cor, forma ou papel semântico — isso é
-comum às duas, e bifurcar ali é como se acabam com dois design systems.
-
-## Namespace: `--hw-*` e `--color-*`
-
-Regra que evita um bug visível para o cliente:
-
-| Prefixo | Dono | Quem escreve |
-|---|---|---|
-| `--hw-*` | o design system | só este repositório |
-| `--color-*` | a aplicação | o tema do tenant, em runtime |
-
-No produto white-label o cliente escolhe as próprias cores, aplicadas em runtime
-sob `--color-*`. Se o design system
-reivindicasse esse namespace, importar os tokens depois do tema do cliente
-**apagaria a marca dele** — e o que decidiria isso seria a ordem dos imports.
-
-`tokens/white-label.css` faz a ponte explícita: publica o default do design
-system em `--color-*`, de onde o tenant sobrescreve por cima.
-
-⚠️ A cor escolhida pelo cliente **não passa** pelo nosso check de contraste —
-ela chega do banco, em runtime. Validar no cadastro do tema é trabalho da
-aplicação, e hoje não existe.
-
-## Verificar
+## Desenvolvimento
 
 ```bash
+npm install
+npm run storybook
 npm run check
+npm run smoke:consumer
+npm run build
+npm run audit:dependencies
 ```
 
-Silencioso quando está tudo certo. Ele pega:
+`npm run check` executa guardas de token/manifesto, testes Node/React/Axe,
+tipagem e build da biblioteca. `smoke:consumer` compila um fixture Next +
+Tailwind v3 pela API publicada. `npm run build` também compila o Storybook.
 
-- hex escrito fora da camada de primitivos;
-- referência a token inexistente, e **auto-referência** (`--x: var(--x)`), que
-  não quebra build nenhum e deixa a propriedade vazia em runtime;
-- **contraste abaixo do piso WCAG** nos pares declarados — se alguém trocar a
-  primária por uma cor que reprova, o CI avisa antes do usuário. Par que não
-  resolve é falha dura: par não verificado é pior que par reprovado;
-- preset do v3 desatualizado em relação à camada semântica.
+O toolbar do Storybook alterna `admin` e `portal`. As histórias em `Contracts/`
+cobrem as 12 famílias; `Pilots/` compara TV, Assinaturas, Academy e Conteúdos
+sem conexão com produto ou serviços externos.
 
-## Regras para agentes
+Homologação publicada: [hywork-ui-storybook.vercel.app](https://hywork-ui-storybook.vercel.app).
+O projeto Vercel é isolado dos produtos e mantém a proteção de acesso da equipe.
 
-Estão em [`AGENTS.md`](./AGENTS.md), e viajam com o pacote de propósito: regra
-que mora em um repositório só não protege os outros.
+## Governança e migração
 
-## A primária é o azul (decidido 13/08/2026, por ora)
+- decisões e ownership: [`governance/`](./governance/);
+- contratos 10/10: [`specs/components/`](./specs/components/);
+- inventário reproduzível: [`INVENTARIO.md`](./INVENTARIO.md);
+- pacote de adoção para outubro: [`migration/`](./migration/);
+- regras que viajam com o pacote: [`AGENTS.md`](./AGENTS.md).
 
-A **cor primária do tema default** é o azul que o produto já executa. A
-alternativa era o laranja do guideline de marca, e a decisão é **revisável** —
-"por ora" está no registro de propósito. O valor não mudou nesta versão; o que
-mudou é que ele deixou de estar em aberto.
-
-O raciocínio e o custo de uma troca futura moram no bloco da primária em
-`tokens/semantico.css`, medidos em vez de estimados. Duas coisas que vale saber
-antes de propor a troca:
-
-- **O check não decide isso por você.** O laranja no lugar da primária deixa
-  `npm run check` verde: o par do botão é medido contra 3,0:1 e o laranja dá
-  3,73:1. A primária como texto pequeno não é par declarado.
-- **A troca não é local.** O laranja colide com `--hw-secondary` e
-  `--hw-focus`, que já são a mesma cor da marca.
+Esta linha não migra nem publica nenhum produto. Changesets preparam a versão;
+uma tag `v*` aprovada gera um tarball imutável no GitHub Release.

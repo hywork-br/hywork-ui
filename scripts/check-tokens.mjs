@@ -158,8 +158,8 @@ const razao = (a, b) => {
 /** Pares que precisam passar, e o piso de cada um.
  *  4.5 = texto corrido (AA) · 3.0 = texto grande, ícone e anel de foco. */
 const PARES = [
-  ["--hw-primary", "--hw-primary-fg", 3.0, "botão primário"],
-  ["--hw-secondary", "--hw-secondary-fg", 3.0, "botão secundário"],
+  ["--hw-primary", "--hw-primary-fg", 4.5, "botão primário com texto pequeno"],
+  ["--hw-secondary", "--hw-secondary-fg", 4.5, "botão secundário com texto pequeno"],
   ["--hw-surface", "--hw-surface-fg", 4.5, "texto sobre superfície"],
   ["--hw-surface", "--hw-text-secondary", 4.5, "texto secundário"],
   ["--hw-surface", "--hw-text-muted", 4.5, "texto de apoio"],
@@ -167,6 +167,12 @@ const PARES = [
   ["--hw-surface-inverse", "--hw-text-inverse-secondary", 4.5, "texto secundário no escuro"],
   ["--hw-surface-accent", "--hw-surface-accent-fg", 4.5, "texto sobre destaque"],
   ["--hw-surface-subtle", "--hw-surface-subtle-fg", 4.5, "texto sobre superfície sutil"],
+  ["--hw-surface-subtle", "--hw-text-muted", 4.5, "texto de apoio sobre superfície sutil"],
+  ["--hw-surface-subtle", "--hw-secondary-text", 4.5, "acento textual sobre superfície sutil"],
+  ["--hw-interactive-hover", "--hw-interactive-hover-fg", 4.5, "texto em hover"],
+  ["--hw-floating", "--hw-floating-fg", 4.5, "texto em superfície flutuante"],
+  ["--hw-card", "--hw-card-fg", 4.5, "texto em cartão"],
+  ["--hw-surface", "--hw-input-border", 3.0, "limite visível de campo"],
   ["--hw-surface", "--hw-focus", 3.0, "anel de foco (WCAG 2.4.11)"],
   ["--hw-danger", "--hw-danger-fg", 3.0, "estado de erro"],
   ["--hw-warning", "--hw-warning-fg", 3.0, "estado de atenção"],
