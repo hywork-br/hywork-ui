@@ -50,5 +50,15 @@ collection operations; additional capabilities must not turn the main toolbar in
 - `collection-mobile-functional.png`: functional composition after surface fixes, before Task5 final
   visual integration. It is not an approved final mobile layout.
 
+### Feedback and recovery — 1e98e83
+
+- Storybook play exercised offline draft preservation, explicit conflict resolution, save, archive/undo,
+  partial publication/retry, cancel focus in destructive confirmation and permission gating.
+- Native390×844: document390px, dialog358px, Montserrat loaded, initial focus Cancelar.
+- Confirmation actions: Cancelar outline and Excluir definitivamente danger, both44px tall.
+- `recovery-confirmation-mobile.png`: refreshed after cancelling action changed from filled to outline.
+- Independent review has no Critical/Important findings. Minor operation-scoping observation remains
+  for final review (partial bulk failure should not style a later save message as warning).
+
 Remaining axes and final integrated gates are pending. These component measurements do not certify
 the final workspace, all contrast pairs, production adoption or the program as complete.
