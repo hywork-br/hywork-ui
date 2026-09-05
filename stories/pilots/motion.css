@@ -1,0 +1,35 @@
+/* Storybook-only pilot. No global token or distributed component overrides. */
+.hw-motion-filters {
+  gap: 0;
+}
+.hw-motion-filters__reveal {
+  margin-inline: calc(-1 * var(--hw-space-1));
+  overflow: clip;
+  padding-inline: var(--hw-space-1);
+}
+.hw-motion-filters__reveal > .hw-filter-bar__active {
+  padding-top: var(--hw-space-3);
+  padding-bottom: var(--hw-space-1);
+  position: relative;
+}
+.hw-motion-popover {
+  animation: none;
+  transform-origin: var(--radix-popover-content-transform-origin);
+}
+.hw-motion-notice {
+  align-items: flex-start;
+  display: inline-flex;
+  gap: var(--hw-space-2);
+}
+.hw-motion-notice > svg {
+  color: var(--hw-text-secondary);
+  flex: 0 0 auto;
+  height: var(--hw-space-4);
+  width: var(--hw-space-4);
+}
+[data-pilot-motion="instant"] .hw-button {
+  transition: none;
+}
+.hw-motion-popover[data-pilot-instant] {
+  animation: none;
+}

@@ -42,14 +42,42 @@ import {
   type PilotItem,
 } from "./model";
 import "./pilots.css";
+import {
+  PilotMotionFilterBar,
+  PilotMotionPopoverContent,
+  PilotMotionScope,
+  PilotSaveNotice,
+} from "./motion";
 
 /** A local reference journey, not a product API or production persistence layer. */
 export function FeaturePilot({
   config,
   stackedFilters = false,
+  motionPilot = false,
 }: {
   config: PilotConfig;
   stackedFilters?: boolean;
+  motionPilot?: boolean;
+}) {
+  return (
+    <PilotMotionScope enabled={motionPilot}>
+      <FeaturePilotContent
+        config={config}
+        stackedFilters={stackedFilters}
+        motionPilot={motionPilot}
+      />
+    </PilotMotionScope>
+  );
+}
+
+function FeaturePilotContent({
+  config,
+  stackedFilters,
+  motionPilot,
+}: {
+  config: PilotConfig;
+  stackedFilters: boolean;
+  motionPilot: boolean;
 }) {
   const [initial] = useState(() => readItems(config));
   const [items, setItems] = useState(initial.items);
@@ -60,6 +88,7 @@ export function FeaturePilot({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState(initial.warning);
+  const [noticeSaved, setNoticeSaved] = useState(false);
   const [confirmExit, setConfirmExit] = useState(false);
   const [failNext, setFailNext] = useState(false);
   const [returnToSearch, setReturnToSearch] = useState(false);
@@ -68,6 +97,10 @@ export function FeaturePilot({
   const continueRef = useRef<HTMLButtonElement>(null);
   const inFlight = useRef(false);
   const Icon = config.icon;
+  const Filters = motionPilot ? PilotMotionFilterBar : FilterBar;
+  const AdvancedContent = motionPilot
+    ? PilotMotionPopoverContent
+    : PopoverContent;
   const visible = items.filter((entry) => matches(entry, filters));
   const changed = draft && JSON.stringify(draft) !== JSON.stringify(original);
   const updateFilter = (key: keyof PilotFilters, value: string) =>
@@ -148,6 +181,7 @@ export function FeaturePilot({
           : `“${saved.name}” salvo nesta sessão de demonstração.`
       );
       setItems(next);
+      setNoticeSaved(true);
       setDraft(null);
     } catch {
       setError(
@@ -346,11 +380,14 @@ export function FeaturePilot({
         renderItem={renderCard}
         title={config.title}
         toolbar={
-          <FilterBar
+          <Filters
             activeFilters={active.map((key) => ({
               id: key,
               label: labelFor(key),
-              onRemove: () => updateFilter(key, emptyFilters[key]),
+              onRemove: () => {
+                updateFilter(key, emptyFilters[key]);
+                if (motionPilot) searchRef.current?.focus();
+              },
             }))}
             onClearAll={clearFilters}
             search={
@@ -387,7 +424,7 @@ export function FeaturePilot({
                         : ""}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent
+                  <AdvancedContent
                     align="end"
                     className="hw-reference-advanced"
                     aria-label="Mais filtros"
@@ -426,7 +463,7 @@ export function FeaturePilot({
                     <FieldHint>
                       Datas de demonstração: referência em 5 set. 2026.
                     </FieldHint>
-                  </PopoverContent>
+                  </AdvancedContent>
                 </Popover>
               </>
             }
@@ -434,9 +471,13 @@ export function FeaturePilot({
         }
         view={config.tableLabel ? "list" : "grid"}
       />
-      <p className="hw-reference-notice" role="status">
-        {notice}
-      </p>
+      {motionPilot ? (
+        <PilotSaveNotice notice={notice} saved={noticeSaved} />
+      ) : (
+        <p className="hw-reference-notice" role="status">
+          {notice}
+        </p>
+      )}
       <details className="hw-reference-demo">
         <summary>Cenários de demonstração</summary>
         <p>
@@ -552,7 +593,14 @@ export function FeaturePilot({
                     )}
                   </div>
                   {error && <FieldError role="alert">{error}</FieldError>}
-                  {saving && <p aria-live="polite">Salvando nesta sessão…</p>}
+                  {saving && (
+                    <p
+                      role={motionPilot ? "status" : undefined}
+                      aria-live="polite"
+                    >
+                      Salvando nesta sessão…
+                    </p>
+                  )}
                 </div>
                 <footer className="hw-reference-editor__footer">
                   <Button

@@ -1,0 +1,1103 @@
+{
+  "contractFull": "passed-full",
+  "contractReduced": "passed-reduced",
+  "reducedLive": {
+    "mode": "instant",
+    "opacity": "1",
+    "transform": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  "chipExitFrames": [
+    {
+      "height": 48,
+      "inert": false,
+      "opacity": "1",
+      "rows": 4,
+      "t": 0
+    },
+    {
+      "height": 48,
+      "inert": false,
+      "opacity": "1",
+      "rows": 4,
+      "t": 17
+    },
+    {
+      "height": 48,
+      "inert": false,
+      "opacity": "1",
+      "rows": 4,
+      "t": 38
+    },
+    {
+      "height": 16,
+      "inert": true,
+      "opacity": "1",
+      "rows": 6,
+      "t": 72
+    },
+    {
+      "height": 15.78125,
+      "inert": true,
+      "opacity": "0.99423",
+      "rows": 6,
+      "t": 75
+    },
+    {
+      "height": 15.640625,
+      "inert": true,
+      "opacity": "0.883577",
+      "rows": 6,
+      "t": 83
+    },
+    {
+      "height": 15.0390625,
+      "inert": true,
+      "opacity": "0.558162",
+      "rows": 6,
+      "t": 100
+    },
+    {
+      "height": 12.2109375,
+      "inert": true,
+      "opacity": "0.268801",
+      "rows": 6,
+      "t": 117
+    },
+    {
+      "height": 8,
+      "inert": true,
+      "opacity": "0.119515",
+      "rows": 6,
+      "t": 134
+    },
+    {
+      "height": 4.5625,
+      "inert": true,
+      "opacity": "0.0424949",
+      "rows": 6,
+      "t": 150
+    },
+    {
+      "height": 2.5,
+      "inert": true,
+      "opacity": "0.0076796",
+      "rows": 6,
+      "t": 167
+    },
+    {
+      "height": 1.3046875,
+      "inert": true,
+      "opacity": "0",
+      "rows": 6,
+      "t": 184
+    },
+    {
+      "height": 0.5078125,
+      "opacity": null,
+      "rows": 6,
+      "t": 200
+    },
+    {
+      "height": 0.140625,
+      "opacity": null,
+      "rows": 6,
+      "t": 217
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 232
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 250
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 267
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 284
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 300
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 317
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 333
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 350
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 367
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 384
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 400
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 417
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 434
+    }
+  ],
+  "mobile": {
+    "font": "\"Nunito Sans\", -apple-system, \".SFNSText-Regular\", \"San Francisco\", \"system-ui\", \"Segoe UI\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+    "panelWidth": 352,
+    "scrollWidth": 390,
+    "width": 390
+  },
+  "chipExitFixedFrames": [
+    {
+      "height": 60,
+      "inert": false,
+      "opacity": "1",
+      "rows": 4,
+      "t": 0
+    },
+    {
+      "height": 60,
+      "inert": false,
+      "opacity": "1",
+      "rows": 4,
+      "t": 20
+    },
+    {
+      "height": 60,
+      "inert": true,
+      "opacity": "1",
+      "rows": 6,
+      "t": 74
+    },
+    {
+      "height": 58.2265625,
+      "inert": true,
+      "opacity": "0.985944",
+      "rows": 6,
+      "t": 76
+    },
+    {
+      "height": 57.7109375,
+      "inert": true,
+      "opacity": "0.866053",
+      "rows": 6,
+      "t": 81
+    },
+    {
+      "height": 55.6171875,
+      "inert": true,
+      "opacity": "0.489657",
+      "rows": 6,
+      "t": 100
+    },
+    {
+      "height": 42.984375,
+      "inert": true,
+      "opacity": "0.23407",
+      "rows": 6,
+      "t": 116
+    },
+    {
+      "height": 26.421875,
+      "inert": true,
+      "opacity": "0.112664",
+      "rows": 6,
+      "t": 131
+    },
+    {
+      "height": 16.015625,
+      "inert": true,
+      "opacity": "0.0334219",
+      "rows": 6,
+      "t": 150
+    },
+    {
+      "height": 8.3515625,
+      "inert": true,
+      "opacity": "0.00453467",
+      "rows": 6,
+      "t": 166
+    },
+    {
+      "height": 4.0859375,
+      "inert": true,
+      "opacity": "0",
+      "rows": 6,
+      "t": 183
+    },
+    {
+      "height": 1.578125,
+      "opacity": null,
+      "rows": 6,
+      "t": 200
+    },
+    {
+      "height": 0.3828125,
+      "opacity": null,
+      "rows": 6,
+      "t": 217
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 233
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 249
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 266
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 283
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 300
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 316
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 333
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 348
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 366
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 383
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 400
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 417
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 432
+    },
+    {
+      "height": 0,
+      "opacity": null,
+      "rows": 6,
+      "t": 449
+    }
+  ],
+  "chipReturn": {
+    "focus": "Buscar em TV Corporativa",
+    "height": 0
+  },
+  "saveButtonBefore": {
+    "height": 44,
+    "text": "Salvar rascunho e voltar",
+    "width": 219.484375
+  },
+  "saveFrames": [
+    {
+      "busy": null,
+      "opacity": null,
+      "t": 1,
+      "width": 219.484375
+    },
+    {
+      "busy": null,
+      "opacity": null,
+      "t": 1,
+      "width": 219.484375
+    },
+    {
+      "busy": null,
+      "opacity": null,
+      "t": 13,
+      "width": 219.484375
+    },
+    {
+      "busy": null,
+      "opacity": null,
+      "t": 31,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 71,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 72,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 77,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 96,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 113,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 129,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 146,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 163,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 177,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 196,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 213,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 229,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 246,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 263,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 279,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 296,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 313,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 328,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 345,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 363,
+      "width": 219.484375
+    },
+    {
+      "busy": "true",
+      "opacity": null,
+      "t": 378,
+      "width": 219.484375
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "0",
+      "t": 430
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "0.00592336",
+      "t": 432
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "0.0706815",
+      "t": 446
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "0.227694",
+      "t": 461
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "0.501561",
+      "t": 477
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "0.731199",
+      "t": 496
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "0.840203",
+      "t": 511
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "0.918742",
+      "t": 527
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "0.969287",
+      "t": 546
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "0.992262",
+      "t": 563
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "0.999926",
+      "t": 580
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 597
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 611
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 630
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 646
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 663
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 679
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 696
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 713
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 730
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 746
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 763
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 780
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 798
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 813
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 830
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 847
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 863
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 881
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 896
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 913
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 931
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 947
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 963
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 980
+    },
+    {
+      "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+      "opacity": "1",
+      "t": 996
+    }
+  ],
+  "saveReturn": {
+    "active": "Novo curso",
+    "notice": "“Integração de equipes · piloto Motion” salvo nesta sessão de demonstração.",
+    "pageWidth": 390
+  },
+  "typography": {
+    "body": "Montserrat, Arial, sans-serif",
+    "heading": "Montserrat, Arial, sans-serif"
+  },
+  "preferenceBefore": "full",
+  "preferenceReduced": "instant",
+  "preferenceRestored": "full",
+  "popoverBeforeFrames": [
+    {
+      "opacity": null,
+      "t": 0,
+      "transform": null
+    },
+    {
+      "opacity": null,
+      "t": 11,
+      "transform": null
+    },
+    {
+      "opacity": null,
+      "t": 30,
+      "transform": null
+    },
+    {
+      "opacity": "1",
+      "t": 104,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 106,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 111,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 127,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 144,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 160,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 177,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 194,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 211,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 227,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 244,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 261,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 277,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 294,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 311,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 327,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 344,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 361,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 377,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 394,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 411,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 428,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 444,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 461,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 478,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 496,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 511,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 527,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 544,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 562,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 577,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 594,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 611,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 628,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 644,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 661,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 679,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 694,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    }
+  ],
+  "popoverAfterFrames": [
+    {
+      "opacity": null,
+      "t": 0,
+      "transform": null
+    },
+    {
+      "opacity": null,
+      "t": 1,
+      "transform": null
+    },
+    {
+      "opacity": null,
+      "t": 6,
+      "transform": null
+    },
+    {
+      "opacity": null,
+      "t": 27,
+      "transform": null
+    },
+    {
+      "opacity": null,
+      "t": 58,
+      "transform": null
+    },
+    {
+      "opacity": null,
+      "t": 58,
+      "transform": null
+    },
+    {
+      "opacity": "0",
+      "t": 176,
+      "transform": "matrix(0.98, 0, 0, 0.98, 0, 0)"
+    },
+    {
+      "opacity": "0.015525",
+      "t": 195,
+      "transform": "matrix(0.98031, 0, 0, 0.98031, 0, 0)"
+    },
+    {
+      "opacity": "0.107357",
+      "t": 222,
+      "transform": "matrix(0.982147, 0, 0, 0.982147, 0, 0)"
+    },
+    {
+      "opacity": "0.318081",
+      "t": 222,
+      "transform": "matrix(0.986362, 0, 0, 0.986362, 0, 0)"
+    },
+    {
+      "opacity": "0.595418",
+      "t": 242,
+      "transform": "matrix(0.991908, 0, 0, 0.991908, 0, 0)"
+    },
+    {
+      "opacity": "0.868441",
+      "t": 282,
+      "transform": "matrix(0.997369, 0, 0, 0.997369, 0, 0)"
+    },
+    {
+      "opacity": "0.940032",
+      "t": 301,
+      "transform": "matrix(0.998801, 0, 0, 0.998801, 0, 0)"
+    },
+    {
+      "opacity": "0.974238",
+      "t": 305,
+      "transform": "matrix(0.999485, 0, 0, 0.999485, 0, 0)"
+    },
+    {
+      "opacity": "0.994354",
+      "t": 321,
+      "transform": "matrix(0.999887, 0, 0, 0.999887, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 341,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 354,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 372,
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    },
+    {
+      "opacity": "1",
+      "t": 398,
+      "transform": "none"
+    },
+    {
+      "opacity": "1",
+      "t": 405,
+      "transform": "none"
+    },
+    {
+      "opacity": "1",
+      "t": 423,
+      "transform": "none"
+    },
+    {
+      "opacity": "1",
+      "t": 440,
+      "transform": "none"
+    },
+    {
+      "opacity": "1",
+      "t": 456,
+      "transform": "none"
+    },
+    {
+      "opacity": "1",
+      "t": 473,
+      "transform": "none"
+    },
+    {
+      "opacity": "1",
+      "t": 490,
+      "transform": "none"
+    },
+    {
+      "opacity": "1",
+      "t": 506,
+      "transform": "none"
+    },
+    {
+      "opacity": "1",
+      "t": 523,
+      "transform": "none"
+    },
+    {
+      "opacity": "1",
+      "t": 540,
+      "transform": "none"
+    },
+    {
+      "opacity": "1",
+      "t": 556,
+      "transform": "none"
+    },
+    {
+      "opacity": "1",
+      "t": 573,
+      "transform": "none"
+    },
+    {
+      "opacity": "1",
+      "t": 590,
+      "transform": "none"
+    },
+    {
+      "opacity": "1",
+      "t": 606,
+      "transform": "none"
+    },
+    {
+      "opacity": "1",
+      "t": 623,
+      "transform": "none"
+    },
+    {
+      "opacity": null,
+      "t": 641,
+      "transform": null
+    }
+  ],
+  "notes": [
+    "Initial generic h1 font query captured hidden Storybook chrome, not product typography; use typography instead.",
+    "Raw unscoped tbody counts include hidden Storybook DOM; use visible story counts, not raw rows, for collection assertions.",
+    "Popover-after recording overlapped a later HMR at its end; interpolated frames plus repeated MotionContract passes establish the correction."
+  ]
+}
