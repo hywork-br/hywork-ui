@@ -28,7 +28,8 @@
       "spec": "specs/components/button.md",
       "storyExport": "ButtonContract",
       "migrationWave": 1,
-      "storyFile": "stories/Contracts.stories.tsx"
+      "storyFile": "stories/Contracts.stories.tsx",
+      "storyContract": "play"
     },
     {
       "slug": "field",
@@ -61,7 +62,8 @@
       "spec": "specs/components/field.md",
       "storyExport": "FieldContract",
       "migrationWave": 1,
-      "storyFile": "stories/Contracts.stories.tsx"
+      "storyFile": "stories/Contracts.stories.tsx",
+      "storyContract": "play"
     },
     {
       "slug": "textarea",
@@ -90,7 +92,8 @@
       "spec": "specs/components/textarea.md",
       "storyExport": "TextareaContract",
       "migrationWave": 1,
-      "storyFile": "stories/Contracts.stories.tsx"
+      "storyFile": "stories/Contracts.stories.tsx",
+      "storyContract": "smoke"
     },
     {
       "slug": "badge",
@@ -119,7 +122,8 @@
       "spec": "specs/components/badge.md",
       "storyExport": "BadgeContract",
       "migrationWave": 2,
-      "storyFile": "stories/Contracts.stories.tsx"
+      "storyFile": "stories/Contracts.stories.tsx",
+      "storyContract": "smoke"
     },
     {
       "slug": "avatar",
@@ -148,7 +152,8 @@
       "spec": "specs/components/avatar.md",
       "storyExport": "AvatarContract",
       "migrationWave": 2,
-      "storyFile": "stories/Contracts.stories.tsx"
+      "storyFile": "stories/Contracts.stories.tsx",
+      "storyContract": "smoke"
     },
     {
       "slug": "skeleton",
@@ -177,7 +182,8 @@
       "spec": "specs/components/skeleton.md",
       "storyExport": "SkeletonContract",
       "migrationWave": 2,
-      "storyFile": "stories/Contracts.stories.tsx"
+      "storyFile": "stories/Contracts.stories.tsx",
+      "storyContract": "smoke"
     },
     {
       "slug": "card",
@@ -211,7 +217,8 @@
       "spec": "specs/components/card.md",
       "storyExport": "CardContract",
       "migrationWave": 2,
-      "storyFile": "stories/Contracts.stories.tsx"
+      "storyFile": "stories/Contracts.stories.tsx",
+      "storyContract": "smoke"
     },
     {
       "slug": "dialog",
@@ -252,7 +259,8 @@
       "spec": "specs/components/dialog.md",
       "storyExport": "DialogContract",
       "migrationWave": 3,
-      "storyFile": "stories/Contracts.stories.tsx"
+      "storyFile": "stories/Contracts.stories.tsx",
+      "storyContract": "smoke"
     },
     {
       "slug": "menus",
@@ -291,7 +299,8 @@
       "spec": "specs/components/menus.md",
       "storyExport": "MenusContract",
       "migrationWave": 3,
-      "storyFile": "stories/Contracts.stories.tsx"
+      "storyFile": "stories/Contracts.stories.tsx",
+      "storyContract": "smoke"
     },
     {
       "slug": "tooltip",
@@ -323,7 +332,8 @@
       "spec": "specs/components/tooltip.md",
       "storyExport": "TooltipContract",
       "migrationWave": 3,
-      "storyFile": "stories/Contracts.stories.tsx"
+      "storyFile": "stories/Contracts.stories.tsx",
+      "storyContract": "smoke"
     },
     {
       "slug": "select",
@@ -352,7 +362,8 @@
       "spec": "specs/components/select.md",
       "storyExport": "SelectContract",
       "migrationWave": 4,
-      "storyFile": "stories/Contracts.stories.tsx"
+      "storyFile": "stories/Contracts.stories.tsx",
+      "storyContract": "smoke"
     },
     {
       "slug": "tabs",
@@ -384,7 +395,8 @@
       "spec": "specs/components/tabs.md",
       "storyExport": "TabsContract",
       "migrationWave": 4,
-      "storyFile": "stories/Contracts.stories.tsx"
+      "storyFile": "stories/Contracts.stories.tsx",
+      "storyContract": "smoke"
     },
     {
       "slug": "choice",
@@ -412,7 +424,8 @@
       "spec": "specs/components/choice.md",
       "storyFile": "stories/SelectionControls.stories.tsx",
       "storyExport": "Interactive",
-      "migrationWave": null
+      "migrationWave": null,
+      "storyContract": "play"
     },
     {
       "slug": "searchable-selection",
@@ -439,7 +452,8 @@
       "spec": "specs/components/searchable-selection.md",
       "storyFile": "stories/SelectionControls.stories.tsx",
       "storyExport": "Interactive",
-      "migrationWave": null
+      "migrationWave": null,
+      "storyContract": "play"
     },
     {
       "slug": "date",
@@ -466,7 +480,8 @@
       "spec": "specs/components/date.md",
       "storyFile": "stories/SelectionControls.stories.tsx",
       "storyExport": "Interactive",
-      "migrationWave": null
+      "migrationWave": null,
+      "storyContract": "play"
     },
     {
       "slug": "upload",
@@ -492,7 +507,8 @@
       "spec": "specs/components/upload.md",
       "storyFile": "stories/SelectionControls.stories.tsx",
       "storyExport": "Interactive",
-      "migrationWave": null
+      "migrationWave": null,
+      "storyContract": "play"
     },
     {
       "slug": "table-cells",
@@ -522,7 +538,8 @@
       "spec": "specs/components/table-cells.md",
       "storyFile": "stories/QualityContracts.stories.tsx",
       "storyExport": "CellsContract",
-      "migrationWave": null
+      "migrationWave": null,
+      "storyContract": "play"
     },
     {
       "slug": "collection-controls",
@@ -551,7 +568,8 @@
       "spec": "specs/components/collection-controls.md",
       "storyFile": "stories/Collections.stories.tsx",
       "storyExport": "Contents",
-      "migrationWave": null
+      "migrationWave": null,
+      "storyContract": "play"
     },
     {
       "slug": "feedback",
@@ -579,7 +597,8 @@
       "spec": "specs/components/feedback.md",
       "storyFile": "stories/Feedback.stories.tsx",
       "storyExport": "Recovery",
-      "migrationWave": null
+      "migrationWave": null,
+      "storyContract": "play"
     }
   ],
   "utilities": [
@@ -602,7 +621,8 @@
         "frontend": "Hywork Frontend"
       },
       "consumers": [],
-      "structuralCase": "Validação determinística de cores opacas e pares de contraste, separada de componentes React."
+      "structuralCase": "Validação determinística de cores opacas e pares de contraste, separada de componentes React.",
+      "storyContract": "play"
     }
   ]
 }

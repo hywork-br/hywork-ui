@@ -14,7 +14,10 @@ Exports: `Checkbox`, `Radio`, `Switch`. Conteúdo e ações são nomeados pelo c
 
 ## API e defaults
 
-checked, onChange, disabled, invalid; Checkbox também indeterminate; Radio usa name e value. A fonte completa é `src/index.ts` e as declarações TypeScript do pacote; esta spec não amplia a API.
+`checked`, `onChange`, `disabled` e atributos nativos como `aria-invalid`;
+Checkbox também recebe `indeterminate` (default false); Radio usa `name` e
+`value`. Não há prop `invalid`. A fonte completa é `src/index.ts` e as
+declarações TypeScript do pacote; esta spec não amplia a API.
 
 ## Variantes e estados
 

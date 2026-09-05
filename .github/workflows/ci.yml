@@ -10,12 +10,14 @@ jobs:
     runs-on: ubuntu-24.04
     container:
       image: mcr.microsoft.com/playwright:v1.63.0-noble
-      options: --ipc=host
+      options: --ipc=host --user pwuser
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
           node-version: "22"
+      - name: Verify browser process and mounted home identity
+        run: node scripts/check-browser-identity.mjs
       - run: npm ci
       - run: npm run build
       - name: Storybook play contracts — Chromium and Firefox

@@ -1,4 +1,11 @@
-import { expect, type Page } from "@playwright/test";
+import { expect, type Page, type TestInfo } from "@playwright/test";
+
+export async function captureVisualCandidate(page: Page, testInfo: TestInfo, name: string) {
+  await page.evaluate(async () => { await document.fonts.ready; });
+  const path = testInfo.outputPath(`${name}-candidate.png`);
+  await page.screenshot({ path, fullPage: true, animations: "allow", caret: "hide" });
+  await testInfo.attach(`${name} full-page candidate`, { path, contentType: "image/png" });
+}
 
 export async function openStory(page: Page, id: string, surface = "admin") {
   await page.goto(`/iframe.html?id=${id}&viewMode=story&globals=surface:${surface}`);

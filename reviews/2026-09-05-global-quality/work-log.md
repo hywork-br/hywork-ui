@@ -102,3 +102,55 @@ October still requires real consumers, domain-specific permissions/data/network,
 pilot evidence, adoption audit and explicit promotion. This worker did not push,
 open a PR, deploy, publish, tag or merge; final review and branch handoff belong to
 the controller and human reviewer.
+
+## Review fix round 1 — base 7a5a23c
+
+Linux run 33998414032 (controller-collected evidence) passed the quality job and
+11 Chromium native cases; Firefox rejected root with a pwuser-owned home. The
+pinned container now uses `--user pwuser`, as documented by
+[Playwright](https://playwright.dev/docs/docker), and a read-only preflight checks
+non-root uid, matching home ownership and writable home/workspace. No HOME
+override, chown, permission broadening or disabled browser coverage was introduced.
+Only the next real Linux run can verify that environment correction.
+
+Review found utility specs and actual play loss could escape the catalog gate.
+An official Storybook CSF AST helper now validates explicit smoke/play contracts,
+including direct or meta-inherited inline play and fail-closed dynamic syntax.
+The ten render-only core families remain honest smoke contracts; Button/Field
+and all seven new draft families plus theme utility retain required play.
+Draft cannot bypass the obligation by changing its catalog label to smoke.
+Utility docs require content/title and documented exports. Choice docs now state
+native aria-invalid, not a nonexistent invalid prop. No source UI code changed.
+
+Executed evidence:
+
+- `CONTRACT_BASELINE_REF=7a5a23c node --test scripts/contracts-mutations.test.mjs`:
+  RED exit 1, five genuine old-gate escapes. Copies run the actual CLI and assert
+  execution, avoiding Node's silent nested-runner skip via NODE_TEST_CONTEXT.
+- `node --test scripts/contracts-mutations.test.mjs scripts/browser-identity.test.mjs`:
+  GREEN exit 0, 8 passed, loss/restoration and inheritance included.
+- `npm run check`: exit 0, 30 Node + 116 Vitest tests; types, tokens, manifest passed.
+- Missing-baseline comparator regression first failed (candidate count 0 versus 1).
+  After explicit capture, `npm run test:comparator` exited 0: mutation still
+  failed with 3592 pixels, restored fixture passed, missing expected still failed
+  and stayed absent, while a real 1440 × 1416 candidate survived a 1000px viewport.
+- Local identity guard exited 0 (uid/home owner 501); not a Linux success claim.
+
+Normal visual tests now capture and attach scene-named full-page candidate PNGs
+before comparison, with fonts ready, animations allowed and caret hidden. The
+matcher never writes expectations. Controller must inspect these exact candidates,
+not generic viewport test-failed PNGs, before committing Linux expectations.
+Package/lockfile and 14 historical baselines are unchanged. Five dev-only moderate
+audit findings, npm config/color warnings and Storybook chunk warning remain as
+documented above; no indiscriminate package changes were made.
+
+Final rebuild passed with unchanged output sizes. Repeated Storybook runner passed
+64 tests/24 engine-suite combinations (36.915s); native browser suite passed all
+22 cases (25.6s), regenerating success screenshots and in-flight observations.
+Self-review added a getter mutation (RED exit 1, then restricted callable methods
+to kind=method); inherited arrow/function/method and meta-spread rejection were
+also exercised. Duplicate-import scan found zero across nine changed/new sources.
+Linux startup and reviewed scene baselines still require the controller's next CI.
+Final `npm run check` after the getter fix passed 30 Node + 116 Vitest tests,
+both TypeScript configs and all build/token/manifest gates. No debug statements
+were found; `git diff --check` passed. Controller checklist is excluded from staging.

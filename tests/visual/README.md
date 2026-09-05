@@ -40,7 +40,12 @@ Snapshot ausente ou diferente retorna não zero; o CI normal nunca usa update-sn
 além de screenshots anexadas dos casos de foco que passaram.
 
 Para a primeira captura, execute o gate normal e recolha as imagens reais produzidas
-pela falha de baseline ausente. Revise composição, foco, overflow e fonte; somente
+pela falha de baseline ausente: `quality-admin-candidate.png`,
+`collection-admin-candidate.png` e `quality-mobile-candidate.png`, anexadas ao relatório.
+Essas capturas explícitas são full-page, com fontes prontas, caret oculto e animações
+permitidas, antes do matcher. Não use `test-failed-1.png`: é apenas o viewport de falha.
+O matcher continua falhando quando a expectativa não existe e nunca escreve baselines.
+Revise composição, foco, overflow e fonte; somente
 depois copie os actuals revisados para os nomes esperados e faça um commit explícito.
 Para alterações posteriores, revise expected/actual/diff antes de substituir qualquer
 PNG. Rerode o gate no mesmo ambiente e registre o resultado. Não aceite snapshots
@@ -51,3 +56,6 @@ Chromium e Firefox reais; `npm run test:comparator` produz uma fixture descartá
 introduz padding de 40px, exige exit 1 e restaura o estado original com exit 0.
 Essa prova não aprova nem altera baselines de produto. A captura Linux permanece
 pendente até existir execução e revisão documentadas; configurar CI não é essa prova.
+Ela também exige que baseline ausente retorne 1, preserve candidato maior que o
+viewport e não crie o PNG esperado. O container roda com `--user pwuser`; o preflight
+confere uid não root, home pertencente ao mesmo uid e diretórios de trabalho graváveis.
