@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Info, MoreHorizontal } from "lucide-react";
-import { expect, fn, userEvent, within } from "storybook/test";
+import { expect, fn, userEvent, waitFor, within } from "storybook/test";
 
 import {
   AlertDialog,
@@ -32,6 +32,7 @@ import {
   Field,
   FieldError,
   FieldHint,
+  FilterBar,
   Input,
   Label,
   Popover,
@@ -125,9 +126,33 @@ export const FieldContract: Story = {
           <Label htmlFor="contract-locked">Código da unidade</Label>
           <Input disabled id="contract-locked" value="MATRIZ-SP" readOnly />
         </Field>
+        <FilterBar search={
+          <Field>
+            <Label htmlFor="contract-search">Busca (estado inválido)</Label>
+            <Input id="contract-search" invalid aria-describedby="contract-search-error" />
+            <FieldError id="contract-search-error">Revise os termos da busca.</FieldError>
+          </Field>
+        } />
       </div>
     </ContractFrame>
   ),
+  // CSS regression: focus and contextual search must not erase the error cue.
+  // Run in the actual browser; jsdom does not resolve CSS custom properties.
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    for (const [label, message] of [
+      ["Responsável", "Escolha quem aprova a publicação."],
+      ["Busca (estado inválido)", "Revise os termos da busca."],
+    ]) {
+      const input = canvas.getByRole("textbox", { name: label });
+      const error = canvas.getByText(message);
+      await userEvent.click(input);
+      await expect(input).toHaveFocus();
+      await waitFor(async () => {
+        await expect(getComputedStyle(input).borderBottomColor).toBe(getComputedStyle(error).color);
+      });
+    }
+  },
 };
 
 export const TextareaContract: Story = {

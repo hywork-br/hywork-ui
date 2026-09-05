@@ -27,7 +27,7 @@
       "files": [
         "tokens/semantico.css"
       ],
-      "tokenCount": 71
+      "tokenCount": 73
     },
     {
       "name": "component",
@@ -53,7 +53,7 @@
       "tokenCount": 0
     }
   ],
-  "tokenCount": 144,
+  "tokenCount": 146,
   "surfaces": [
     "admin",
     "portal"

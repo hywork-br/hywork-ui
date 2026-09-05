@@ -57,7 +57,7 @@
   /* Superfícies — sempre em par com a tinta que vai por cima */
   --hw-surface: var(--hw-white);
   --hw-surface-fg: var(--hw-navy);
-  --hw-surface-subtle: var(--hw-blue-tint);
+  --hw-surface-subtle: var(--hw-gray-tint);
   --hw-surface-subtle-fg: var(--hw-navy);
   --hw-surface-inverse: var(--hw-navy);
   --hw-surface-inverse-fg: var(--hw-white);
@@ -65,30 +65,34 @@
   --hw-surface-accent-fg: var(--hw-navy);
 
   /* Papéis de componente — superfícies com intenção própria. */
-  --hw-interactive-hover: var(--hw-blue-tint);
+  --hw-interactive-hover: var(--hw-gray-tint);
   --hw-interactive-hover-fg: var(--hw-navy);
   --hw-floating: var(--hw-white);
   --hw-floating-fg: var(--hw-navy);
   --hw-card: var(--hw-white);
   --hw-card-fg: var(--hw-navy);
-  --hw-input-border: var(--hw-blue-steel);
+  /* Quiet fields: a neutral surface and a single identifying baseline, not
+     a blue perimeter. Both surface/ink and baseline contrast are gated. */
+  --hw-input-surface: var(--hw-gray-tint);
+  --hw-input-surface-fg: var(--hw-navy);
+  --hw-input-border: var(--hw-gray);
 
   /* Texto */
   --hw-text: var(--hw-navy);
-  --hw-text-secondary: var(--hw-blue-deep);
-  /* Apoio: usa o derivado escurecido — o blue-steel do guideline reprova
-     contraste como texto (3,31:1). Ele segue válido para borda e dataviz. */
-  --hw-text-muted: var(--hw-blue-steel-text);
+  --hw-text-secondary: var(--hw-navy);
+  /* Neutral supporting ink keeps brand color for action and status. The
+     darkened gray passes small-text contrast on white and subtle surfaces. */
+  --hw-text-muted: var(--hw-gray-text);
   --hw-text-inverse: var(--hw-white);
   --hw-text-inverse-secondary: var(--hw-blue-lavender);
 
   /* Bordas e divisores */
   --hw-border: var(--hw-hairline-light);
-  --hw-border-strong: var(--hw-blue-steel);
+  --hw-border-strong: var(--hw-gray);
 
   /**
    * Foco — 2px com offset. O anel precisa passar de 3:1 contra o fundo
-   * adjacente (WCAG 2.4.11); o anel que vem por padrão na maioria dos scaffolds
+   * adjacente (WCAG 1.4.11); o anel que vem por padrão na maioria dos scaffolds
    * fica abaixo disso, e é por isso que este token existe em vez de herdarmos.
    */
   --hw-focus: var(--hw-orange);

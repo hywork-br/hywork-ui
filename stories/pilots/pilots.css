@@ -103,10 +103,13 @@
 }
 .hw-reference-editor__intro h2 {
   font-size: var(--hw-text-xl);
+  font-weight: 600;
   margin: 0;
 }
 .hw-reference-editor__intro p {
   color: var(--hw-text-muted);
+  font-size: var(--hw-body-size);
+  line-height: var(--hw-body-leading);
   margin: var(--hw-space-2) 0 0;
 }
 .hw-reference-editor__grid {

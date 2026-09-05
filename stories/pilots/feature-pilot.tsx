@@ -192,7 +192,7 @@ export function FeaturePilot({
       aria-label={`Editar ${entry.name}`}
       onClick={() => openEditor(entry)}
       size="sm"
-      variant="outline"
+      variant="quiet"
     >
       Editar
     </Button>
@@ -377,7 +377,7 @@ export function FeaturePilot({
                 )}
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline">
+                    <Button variant="quiet">
                       <SlidersHorizontal aria-hidden="true" />
                       Mais filtros
                       {["group", "owner", "period", "quantity"].some(

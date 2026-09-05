@@ -20,6 +20,11 @@ Root, Trigger, Value, Icon, portal, Content, Viewport, Item e indicador.
 
 Placeholder, valor selecionado, aberto, focus, disabled e opção disabled.
 
+Em formulário, compartilha o preenchimento neutro e limite inferior do Input.
+Dentro de FilterBar, o trigger é contextual: texto e chevron sem caixa em
+repouso; hover/aberto usam superfície neutra. O portal não herda esse tratamento
+de toolbar. O chevron mantém seu tamanho mesmo quando o valor precisa truncar.
+
 ## Tokens consumidos
 
 Input surface/border, texto, placeholder, hover, focus, floating surface, shadow e z-index.

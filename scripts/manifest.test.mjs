@@ -17,7 +17,7 @@ test("manifest exposes generated token layers and public exports", async () => {
     manifest.tokenLayers.map((layer) => layer.name),
     ["primitive", "semantic", "component", "surface", "theme"],
   );
-  assert.equal(manifest.tokenCount, 144);
+  assert.equal(manifest.tokenCount, 146);
   assert.deepEqual(manifest.exports, Object.keys(packageJson.exports).sort());
   assert.deepEqual(manifest.generatedFrom, [
     "governance/component-contracts.json",

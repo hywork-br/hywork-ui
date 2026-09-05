@@ -84,6 +84,14 @@ larguras relevantes antes de afirmar qualidade. Não substitua gates de release 
 
 ## Para o mantenedor humano
 
+### Quiet controls — approved refinement, 2026-09-05
+
+Do not restore blue outlines on every input or nest the filter toolbar in a
+bordered card. Filtering controls and form fields have distinct treatments in
+the shared CSS. Reduced visual weight must preserve error cues during focus,
+named controls, readable contrast and comfortable hit targets. The executable
+Field contract checks invalid fields both in forms and contextual search.
+
 Token novo entra por PR, com o papel que ele cumpre escrito. Se a cor não existe
 no guideline da marca, ela não entra como primitivo — vira derivado, com
 justificativa no comentário.

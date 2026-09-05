@@ -39,6 +39,8 @@ module.exports = {
         "floating-fg": "var(--hw-floating-fg)",
         "card": "var(--hw-card)",
         "card-fg": "var(--hw-card-fg)",
+        "input-surface": "var(--hw-input-surface)",
+        "input-surface-fg": "var(--hw-input-surface-fg)",
         "input-border": "var(--hw-input-border)",
         "text": "var(--hw-text)",
         "text-secondary": "var(--hw-text-secondary)",

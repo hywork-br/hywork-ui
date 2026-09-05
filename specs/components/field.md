@@ -20,6 +20,13 @@ Input herda a API nativa e adiciona `invalid=false`; os demais slots preservam s
 
 Default, placeholder, hover, focus, disabled, read-only, invalid e preenchido.
 
+O campo usa preenchimento neutro e uma linha inferior identificável (3:1 sobre
+o próprio preenchimento), sem perímetro azul em repouso. Foco mantém anel
+laranja de 2px com offset; invalid conserva a linha de erro inclusive no foco
+e dentro da busca contextual. A regra de busca só remove o limite de repouso,
+nunca erro ou foco. Label e mensagem continuam obrigatórios quando aplicáveis.
+Read-only usa linha tracejada; disabled preserva semântica nativa e reduz opacidade.
+
 ## Tokens consumidos
 
 Papéis de superfície, texto, placeholder, input border, danger, foco, altura, raio e espaçamento.
@@ -27,6 +34,9 @@ Papéis de superfície, texto, placeholder, input border, danger, foco, altura, 
 ## Admin, portal e mobile
 
 Admin é mais denso; portal e mobile mantêm texto de 16px e alvo de toque confortável.
+
+Até 640px, admin adota controles de 44px e entrada textual de 16px. O desktop
+mantém 36px. A aparência discreta não reduz o alvo interativo.
 
 ## Teclado, foco e acessibilidade
 

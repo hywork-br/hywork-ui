@@ -1,4 +1,4 @@
-import { Filter, X } from "lucide-react";
+import { X } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "../components/button";
@@ -24,7 +24,6 @@ export const FilterBar = React.forwardRef<HTMLDivElement, FilterBarProps>(
         <div className="hw-filter-bar__search">{search}</div>
         {filters ? (
           <div aria-label="Filtros" className="hw-filter-bar__filters">
-            <Filter aria-hidden="true" />
             {filters}
           </div>
         ) : null}

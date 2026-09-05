@@ -29,6 +29,12 @@ A gramática é compartilhada; a taxonomia não:
 O `FilterBar` não conhece esses campos. Ele organiza controles passados pela
 feature e oferece chips/limpeza com comportamento previsível.
 
+O acabamento usa uma barra aberta, não um formulário dentro de um cartão.
+Busca tem superfície suave; filtros rápidos usam texto/chevron e opções em
+popover. Foco, invalid e semântica permanecem explícitos. Remover um chip tem
+alvo próprio de 32px no desktop e 44px no admin estreito ou de toque. “Mais
+filtros” e ações repetidas da coleção usam Button quiet nos pilotos.
+
 No mobile estreito, os filtros rápidos compartilham duas colunas e a ação de filtros avançados
 ocupa uma linha própria. A comparação de referência mantém o mesmo conteúdo e muda somente
 essa disposição. Em dispositivo de ponteiro grosseiro, os tokens admin aumentam os controles
