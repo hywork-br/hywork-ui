@@ -18,3 +18,5 @@ export * from "./components/choice";
 export * from "./components/combobox";
 export * from "./components/date-field";
 export * from "./components/upload";
+export * from "./patterns/collection-controls";
+export * from "./components/table-cells";
