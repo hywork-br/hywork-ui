@@ -1,4 +1,6 @@
-import { useState, type Key } from "react";
+import { useId, useRef, useState, type Key, type ReactNode } from "react";
+import { Pencil, SlidersHorizontal } from "lucide-react";
+import { PilotMotionPresence, PilotSaveNotice } from "../pilots/motion";
 import {
   Button,
   DataTable,
@@ -142,7 +144,15 @@ function readViews(): View[] {
     return [];
   }
 }
-export function CollectionDemo() {
+export interface CollectionEditorProps {
+  content: { id: string; title: string };
+  onSave: (title: string) => void;
+  onClose: () => void;
+}
+
+export function CollectionDemo({ renderEditor }: {
+  renderEditor?: (props: CollectionEditorProps) => ReactNode;
+} = {}) {
   const [rows, setRows] = useState(fixture);
   const [criteria, setCriteria] = useState(empty);
   const [page, setPage] = useState(1);
@@ -154,6 +164,14 @@ export function CollectionDemo() {
   const [views, setViews] = useState(readViews);
   const [viewId, setViewId] = useState("");
   const [message, setMessage] = useState("");
+  const [messageSaved, setMessageSaved] = useState(false);
+  const [preferences, setPreferences] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const editing = rows.find((row) => row.id === editingId);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const preferencesRef = useRef<HTMLButtonElement>(null);
+  const preferencesId = useId();
+  const returnToSearch = () => searchRef.current?.focus();
   const update = (next: Partial<Criteria>) => {
     setCriteria({ ...criteria, ...next });
     setPage(1);
@@ -185,6 +203,7 @@ export function CollectionDemo() {
   );
   const visible = filtered.slice((current - 1) * pageSize, current * pageSize);
   const pageSelection = visible.filter((row) => selected.includes(row.id));
+  const advancedCount = Number(criteria.authors.length > 0) + Number(!!(criteria.from || criteria.to));
   const persist = (next: View[]) => {
     setViews(next);
     try {
@@ -193,7 +212,9 @@ export function CollectionDemo() {
         JSON.stringify({ version: 1, views: next })
       );
       setMessage("Visões salvas nesta sessão do navegador.");
+      setMessageSaved(true);
     } catch {
+      setMessageSaved(false);
       setMessage(
         "Armazenamento indisponível. Visões mantidas apenas enquanto esta página estiver aberta."
       );
@@ -202,17 +223,13 @@ export function CollectionDemo() {
   return (
     <section className="hw-collection-demo" aria-label="Coleção de conteúdos">
       <header>
-        <p>COMUNICAÇÃO INTERNA</p>
         <h1>Conteúdos</h1>
         <p>Histórias, novidades e conhecimento para conectar sua equipe.</p>
-        <small>
-          Fixture interativa • dados demonstrativos locais. Visões válidas
-          apenas nesta sessão.
-        </small>
       </header>
       <div className="hw-filter-bar hw-collection-controls">
         <input
           className="hw-input"
+          ref={searchRef}
           type="search"
           aria-label="Buscar conteúdos"
           placeholder="Buscar conteúdos"
@@ -231,7 +248,7 @@ export function CollectionDemo() {
           </select>
         </label>
         <details className="hw-collection-disclosure">
-          <summary>Mais filtros</summary>
+          <summary>Mais filtros{advancedCount > 0 && <span> ({advancedCount})</span>}</summary>
           <div className="hw-collection-advanced">
             <MultiSelect
               aria-label="Autores"
@@ -249,8 +266,30 @@ export function CollectionDemo() {
             </Button>
           </div>
         </details>
+        <Button
+          className="hw-collection-preferences-trigger"
+          variant="quiet"
+          ref={preferencesRef}
+          aria-expanded={preferences}
+          aria-controls={preferencesId}
+          onClick={() => setPreferences(!preferences)}
+        >
+          <SlidersHorizontal aria-hidden="true" />
+          Preferências de visualização
+        </Button>
       </div>
-      <div className="hw-collection-controls">
+      {preferences && <section
+        id={preferencesId}
+        aria-label="Preferências de visualização"
+        className="hw-collection-controls hw-collection-preferences"
+        onKeyDown={(event) => {
+          if (event.key === "Escape" && !event.defaultPrevented) {
+            event.preventDefault();
+            setPreferences(false);
+            preferencesRef.current?.focus();
+          }
+        }}
+      >
         <ColumnControl
           columns={columnOptions}
           value={columns}
@@ -299,18 +338,22 @@ export function CollectionDemo() {
             }}
           />
         </details>
-      </div>
-      <p role="status">
+      </section>}
+      <div className="hw-collection-results">
+      <p role="status" className="hw-collection-summary">
         {rows.length} no total · {filtered.length}{" "}
         {filtered.length === 1 ? "filtrado" : "filtrados"} · {visible.length}{" "}
         nesta página · {selected.length}{" "}
         {selected.length === 1 ? "selecionado" : "selecionados"} (
         {pageSelection.length} nesta página)
       </p>
-      <div className="hw-collection-controls">
+      <PilotMotionPresence visible={selected.length > 0} label="Ações da seleção" className="hw-collection-bulk-presence">
+      <div className="hw-collection-controls hw-collection-bulk">
+        <span>{pageSelection.length} nesta página</span>
         <Button
           variant="quiet"
-          disabled={!pageSelection.length}
+          disabled={!pageSelection.length || pageSelection.some((row) => row.id === editingId)}
+          title={pageSelection.some((row) => row.id === editingId) ? "Feche a edição antes de arquivar este conteúdo" : undefined}
           onClick={() => {
             const ids = new Set(pageSelection.map((row) => row.id));
             setRows(rows.filter((row) => !ids.has(row.id)));
@@ -324,15 +367,17 @@ export function CollectionDemo() {
             setMessage(
               `${ids.size} conteúdo(s) desta página arquivado(s) na fixture.`
             );
+            setMessageSaved(true);
+            returnToSearch();
           }}
         >
           Arquivar selecionados desta página ({pageSelection.length})
         </Button>
-        {selected.length > 0 && (
-          <Button variant="quiet" onClick={() => setSelected([])}>
+          <Button variant="quiet" onClick={() => { setSelected([]); returnToSearch(); }}>
             Limpar seleção de todas as páginas
           </Button>
-        )}
+      </div>
+      </PilotMotionPresence>
       </div>
       <DataTable
         ariaLabel="Conteúdos"
@@ -390,8 +435,18 @@ export function CollectionDemo() {
             align: "end" as const,
             render: (row: Content) => <NumberCell value={row.views} />,
           },
+          ...(renderEditor ? [{
+            key: "actions",
+            header: "Ações",
+            render: (row: Content) => <Button variant="quiet" aria-label={`Editar ${row.title}`}
+              disabled={!!editingId && editingId !== row.id}
+              title={editingId && editingId !== row.id ? "Feche a edição atual para editar outro conteúdo" : undefined}
+              onClick={() => setEditingId(row.id)}>
+              <Pencil aria-hidden="true" />Editar
+            </Button>,
+          }] : []),
         ].filter(
-          (column) => column.key === "title" || columns.includes(column.key)
+          (column) => column.key === "title" || column.key === "actions" || columns.includes(column.key)
         )}
       />
       {!visible.length && <p>Nenhum conteúdo corresponde aos filtros.</p>}
@@ -406,7 +461,16 @@ export function CollectionDemo() {
           setViewId("");
         }}
       />
-      <p role="status">{message}</p>
+      <PilotSaveNotice notice={message} saved={messageSaved} />
+      {renderEditor && editing && renderEditor({
+        content: editing,
+        onSave: (title) => setRows((previous) => previous.map((row) => row.id === editing.id ? { ...row, title } : row)),
+        onClose: () => { setEditingId(null); returnToSearch(); },
+      })}
+      <small className="hw-collection-provenance">
+        Demonstração local de Conteúdos. Dados ilustrativos; arquivamento e edição afetam somente esta página.
+        {" "}Visões válidas apenas nesta sessão do navegador.
+      </small>
     </section>
   );
 }

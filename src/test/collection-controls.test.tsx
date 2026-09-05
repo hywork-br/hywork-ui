@@ -35,6 +35,7 @@ describe("operational collections", () => {
   it("restores columns, density and actual sort order", async () => {
     sessionStorage.clear();
     render(<CollectionDemo />);
+    await userEvent.click(screen.getByRole("button", { name: "Preferências de visualização" }));
     await userEvent.selectOptions(
       screen.getByLabelText("Densidade"),
       "compact"
@@ -169,6 +170,7 @@ describe("operational collections", () => {
       "Publicado"
     );
     expect(screen.getByText("1–1 de 1")).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Preferências de visualização" }));
     await userEvent.click(screen.getByText("Gerenciar visões"));
     await userEvent.type(
       screen.getByLabelText("Nome da visão"),
@@ -247,11 +249,13 @@ describe("operational collections", () => {
     );
     const { unmount } = render(<CollectionDemo />);
     await userEvent.type(screen.getByRole("searchbox"), "Cultura");
+    await userEvent.click(screen.getByRole("button", { name: "Preferências de visualização" }));
     await userEvent.click(screen.getByText("Gerenciar visões"));
     await userEvent.type(screen.getByLabelText("Nome da visão"), "Editorial");
     await userEvent.click(screen.getByRole("button", { name: "Salvar visão" }));
     unmount();
     render(<CollectionDemo />);
+    await userEvent.click(screen.getByRole("button", { name: "Preferências de visualização" }));
     await userEvent.click(screen.getByText("Gerenciar visões"));
     await userEvent.selectOptions(
       screen.getByLabelText("Visões salvas"),

@@ -19,6 +19,7 @@ export const Contents: Story = {
     await expect(canvas.getByText(/5 selecionados/)).toBeVisible();
     await userEvent.type(canvas.getByRole("searchbox"), "Cultura");
     await expect(canvas.getByText("1–1 de 1")).toBeVisible();
+    await userEvent.click(canvas.getByRole("button", { name: "Preferências de visualização" }));
     await userEvent.click(canvas.getByText("Gerenciar visões"));
     await userEvent.type(canvas.getByLabelText("Nome da visão"), "Cultura");
     await userEvent.click(canvas.getByRole("button", { name: "Salvar visão" }));

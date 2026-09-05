@@ -15,6 +15,13 @@
 .hw-collection-demo > p {
   margin: 0;
 }
+.hw-collection-demo header p {
+  color: var(--hw-text-muted);
+  max-width: 65ch;
+}
+.hw-collection-demo header {
+  margin-bottom: var(--hw-space-2);
+}
 .hw-collection-controls {
   display: flex;
   align-items: center;
@@ -23,9 +30,53 @@
   min-width: 0;
 }
 .hw-collection-controls > input {
-  flex: 1 1 14rem;
+  flex: 0 1 22rem;
   width: auto;
   min-width: 0;
+}
+.hw-collection-preferences-trigger {
+  margin-inline-start: auto;
+}
+.hw-collection-preferences {
+  align-items: flex-start;
+  border-block: 1px solid var(--hw-border);
+  padding-block: var(--hw-space-3);
+}
+.hw-collection-summary,
+.hw-collection-provenance {
+  color: var(--hw-text-muted);
+  font-size: var(--hw-label-size);
+}
+.hw-collection-summary { margin: 0; }
+.hw-collection-bulk-presence {
+  /* Only this bounded area changes height. Padding keeps focus rings unclipped. */
+  overflow: clip;
+  margin-inline: calc(-1 * var(--hw-space-1));
+  padding-inline: var(--hw-space-1);
+}
+.hw-collection-bulk {
+  background: var(--hw-neutral-soft);
+  color: var(--hw-neutral-soft-fg);
+  padding: var(--hw-space-2);
+  border-radius: var(--hw-control-radius);
+  margin-block: var(--hw-space-3) var(--hw-space-1);
+}
+.hw-collection-bulk > span {
+  font-weight: 600;
+  padding-inline: var(--hw-space-2);
+}
+.hw-collection-demo .hw-content-cell .hw-button {
+  padding-inline: 0;
+  font-weight: 400;
+  color: var(--hw-text-muted);
+}
+.hw-collection-demo .hw-reference-notice {
+  min-height: 1.5em;
+  margin: 0;
+}
+.hw-collection-provenance {
+  max-width: 75ch;
+  margin-top: var(--hw-space-3);
 }
 .hw-collection-controls label {
   display: flex;
@@ -130,6 +181,9 @@
   gap: var(--hw-space-2);
 }
 @media (max-width: 40rem) {
+  .hw-collection-preferences-trigger {
+    margin-inline-start: 0;
+  }
   .hw-collection-controls :is(input, select),
   .hw-collection-select {
     font-size: var(--hw-text-base);
@@ -139,7 +193,7 @@
   .hw-collection-controls > input {
     flex-basis: 100%;
   }
-  .hw-collection-controls > details {
+  .hw-collection-controls > details[open] {
     width: 100%;
   }
   .hw-collection-demo .hw-date-range__fields {

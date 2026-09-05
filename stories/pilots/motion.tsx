@@ -1,5 +1,5 @@
 import { Check, X } from "lucide-react";
-import { AnimatePresence, motion, useIsPresent } from "motion/react";
+import { AnimatePresence, motion, useAnimationControls, useIsPresent, usePresence } from "motion/react";
 import {
   createContext,
   forwardRef,
@@ -228,14 +228,31 @@ export function PilotSaveNotice({
   saved: boolean;
 }) {
   const { instant, transition } = usePilotTransition();
+  const controls = useAnimationControls();
+  const noticeRef = useRef<HTMLSpanElement>(null);
+  const previousNotice = useRef<string | null>(null);
+  useLayoutEffect(() => {
+    const changed = notice !== previousNotice.current;
+    previousNotice.current = notice;
+    controls.stop();
+    if (instant || !saved || !changed) {
+      controls.set({ opacity: 1 });
+      if (noticeRef.current) noticeRef.current.style.opacity = "1";
+    } else {
+      controls.set({ opacity: 0 });
+      void controls.start({ opacity: 1, transition });
+    }
+    return () => controls.stop();
+  }, [controls, instant, notice, saved, transition.duration]);
   return (
     <p className="hw-reference-notice" role="status" aria-atomic="true">
       {notice && (
         <motion.span
+          ref={noticeRef}
           className="hw-motion-notice"
           key={notice}
           initial={instant || !saved ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
+          animate={controls}
           transition={transition}
         >
           {saved && <Check aria-hidden="true" />}
@@ -244,4 +261,63 @@ export function PilotSaveNotice({
       )}
     </p>
   );
+}
+
+/** Bounded contextual actions. Exit content is inert from the first exit render.
+ * Explicit stop/set is necessary: changing duration alone does not settle a
+ * transition already running when the OS preference or input modality changes. */
+export function PilotMotionPresence({ children, visible, label, className }: {
+  children: ReactNode;
+  visible: boolean;
+  label: string;
+  className?: string;
+}) {
+  return <AnimatePresence initial={false}>
+    {visible && <PresenceRegion key="context" label={label} className={className}>{children}</PresenceRegion>}
+  </AnimatePresence>;
+}
+
+function PresenceRegion({ children, label, className }: {
+  children: ReactNode;
+  label: string;
+  className?: string;
+}) {
+  const [present, remove] = usePresence();
+  const { instant, transition } = usePilotTransition(!present);
+  const controls = useAnimationControls();
+  const regionRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    let current = true;
+    const target = present
+      ? { opacity: 1, height: "auto", transform: "none" }
+      : { opacity: 0, height: 0, transform: "translateY(calc(-1 * var(--hw-space-1)))" };
+    controls.stop();
+    if (instant) {
+      controls.set(target);
+      // Motion schedules DOM writes on its next frame. The accessibility path
+      // must already be settled in this layout commit, including mid-flight.
+      if (regionRef.current) Object.assign(regionRef.current.style, {
+        opacity: String(target.opacity),
+        height: present ? "auto" : "0px",
+        transform: target.transform,
+      });
+      if (!present) remove?.();
+    } else {
+      void controls.start({ ...target, transition }).then(() => {
+        if (current && !present) remove?.();
+      });
+    }
+    return () => { current = false; controls.stop(); };
+  }, [controls, instant, present, remove, transition.duration]);
+  return <motion.div
+    ref={regionRef}
+    role="region"
+    aria-label={label}
+    aria-hidden={!present || undefined}
+    inert={!present || undefined}
+    className={className}
+    data-pilot-presence={present ? "present" : "exiting"}
+    initial={instant ? false : { opacity: 0, height: 0, transform: "translateY(calc(-1 * var(--hw-space-1)))" }}
+    animate={controls}
+  >{children}</motion.div>;
 }
