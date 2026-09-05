@@ -156,3 +156,27 @@ Linux startup and reviewed scene baselines still require the controller's next C
 Final `npm run check` after the getter fix passed 30 Node + 116 Vitest tests,
 both TypeScript configs and all build/token/manifest gates. No debug statements
 were found; `git diff --check` passed. Controller checklist is excluded from staging.
+
+## Review fix round 2 — base b50d8b7
+
+Reviewer demonstrated that computed own play keys could be ignored by the CSF
+parser while overriding meta at runtime, and generator functions were accepted
+although calling them does not execute their bodies. The gate now rejects
+computed/unresolved top-level property keys before inheritance and requires
+non-generator play functions/methods. No new CSF evaluation or parser was added.
+
+Before the helper changed, `node --test --test-name-pattern='unresolved CSF'
+scripts/contracts-mutations.test.mjs` exited 1 with eight failing mutations
+(8.889s): computed story literal/expression, computed meta override, generator,
+async generator, inherited generator, generator method and async generator method.
+All were genuine old-gate escapes (actual exit 0 versus required 1); the helper
+diff was empty against b50d8b7 at RED. After the fix, `node --test
+scripts/contracts.test.mjs scripts/contracts-mutations.test.mjs` passed all 15
+tests (23.019s), including real CLI failure and restoration for each mutation.
+The supported-CSF document now states these exclusions. No UI/stories, CI,
+dependencies, lockfile or visual baselines changed; controller checklist preserved.
+Final `npm run check` exited 0: 38 Node tests (23.313s), 116 Vitest tests in 15
+files (7.54s), both TypeScript configs, tokens, manifest and library build passed.
+Duplicate-import scan found zero in the two edited modules; diff check passed.
+Browser/visual suites were not rerun for this parser-only change. Linux startup
+and screenshot evidence remain separate controller gates, not inferred success.

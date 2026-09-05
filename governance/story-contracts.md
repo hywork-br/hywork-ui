@@ -10,10 +10,14 @@ O gate usa o parser CSF instalado do Storybook (`storybook/internal/csf-tools`).
 O subconjunto suportado para play é CSF3 com objeto de story, função inline
 (`async` opcional, arrow/function/method) própria ou herdada do objeto meta.
 Uma propriedade própria, inclusive `play: undefined`, sobrepõe a do meta.
-Getters/setters, spreads de story, spreads de meta usados para herança, funções importadas ou
+Generators (inclusive async), getters/setters, chaves computadas/expressões de
+propriedade, spreads de story, spreads de meta usados para herança, funções importadas ou
 expressões dinâmicas não são resolvidos: o gate falha fechado com diagnóstico.
 Para adotar outra sintaxe, estenda o helper com prova de resolução e regressão;
 não substitua isso por regex nem por busca textual de `play` no arquivo.
+Uma chave computada pode sobrepor play mesmo quando o parser não a registra;
+por isso as propriedades do objeto são validadas antes de resolver a herança.
+Generators não executam o corpo ao serem chamados e não são plays suportados.
 
 Presença callable não prova a qualidade da interação. O runner oficial executa
 as stories em Chromium e Firefox com axe; testes nativos verificam os caminhos

@@ -94,3 +94,26 @@ test("contract CLI rejects downgrading a draft contract to render smoke", () => 
   await writeFile(path, original);
   assert.equal(gate().status, 0);
 }));
+
+for (const [label, metaOverride, storyOverride] of [
+  ["computed story play", "", '["play"]: undefined'],
+  ["computed expression", "", '["pl" + "ay"]: undefined'],
+  ["computed meta play", ', ["play"]: undefined', ""],
+  ["generator play", "", "play: function* () { throw new Error(); }"],
+  ["async generator play", "", "play: async function* () { throw new Error(); }"],
+  ["inherited generator play", ", play: function* () { throw new Error(); }", ""],
+  ["generator method", "", "*play() { throw new Error(); }"],
+  ["async generator method", "", "async *play() { throw new Error(); }"],
+]) {
+  test(`contract CLI rejects unresolved CSF ${label} and passes after restoration`, () => fixture(async (directory, gate) => {
+    const path = join(directory, "stories/QualityContracts.stories.tsx");
+    const original = await readFile(path, "utf8");
+    await writeFile(path, `const meta = { title: "Contracts/Fixture", play: async () => {}${metaOverride} };
+      export default meta; export const CellsContract = { render: () => null, ${storyOverride} };`);
+    const result = gate();
+    assert.equal(result.status, 1, `${label} escaped the effective play gate`);
+    assert.match(result.stdout + result.stderr, /table-cells.*(play|computed|properties)/);
+    await writeFile(path, original);
+    assert.equal(gate().status, 0, "restored real contract must pass");
+  }));
+}
