@@ -129,11 +129,13 @@
   align-items: center;
   gap: var(--hw-space-2);
 }
-@media (max-width: 480px) {
+@media (max-width: 40rem) {
   .hw-collection-controls :is(input, select),
   .hw-collection-select {
     font-size: var(--hw-text-base);
   }
+}
+@media (max-width: 480px) {
   .hw-collection-controls > input {
     flex-basis: 100%;
   }
