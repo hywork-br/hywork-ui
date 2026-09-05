@@ -45,6 +45,11 @@ movimento reduzido o indicador fica estático e `aria-busy` mantém o estado.
 Hover é restrito a ponteiro preciso, exclui controles indisponíveis e não move
 o botão.
 
+`aria-busy` explícito é preservado tanto no Button nativo quanto em `asChild`;
+quando o filho define o atributo, ele tem precedência. `loading=true` sempre
+impõe `aria-busy=true`. O atributo visual `data-loading` acompanha apenas a prop
+`loading`: marcar busy externamente não deve ocultar o rótulo nem criar spinner.
+
 ## Composição e erros comuns
 
 Ícone acompanha texto ou tem nome acessível. Não usar div clicável, ação sem label ou botão fake.

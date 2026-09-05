@@ -59,8 +59,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       ? React.cloneElement(children, {
           ...(isDisabled ? unavailableCaptureHandlers(children.props) : {}),
           ...(isDisabled ? { "aria-disabled": true } : {}),
-          "aria-busy": loading || children.props["aria-busy"],
-          children: <span className="hw-button__label">{children.props.children}</span>,
+          "aria-busy": loading || (children.props["aria-busy"] ?? props["aria-busy"]),
+          children: <span className="hw-button__label" key="label">{children.props.children}</span>,
         })
       : children;
     const handleClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -76,9 +76,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <Component
         {...props}
         {...(isDisabled ? unavailableCaptureHandlers(props) : {})}
-        aria-busy={loading || undefined}
+        aria-busy={loading || props["aria-busy"]}
         aria-disabled={isDisabled || undefined}
         className={cn("hw-button", className)}
+        data-loading={loading || undefined}
         data-size={size}
         data-variant={variant}
         disabled={asChild ? undefined : isDisabled}

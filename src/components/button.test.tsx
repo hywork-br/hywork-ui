@@ -6,6 +6,29 @@ import { describe, expect, it } from "vitest";
 import { Button } from "./button";
 
 describe("Button activation", () => {
+  it.each([false, true])("preserves consumer aria-busy and lets loading prevail (asChild=%s)", (asChild) => {
+    const content = asChild ? <a href="#course">Curso</a> : "Curso";
+    const { rerender } = render(<Button asChild={asChild} aria-busy="true">{content}</Button>);
+    const control = screen.getByRole(asChild ? "link" : "button", { name: "Curso" });
+    expect(control).toHaveAttribute("aria-busy", "true");
+    expect(control).not.toHaveAttribute("data-loading");
+    rerender(<Button asChild={asChild} aria-busy={false}>{content}</Button>);
+    expect(control).toHaveAttribute("aria-busy", "false");
+    rerender(<Button asChild={asChild} aria-busy={false} loading>{content}</Button>);
+    expect(control).toHaveAttribute("aria-busy", "true");
+    expect(control).toHaveAttribute("data-loading", "true");
+  });
+
+  it("keeps slotted child aria-busy precedence until loading starts", () => {
+    const { rerender } = render(<Button asChild aria-busy><a href="#course" aria-busy={false}>Curso</a></Button>);
+    const link = screen.getByRole("link", { name: "Curso" });
+    expect(link).toHaveAttribute("aria-busy", "false");
+    rerender(<Button asChild aria-busy={false}><a href="#course" aria-busy>Curso</a></Button>);
+    expect(link).toHaveAttribute("aria-busy", "true");
+    rerender(<Button asChild loading><a href="#course" aria-busy={false}>Curso</a></Button>);
+    expect(link).toHaveAttribute("aria-busy", "true");
+  });
+
   it.each(["disabled", "loading"] as const)("blocks child and parent handlers when %s", async (state) => {
     const user = userEvent.setup();
     const calls: string[] = [];
