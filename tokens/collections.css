@@ -1,10 +1,14 @@
 .hw-collection-demo {
+  font-size: var(--hw-body-size);
+  line-height: var(--hw-body-leading);
   display: grid;
   gap: var(--hw-space-4);
   min-width: 0;
   max-width: 100%;
 }
 .hw-collection-demo header h1 {
+  font-size: var(--hw-page-title-size);
+  font-family: var(--hw-font-heading);
   margin-block: var(--hw-space-2);
 }
 .hw-collection-demo header p,
@@ -30,7 +34,8 @@
   flex-wrap: wrap;
   min-width: 0;
 }
-.hw-collection-controls select {
+.hw-collection-controls select,
+.hw-collection-select {
   font: inherit;
   color: var(--hw-text);
   background: var(--hw-surface);
@@ -46,8 +51,7 @@
   min-width: 0;
   max-width: 100%;
 }
-.hw-collection-disclosure summary,
-.hw-content-cell summary {
+.hw-collection-disclosure summary {
   cursor: pointer;
   min-height: var(--hw-control-height);
   align-content: center;
@@ -95,10 +99,6 @@
   white-space: normal;
   overflow-wrap: anywhere;
 }
-.hw-content-cell summary {
-  color: var(--hw-text-muted);
-  font-size: var(--hw-text-sm);
-}
 .hw-number-cell {
   font-variant-numeric: tabular-nums;
 }
@@ -112,11 +112,28 @@
   max-width: 100%;
   min-width: 0;
 }
-.hw-collection-demo :is(summary, select):focus-visible {
+.hw-collection-disclosure summary:focus-visible,
+.hw-collection-controls select:focus-visible,
+.hw-collection-select:focus-visible {
   outline: var(--hw-focus-width) solid var(--hw-focus);
   outline-offset: var(--hw-focus-offset);
 }
+.hw-collection-controls,
+.hw-collection-disclosure,
+.hw-collection-density {
+  font-size: var(--hw-body-size);
+  line-height: var(--hw-body-leading);
+}
+.hw-collection-density {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--hw-space-2);
+}
 @media (max-width: 480px) {
+  .hw-collection-controls :is(input, select),
+  .hw-collection-select {
+    font-size: var(--hw-text-base);
+  }
   .hw-collection-controls > input {
     flex-basis: 100%;
   }

@@ -301,9 +301,11 @@ export function CollectionDemo() {
         </details>
       </div>
       <p role="status">
-        {rows.length} no total · {filtered.length} filtrados · {visible.length}{" "}
-        nesta página · {selected.length} selecionados ({pageSelection.length}{" "}
-        nesta página)
+        {rows.length} no total · {filtered.length}{" "}
+        {filtered.length === 1 ? "filtrado" : "filtrados"} · {visible.length}{" "}
+        nesta página · {selected.length}{" "}
+        {selected.length === 1 ? "selecionado" : "selecionados"} (
+        {pageSelection.length} nesta página)
       </p>
       <div className="hw-collection-controls">
         <Button

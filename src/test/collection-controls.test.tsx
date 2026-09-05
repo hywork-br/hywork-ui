@@ -8,6 +8,71 @@ import { ContentCell } from "../components/table-cells";
 import { CollectionDemo } from "../../stories/collections/collection-demo";
 
 describe("operational collections", () => {
+  it("excludes by author and by date independently and uses singular counts", async () => {
+    sessionStorage.clear();
+    render(<CollectionDemo />);
+    await userEvent.click(screen.getByText("Mais filtros"));
+    await userEvent.click(screen.getByRole("combobox", { name: "Autores" }));
+    await userEvent.click(screen.getByRole("option", { name: "Bruno Reis" }));
+    expect(screen.queryByText("Cultura que aproxima")).not.toBeInTheDocument();
+    expect(screen.getByText("Guia de benefícios")).toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Remover Bruno Reis" })
+    );
+    fireEvent.change(screen.getByLabelText("De"), {
+      target: { value: "2026-09-04" },
+    });
+    expect(screen.queryByText("Cultura que aproxima")).not.toBeInTheDocument();
+    expect(screen.getByText("Boas-vindas à equipe")).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Até"), {
+      target: { value: "2026-09-04" },
+    });
+    expect(screen.queryByText("Guia de benefícios")).not.toBeInTheDocument();
+    expect(screen.getByText(/1 filtrado ·/)).toBeInTheDocument();
+    await userEvent.click(screen.getByLabelText("Selecionar página"));
+    expect(screen.getByText(/1 selecionado \(/)).toBeInTheDocument();
+  });
+  it("restores columns, density and actual sort order", async () => {
+    sessionStorage.clear();
+    render(<CollectionDemo />);
+    await userEvent.selectOptions(
+      screen.getByLabelText("Densidade"),
+      "compact"
+    );
+    await userEvent.click(screen.getByText("Colunas"));
+    await userEvent.click(screen.getByRole("checkbox", { name: "Autor" }));
+    await userEvent.click(
+      screen.getByRole("button", { name: "Ordenar por Conteúdo" })
+    );
+    await userEvent.click(screen.getByText("Gerenciar visões"));
+    await userEvent.type(screen.getByLabelText("Nome da visão"), "Compacta");
+    await userEvent.click(screen.getByRole("button", { name: "Salvar visão" }));
+    await userEvent.selectOptions(
+      screen.getByLabelText("Densidade"),
+      "comfortable"
+    );
+    await userEvent.click(screen.getByRole("checkbox", { name: "Autor" }));
+    await userEvent.click(
+      screen.getByRole("button", { name: "Ordenar por Conteúdo" })
+    );
+    await userEvent.selectOptions(
+      screen.getByLabelText("Visões salvas"),
+      "view-1"
+    );
+    expect(screen.getByLabelText("Densidade")).toHaveValue("compact");
+    expect(
+      screen.getByRole("region", { name: "Conteúdos: tabela rolável" })
+    ).toHaveAttribute("data-density", "compact");
+    expect(
+      screen.queryByRole("columnheader", { name: "Autor" })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("columnheader", { name: "Conteúdo" })
+    ).toHaveAttribute("aria-sort", "ascending");
+    expect(screen.getAllByRole("row")[1]).toHaveTextContent(
+      "Agenda de setembro"
+    );
+  });
   it("selects only eligible page rows and preserves other-page keys", async () => {
     const change = vi.fn();
     render(
@@ -149,9 +214,10 @@ describe("operational collections", () => {
       screen.getByRole("button", { name: "Ordenar por Item" })
     );
     expect(sort).toHaveBeenCalledWith("id", "descending");
-    expect(
-      screen.getByRole("columnheader", { name: "Item" })
-    ).toHaveAttribute("aria-sort", "ascending");
+    expect(screen.getByRole("columnheader", { name: "Item" })).toHaveAttribute(
+      "aria-sort",
+      "ascending"
+    );
   });
   it("archives only current-page selection and clamps the last page", async () => {
     sessionStorage.clear();

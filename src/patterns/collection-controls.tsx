@@ -50,6 +50,7 @@ export function Pagination({
         <label>
           Por página{" "}
           <select
+            className="hw-collection-select"
             value={size}
             onChange={(e) => onPageSizeChange(Number(e.target.value))}
           >
@@ -112,9 +113,10 @@ export function DensityControl({
   onChange: (value: CollectionDensity) => void;
 }) {
   return (
-    <label>
+    <label className="hw-collection-density">
       Densidade{" "}
       <select
+        className="hw-collection-select"
         value={value}
         onChange={(e) => onChange(e.target.value as CollectionDensity)}
       >
@@ -143,7 +145,11 @@ export function SavedViews({
     <div className="hw-collection-controls">
       <label>
         Visões salvas{" "}
-        <select value={value} onChange={(e) => onChange(e.target.value)}>
+        <select
+          className="hw-collection-select"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        >
           <option value="">Visão atual</option>
           {views.map((view) => (
             <option key={view.id} value={view.id}>
