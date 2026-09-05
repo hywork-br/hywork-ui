@@ -1,0 +1,10 @@
+debug-storybook.log
+dist/
+fixtures/**/.next/
+fixtures/**/out/
+node_modules/
+storybook-static/
+.vercel/
+.env.local
+test-results/
+playwright-report/

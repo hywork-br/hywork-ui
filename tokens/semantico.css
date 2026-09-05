@@ -29,70 +29,70 @@
    * não é um fechamento definitivo; é o fim de um limbo. O valor não mudou: o
    * que mudou é que ele deixou de estar em aberto.
    *
-   * ⚠️ O QUE CUSTA TROCAR — medido em 13/08, trocando de verdade e rodando as
-   * guardas. A versão anterior deste comentário prometia duas coisas ("é editar
-   * as quatro linhas abaixo" e "o check reprova a troca se o par não passar") e
-   * as duas eram falsas. A conta real:
+   * ⚠️ O QUE CUSTA TROCAR — revalidado na linha 0.6:
    *
-   * 1. O check NÃO reprova o laranja. Trocado, `npm run check` sai 0. O par
-   *    --hw-primary/--hw-primary-fg é medido contra o piso de 3.0 (botão), e o
-   *    laranja sobre branco dá 3,73:1 — passa. O caso que reprovaria é a
-   *    primária como TEXTO pequeno sobre branco (piso 4,5), e esse par não é
-   *    declarado, embora os consumidores usem a primária como texto. Contraste
-   *    da primária é decisão humana; o check não a cobre.
-   * 2. O laranja COLIDE com dois papéis vizinhos, e nada acusa: --hw-secondary
-   *    já é --hw-orange, e --hw-focus também. Trocada a primária, os três viram
-   *    o mesmo valor, os dois hovers viram o mesmo e os dois soft viram o
-   *    mesmo. Manter primária ≠ secundária ≠ foco exige mover a secundária
-   *    junto — outras quatro linhas, neste mesmo arquivo.
-   * 3. Cada consumidor que espelha esta camada em código tem a linha dele. Ali
-   *    a guarda existe e MORDE: o espelho é comparado com este arquivo e fica
-   *    vermelho, não silencioso. E onde a tinta é calculada em vez de
-   *    declarada, o cálculo escolhe quase-preto sobre o laranja (4,93:1) contra
-   *    branco (3,73:1) — a marca manda branco, então a troca reintroduz um
-   *    override que o azul dispensa.
-   *
-   * Ou seja: quatro linhas aqui, mais a secundária, mais uma por consumidor.
-   * A camada continua fazendo o trabalho dela — nenhuma TELA é reescrita —, e
-   * essa é a promessa que sobrevive à medição.
+   * 1. O gate agora mede botão pequeno em 4,5:1. O laranja puro com branco dá
+   *    3,73:1 e reprova; uma troca precisa escolher outro foreground ou um
+   *    derivado sólido acessível.
+   * 2. `--hw-focus` já usa o laranja da marca e a secundária usa um derivado da
+   *    mesma família. Mover a primária exige preservar distinção entre ação,
+   *    foco e segundo nível — não é só trocar quatro referências.
+   * 3. Cada consumidor que espelha esta camada em código precisa atualizar sua
+   *    guarda. Nenhuma tela deve reescrever cor, mas a adoção precisa provar o
+   *    contrato de white-label e contraste no build real.
    */
   --hw-primary: var(--hw-blue-mid);
   --hw-primary-hover: var(--hw-blue-deep);
   --hw-primary-fg: var(--hw-white);
   --hw-primary-soft: var(--hw-blue-tint);
 
-  /* Secundária — o acento de alta energia da marca */
-  --hw-secondary: var(--hw-orange);
-  --hw-secondary-hover: var(--hw-rust);
+  /* Secundária — sólido laranja escurecido para texto pequeno AA. O laranja
+     puro permanece em dataviz e decoração, onde não carrega texto branco. */
+  --hw-secondary: var(--hw-rust-text);
+  --hw-secondary-hover: var(--hw-rust-strong);
   --hw-secondary-fg: var(--hw-white);
   --hw-secondary-soft: var(--hw-amber-tint);
+  --hw-secondary-text: var(--hw-rust-text);
 
   /* Superfícies — sempre em par com a tinta que vai por cima */
   --hw-surface: var(--hw-white);
   --hw-surface-fg: var(--hw-navy);
-  --hw-surface-subtle: var(--hw-blue-tint);
+  --hw-surface-subtle: var(--hw-gray-tint);
   --hw-surface-subtle-fg: var(--hw-navy);
   --hw-surface-inverse: var(--hw-navy);
   --hw-surface-inverse-fg: var(--hw-white);
   --hw-surface-accent: var(--hw-amber-tint);
   --hw-surface-accent-fg: var(--hw-navy);
 
+  /* Papéis de componente — superfícies com intenção própria. */
+  --hw-interactive-hover: var(--hw-gray-tint);
+  --hw-interactive-hover-fg: var(--hw-navy);
+  --hw-floating: var(--hw-white);
+  --hw-floating-fg: var(--hw-navy);
+  --hw-card: var(--hw-white);
+  --hw-card-fg: var(--hw-navy);
+  /* Quiet fields: a neutral surface and a single identifying baseline, not
+     a blue perimeter. Both surface/ink and baseline contrast are gated. */
+  --hw-input-surface: var(--hw-gray-tint);
+  --hw-input-surface-fg: var(--hw-navy);
+  --hw-input-border: var(--hw-gray);
+
   /* Texto */
   --hw-text: var(--hw-navy);
-  --hw-text-secondary: var(--hw-blue-deep);
-  /* Apoio: usa o derivado escurecido — o blue-steel do guideline reprova
-     contraste como texto (3,31:1). Ele segue válido para borda e dataviz. */
-  --hw-text-muted: var(--hw-blue-steel-text);
+  --hw-text-secondary: var(--hw-navy);
+  /* Neutral supporting ink keeps brand color for action and status. The
+     darkened gray passes small-text contrast on white and subtle surfaces. */
+  --hw-text-muted: var(--hw-gray-text);
   --hw-text-inverse: var(--hw-white);
   --hw-text-inverse-secondary: var(--hw-blue-lavender);
 
   /* Bordas e divisores */
   --hw-border: var(--hw-hairline-light);
-  --hw-border-strong: var(--hw-blue-steel);
+  --hw-border-strong: var(--hw-gray);
 
   /**
    * Foco — 2px com offset. O anel precisa passar de 3:1 contra o fundo
-   * adjacente (WCAG 2.4.11); o anel que vem por padrão na maioria dos scaffolds
+   * adjacente (WCAG 1.4.11); o anel que vem por padrão na maioria dos scaffolds
    * fica abaixo disso, e é por isso que este token existe em vez de herdarmos.
    */
   --hw-focus: var(--hw-orange);

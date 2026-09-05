@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 2,
+  "package": "@hywork/ui",
+  "version": "0.6.0",
+  "generatedFrom": [
+    "governance/component-contracts.json",
+    "governance/patterns.json",
+    "package.json",
+    "tokens/admin.css",
+    "tokens/componentes.css",
+    "tokens/portal.css",
+    "tokens/primitivos.css",
+    "tokens/semantico.css",
+    "tokens/tema.css",
+    "tokens/white-label.css"
+  ],
+  "tokenLayers": [
+    {
+      "name": "primitive",
+      "files": [
+        "tokens/primitivos.css"
+      ],
+      "tokenCount": 58
+    },
+    {
+      "name": "semantic",
+      "files": [
+        "tokens/semantico.css"
+      ],
+      "tokenCount": 73
+    },
+    {
+      "name": "component",
+      "files": [
+        "tokens/componentes.css"
+      ],
+      "tokenCount": 3
+    },
+    {
+      "name": "surface",
+      "files": [
+        "tokens/admin.css",
+        "tokens/portal.css"
+      ],
+      "tokenCount": 15
+    },
+    {
+      "name": "theme",
+      "files": [
+        "tokens/tema.css",
+        "tokens/white-label.css"
+      ],
+      "tokenCount": 0
+    }
+  ],
+  "tokenCount": 146,
+  "surfaces": [
+    "admin",
+    "portal"
+  ],
+  "stable": [
+    "tokens"
+  ],
+  "beta": [
+    "Button",
+    "Field",
+    "FieldError",
+    "FieldHint",
+    "Input",
+    "Label",
+    "Textarea",
+    "Badge",
+    "Avatar",
+    "Skeleton",
+    "Card",
+    "CardContent",
+    "CardDescription",
+    "CardFooter",
+    "CardHeader",
+    "CardTitle",
+    "AlertDialog",
+    "AlertDialogClose",
+    "AlertDialogContent",
+    "AlertDialogDescription",
+    "AlertDialogTitle",
+    "AlertDialogTrigger",
+    "Dialog",
+    "DialogActions",
+    "DialogClose",
+    "DialogContent",
+    "DialogDescription",
+    "DialogTitle",
+    "DialogTrigger",
+    "DropdownMenu",
+    "DropdownMenuContent",
+    "DropdownMenuGroup",
+    "DropdownMenuItem",
+    "DropdownMenuLabel",
+    "DropdownMenuSeparator",
+    "DropdownMenuTrigger",
+    "Popover",
+    "PopoverClose",
+    "PopoverContent",
+    "PopoverTrigger",
+    "Tooltip",
+    "TooltipContent",
+    "TooltipProvider",
+    "TooltipTrigger",
+    "Select",
+    "Tabs",
+    "TabsContent",
+    "TabsList",
+    "TabsTrigger"
+  ],
+  "draft": [
+    "Checkbox",
+    "Radio",
+    "Switch",
+    "Combobox",
+    "MultiSelect",
+    "DateField",
+    "DateRangeField",
+    "FileUpload",
+    "ContentCell",
+    "PersonCell",
+    "StatusCell",
+    "DateCell",
+    "NumberCell",
+    "Pagination",
+    "ColumnControl",
+    "DensityControl",
+    "SavedViews",
+    "Banner",
+    "InlineNotice",
+    "Toast",
+    "parseOpaqueCssColor",
+    "contrastRatio",
+    "validateTenantTheme",
+    "NORMAL_TEXT_CONTRAST",
+    "NON_TEXT_CONTRAST",
+    "AdminShell",
+    "DataTable",
+    "FilterBar",
+    "FocusMode",
+    "ListPage",
+    "Stepper"
+  ],
+  "deprecated": [],
+  "utilities": [
+    "parseOpaqueCssColor",
+    "contrastRatio",
+    "validateTenantTheme",
+    "NORMAL_TEXT_CONTRAST",
+    "NON_TEXT_CONTRAST"
+  ],
+  "exports": [
+    ".",
+    "./manifest.json",
+    "./styles.css",
+    "./tailwind/v3-preset.cjs",
+    "./tailwind/v4.css",
+    "./tokens/admin.css",
+    "./tokens/componentes.css",
+    "./tokens/portal.css",
+    "./tokens/primitivos.css",
+    "./tokens/semantico.css",
+    "./tokens/tema.css",
+    "./tokens/white-label.css"
+  ]
+}

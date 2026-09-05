@@ -1,0 +1,194 @@
+{
+  "date": "2026-09-05",
+  "scope": "local Storybook fixtures",
+  "assertions": "passed",
+  "checks": [
+    {
+      "case": "academy-mobile",
+      "controls": [
+        {
+          "disabled": false,
+          "fontSize": "16px",
+          "height": 44,
+          "label": "edit-academy-name",
+          "width": 358
+        },
+        {
+          "disabled": false,
+          "fontSize": "16px",
+          "height": 44,
+          "label": "edit-academy-dimension",
+          "width": 358
+        },
+        {
+          "disabled": true,
+          "fontSize": "16px",
+          "height": 44,
+          "label": "edit-academy-status",
+          "width": 358
+        },
+        {
+          "disabled": false,
+          "fontSize": "16px",
+          "height": 44,
+          "label": "edit-academy-group",
+          "width": 358
+        },
+        {
+          "disabled": false,
+          "fontSize": "16px",
+          "height": 44,
+          "label": "edit-academy-owner",
+          "width": 358
+        },
+        {
+          "disabled": false,
+          "fontSize": "12px",
+          "height": 44,
+          "label": "Cancelar",
+          "width": 126.515625
+        },
+        {
+          "disabled": false,
+          "fontSize": "12px",
+          "height": 44,
+          "label": "Salvar rascunho e voltar",
+          "width": 219.484375
+        }
+      ],
+      "fontLoaded": true,
+      "pageWidth": 390,
+      "viewport": 390
+    },
+    {
+      "case": "invalid-search-focus-green",
+      "fields": [
+        {
+          "border": "rgb(191, 69, 25)",
+          "errorColor": "rgb(191, 69, 25)",
+          "focus": false,
+          "id": "contract-owner",
+          "passes": true
+        },
+        {
+          "border": "rgb(191, 69, 25)",
+          "errorColor": "rgb(191, 69, 25)",
+          "focus": true,
+          "id": "contract-search",
+          "passes": true
+        }
+      ]
+    },
+    {
+      "border": "rgb(191, 69, 25)",
+      "case": "invalid-form-focus-green",
+      "focus": true,
+      "outline": "rgb(233, 80, 27) solid 2px",
+      "passes": true
+    },
+    {
+      "alert": "Não foi possível salvar. Seus dados continuam aqui. Tente novamente.",
+      "case": "save-error",
+      "dialog": true,
+      "name": "Integração e desenvolvimento de equipes",
+      "retry": true
+    },
+    {
+      "case": "save-retry-success",
+      "dialog": false,
+      "focus": "Novo curso",
+      "matchedCards": 1,
+      "notice": "“Integração e desenvolvimento de equipes” salvo nesta sessão de demonstração."
+    },
+    {
+      "case": "saved-outside-filter",
+      "dialog": false,
+      "emptyState": "Nenhum resultado com estes filtros",
+      "focus": null,
+      "notice": "",
+      "search": "Integração",
+      "status": "Discarded measurement: library build reloaded the dev page; replayed below after build."
+    },
+    {
+      "case": "mobile-long-search",
+      "chevrons": [
+        {
+          "height": 16,
+          "shrink": "0",
+          "width": 16
+        },
+        {
+          "height": 16,
+          "shrink": "0",
+          "width": 16
+        }
+      ],
+      "pageWidth": 390,
+      "targets": [
+        {
+          "height": 44,
+          "width": 44
+        }
+      ],
+      "viewport": 390
+    },
+    {
+      "case": "saved-outside-filter-confirmed",
+      "dialog": false,
+      "emptyState": "Nenhum resultado com estes filtros",
+      "focus": "Buscar em Academy",
+      "notice": "“Programa de liderança e cultura” foi salvo, mas está fora dos filtros atuais.",
+      "search": "Desenvolvimento"
+    },
+    {
+      "case": "contents-mobile",
+      "controls": [
+        {
+          "height": 44,
+          "label": "Buscar em Conteúdos"
+        },
+        {
+          "height": 44,
+          "label": "Status"
+        },
+        {
+          "height": 44,
+          "label": "Tipo"
+        },
+        {
+          "height": 44,
+          "label": "Mais filtros"
+        }
+      ],
+      "pageWidth": 390,
+      "tableViewport": 358,
+      "tableWidth": 777,
+      "viewport": 390
+    },
+    {
+      "cards": 3,
+      "case": "email-mobile",
+      "chevrons": [
+        {
+          "height": 16,
+          "width": 16
+        },
+        {
+          "height": 16,
+          "width": 16
+        }
+      ],
+      "pageWidth": 390,
+      "viewport": 390
+    },
+    {
+      "case": "narrow-long-select",
+      "controlWidth": 140,
+      "iconShrink": "0",
+      "iconWidth": 16,
+      "pageWidth": 320,
+      "text": "Novas contratações",
+      "viewport": 320
+    }
+  ]
+}

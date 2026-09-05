@@ -40,6 +40,16 @@
    * botão de ação principal — nunca campo de fundo. Usar a primária como área é
    * o erro que produz a impressão de interface "toda colorida".
    */
-  --hw-chrome: var(--hw-blue-tint);
+  --hw-chrome: var(--hw-gray-tint);
   --hw-chrome-fg: var(--hw-navy);
+}
+
+/* Dense desktop controls are not touch targets. Portals inherit this root surface too. */
+@media (pointer: coarse), (max-width: 40rem) {
+  [data-surface="admin"],
+  .hw-admin {
+    --hw-target-min: 44px;
+    --hw-control-height: 44px;
+    --hw-control-height-sm: 44px;
+  }
 }

@@ -6,18 +6,47 @@ on:
   pull_request:
 
 jobs:
-  tokens:
-    runs-on: ubuntu-latest
+  browser:
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+      options: --ipc=host
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: "22"
-      # Sem dependências: o check é Node puro, de propósito. Design system que
-      # precisa de build pra validar token demora a rodar e para de ser rodado.
-      - run: node scripts/check-tokens.mjs
-      # Gerado que não é verificado vira gerado que ninguém regenera.
-      - run: node scripts/gerar-preset-v3.mjs --check
+      - run: npm ci
+      - run: npm run build
+      - name: Storybook play contracts — Chromium and Firefox
+        run: npm run test:stories
+      - name: Native keyboard, live reduced motion, reflow and axe
+        if: ${{ !cancelled() }}
+        run: npm run test:browser
+      - name: Deterministic Linux screenshots — missing and changed baselines fail
+        if: ${{ !cancelled() }}
+        run: npm run test:visual
+      - uses: actions/upload-artifact@v6
+        if: ${{ !cancelled() }}
+        with:
+          name: browser-evidence-linux
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: error
+          retention-days: 14
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - run: npm ci
+      - run: npm run check
+      - run: npm run smoke:consumer
+      - run: npm run build
+      - run: npm audit --audit-level=high
       # O preset precisa carregar de verdade, não só existir.
       #
       # ⚠️ Bloco literal (`|`), e não escalar solto. Esta linha já derrubou o CI

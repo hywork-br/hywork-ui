@@ -1,0 +1,92 @@
+.hw-feedback {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--hw-space-3);
+  padding: var(--hw-space-3);
+  border-radius: var(--hw-radius-sm);
+  background: var(--hw-surface-subtle);
+  color: var(--hw-surface-subtle-fg);
+  font-family: var(--hw-font-body);
+  font-size: var(--hw-body-size);
+  line-height: var(--hw-body-leading);
+}
+.hw-feedback__icon {
+  width: 1.25em;
+  height: 1.25em;
+  flex: none;
+  margin-top: 0.15em;
+}
+.hw-feedback__copy {
+  flex: 1 1 12rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.hw-feedback[data-severity="error"] {
+  background: var(--hw-danger-soft);
+  color: var(--hw-danger-soft-fg);
+}
+.hw-feedback[data-severity="warning"] {
+  background: var(--hw-warning-soft);
+  color: var(--hw-warning-soft-fg);
+}
+.hw-feedback[data-kind="inline"] {
+  padding-inline: var(--hw-space-2);
+}
+.hw-feedback[data-kind="toast"] {
+  border: 1px solid var(--hw-border);
+}
+.hw-recovery-demo {
+  display: grid;
+  gap: var(--hw-space-4);
+  font-family: var(--hw-font-body);
+  font-size: var(--hw-body-size);
+  line-height: var(--hw-body-leading);
+  max-width: 56rem;
+}
+.hw-recovery-demo h1 {
+  font-size: var(--hw-page-title-size);
+}
+.hw-recovery-demo h2 {
+  font-size: var(--hw-body-size);
+}
+.hw-recovery-demo__actions,
+.hw-recovery-demo__scenarios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hw-space-3);
+}
+.hw-recovery-demo__scenarios {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.hw-recovery-demo__scenarios label {
+  display: flex;
+  align-items: center;
+  gap: var(--hw-space-2);
+  min-height: var(--hw-control-height);
+}
+.hw-recovery-demo__draft {
+  display: grid;
+  gap: var(--hw-space-2);
+}
+.hw-recovery-demo textarea {
+  resize: vertical;
+  min-height: 8rem;
+  padding: var(--hw-space-3);
+  font: inherit;
+  background: var(--hw-surface-subtle);
+  color: var(--hw-surface-subtle-fg);
+  border: 1px solid var(--hw-border);
+  border-radius: var(--hw-control-radius);
+}
+.hw-recovery-demo textarea:focus-visible {
+  outline: var(--hw-focus-width) solid var(--hw-focus);
+  outline-offset: var(--hw-focus-offset);
+}
+@media (max-width: 40rem) {
+  .hw-recovery-demo textarea {
+    font-size: var(--hw-text-base);
+  }
+}
