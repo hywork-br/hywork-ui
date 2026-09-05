@@ -97,7 +97,6 @@ export function ThemeLab({ initialTheme }: { initialTheme?: TenantThemeCandidate
     "--color-primary-fg": applied.primaryForeground,
     "--color-background": applied.background,
     "--color-text": applied.text,
-    "--theme-lab-focus": applied.focus,
   } as CSSProperties;
 
   return (

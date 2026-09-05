@@ -112,6 +112,33 @@ describe("tenant theme validation", () => {
     );
   });
 
+  it("uses the raw ratio on both sides of the 3:1 focus boundary", () => {
+    const candidate = {
+      primary: "#092938",
+      primaryForeground: "#ffffff",
+      background: "#ffffff",
+      text: "#092938",
+      focusAdjacentSurfaces: [{ name: "background", color: "#ffffff" }],
+    };
+    const immediatelyBelow = validateTenantTheme({
+      ...candidate,
+      focus: "rgb(0, 153, 255)",
+    }).focusChecks[0];
+    const immediatelyAbove = validateTenantTheme({
+      ...candidate,
+      focus: "rgb(0, 154, 249)",
+    }).focusChecks[0];
+
+    expect(immediatelyBelow.ratio).toBeCloseTo(2.9997886802, 9);
+    expect(immediatelyAbove.ratio).toBeCloseTo(3.0042269034, 9);
+    expect(immediatelyBelow.displayRatio).toBe(3);
+    expect(immediatelyAbove.displayRatio).toBe(3);
+    expect(immediatelyBelow.threshold).toBe(3);
+    expect(immediatelyAbove.threshold).toBe(3);
+    expect(immediatelyBelow.passed).toBe(false);
+    expect(immediatelyAbove.passed).toBe(true);
+  });
+
   it("reports invalid candidates without producing contrast checks", () => {
     const result = validateTenantTheme({
       primary: "transparent",
