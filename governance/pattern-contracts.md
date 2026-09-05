@@ -93,3 +93,43 @@ Etapa futura é desabilitada. Etapa concluída pode ser reaberta via
 
 Os seis padrões permanecem `draft` em setembro. Testes, stories e revisão visual
 provam o contrato no pacote; promoção a `beta` exige os pilotos reais de outubro.
+
+## Coleções, feedback e tema — contratos draft de setembro
+
+`Pagination`, `ColumnControl`, `DensityControl` e `SavedViews` fornecem controles
+controlados. O consumidor continua dono da busca/filtro/ordenação efetiva, seleção
+entre páginas, identidade, elegibilidade, permissões, rede, payload e persistência.
+Salvar uma visão limpa seu nome e devolve foco ao campo, mantendo o botão vazio
+desabilitado e permitindo Tab/Escape. O callback não representa confirmação de
+persistência remota. Taxonomias e ações mantêm a identidade do domínio.
+
+As famílias choice, searchable-selection, date, upload, table-cells,
+collection-controls e feedback estão registradas como `draft`, com zero
+consumidores comprovados e justificativa estrutural em suas specs. Os cinco
+exports de validação/contraste são utilities, não componentes React. O manifesto
+agrupa os exports pelo status real do catálogo; sua geração e integridade são gates.
+
+Upload fornece seleção/remoção controladas; transporte, cancelamento, progresso,
+limites e persistência reais permanecem no consumidor. Feedback apresenta o estado
+fornecido: confirmação, retry e idempotência são decisões do fluxo. Tema exige pares
+semânticos e superfícies adjacentes explícitas; aplicar a marca e salvar o tema são
+responsabilidades do consumidor.
+
+## Gates executáveis e limite da evidência
+
+`npm run check` valida catálogo, manifesto, tipos e testes de comportamento.
+`npm run build` gera biblioteca e Storybook estático. `npm run test:stories`
+executa stories/play e a configuração a11y em Chromium e Firefox;
+`npm run test:browser` verifica teclado nativo, foco, reflow, alvos, axe e mudanças
+de preferência durante frames reais de entrada/saída. A instrumentação do teste
+observa o evento antes do listener da aplicação; não aumenta durações do piloto.
+
+`npm run test:visual` compara cenas determinísticas no container Linux fixado em
+CI, com fontes locais carregadas e UI assentada. Imagem ausente ou diferente falha;
+artefatos de falha são enviados para revisão humana. O procedimento e a proveniência
+das 14 imagens históricas estão em `tests/visual/README.md`. `npm run test:comparator`
+demonstra que uma alteração visual controlada falha e que restaurar a fixture passa.
+
+Movimento continua somente no laboratório. Teclado e reduced motion são imediatos,
+inclusive quando a preferência muda sem reload; controles em saída ficam inertes.
+Nenhum gate autoriza migração, adoção ou promoção antes dos pilotos de outubro.

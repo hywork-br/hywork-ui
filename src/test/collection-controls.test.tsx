@@ -8,6 +8,23 @@ import { ContentCell } from "../components/table-cells";
 import { CollectionDemo } from "../../stories/collections/collection-demo";
 
 describe("operational collections", () => {
+  it("keeps focus in preferences when saving clears and disables the save action", async () => {
+    sessionStorage.clear();
+    render(<CollectionDemo />);
+    const preferences = screen.getByRole("button", { name: "Preferências de visualização" });
+    await userEvent.click(preferences);
+    await userEvent.click(screen.getByText("Gerenciar visões"));
+    const name = screen.getByLabelText("Nome da visão");
+    await userEvent.type(name, "Editorial");
+    const save = screen.getByRole("button", { name: "Salvar visão" });
+    await userEvent.click(save);
+    expect(save).toBeDisabled();
+    expect(name).toHaveValue("");
+    expect(name).toHaveFocus();
+    await userEvent.keyboard("{Escape}");
+    expect(preferences).toHaveFocus();
+    expect(preferences).toHaveAttribute("aria-expanded", "false");
+  });
   it("excludes by author and by date independently and uses singular counts", async () => {
     sessionStorage.clear();
     render(<CollectionDemo />);

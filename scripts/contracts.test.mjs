@@ -25,16 +25,23 @@ async function read(relativePath) {
   }
 }
 
-test("all twelve public families have a complete 10-part contract", async () => {
+test("all public families have unique exports and complete 10-part contracts", async () => {
   const catalogSource = await read("governance/component-contracts.json");
   assert.ok(catalogSource, "component contract catalog must exist");
   const catalog = JSON.parse(catalogSource);
 
-  assert.equal(catalog.families.length, 12);
-  assert.equal(new Set(catalog.families.map((family) => family.slug)).size, 12);
+  assert.equal(new Set(catalog.families.map((family) => family.slug)).size, catalog.families.length);
+  assert.equal(new Set(catalog.families.map((family) => family.spec)).size, catalog.families.length);
+  const patterns = JSON.parse(await read("governance/patterns.json"));
+  const registered = [...catalog.families.flatMap((family) => family.exports),
+    ...patterns.patterns.map((pattern) => pattern.name),
+    ...(catalog.utilities ?? []).flatMap((utility) => utility.exports)];
+  assert.equal(new Set(registered).size, registered.length, "duplicate runtime export registration");
+  const runtime = await import("../dist/index.js");
+  assert.deepEqual([...registered].sort(), Object.keys(runtime).sort(), "every runtime export must have exactly one registration");
 
   for (const family of catalog.families) {
-    assert.equal(family.status, "beta", `${family.slug} must be beta`);
+    assert.ok(["draft", "beta", "stable", "deprecated"].includes(family.status));
     assert.ok(family.owner.design, `${family.slug} needs a design owner`);
     assert.ok(family.owner.frontend, `${family.slug} needs a frontend owner`);
     assert.ok(
@@ -56,10 +63,9 @@ test("storybook contract catalog covers every public family", async () => {
   const catalogSource = await read("governance/component-contracts.json");
   assert.ok(catalogSource, "component contract catalog must exist");
   const catalog = JSON.parse(catalogSource);
-  const stories = await read("stories/Contracts.stories.tsx");
-  assert.ok(stories, "component contract stories must exist");
-
-  for (const family of catalog.families) {
+  for (const family of [...catalog.families, ...(catalog.utilities ?? [])]) {
+    const stories = await read(family.storyFile);
+    assert.ok(stories, `${family.slug} story file must exist`);
     assert.match(
       stories,
       new RegExp(`export const ${family.storyExport}\\b`),

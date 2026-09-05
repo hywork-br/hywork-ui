@@ -60,7 +60,12 @@
     "storybook": "storybook dev -p 6006 --no-open",
     "test": "node --test scripts/*.test.mjs && vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
+    "test:stories": "node scripts/run-story-contracts.mjs",
+    "test:browser": "playwright test --project=chromium --project=firefox",
+    "test:visual": "PW_GATE=visual playwright test --project=linux-visual",
+    "test:comparator": "node scripts/prove-visual-comparator.mjs",
+    "test:browser:gate": "npm run test:stories && npm run test:browser && npm run test:visual",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.browser.json"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.23",
@@ -80,9 +85,11 @@
   "devDependencies": {
     "@changesets/cli": "^2.31.1",
     "@fontsource-variable/montserrat": "5.3.0",
+    "@playwright/test": "1.63.0",
     "@storybook/addon-a11y": "^10.5.10",
     "@storybook/addon-docs": "^10.5.10",
     "@storybook/react-vite": "^10.5.10",
+    "@storybook/test-runner": "0.24.5",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.6",

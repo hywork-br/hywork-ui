@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "../components/button";
 import { Checkbox } from "../components/choice";
 import type { CollectionDensity } from "./data-table";
@@ -141,6 +141,7 @@ export function SavedViews({
   onDelete: (id: string) => void;
 }) {
   const [name, setName] = useState("");
+  const nameRef = useRef<HTMLInputElement>(null);
   return (
     <div className="hw-collection-controls">
       <label>
@@ -161,6 +162,7 @@ export function SavedViews({
       <label>
         Nome da visão{" "}
         <input
+          ref={nameRef}
           className="hw-input"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -172,6 +174,7 @@ export function SavedViews({
         onClick={() => {
           onSave(name.trim());
           setName("");
+          nameRef.current?.focus();
         }}
       >
         Salvar visão

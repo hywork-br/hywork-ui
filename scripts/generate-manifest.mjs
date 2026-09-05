@@ -31,6 +31,11 @@ export async function buildManifest() {
   const packageJson = await readJson("package.json");
   const componentCatalog = await readJson("governance/component-contracts.json");
   const patternCatalog = await readJson("governance/patterns.json");
+  const byStatus = { stable: ["tokens"], beta: [], draft: [], deprecated: [] };
+  for (const entry of [...componentCatalog.families, ...(componentCatalog.utilities ?? []), ...patternCatalog.patterns]) {
+    if (!(entry.status in byStatus)) throw new Error(`Unknown status: ${entry.status}`);
+    byStatus[entry.status].push(...(entry.exports ?? [entry.name]));
+  }
   const uniqueTokens = new Set();
   const layers = [];
 
@@ -54,9 +59,8 @@ export async function buildManifest() {
     tokenLayers: layers,
     tokenCount: uniqueTokens.size,
     surfaces: ["admin", "portal"],
-    stable: ["tokens"],
-    beta: componentCatalog.families.flatMap((family) => family.exports),
-    draft: patternCatalog.patterns.map((pattern) => pattern.name),
+    ...byStatus,
+    utilities: (componentCatalog.utilities ?? []).flatMap((utility) => utility.exports),
     exports: Object.keys(packageJson.exports).sort(),
   };
 }

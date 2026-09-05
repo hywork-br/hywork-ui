@@ -9,6 +9,10 @@ const meta = {
 } satisfies Meta<typeof CollectionDemo>;
 export default meta;
 type Story = StoryObj<typeof meta>;
+// Fresh deterministic composition: Contents.play deliberately leaves saved filters.
+export const Baseline: Story = {
+  beforeEach: () => { sessionStorage.removeItem("hywork.collections.contents.views.v1"); },
+};
 export const Contents: Story = {
   beforeEach: () => {
     sessionStorage.removeItem("hywork.collections.contents.views.v1");

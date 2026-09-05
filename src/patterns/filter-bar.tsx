@@ -23,13 +23,13 @@ export const FilterBar = React.forwardRef<HTMLDivElement, FilterBarProps>(
       <div className="hw-filter-bar__controls">
         <div className="hw-filter-bar__search">{search}</div>
         {filters ? (
-          <div aria-label="Filtros" className="hw-filter-bar__filters">
+          <div role="group" aria-label="Filtros" className="hw-filter-bar__filters">
             {filters}
           </div>
         ) : null}
       </div>
       {activeFilters.length > 0 ? (
-        <div aria-label="Filtros ativos" className="hw-filter-bar__active">
+        <div role="group" aria-label="Filtros ativos" className="hw-filter-bar__active">
           {activeFilters.map((filter) => (
             <span className="hw-filter-chip" key={filter.id}>
               {filter.label}

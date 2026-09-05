@@ -46,3 +46,12 @@ test("every package export resolves after the library build", async () => {
     );
   }
 });
+
+test("manifest keeps new capabilities draft and distinguishes theme utilities", async () => {
+  const manifest = await readJson("manifest.json");
+  assert.ok(manifest.draft.includes("Checkbox"));
+  assert.ok(manifest.draft.includes("Pagination"));
+  assert.ok(manifest.draft.includes("validateTenantTheme"));
+  assert.ok(!manifest.beta.includes("Checkbox"));
+  assert.deepEqual(manifest.utilities.sort(), ["NON_TEXT_CONTRAST", "NORMAL_TEXT_CONTRAST", "contrastRatio", "parseOpaqueCssColor", "validateTenantTheme"].sort());
+});

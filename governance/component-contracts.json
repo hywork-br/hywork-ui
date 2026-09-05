@@ -4,170 +4,605 @@
     {
       "slug": "button",
       "name": "Button",
-      "exports": ["Button"],
+      "exports": [
+        "Button"
+      ],
       "status": "beta",
-      "owner": { "design": "Hywork Product Design", "frontend": "Hywork Frontend" },
-      "consumers": ["hywork-plataform", "hw-cloud-builder"],
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [
+        "hywork-plataform",
+        "hw-cloud-builder"
+      ],
       "structuralCase": false,
-      "surfaces": ["admin", "portal"],
-      "viewports": ["desktop", "mobile"],
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
       "spec": "specs/components/button.md",
       "storyExport": "ButtonContract",
-      "migrationWave": 1
+      "migrationWave": 1,
+      "storyFile": "stories/Contracts.stories.tsx"
     },
     {
       "slug": "field",
       "name": "Input, Field e Label",
-      "exports": ["Field", "FieldError", "FieldHint", "Input", "Label"],
+      "exports": [
+        "Field",
+        "FieldError",
+        "FieldHint",
+        "Input",
+        "Label"
+      ],
       "status": "beta",
-      "owner": { "design": "Hywork Product Design", "frontend": "Hywork Frontend" },
-      "consumers": ["hywork-plataform", "hw-cloud-builder"],
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [
+        "hywork-plataform",
+        "hw-cloud-builder"
+      ],
       "structuralCase": false,
-      "surfaces": ["admin", "portal"],
-      "viewports": ["desktop", "mobile"],
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
       "spec": "specs/components/field.md",
       "storyExport": "FieldContract",
-      "migrationWave": 1
+      "migrationWave": 1,
+      "storyFile": "stories/Contracts.stories.tsx"
     },
     {
       "slug": "textarea",
       "name": "Textarea",
-      "exports": ["Textarea"],
+      "exports": [
+        "Textarea"
+      ],
       "status": "beta",
-      "owner": { "design": "Hywork Product Design", "frontend": "Hywork Frontend" },
-      "consumers": ["hywork-plataform", "hw-cloud-builder"],
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [
+        "hywork-plataform",
+        "hw-cloud-builder"
+      ],
       "structuralCase": false,
-      "surfaces": ["admin", "portal"],
-      "viewports": ["desktop", "mobile"],
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
       "spec": "specs/components/textarea.md",
       "storyExport": "TextareaContract",
-      "migrationWave": 1
+      "migrationWave": 1,
+      "storyFile": "stories/Contracts.stories.tsx"
     },
     {
       "slug": "badge",
       "name": "Badge",
-      "exports": ["Badge"],
+      "exports": [
+        "Badge"
+      ],
       "status": "beta",
-      "owner": { "design": "Hywork Product Design", "frontend": "Hywork Frontend" },
-      "consumers": ["hywork-plataform", "hw-cloud-builder"],
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [
+        "hywork-plataform",
+        "hw-cloud-builder"
+      ],
       "structuralCase": false,
-      "surfaces": ["admin", "portal"],
-      "viewports": ["desktop", "mobile"],
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
       "spec": "specs/components/badge.md",
       "storyExport": "BadgeContract",
-      "migrationWave": 2
+      "migrationWave": 2,
+      "storyFile": "stories/Contracts.stories.tsx"
     },
     {
       "slug": "avatar",
       "name": "Avatar",
-      "exports": ["Avatar"],
+      "exports": [
+        "Avatar"
+      ],
       "status": "beta",
-      "owner": { "design": "Hywork Product Design", "frontend": "Hywork Frontend" },
-      "consumers": ["hywork-plataform", "hw-cloud-builder"],
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [
+        "hywork-plataform",
+        "hw-cloud-builder"
+      ],
       "structuralCase": false,
-      "surfaces": ["admin", "portal"],
-      "viewports": ["desktop", "mobile"],
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
       "spec": "specs/components/avatar.md",
       "storyExport": "AvatarContract",
-      "migrationWave": 2
+      "migrationWave": 2,
+      "storyFile": "stories/Contracts.stories.tsx"
     },
     {
       "slug": "skeleton",
       "name": "Skeleton",
-      "exports": ["Skeleton"],
+      "exports": [
+        "Skeleton"
+      ],
       "status": "beta",
-      "owner": { "design": "Hywork Product Design", "frontend": "Hywork Frontend" },
-      "consumers": ["hywork-plataform", "hw-cloud-builder"],
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [
+        "hywork-plataform",
+        "hw-cloud-builder"
+      ],
       "structuralCase": false,
-      "surfaces": ["admin", "portal"],
-      "viewports": ["desktop", "mobile"],
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
       "spec": "specs/components/skeleton.md",
       "storyExport": "SkeletonContract",
-      "migrationWave": 2
+      "migrationWave": 2,
+      "storyFile": "stories/Contracts.stories.tsx"
     },
     {
       "slug": "card",
       "name": "Card",
-      "exports": ["Card", "CardContent", "CardDescription", "CardFooter", "CardHeader", "CardTitle"],
+      "exports": [
+        "Card",
+        "CardContent",
+        "CardDescription",
+        "CardFooter",
+        "CardHeader",
+        "CardTitle"
+      ],
       "status": "beta",
-      "owner": { "design": "Hywork Product Design", "frontend": "Hywork Frontend" },
-      "consumers": ["hywork-plataform", "hw-cloud-builder"],
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [
+        "hywork-plataform",
+        "hw-cloud-builder"
+      ],
       "structuralCase": false,
-      "surfaces": ["admin", "portal"],
-      "viewports": ["desktop", "mobile"],
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
       "spec": "specs/components/card.md",
       "storyExport": "CardContract",
-      "migrationWave": 2
+      "migrationWave": 2,
+      "storyFile": "stories/Contracts.stories.tsx"
     },
     {
       "slug": "dialog",
       "name": "Dialog e AlertDialog",
-      "exports": ["AlertDialog", "AlertDialogClose", "AlertDialogContent", "AlertDialogDescription", "AlertDialogTitle", "AlertDialogTrigger", "Dialog", "DialogActions", "DialogClose", "DialogContent", "DialogDescription", "DialogTitle", "DialogTrigger"],
+      "exports": [
+        "AlertDialog",
+        "AlertDialogClose",
+        "AlertDialogContent",
+        "AlertDialogDescription",
+        "AlertDialogTitle",
+        "AlertDialogTrigger",
+        "Dialog",
+        "DialogActions",
+        "DialogClose",
+        "DialogContent",
+        "DialogDescription",
+        "DialogTitle",
+        "DialogTrigger"
+      ],
       "status": "beta",
-      "owner": { "design": "Hywork Product Design", "frontend": "Hywork Frontend" },
-      "consumers": ["hywork-plataform", "hw-cloud-builder"],
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [
+        "hywork-plataform",
+        "hw-cloud-builder"
+      ],
       "structuralCase": false,
-      "surfaces": ["admin", "portal"],
-      "viewports": ["desktop", "mobile"],
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
       "spec": "specs/components/dialog.md",
       "storyExport": "DialogContract",
-      "migrationWave": 3
+      "migrationWave": 3,
+      "storyFile": "stories/Contracts.stories.tsx"
     },
     {
       "slug": "menus",
       "name": "DropdownMenu e Popover",
-      "exports": ["DropdownMenu", "DropdownMenuContent", "DropdownMenuGroup", "DropdownMenuItem", "DropdownMenuLabel", "DropdownMenuSeparator", "DropdownMenuTrigger", "Popover", "PopoverClose", "PopoverContent", "PopoverTrigger"],
+      "exports": [
+        "DropdownMenu",
+        "DropdownMenuContent",
+        "DropdownMenuGroup",
+        "DropdownMenuItem",
+        "DropdownMenuLabel",
+        "DropdownMenuSeparator",
+        "DropdownMenuTrigger",
+        "Popover",
+        "PopoverClose",
+        "PopoverContent",
+        "PopoverTrigger"
+      ],
       "status": "beta",
-      "owner": { "design": "Hywork Product Design", "frontend": "Hywork Frontend" },
-      "consumers": ["hywork-plataform", "hw-cloud-builder"],
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [
+        "hywork-plataform",
+        "hw-cloud-builder"
+      ],
       "structuralCase": false,
-      "surfaces": ["admin", "portal"],
-      "viewports": ["desktop", "mobile"],
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
       "spec": "specs/components/menus.md",
       "storyExport": "MenusContract",
-      "migrationWave": 3
+      "migrationWave": 3,
+      "storyFile": "stories/Contracts.stories.tsx"
     },
     {
       "slug": "tooltip",
       "name": "Tooltip",
-      "exports": ["Tooltip", "TooltipContent", "TooltipProvider", "TooltipTrigger"],
+      "exports": [
+        "Tooltip",
+        "TooltipContent",
+        "TooltipProvider",
+        "TooltipTrigger"
+      ],
       "status": "beta",
-      "owner": { "design": "Hywork Product Design", "frontend": "Hywork Frontend" },
-      "consumers": ["hywork-plataform", "hw-cloud-builder"],
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [
+        "hywork-plataform",
+        "hw-cloud-builder"
+      ],
       "structuralCase": false,
-      "surfaces": ["admin", "portal"],
-      "viewports": ["desktop", "mobile"],
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
       "spec": "specs/components/tooltip.md",
       "storyExport": "TooltipContract",
-      "migrationWave": 3
+      "migrationWave": 3,
+      "storyFile": "stories/Contracts.stories.tsx"
     },
     {
       "slug": "select",
       "name": "Select",
-      "exports": ["Select"],
+      "exports": [
+        "Select"
+      ],
       "status": "beta",
-      "owner": { "design": "Hywork Product Design", "frontend": "Hywork Frontend" },
-      "consumers": ["hywork-plataform", "hw-cloud-builder"],
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [
+        "hywork-plataform",
+        "hw-cloud-builder"
+      ],
       "structuralCase": false,
-      "surfaces": ["admin", "portal"],
-      "viewports": ["desktop", "mobile"],
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
       "spec": "specs/components/select.md",
       "storyExport": "SelectContract",
-      "migrationWave": 4
+      "migrationWave": 4,
+      "storyFile": "stories/Contracts.stories.tsx"
     },
     {
       "slug": "tabs",
       "name": "Tabs",
-      "exports": ["Tabs", "TabsContent", "TabsList", "TabsTrigger"],
+      "exports": [
+        "Tabs",
+        "TabsContent",
+        "TabsList",
+        "TabsTrigger"
+      ],
       "status": "beta",
-      "owner": { "design": "Hywork Product Design", "frontend": "Hywork Frontend" },
-      "consumers": ["hywork-plataform", "hw-cloud-builder"],
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [
+        "hywork-plataform",
+        "hw-cloud-builder"
+      ],
       "structuralCase": false,
-      "surfaces": ["admin", "portal"],
-      "viewports": ["desktop", "mobile"],
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
       "spec": "specs/components/tabs.md",
       "storyExport": "TabsContract",
-      "migrationWave": 4
+      "migrationWave": 4,
+      "storyFile": "stories/Contracts.stories.tsx"
+    },
+    {
+      "slug": "choice",
+      "name": "choice",
+      "exports": [
+        "Checkbox",
+        "Radio",
+        "Switch"
+      ],
+      "status": "draft",
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [],
+      "structuralCase": "Contrato estrutural compartilhado de choice; justificativa e limites em specs/components/choice.md.",
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "spec": "specs/components/choice.md",
+      "storyFile": "stories/SelectionControls.stories.tsx",
+      "storyExport": "Interactive",
+      "migrationWave": null
+    },
+    {
+      "slug": "searchable-selection",
+      "name": "searchable-selection",
+      "exports": [
+        "Combobox",
+        "MultiSelect"
+      ],
+      "status": "draft",
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [],
+      "structuralCase": "Contrato estrutural compartilhado de searchable-selection; justificativa e limites em specs/components/searchable-selection.md.",
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "spec": "specs/components/searchable-selection.md",
+      "storyFile": "stories/SelectionControls.stories.tsx",
+      "storyExport": "Interactive",
+      "migrationWave": null
+    },
+    {
+      "slug": "date",
+      "name": "date",
+      "exports": [
+        "DateField",
+        "DateRangeField"
+      ],
+      "status": "draft",
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [],
+      "structuralCase": "Contrato estrutural compartilhado de date; justificativa e limites em specs/components/date.md.",
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "spec": "specs/components/date.md",
+      "storyFile": "stories/SelectionControls.stories.tsx",
+      "storyExport": "Interactive",
+      "migrationWave": null
+    },
+    {
+      "slug": "upload",
+      "name": "upload",
+      "exports": [
+        "FileUpload"
+      ],
+      "status": "draft",
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [],
+      "structuralCase": "Contrato estrutural compartilhado de upload; justificativa e limites em specs/components/upload.md.",
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "spec": "specs/components/upload.md",
+      "storyFile": "stories/SelectionControls.stories.tsx",
+      "storyExport": "Interactive",
+      "migrationWave": null
+    },
+    {
+      "slug": "table-cells",
+      "name": "table-cells",
+      "exports": [
+        "ContentCell",
+        "PersonCell",
+        "StatusCell",
+        "DateCell",
+        "NumberCell"
+      ],
+      "status": "draft",
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [],
+      "structuralCase": "Contrato estrutural compartilhado de table-cells; justificativa e limites em specs/components/table-cells.md.",
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "spec": "specs/components/table-cells.md",
+      "storyFile": "stories/QualityContracts.stories.tsx",
+      "storyExport": "CellsContract",
+      "migrationWave": null
+    },
+    {
+      "slug": "collection-controls",
+      "name": "collection-controls",
+      "exports": [
+        "Pagination",
+        "ColumnControl",
+        "DensityControl",
+        "SavedViews"
+      ],
+      "status": "draft",
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [],
+      "structuralCase": "Contrato estrutural compartilhado de collection-controls; justificativa e limites em specs/components/collection-controls.md.",
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "spec": "specs/components/collection-controls.md",
+      "storyFile": "stories/Collections.stories.tsx",
+      "storyExport": "Contents",
+      "migrationWave": null
+    },
+    {
+      "slug": "feedback",
+      "name": "feedback",
+      "exports": [
+        "Banner",
+        "InlineNotice",
+        "Toast"
+      ],
+      "status": "draft",
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [],
+      "structuralCase": "Contrato estrutural compartilhado de feedback; justificativa e limites em specs/components/feedback.md.",
+      "surfaces": [
+        "admin",
+        "portal"
+      ],
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "spec": "specs/components/feedback.md",
+      "storyFile": "stories/Feedback.stories.tsx",
+      "storyExport": "Recovery",
+      "migrationWave": null
+    }
+  ],
+  "utilities": [
+    {
+      "slug": "theme-validation",
+      "kind": "utility",
+      "exports": [
+        "parseOpaqueCssColor",
+        "contrastRatio",
+        "validateTenantTheme",
+        "NORMAL_TEXT_CONTRAST",
+        "NON_TEXT_CONTRAST"
+      ],
+      "status": "draft",
+      "spec": "specs/utilities/theme-validation.md",
+      "storyFile": "stories/Themes.stories.tsx",
+      "storyExport": "ValidationLab",
+      "owner": {
+        "design": "Hywork Product Design",
+        "frontend": "Hywork Frontend"
+      },
+      "consumers": [],
+      "structuralCase": "Validação determinística de cores opacas e pares de contraste, separada de componentes React."
     }
   ]
 }

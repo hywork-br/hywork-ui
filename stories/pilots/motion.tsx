@@ -167,7 +167,7 @@ export function PilotMotionFilterBar({
     <section className="hw-filter-bar hw-motion-filters">
       <div className="hw-filter-bar__controls">
         <div className="hw-filter-bar__search">{search}</div>
-        <div aria-label="Filtros" className="hw-filter-bar__filters">
+        <div role="group" aria-label="Filtros" className="hw-filter-bar__filters">
           {filters}
         </div>
       </div>
@@ -178,6 +178,7 @@ export function PilotMotionFilterBar({
         transition={transition}
       >
         <div
+          role="group"
           aria-label="Filtros ativos"
           className="hw-filter-bar__active"
           ref={activeRef}
