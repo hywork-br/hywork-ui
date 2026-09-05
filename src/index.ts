@@ -20,3 +20,4 @@ export * from "./components/date-field";
 export * from "./components/upload";
 export * from "./patterns/collection-controls";
 export * from "./components/table-cells";
+export * from "./components/feedback";
