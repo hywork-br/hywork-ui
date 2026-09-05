@@ -114,7 +114,9 @@ and append imports/exports in `tokens/tema.css`, `src/index.ts`. No other existi
 `stories/details/details.css`, `src/test/interface-details.test.tsx`, minimal existing motion adapter
 extensions if needed, and `governance/interface-details.md`. Integration ownership also includes
 `stories/collections/collection-demo.tsx` and `tokens/collections.css` for the existing collection's
-presentation (not a parallel implementation of its state logic), and `tokens/componentes.css` solely
+presentation (not a parallel implementation of its state logic), `stories/Collections.stories.tsx`
+and `src/test/collection-controls.test.tsx` only to preserve their existing assertions through the
+new contextual-control access path, and `tokens/componentes.css` solely
 for the existing table-header sort-button target/focus defect identified during Task 2 review.
 
 1. Compose the new primitives into an intentional minimal admin workspace: collection controls and
