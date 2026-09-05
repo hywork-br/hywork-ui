@@ -67,6 +67,8 @@ collection operations; additional capabilities must not turn the main toolbar in
   Its local action displayed “Prévia confirmada localmente.” without navigation or persistence.
 - Selecting the intentionally rejected white-on-white candidate left that actual button pair intact;
   a visible alert explained the 1:1 ratio and the 4.5:1 minimum using human PT-BR role labels.
+- All three primitive-resolved presets were exercised in the native browser: strong accent6.93:1,
+  light accent13.69:1, dark accent15.15:1, no rejection alert. These are preview text/primary ratios.
 - At390×844, document390px, Montserrat loaded, editable inputs16px and heights48/44px.
   Initial preflight also measured320px outer reflow and preset button targets44px or more.
 - `theme-validation-desktop.png` records rejected candidate, retained active preview and local result.
@@ -74,5 +76,24 @@ collection operations; additional capabilities must not turn the main toolbar in
 - These screenshots demonstrate the scoped prototype adapter, not automatic theming of every public
   component, whole-product dark mode, or October consumer adoption.
 
-Remaining axes and final integrated gates are pending. These component measurements do not certify
+### Integrated details — 5cc5c13 (before behavioral fix round)
+
+- `interface-details-desktop.png`: working Contents collection at1440×1000, bounded search,
+  contextual preferences, canonical cells and no bulk controls without selection.
+- `interface-details-mobile.png`: same collection at390×844, document390px, search358×44px/font16px;
+  Status and More filters now share a wrapping row. Horizontal scrolling belongs to the table only.
+- `interface-editor-mobile.png`: opening the real first-row edit action at390 focused the title field,
+  placed its full44px target in view (top500/bottom544), preserved draft/collection and page390px.
+  Closing the editor returned focus to Buscar conteúdos near the top of the page.
+- `interface-preferences-desktop.png`: initially hidden column/density/saved-view controls opened
+  explicitly without replacing the table or introducing a second copy of collection state.
+- `interface-detail-comparison.png`: approved/static-counterexample criteria at1440×1280.
+  At320px the specimen page measured320px and its editable field remained16px/44px.
+- `native-motion-observations.md` contains measured intermediate entry/exit frames and limitations.
+- FullJourney's native run exposed an immediate visibility assertion racing animated entrance.
+  Fixceba670 completed the native journey with7total/0selected, saved-view status and final preference
+  trigger focus. Reduced clear was rerun:0remaining contextual nodes, search focus, document320px.
+  Native Tab/Escape immediately after the save-view button disables remains a direct harness gate.
+
+Remaining fixes and final integrated gates are pending. These component measurements do not certify
 the final workspace, all contrast pairs, production adoption or the program as complete.
