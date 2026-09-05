@@ -32,6 +32,19 @@ A API é única; `data-surface` ajusta densidade. Ações móveis mantêm alvo m
 
 Mantém semântica de button/link, foco visível e `aria-busy`; loading e disabled bloqueiam ativação.
 
+Em `asChild`, a indisponibilidade bloqueia clique, ponteiro e Enter/Espaço na
+fase de captura, antes dos handlers do filho ou dos descendentes. Handlers de
+captura de ativação fornecidos pelo consumidor também ficam bloqueados. Tab
+continua funcionando. Habilitado, preserva a composição do Radix: handler do
+filho e depois do Button, uma vez cada; refs continuam no elemento interativo.
+
+Loading mantém o rótulo no layout e na árvore acessível, com spinner sobreposto
+sem acrescentar largura. O consumidor deve manter o mesmo texto para preservar
+as dimensões; trocar “Salvar” por uma frase longa ainda muda a largura. Com
+movimento reduzido o indicador fica estático e `aria-busy` mantém o estado.
+Hover é restrito a ponteiro preciso, exclui controles indisponíveis e não move
+o botão.
+
 ## Composição e erros comuns
 
 Ícone acompanha texto ou tem nome acessível. Não usar div clicável, ação sem label ou botão fake.

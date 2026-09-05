@@ -14,6 +14,27 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   variant?: ButtonVariant;
 }
 
+function unavailableCaptureHandlers(handlers: React.DOMAttributes<HTMLElement>) {
+  const block = (event: React.SyntheticEvent<HTMLElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+  const keyboard = (handler?: React.KeyboardEventHandler<HTMLElement>): React.KeyboardEventHandler<HTMLElement> => (event) => {
+    if (event.key === "Enter" || event.key === " ") block(event);
+    else handler?.(event);
+  };
+  return {
+    onClickCapture: block,
+    onDoubleClickCapture: block,
+    onPointerDownCapture: block,
+    onPointerUpCapture: block,
+    onMouseDownCapture: block,
+    onMouseUpCapture: block,
+    onKeyDownCapture: keyboard(handlers.onKeyDownCapture),
+    onKeyUpCapture: keyboard(handlers.onKeyUpCapture),
+  };
+}
+
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
@@ -32,6 +53,16 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const Component = asChild ? Slot : "button";
     const isDisabled = disabled || loading;
+    // Slot runs child handlers first. Guard the child itself before Slot merges
+    // callbacks, and guard capture so descendant actions cannot run either.
+    const child = asChild && React.isValidElement<React.HTMLAttributes<HTMLElement>>(children)
+      ? React.cloneElement(children, {
+          ...(isDisabled ? unavailableCaptureHandlers(children.props) : {}),
+          ...(isDisabled ? { "aria-disabled": true } : {}),
+          "aria-busy": loading || children.props["aria-busy"],
+          children: <span className="hw-button__label">{children.props.children}</span>,
+        })
+      : children;
     const handleClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
       if (isDisabled) {
         event.preventDefault();
@@ -43,6 +74,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <Component
+        {...props}
+        {...(isDisabled ? unavailableCaptureHandlers(props) : {})}
         aria-busy={loading || undefined}
         aria-disabled={isDisabled || undefined}
         className={cn("hw-button", className)}
@@ -52,11 +85,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         onClick={handleClick}
         ref={ref}
         type={asChild ? undefined : type}
-        {...props}
       >
         {loading ? <LoaderCircle aria-hidden="true" className="hw-button__spinner" /> : null}
         <Slottable>
-          {asChild ? children : <span className="hw-button__label">{children}</span>}
+          {asChild ? child : <span className="hw-button__label">{children}</span>}
         </Slottable>
       </Component>
     );

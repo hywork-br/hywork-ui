@@ -47,6 +47,24 @@ consumidor.
 - o consumidor preserva rota-pai, filtros, scroll e rascunho;
 - confirmação de descarte é responsabilidade do fluxo, não do shell.
 
+O opener é capturado em `onOpenAutoFocus`, antes do autofocus do modal. X,
+Escape, dismiss e fechamento controlado devolvem o foco ao opener conectado.
+`returnFocusRef?: React.RefObject<HTMLElement | null>` permite indicar um
+destino preferido (por exemplo, a busca após salvar e remover a linha filtrada).
+Se esse destino não aceita foco, tenta o opener. O destino deve ser focável,
+como um input ou heading com `tabIndex={-1}`; `body` nunca é um fallback válido.
+Se o opener desaparecer, o consumidor precisa fornecer um destino persistente.
+
+`exitDisabled?: boolean` bloqueia X, Escape e dismiss durante o salvamento.
+O consumidor ainda pode encerrar pela prop `open`, após concluir a operação.
+Formulário sujo e confirmação de descarte continuam no fluxo. A descrição
+opcional só é associada quando existe; o foco continua contido pelo Radix.
+
+O cabeçalho ocupa apenas sua altura natural e o corpo usa o espaço restante
+com scroll próprio. Portais usam a família tipográfica do design system.
+Indicadores de loading de ListPage e Skeleton ficam estáticos com movimento
+reduzido, preservando sua identificação acessível.
+
 ## Stepper
 
 Etapa futura é desabilitada. Etapa concluída pode ser reaberta via
