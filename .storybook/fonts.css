@@ -1,0 +1,9 @@
+/* Preview-owned font assets: consuming products choose their own delivery strategy. */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("@fontsource-variable/montserrat/files/montserrat-latin-wght-normal.woff2")
+    format("woff2");
+}

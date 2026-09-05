@@ -79,6 +79,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.1",
+    "@fontsource-variable/montserrat": "5.3.0",
     "@storybook/addon-a11y": "^10.5.10",
     "@storybook/addon-docs": "^10.5.10",
     "@storybook/react-vite": "^10.5.10",

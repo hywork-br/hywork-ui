@@ -126,7 +126,7 @@
 .hw-button[data-size="icon"] { flex: 0 0 auto; height: var(--hw-control-height); padding: 0; width: var(--hw-control-height); }
 .hw-button svg { height: 1rem; width: 1rem; }
 .hw-button__label { align-items: center; display: inline-flex; gap: var(--hw-space-2); justify-content: center; }
-.hw-button[aria-busy="true"] > .hw-button__label { opacity: 0; }
+.hw-button[data-loading="true"] > .hw-button__label { opacity: 0; }
 .hw-button__spinner { animation: hw-spin 800ms linear infinite; position: absolute; }
 
 .hw-field { display: grid; gap: var(--hw-space-2); }
@@ -404,7 +404,7 @@
 @media (max-width: 48rem) {
   .hw-contract__form-grid { grid-template-columns: 1fr; }
   .hw-contract__canvas { padding: var(--hw-space-4); }
-  .hw-story-frame,
+  .hw-story-frame:not(.hw-story-frame--flush),
   .hw-list-page { padding: var(--hw-space-4); }
   .hw-list-page__header,
   .hw-filter-bar__controls { align-items: stretch; flex-direction: column; }
@@ -427,4 +427,11 @@
   .hw-flow__grid { grid-template-columns: 1fr; }
   .hw-flow__actions { align-items: stretch; flex-direction: column; gap: var(--hw-space-2); }
   .hw-flow__actions .hw-button { width: 100%; }
+}
+
+/* Keep up to two quick filters visible together; the advanced action gets its own row. */
+@media (max-width: 40rem) {
+  .hw-filter-bar__filters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
+  .hw-filter-bar__filters > :not(svg) { min-width: 0; width: 100%; }
+  .hw-filter-bar__filters > .hw-button { grid-column: 1 / -1; }
 }

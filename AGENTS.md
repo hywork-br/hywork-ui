@@ -15,8 +15,8 @@ como um repositório acaba com uma dúzia de versões do mesmo componente.
 
 ## Onde está a verdade, em ordem
 
-1. **`tokens/semantico.css`** — cor, tipografia, foco, estado, tudo sob o prefixo
-   `--hw-`. É daqui que sai toda decisão visual.
+1. **`tokens/semantico.css`** — papéis aprovados de cor, tipografia, foco e estado sob
+   o prefixo `--hw-`. Verifique o valor atual, não o copie de uma skill.
 2. **`tokens/admin.css` e `tokens/portal.css`** — densidade e tamanho por
    superfície.
 3. **`tokens/componentes.css`, `src/` e `manifest.json`** — execução e API. O
@@ -26,6 +26,11 @@ como um repositório acaba com uma dúzia de versões do mesmo componente.
 O que **não** é fonte de verdade: o arquivo de design (que não é biblioteca
 publicada), o que outro trecho do código faz, e o default de qualquer
 biblioteca que a gente instalou.
+
+Código é referência de implementação, não prova de que uma decisão seja boa. Um defeito observado
+é corrigido no componente/token responsável, com evidência e consumidores identificados. Requisito
+aprovado é vinculante; heurística é contextual; receita externa é experimento. Não promover valores
+de escala, blur ou duração só por aparecerem numa referência. Uma crítica é somente leitura.
 
 ## Proibições
 
@@ -56,12 +61,26 @@ biblioteca que a gente instalou.
 - **Par bg/fg:** ao pintar um fundo, use a tinta que vem no par
   (`--hw-surface` com `--hw-surface-fg`). Combinar fundo de um par com tinta de
   outro é como se produz texto ilegível.
-- **Movimento curto:** 120–200ms, e `prefers-reduced-motion` já está tratado nos
-  tokens — não reintroduza duração fixa.
+- **Movimento contextual:** use os tokens existentes e prove o resultado em runtime. Não mova
+  todo botão no hover nem anime toda lista ao entrar. Reduced motion inclui loaders estáticos;
+  a presença de tokens não demonstra que cada componente respeita essa preferência.
 - **Padrões preservam domínio:** `ListPage`, filtros e tabela compartilham
   anatomia; taxonomia, células, permissões e ações continuam na feature.
 - **Até outubro não migre produto:** os pilotos do Storybook usam fixtures. Uma
   importação em Platform ou Builder exige o gate de migração aprovado.
+
+## Referência de integração e acabamento
+
+Leia `governance/pattern-contracts.md` para anatomia e responsabilidades, e a spec do componente
+afetado para o comportamento aprovado. As jornadas executáveis ficam em
+`stories/FeaturePilots.stories.tsx` e `stories/FocusMode.stories.tsx`; os testes correspondentes em
+`src/test/`. Filtros, status e formato da coleção preservam o domínio da feature.
+
+Para uma decisão aberta, compare um eixo principal usando o mesmo conteúdo; não gere variantes
+para bugs ou escolhas já encerradas. O experimento fica no Storybook, fora do pacote distribuído.
+Fotografia de tela comprova composição; teste de interação/gravação comprova continuidade.
+Verifique fonte carregada nos portais, foco de retorno, erro recuperável, largura no loading e
+larguras relevantes antes de afirmar qualidade. Não substitua gates de release por um piloto visual.
 
 ## Para o mantenedor humano
 

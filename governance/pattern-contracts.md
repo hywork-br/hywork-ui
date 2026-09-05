@@ -29,9 +29,21 @@ A gramática é compartilhada; a taxonomia não:
 O `FilterBar` não conhece esses campos. Ele organiza controles passados pela
 feature e oferece chips/limpeza com comportamento previsível.
 
+No mobile estreito, os filtros rápidos compartilham duas colunas e a ação de filtros avançados
+ocupa uma linha própria. A comparação de referência mantém o mesmo conteúdo e muda somente
+essa disposição. Em dispositivo de ponteiro grosseiro, os tokens admin aumentam os controles
+para 44px; desktop preserva densidade. Os campos desta tabela são exemplos de pilotos, não
+uma promessa de capacidade da API dos produtos.
+
 O consumidor serializa busca e filtros na URL. Os pilotos do Storybook usam
 query params por feature e demonstram que abrir/fechar `FocusMode` não desmonta
 a lista, não perde filtros e não move o scroll do contexto pai.
+
+Os pilotos de prioridade salvam fixtures em `sessionStorage`, com namespace e validação próprios;
+não usam backend. Erro mantém o formulário para retry; saída suja confirma descarte. Se um item
+editado deixa de corresponder ao filtro, ele não é forçado na coleção: a mensagem explica o
+resultado e o foco retorna à busca. A edição demonstrada é de metadados, não o editor completo
+de cursos, distribuição de telas ou implantação de assinaturas dos produtos.
 
 ## DataTable
 

@@ -16,11 +16,14 @@
  *    reprova, o CI diz antes do usuário.
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import ts from "typescript";
 
-const RAIZ = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+const RAIZ = process.argv[2]
+  ? path.resolve(process.argv[2])
+  : path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const ler = (f) => readFileSync(path.join(RAIZ, "tokens", f), "utf8");
 
 const falhas = [];
@@ -34,6 +37,7 @@ const semantico = semComentarios(ler("semantico.css"));
 const admin = semComentarios(ler("admin.css"));
 const portal = semComentarios(ler("portal.css"));
 const whiteLabel = semComentarios(ler("white-label.css"));
+const componentes = semComentarios(ler("componentes.css"));
 
 /**
  * 0. Nenhum par declarado pode ficar sem checagem por erro de digitação no
@@ -54,8 +58,9 @@ for (const [nome, css] of CAMADAS_SEM_HEX) {
   const hex = css.match(/#[0-9a-fA-F]{3,8}\b/g) ?? [];
   if (hex.length) {
     falhas.push(
-      `${nome}: ${hex.length} hex literal (${[...new Set(hex)].join(", ")}) — ` +
-        `só primitivos.css pode ter valor; aqui vai var(--hw-*)`,
+      `${nome}: ${hex.length} hex literal (${[...new Set(hex)].join(
+        ", "
+      )}) — ` + `só primitivos.css pode ter valor; aqui vai var(--hw-*)`
     );
   }
 }
@@ -67,7 +72,9 @@ for (const [nome, css] of CAMADAS_SEM_HEX) {
  *    vazia em runtime: a cor simplesmente não aplica.
  */
 const declarados = new Set(
-  [...`${primitivos}\n${semantico}`.matchAll(/^\s*(--hw-[\w-]+):/gm)].map((m) => m[1]),
+  [...`${primitivos}\n${semantico}`.matchAll(/^\s*(--hw-[\w-]+):/gm)].map(
+    (m) => m[1]
+  )
 );
 for (const [nome, css] of [
   ["semantico.css", semantico],
@@ -78,14 +85,20 @@ for (const [nome, css] of [
   const usados = [...css.matchAll(/var\((--hw-[\w-]+)\)/g)].map((m) => m[1]);
   const orfaos = [...new Set(usados)].filter((t) => !declarados.has(t));
   if (orfaos.length) {
-    falhas.push(`${nome}: referência a token inexistente — ${orfaos.join(", ")}`);
+    falhas.push(
+      `${nome}: referência a token inexistente — ${orfaos.join(", ")}`
+    );
   }
 
   const circulares = [...css.matchAll(/^\s*(--[\w-]+):\s*var\((--[\w-]+)\)/gm)]
     .filter((m) => m[1] === m[2])
     .map((m) => m[1]);
   if (circulares.length) {
-    falhas.push(`${nome}: auto-referência (fica vazio em runtime) — ${circulares.join(", ")}`);
+    falhas.push(
+      `${nome}: auto-referência (fica vazio em runtime) — ${circulares.join(
+        ", "
+      )}`
+    );
   }
 }
 
@@ -98,14 +111,76 @@ for (const [nome, css] of [
  * e nada acusou, porque documentação não compila.
  */
 const declaradosTodos = new Set(
-  [...[primitivos, semantico, admin, portal, whiteLabel]
-    .join("\n")
-    .matchAll(/^\s*(--[\w-]+):/gm)].map((m) => m[1]),
+  [
+    ...[primitivos, semantico, admin, portal, whiteLabel, componentes]
+      .join("\n")
+      .matchAll(/^\s*(--[\w-]+):/gm),
+  ].map((m) => m[1])
 );
+
+// Check implementation and reference compositions too, not only token declarations.
+// TypeScript's AST excludes comments without erasing strings that contain URLs or JSX.
+const implementationFiles = (directory) =>
+  readdirSync(path.join(RAIZ, directory), { withFileTypes: true })
+    .flatMap((entry) =>
+      entry.isDirectory()
+        ? implementationFiles(path.join(directory, entry.name))
+        : [path.join(directory, entry.name)]
+    )
+    .filter(
+      (file) => /\.(css|tsx?|jsx?)$/.test(file) && !/\.(test|spec)\./.test(file)
+    );
+for (const file of [
+  ...implementationFiles("src"),
+  ...implementationFiles("stories"),
+  "tokens/componentes.css",
+]) {
+  const source = readFileSync(path.join(RAIZ, file), "utf8");
+  const chunks = [];
+  if (file.endsWith(".css")) chunks.push(semComentarios(source));
+  else {
+    const tree = ts.createSourceFile(
+      file,
+      source,
+      ts.ScriptTarget.Latest,
+      true
+    );
+    const visit = (node) => {
+      if (
+        ts.isStringLiteralLike(node) ||
+        ts.isTemplateHead(node) ||
+        ts.isTemplateMiddle(node) ||
+        ts.isTemplateTail(node)
+      )
+        chunks.push(node.text);
+      ts.forEachChild(node, visit);
+    };
+    visit(tree);
+  }
+  const text = chunks.join("\n");
+  const literals =
+    text.match(/#[\da-f]{3,8}\b|\b(?:rgb|hsl|oklch|oklab)a?\([^)]*\)/gi) ?? [];
+  if (literals.length)
+    falhas.push(
+      `${file}: cor literal fora dos primitivos — ${[...new Set(literals)].join(
+        ", "
+      )}`
+    );
+  const references = [...text.matchAll(/var\(\s*(--hw-[\w-]+)\s*[,)]/g)].map(
+    (match) => match[1]
+  );
+  const missing = [...new Set(references)].filter(
+    (token) => !declaradosTodos.has(token)
+  );
+  if (missing.length)
+    falhas.push(
+      `${file}: referência a token inexistente — ${missing.join(", ")}`
+    );
+}
 for (const doc of ["README.md", "AGENTS.md", "CONTRIBUTING.md"]) {
   const texto = readFileSync(path.join(RAIZ, doc), "utf8");
   const citados = [...texto.matchAll(/`(--[\w-]+)`|var\((--[\w-]+)\)/g)].map(
-    (m) => m[1] ?? m[2],
+    (m) => m[1] ?? m[2]
   );
   /* Doc pode citar --color-* (namespace da aplicação, mencionado ao explicar a
      fronteira) e um punhado de coisas que parecem token e não são: flag de CLI
@@ -114,7 +189,10 @@ for (const doc of ["README.md", "AGENTS.md", "CONTRIBUTING.md"]) {
      documentados aqui. */
   const NAO_SAO_TOKENS = new Set(["--x", "--check", "--fresh", "--hw-"]);
   const mortos = [...new Set(citados)].filter(
-    (t) => !declaradosTodos.has(t) && !t.startsWith("--color-") && !NAO_SAO_TOKENS.has(t),
+    (t) =>
+      !declaradosTodos.has(t) &&
+      !t.startsWith("--color-") &&
+      !NAO_SAO_TOKENS.has(t)
   );
   if (mortos.length) {
     falhas.push(`${doc}: ensina token que não existe — ${mortos.join(", ")}`);
@@ -137,10 +215,12 @@ const valorDe = (token, vistos = new Set()) => {
   if (vistos.has(token)) return null; // ciclo: já reportado acima
   vistos.add(token);
   const direto = primitivos.match(
-    new RegExp(`^\\s*${token}:\\s*(#[0-9a-fA-F]{3,8})`, "m"),
+    new RegExp(`^\\s*${token}:\\s*(#[0-9a-fA-F]{3,8})`, "m")
   );
   if (direto) return direto[1];
-  const ref = semantico.match(new RegExp(`^\\s*${token}:\\s*var\\((--hw-[\\w-]+)\\)`, "m"));
+  const ref = semantico.match(
+    new RegExp(`^\\s*${token}:\\s*var\\((--hw-[\\w-]+)\\)`, "m")
+  );
   return ref ? valorDe(ref[1], vistos) : null;
 };
 
@@ -159,17 +239,57 @@ const razao = (a, b) => {
  *  4.5 = texto corrido (AA) · 3.0 = texto grande, ícone e anel de foco. */
 const PARES = [
   ["--hw-primary", "--hw-primary-fg", 4.5, "botão primário com texto pequeno"],
-  ["--hw-secondary", "--hw-secondary-fg", 4.5, "botão secundário com texto pequeno"],
+  [
+    "--hw-secondary",
+    "--hw-secondary-fg",
+    4.5,
+    "botão secundário com texto pequeno",
+  ],
   ["--hw-surface", "--hw-surface-fg", 4.5, "texto sobre superfície"],
   ["--hw-surface", "--hw-text-secondary", 4.5, "texto secundário"],
   ["--hw-surface", "--hw-text-muted", 4.5, "texto de apoio"],
-  ["--hw-surface-inverse", "--hw-surface-inverse-fg", 4.5, "texto sobre base escura"],
-  ["--hw-surface-inverse", "--hw-text-inverse-secondary", 4.5, "texto secundário no escuro"],
-  ["--hw-surface-accent", "--hw-surface-accent-fg", 4.5, "texto sobre destaque"],
-  ["--hw-surface-subtle", "--hw-surface-subtle-fg", 4.5, "texto sobre superfície sutil"],
-  ["--hw-surface-subtle", "--hw-text-muted", 4.5, "texto de apoio sobre superfície sutil"],
-  ["--hw-surface-subtle", "--hw-secondary-text", 4.5, "acento textual sobre superfície sutil"],
-  ["--hw-interactive-hover", "--hw-interactive-hover-fg", 4.5, "texto em hover"],
+  [
+    "--hw-surface-inverse",
+    "--hw-surface-inverse-fg",
+    4.5,
+    "texto sobre base escura",
+  ],
+  [
+    "--hw-surface-inverse",
+    "--hw-text-inverse-secondary",
+    4.5,
+    "texto secundário no escuro",
+  ],
+  [
+    "--hw-surface-accent",
+    "--hw-surface-accent-fg",
+    4.5,
+    "texto sobre destaque",
+  ],
+  [
+    "--hw-surface-subtle",
+    "--hw-surface-subtle-fg",
+    4.5,
+    "texto sobre superfície sutil",
+  ],
+  [
+    "--hw-surface-subtle",
+    "--hw-text-muted",
+    4.5,
+    "texto de apoio sobre superfície sutil",
+  ],
+  [
+    "--hw-surface-subtle",
+    "--hw-secondary-text",
+    4.5,
+    "acento textual sobre superfície sutil",
+  ],
+  [
+    "--hw-interactive-hover",
+    "--hw-interactive-hover-fg",
+    4.5,
+    "texto em hover",
+  ],
   ["--hw-floating", "--hw-floating-fg", 4.5, "texto em superfície flutuante"],
   ["--hw-card", "--hw-card-fg", 4.5, "texto em cartão"],
   ["--hw-surface", "--hw-input-border", 3.0, "limite visível de campo"],
@@ -178,8 +298,18 @@ const PARES = [
   ["--hw-warning", "--hw-warning-fg", 3.0, "estado de atenção"],
   ["--hw-success", "--hw-success-fg", 3.0, "estado de sucesso"],
   ["--hw-info", "--hw-info-fg", 3.0, "estado informativo"],
-  ["--hw-danger-strong", "--hw-danger-strong-fg", 4.5, "erro sólido com texto pequeno"],
-  ["--hw-muted-strong", "--hw-muted-strong-fg", 4.5, "neutro sólido com texto pequeno"],
+  [
+    "--hw-danger-strong",
+    "--hw-danger-strong-fg",
+    4.5,
+    "erro sólido com texto pequeno",
+  ],
+  [
+    "--hw-muted-strong",
+    "--hw-muted-strong-fg",
+    4.5,
+    "neutro sólido com texto pequeno",
+  ],
   ["--hw-success-soft", "--hw-success-soft-fg", 4.5, "selo suave de sucesso"],
   ["--hw-warning-soft", "--hw-warning-soft-fg", 4.5, "selo suave de atenção"],
   ["--hw-danger-soft", "--hw-danger-soft-fg", 4.5, "selo suave de erro"],
@@ -195,7 +325,7 @@ for (const [bg, fg, piso, papel] of PARES) {
        passar verde sem avaliar cor nenhuma depois de um rename. */
     falhas.push(
       `contraste ${papel}: token não resolve (${!vbg ? bg : fg}) — ` +
-        `o par não foi verificado, o que é pior que reprovar`,
+        `o par não foi verificado, o que é pior que reprovar`
     );
     continue;
   }
@@ -203,7 +333,7 @@ for (const [bg, fg, piso, papel] of PARES) {
   if (r < piso) {
     falhas.push(
       `contraste ${papel}: ${vbg} sobre ${vfg} dá ${r.toFixed(2)}:1, ` +
-        `abaixo do piso de ${piso}:1`,
+        `abaixo do piso de ${piso}:1`
     );
   }
 }

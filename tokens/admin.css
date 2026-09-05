@@ -43,3 +43,13 @@
   --hw-chrome: var(--hw-blue-tint);
   --hw-chrome-fg: var(--hw-navy);
 }
+
+/* Dense desktop controls are not touch targets. Portals inherit this root surface too. */
+@media (pointer: coarse) {
+  [data-surface="admin"],
+  .hw-admin {
+    --hw-target-min: 44px;
+    --hw-control-height: 44px;
+    --hw-control-height-sm: 44px;
+  }
+}
