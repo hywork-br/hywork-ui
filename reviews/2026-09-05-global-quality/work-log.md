@@ -105,6 +105,8 @@ the controller and human reviewer.
 
 ## Review fix round 1 — base 7a5a23c
 
+Implementation candidate: `ab3e2c4` (`fix: close contract and browser evidence gate gaps`).
+
 Linux run 33998414032 (controller-collected evidence) passed the quality job and
 11 Chromium native cases; Firefox rejected root with a pwuser-owned home. The
 pinned container now uses `--user pwuser`, as documented by
