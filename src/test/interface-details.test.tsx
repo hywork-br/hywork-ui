@@ -1,7 +1,16 @@
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { QualityWorkspace } from "../../stories/details/quality-workspace";
+import { DetailSpecimens, QualityWorkspace } from "../../stories/details/quality-workspace";
+import { FullJourney } from "../../stories/InterfaceDetails.stories";
+
+// Execute the actual play function with the local DOM harness. Motion remains real.
+vi.mock("storybook/test", async () => ({
+  expect: (await import("vitest")).expect,
+  userEvent: (await import("@testing-library/user-event")).default,
+  within: (await import("@testing-library/react")).within,
+  waitFor: (await import("@testing-library/react")).waitFor,
+}));
 
 beforeEach(() => sessionStorage.clear());
 afterEach(() => {
@@ -10,6 +19,39 @@ afterEach(() => {
 });
 
 describe("interface detail workspace", () => {
+  it("finishes reduced-motion exit from the initial preference without leaving a retained node", async () => {
+    vi.stubGlobal("matchMedia", () => Object.assign(new EventTarget(), { matches: true }));
+    render(<QualityWorkspace />);
+    await userEvent.click(screen.getByLabelText("Selecionar página"));
+    const region = screen.getByRole("region", { name: "Ações da seleção" });
+    await userEvent.click(screen.getByRole("button", { name: "Limpar seleção de todas as páginas" }));
+    expect(screen.getByRole("searchbox")).toHaveFocus();
+    expect(region).not.toBeInTheDocument();
+    await userEvent.click(screen.getByLabelText("Selecionar página"));
+    expect(screen.getAllByRole("region", { name: "Ações da seleção" })).toHaveLength(1);
+  });
+  it("completes the actual full-motion story journey including archive and saved view", async () => {
+    // jsdom omits scrollTo, which Motion uses to preserve scroll during measurement.
+    vi.stubGlobal("scrollTo", vi.fn());
+    vi.stubGlobal("matchMedia", () => Object.assign(new EventTarget(), { matches: false }));
+    document.documentElement.style.setProperty("--hw-duration-base", "180ms");
+    document.documentElement.style.setProperty("--hw-duration-fast", "120ms");
+    document.documentElement.style.setProperty("--hw-ease-standard", "cubic-bezier(0.2, 0, 0, 1)");
+    const { container } = render(<QualityWorkspace />);
+    await FullJourney.play!({ canvasElement: container } as Parameters<NonNullable<typeof FullJourney.play>>[0]);
+    expect(screen.getByText(/7 no total/)).toBeVisible();
+    expect(JSON.parse(sessionStorage.getItem("hywork.collections.contents.views.v1")!).views[0].name).toBe("Editorial compacta");
+    expect(screen.getByRole("button", { name: "Preferências de visualização" })).toHaveFocus();
+  });
+
+  it("removes the error description relationship after correcting the required title", async () => {
+    render(<DetailSpecimens />);
+    const title = screen.getByRole("textbox", { name: "Título obrigatório" });
+    expect(title).toHaveAccessibleDescription("Informe o título para continuar.");
+    await userEvent.type(title, "Integração");
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(title).not.toHaveAttribute("aria-describedby");
+  });
   it("keeps the count of applied advanced criteria visible when filters are collapsed", async () => {
     render(<QualityWorkspace />);
     const disclosure = screen.getByText("Mais filtros");

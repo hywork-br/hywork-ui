@@ -301,7 +301,6 @@ function PresenceRegion({ children, label, className }: {
         height: present ? "auto" : "0px",
         transform: target.transform,
       });
-      if (!present) remove?.();
     } else {
       void controls.start({ ...target, transition }).then(() => {
         if (current && !present) remove?.();
@@ -309,6 +308,13 @@ function PresenceRegion({ children, label, className }: {
     }
     return () => { current = false; controls.stop(); };
   }, [controls, instant, present, remove, transition.duration]);
+  useEffect(() => {
+    // AnimatePresence registers exiting keys in its parent layout effect.
+    // A child's layout-effect safeToRemove runs too early and is ignored.
+    // Visual settlement/inertness above stays synchronous; cleanup follows
+    // the parent's registration with no timer or animation-frame wait.
+    if (instant && !present) remove?.();
+  }, [instant, present, remove]);
   return <motion.div
     ref={regionRef}
     role="region"
