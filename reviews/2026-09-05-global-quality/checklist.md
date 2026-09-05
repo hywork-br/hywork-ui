@@ -60,5 +60,19 @@ collection operations; additional capabilities must not turn the main toolbar in
 - Independent review has no Critical/Important findings. Minor operation-scoping observation remains
   for final review (partial bulk failure should not style a later save message as warning).
 
+### Tenant theme validation — 238173b
+
+- Native Storybook play reached the approved dark accent after testing a rejected combination.
+- At1440×1000, the operable preview button rendered rgb(9,41,56) with white text and opacity1.
+  Its local action displayed “Prévia confirmada localmente.” without navigation or persistence.
+- Selecting the intentionally rejected white-on-white candidate left that actual button pair intact;
+  a visible alert explained the 1:1 ratio and the 4.5:1 minimum using human PT-BR role labels.
+- At390×844, document390px, Montserrat loaded, editable inputs16px and heights48/44px.
+  Initial preflight also measured320px outer reflow and preset button targets44px or more.
+- `theme-validation-desktop.png` records rejected candidate, retained active preview and local result.
+  `theme-validation-mobile.png` records the mobile rejection explanation.
+- These screenshots demonstrate the scoped prototype adapter, not automatic theming of every public
+  component, whole-product dark mode, or October consumer adoption.
+
 Remaining axes and final integrated gates are pending. These component measurements do not certify
 the final workspace, all contrast pairs, production adoption or the program as complete.
