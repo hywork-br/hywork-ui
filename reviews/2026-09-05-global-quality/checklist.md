@@ -40,5 +40,15 @@ collection operations; additional capabilities must not turn the main toolbar in
 - `before-contents-desktop.png`: original collection baseline1440×1000, pre-program UI.
 - `selection-mobile.png`: selection composition390×844 after fix (laboratory fixtures).
 
+### Operational collection — a609a89
+
+- Storybook play reached selection, search Cultura, save view and restore Cultura successfully.
+- After typography correction: desktop1440 body14px, title24px, document1440px.
+- Mobile390: every measured text/date input and select16px/44px; document390px.
+- Intermediate600: selects16px/44px; document600px (font breakpoint aligned to40rem).
+- At320: outerpage320px, table scroll region256px with757px scrollable contents.
+- `collection-mobile-functional.png`: functional composition after surface fixes, before Task5 final
+  visual integration. It is not an approved final mobile layout.
+
 Remaining axes and final integrated gates are pending. These component measurements do not certify
 the final workspace, all contrast pairs, production adoption or the program as complete.
