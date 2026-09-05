@@ -10,6 +10,10 @@ O gate usa o parser CSF instalado do Storybook (`storybook/internal/csf-tools`).
 O subconjunto suportado para play é CSF3 com objeto de story, função inline
 (`async` opcional, arrow/function/method) própria ou herdada do objeto meta.
 Uma propriedade própria, inclusive `play: undefined`, sobrepõe a do meta.
+As chaves simples `play` e `"play"` são equivalentes. O gate resolve a última
+propriedade top-level correspondente no AST validado (ordem de execução), sem
+usar as annotations parciais do parser para decidir ownership. Meta só fornece
+play quando não há essa propriedade própria na story, mesmo se seu valor é undefined.
 Generators (inclusive async), getters/setters, chaves computadas/expressões de
 propriedade, spreads de story, spreads de meta usados para herança, funções importadas ou
 expressões dinâmicas não são resolvidos: o gate falha fechado com diagnóstico.

@@ -117,3 +117,26 @@ for (const [label, metaOverride, storyOverride] of [
     assert.equal(gate().status, 0, "restored real contract must pass");
   }));
 }
+
+for (const [label, metaProperties, storyProperties, expectedStatus] of [
+  ["own undefined", "play: async () => {}", '"play": undefined', 1],
+  ["own callable", "", '"play": async () => {}', 0],
+  ["inherited callable", '"play": async () => {}', "", 0],
+  ["meta undefined wins", 'play: async () => {}, "play": undefined', "", 1],
+  ["own quoted last wins", "", 'play: undefined, "play": async () => {}', 0],
+  ["own identifier last wins", "play: async () => {}", '"play": async () => {}, play: undefined', 1],
+  ["meta quoted last wins", 'play: undefined, "play": async () => {}', "", 0],
+  ["meta identifier last wins", '"play": undefined, play: async () => {}', "", 0],
+]) {
+  test(`contract CLI resolves quoted play ${label} in source order`, () => fixture(async (directory, gate) => {
+    const path = join(directory, "stories/QualityContracts.stories.tsx");
+    const original = await readFile(path, "utf8");
+    await writeFile(path, `const meta = { title: "Contracts/Fixture", ${metaProperties} };
+      export default meta; export const CellsContract = { render: () => null, ${storyProperties} };`);
+    const result = gate();
+    assert.equal(result.status, expectedStatus, `${label} must follow actual own-property precedence`);
+    if (expectedStatus === 1) assert.match(result.stdout + result.stderr, /table-cells.*play/);
+    await writeFile(path, original);
+    assert.equal(gate().status, 0, "restored real contract must pass");
+  }));
+}

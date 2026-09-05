@@ -180,3 +180,26 @@ files (7.54s), both TypeScript configs, tokens, manifest and library build passe
 Duplicate-import scan found zero in the two edited modules; diff check passed.
 Browser/visual suites were not rerun for this parser-only change. Linux startup
 and screenshot evidence remain separate controller gates, not inferred success.
+
+## Review fix round 3 — base 8948b8e
+
+The same incomplete-annotations root also affected simple quoted keys. With the
+helper unchanged, `node --test --test-name-pattern='quoted play'
+scripts/contracts-mutations.test.mjs` exited 1 (6 failed/2 passed, 9.802s), showing
+both quoted undefined overrides escaping and valid quoted functions rejected.
+Ownership/value selection now reads the last matching Identifier/StringLiteral
+property directly from the validated top-level AST, in source order. Own undefined
+does not inherit meta. No annotations are used for that decision; computed keys,
+spreads, unresolved expressions, generators and accessors retain their guards.
+
+`node --test scripts/contracts.test.mjs scripts/contracts-mutations.test.mjs`
+passed 23/23 (35.773s), including quoted own/meta values and duplicate-key order,
+plus the previous mutation regressions and restoration of each real contract.
+A direct-helper matrix passed 40/40 probes: identifier/quoted keys × own/meta ×
+five accepted function forms and five rejected values/generator forms. No separate
+root/bypass appeared. No product code, story, CI, dependency or baseline changed;
+the controller's checklist remains excluded from staging.
+Final `npm run check` passed: 46 Node tests (36.211s), 116 Vitest tests/15 files
+(7.90s), both TypeScript configs, tokens, manifest and library build. Duplicate
+imports: zero in both edited modules; diff check passed. Browser/visual execution
+was not repeated for this parser-only round; Linux evidence remains separate.
