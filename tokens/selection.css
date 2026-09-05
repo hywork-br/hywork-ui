@@ -143,8 +143,14 @@ label:has(> .hw-choice) {
   accent-color: var(--hw-primary);
   max-inline-size: 100%;
 }
+.hw-upload {
+  min-inline-size: 0;
+}
 .hw-upload input[type="file"] {
   font: inherit;
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
   min-block-size: var(--hw-target-min);
   max-inline-size: 100%;
 }

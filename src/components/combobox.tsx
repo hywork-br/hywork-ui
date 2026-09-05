@@ -39,6 +39,7 @@ function Selection({
   const id = React.useId();
   const input = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
+  const isOpen = open && !props.disabled;
   const [query, setQuery] = React.useState("");
   const [active, setActive] = React.useState<string | null>(null);
   const visible = options.filter((option) =>
@@ -54,7 +55,7 @@ function Selection({
     setActive(null);
   };
   const select = (option: ComboboxOption) => {
-    if (option.disabled) return;
+    if (props.disabled || option.disabled) return;
     onValueChange(
       multiple
         ? value.includes(option.value)
@@ -65,11 +66,18 @@ function Selection({
     if (!multiple) close();
   };
   React.useEffect(() => {
-    if (open && activeOption)
+    if (props.disabled) {
+      setOpen(false);
+      setQuery("");
+      setActive(null);
+    }
+  }, [props.disabled]);
+  React.useEffect(() => {
+    if (isOpen && activeOption)
       document
         .getElementById(optionId(activeOption.value))
         ?.scrollIntoView?.({ block: "nearest" });
-  }, [open, activeOption?.value]);
+  }, [isOpen, activeOption?.value]);
   return (
     <div
       className={cn("hw-combobox", className)}
@@ -109,13 +117,13 @@ function Selection({
         role="combobox"
         autoComplete="off"
         aria-autocomplete="list"
-        aria-expanded={open}
-        aria-controls={open ? `${id}-list` : undefined}
+        aria-expanded={isOpen}
+        aria-controls={isOpen ? `${id}-list` : undefined}
         aria-activedescendant={
-          open && activeOption ? optionId(activeOption.value) : undefined
+          isOpen && activeOption ? optionId(activeOption.value) : undefined
         }
         value={
-          open || multiple
+          isOpen || multiple
             ? query
             : options.find((option) => option.value === value[0])?.label ?? ""
         }
@@ -126,19 +134,19 @@ function Selection({
           setActive(null);
         }}
         onKeyDown={(event) => {
-          if (event.nativeEvent.isComposing) return;
-          if (event.key === "Escape" && open) {
+          if (props.disabled || event.nativeEvent.isComposing) return;
+          if (event.key === "Escape" && isOpen) {
             event.preventDefault();
             event.stopPropagation();
             close();
           }
           if (event.key === "Enter") {
             event.preventDefault();
-            if (open && activeOption) select(activeOption);
+            if (isOpen && activeOption) select(activeOption);
           }
           if (
             ["ArrowDown", "ArrowUp"].includes(event.key) ||
-            (open && ["Home", "End"].includes(event.key))
+            (isOpen && ["Home", "End"].includes(event.key))
           ) {
             event.preventDefault();
             setOpen(true);
@@ -159,7 +167,7 @@ function Selection({
           }
         }}
       />
-      {open && (
+      {isOpen && (
         <div className="hw-combobox__popup">
           <ul
             id={`${id}-list`}
@@ -186,11 +194,9 @@ function Selection({
               </li>
             ))}
           </ul>
-          {!visible.length && (
-            <p role={multiple ? undefined : "status"}>
-              Nenhuma opção encontrada
-            </p>
-          )}
+          <div role="status" aria-live="polite" aria-atomic="true">
+            {!visible.length && <p>Nenhuma opção encontrada</p>}
+          </div>
         </div>
       )}
     </div>

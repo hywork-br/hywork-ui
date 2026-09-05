@@ -19,6 +19,67 @@ const options = [
 ];
 
 describe("selection controls", () => {
+  it.each([false, true])(
+    "closes and blocks an open selection when disabled (multiple=%s)",
+    async (multiple) => {
+      const change = vi.fn();
+      const fixture = (disabled: boolean) =>
+        multiple ? (
+          <MultiSelect
+            aria-label="Canais"
+            options={options}
+            value={[]}
+            onValueChange={change}
+            disabled={disabled}
+          />
+        ) : (
+          <Combobox
+            aria-label="Canal"
+            options={options}
+            value=""
+            onValueChange={change}
+            disabled={disabled}
+          />
+        );
+      const user = userEvent.setup();
+      const { rerender } = render(fixture(false));
+      await user.click(screen.getByRole("combobox"));
+      expect(screen.getByRole("listbox")).toBeInTheDocument();
+      rerender(fixture(true));
+      const remaining = screen.queryByRole("option", { name: "Academy" });
+      if (remaining) await user.click(remaining);
+      expect(change).not.toHaveBeenCalled();
+      expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+      expect(screen.getByRole("combobox")).toHaveAttribute(
+        "aria-expanded",
+        "false"
+      );
+      rerender(fixture(false));
+      expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+    }
+  );
+  it("announces a multi-select empty search without changing its selected count", async () => {
+    const user = userEvent.setup();
+    render(
+      <MultiSelect
+        aria-label="Canais"
+        options={options}
+        value={["a"]}
+        onValueChange={() => undefined}
+      />
+    );
+    await user.type(screen.getByRole("combobox"), "nothing");
+    expect(
+      screen
+        .getAllByRole("status")
+        .some((node) => node.textContent?.includes("Nenhuma opção encontrada"))
+    ).toBe(true);
+    expect(screen.getByText("1 selecionado")).toBeInTheDocument();
+    await user.clear(screen.getByRole("combobox"));
+    expect(
+      screen.queryByText("Nenhuma opção encontrada")
+    ).not.toBeInTheDocument();
+  });
   it("exposes mixed state, forwards refs and participates in native forms", () => {
     const ref = createRef<HTMLInputElement>();
     render(
@@ -134,7 +195,10 @@ describe("selection controls", () => {
     await user.type(input, "Acad{ArrowDown}{Enter}");
     await user.clear(input);
     await user.type(input, "Camp{ArrowDown}{Enter}");
-    expect(screen.getByRole("status")).toHaveTextContent("2 selecionados");
+    expect(screen.getByText("2 selecionados")).toHaveAttribute(
+      "role",
+      "status"
+    );
     expect(
       screen.getByRole("button", { name: "Remover Academy" })
     ).toBeInTheDocument();
@@ -143,7 +207,10 @@ describe("selection controls", () => {
       "true"
     );
     await user.click(screen.getByRole("button", { name: "Remover Academy" }));
-    expect(screen.getByRole("status")).toHaveTextContent(/^1 selecionado$/);
+    expect(screen.getByText(/^1 selecionado$/)).toHaveAttribute(
+      "role",
+      "status"
+    );
   });
   it("labels date endpoints and links invalid chronology to both inputs", () => {
     const change = vi.fn();
