@@ -14,3 +14,7 @@ export * from "./patterns/filter-bar";
 export * from "./patterns/focus-mode";
 export * from "./patterns/list-page";
 export * from "./patterns/stepper";
+export * from "./components/choice";
+export * from "./components/combobox";
+export * from "./components/date-field";
+export * from "./components/upload";
