@@ -225,6 +225,11 @@ Mutation proof rebuilt the served Storybook with the app's stop/set/inline
 settlement temporarily removed. Firefox entry failed exactly at the new behavior
 assertion (`Expected idle`, `Received paused`). Production source was restored
 with no diff and rebuilt; focused Chromium+Firefox then passed 4/4.
+This exact RED result is worker-reported: its later reporter run overwrote the raw
+artifact before independent review. The retained earlier `paused/running` artifact
+is a different harness iteration and is not cited as proof of cancellation failure.
+The committed strict `finalAnimationState === idle` assertion and the four GREEN
+JSON artifacts remain independently inspectable.
 
 Final `npm run test:browser` passed 22/22 (25.2s). The final evidence values were
 Chromium entry 0.0519651 and exit 0.864636; Firefox entry 0.0386989 and exit
@@ -234,3 +239,22 @@ event, cancellation to idle, unchanged time origin and policy instant.
 116 Vitest tests/15 files, plus tokens, manifest, both TypeScript configs and
 library build. No product/story source, dependency, lockfile or baseline change
 is part of this round. The controller checklist remains excluded from staging.
+
+## Reviewed Linux baseline capture — run 33999864794
+
+The pinned Noble container passed the non-root `pwuser` identity preflight, library/
+Storybook build and all 64 Storybook Chromium/Firefox contracts. The normal visual
+gate returned nonzero for exactly the three absent expectations and attached the
+named full-page candidates without writing expected files. The controller downloaded
+`browser-evidence-linux` and inspected all three original-resolution PNGs.
+
+The approved copies are now explicit baselines under
+`tests/visual/deterministic/linux-visual/`. Their source run/head, story/surface,
+dimensions, SHA-256 values and visual acceptance notes are recorded in the adjacent
+`PROVENANCE.md`. Mobile records the contractually table-owned horizontal viewport,
+not a card-layout claim. No snapshot update command was used.
+
+Run 33999864794 also exposed the Firefox native evidence race fixed by `101d36b`;
+that commit changes only the browser harness and this work log, so it cannot alter
+the story pixels copied from head `01a9d042`. A subsequent normal Linux CI run must
+prove the new baselines byte-for-byte and the corrected native motion gate together.

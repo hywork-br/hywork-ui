@@ -39,6 +39,10 @@ Snapshot ausente ou diferente retorna não zero; o CI normal nunca usa update-sn
 `browser-evidence-linux` contém actuals, diffs, traces e relatórios HTML de falha,
 além de screenshots anexadas dos casos de foco que passaram.
 
+Os baselines determinísticos aprovados e a origem exata de captura estão em
+`deterministic/linux-visual/PROVENANCE.md`. Eles só podem ser substituídos por outro
+commit explícito que registre o run Linux, dimensões, hashes e revisão humana.
+
 Para a primeira captura, execute o gate normal e recolha as imagens reais produzidas
 pela falha de baseline ausente: `quality-admin-candidate.png`,
 `collection-admin-candidate.png` e `quality-mobile-candidate.png`, anexadas ao relatório.

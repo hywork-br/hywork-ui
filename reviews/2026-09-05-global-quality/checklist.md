@@ -95,5 +95,37 @@ collection operations; additional capabilities must not turn the main toolbar in
   trigger focus. Reduced clear was rerun:0remaining contextual nodes, search focus, document320px.
   Native Tab/Escape immediately after the save-view button disables remains a direct harness gate.
 
-Remaining fixes and final integrated gates are pending. These component measurements do not certify
-the final workspace, all contrast pairs, production adoption or the program as complete.
+### Real browser gates — source 5c171cd, evidence 7a5a23c
+
+- Full local Storybook play/axe suite passed64tests across Chromium and Firefox. Direct browser
+  suite passed22tests, including admin/portal1440/390/320 reflow, real label hit areas, native focus
+  and dynamic reduced motion. Consumer smoke and check22Node/116Vitest passed.
+- The controller inspected the actual Chromium post-save PNG: Editorial selected, Save disabled,
+  live name input focused with an orange ring, table intact. Native Escape and Tab continue from
+  that component-owned focus without a harness repair.
+- The controller read all four actual interruption JSON attachments. Chromium entry opacity was
+  0.0470651 at the first partial frame and0.47137 at the native preference event, then1/height:auto;
+  exit0.926764/0.644089 with inert outgoing controls, then absent. Firefox entry0.044604/0.044604,
+  exit0.967274/0.967274; the same final states and instant policy were recorded without reload.
+- A controlled comparator mutation detected3592different pixels and failed; restoration passed.
+  Missing Linux baselines remain an explicit pending gate, not covered by Mac screenshots.
+- Controller runtime import:80exports, ESM54498bytes; Motion13.2.0dev-only, absent from production
+  and peer dependencies and absent as a distributed Motion import.
+
+### Linux baseline review — run 33999864794, head 01a9d042
+
+- Browser identity preflight passed as non-root `pwuser`; build and all 64 Storybook
+  Chromium/Firefox contracts passed in the pinned Playwright Noble image.
+- The normal visual command failed for exactly three absent expectations and preserved named
+  full-page candidates. No update-snapshots command or automatic expected-file write ran.
+- Controller inspected the original-resolution candidates. Montserrat, hierarchy, empty search/
+  selection, desktop table completeness and page containment passed. Mobile horizontal overflow
+  belongs to the table viewport by contract; the outer 390px page remained contained.
+- Approved files and provenance: `tests/visual/deterministic/linux-visual/PROVENANCE.md`.
+  Dimensions are 1440x1000, 1440x1032 and 390x1284; SHA-256 values are recorded there.
+- The same run found one Firefox-only ordering race in the motion evidence harness. Commit `101d36b`
+  now observes the app's actual native MQL and holds a naturally partial WAAPI frame; review approved
+  strict trusted-event, paused-to-idle cancellation and no-reload assertions. Final Linux rerun pending.
+
+Final normal CI and whole-branch independent review are pending. These measurements do not certify
+production adoption, automatic migration or every possible tenant color pair.
