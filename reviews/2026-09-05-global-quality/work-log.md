@@ -203,3 +203,34 @@ Final `npm run check` passed: 46 Node tests (36.211s), 116 Vitest tests/15 files
 (7.90s), both TypeScript configs, tokens, manifest and library build. Duplicate
 imports: zero in both edited modules; diff check passed. Browser/visual execution
 was not repeated for this parser-only round; Linux evidence remains separate.
+
+## Review fix round 4 — native reduced-motion evidence
+
+Linux run 33999864794 isolated the remaining browser failure to Firefox entry:
+the pre-mount probe and application each owned a separate native MediaQueryList,
+so Firefox could settle the application before the probe sampled the change.
+The browser harness now wraps `matchMedia` before application startup, attaches
+its observer to the exact native object returned to the application, and returns
+that object unchanged. It neither mocks preference state/events nor changes app
+motion duration.
+
+After a real partial-opacity frame appears, the harness pauses only the target's
+native opacity animation and triggers Playwright's native reduced-motion emulation.
+Evidence requires a trusted matching media event, identical held animation time,
+unchanged document time origin, and cancellation to `idle` by the existing app
+policy. Entry still must settle to opacity 1/height auto; exit must already be
+inert and then be removed. Partial-opacity assertions remain strict.
+
+Mutation proof rebuilt the served Storybook with the app's stop/set/inline
+settlement temporarily removed. Firefox entry failed exactly at the new behavior
+assertion (`Expected idle`, `Received paused`). Production source was restored
+with no diff and rebuilt; focused Chromium+Firefox then passed 4/4.
+
+Final `npm run test:browser` passed 22/22 (25.2s). The final evidence values were
+Chromium entry 0.0519651 and exit 0.864636; Firefox entry 0.0386989 and exit
+0.974422. All four recorded trusted native events, the held partial state at the
+event, cancellation to idle, unchanged time origin and policy instant.
+`npm run typecheck` exited 0. `npm run check` exited 0 with 46 Node tests and
+116 Vitest tests/15 files, plus tokens, manifest, both TypeScript configs and
+library build. No product/story source, dependency, lockfile or baseline change
+is part of this round. The controller checklist remains excluded from staging.

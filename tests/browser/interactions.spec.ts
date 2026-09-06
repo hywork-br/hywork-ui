@@ -6,6 +6,13 @@ import { openStory, expectSettled } from "./helpers";
 const require = createRequire(import.meta.url);
 const workspace = "lab-interface-details--workspace";
 
+type MotionChange = {
+  atChange: number; inert: boolean; trusted: boolean; matches: boolean;
+  heldStateAtChange: string | null; heldTimeAtChange: number | null;
+  finalOpacity: string | null; finalHeight: string | null; policy: string | null;
+  finalAnimationState: string | null; timeOrigin: number;
+};
+
 for (const key of ["Escape", "Tab"] as const) {
   test(`native ${key} immediately after saving disables the Save button`, async ({ page }, testInfo) => {
     await openStory(page, workspace);
@@ -115,49 +122,87 @@ test("keyboard selection is immediate and visible focus uses the orange semantic
 
 for (const direction of ["entry", "exit"] as const) {
   test(`reduced preference interrupts rendered ${direction} mid-flight without reload`, async ({ page }, testInfo) => {
-    // Observe before the application's media listener synchronously settles styles.
-    // Registering after mount measures the successful settlement, not interruption.
+    // Observe each real native MQL before returning it to application listeners.
+    // Ordering between separate MediaQueryList objects is not portable across engines.
     await page.addInitScript(() => {
-      const probe = window as unknown as { motionChange: Promise<unknown> };
+      const probe = window as unknown as { motionChange: Promise<MotionChange>; heldAnimation?: Animation };
+      const nativeMatchMedia = window.matchMedia.bind(window);
       probe.motionChange = new Promise((resolve) => {
-        matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", () => {
+        let observed = false;
+        const observe = (event: MediaQueryListEvent) => {
+          if (!event.matches || observed) return;
+          observed = true;
           const before = document.querySelector("[data-pilot-presence]");
           const atChange = before ? Number(getComputedStyle(before).opacity) : -1;
           const inert = !before || (before as HTMLElement).inert;
+          const heldStateAtChange = probe.heldAnimation?.playState ?? null;
+          const heldTimeAtChange = probe.heldAnimation?.currentTime == null ? null : Number(probe.heldAnimation.currentTime);
           requestAnimationFrame(() => requestAnimationFrame(() => {
             const element = document.querySelector("[data-pilot-presence]");
-            resolve({ atChange, inert, finalOpacity: element ? getComputedStyle(element).opacity : null,
+            resolve({ atChange, inert, trusted: event.isTrusted, matches: event.matches,
+              heldStateAtChange, heldTimeAtChange,
+              finalAnimationState: probe.heldAnimation?.playState ?? null, timeOrigin: performance.timeOrigin,
+              finalOpacity: element ? getComputedStyle(element).opacity : null,
               finalHeight: element ? (element as HTMLElement).style.height : null,
               policy: document.querySelector("[data-pilot-motion]")?.getAttribute("data-pilot-motion") ?? null });
           }));
-        }, { once: true });
+        };
+        window.matchMedia = (query) => {
+          const media = nativeMatchMedia(query);
+          if (query === "(prefers-reduced-motion: reduce)" || query === "(prefers-reduced-motion)")
+            media.addEventListener("change", observe, { once: true });
+          return media;
+        };
       });
     });
     await openStory(page, workspace);
+    const timeOrigin = await page.evaluate(() => performance.timeOrigin);
     const select = page.getByLabel("Selecionar página", { exact: true });
     if (direction === "exit") { await select.click(); await expectSettled(page); }
     // Arm the actual rendered partial-frame observer BEFORE the pointer action.
-    const partial = page.evaluate(() => new Promise<number>((resolve) => {
+    const partial = page.evaluate(() => new Promise<{ sampledOpacity: number; opacity: number; playState: string; heldTime: number }>((resolve, reject) => {
       const sample = () => {
         const element = document.querySelector("[data-pilot-presence]");
         const opacity = element ? Number(getComputedStyle(element).opacity) : -1;
-        if (opacity > 0 && opacity < 1) resolve(opacity);
-        else requestAnimationFrame(sample);
+        const animation = element?.getAnimations().find((candidate) => candidate.playState === "running"
+          && (candidate.effect as KeyframeEffect).getKeyframes().some((frame) => "opacity" in frame));
+        if (opacity > 0 && opacity < 1 && animation) {
+          (window as unknown as { heldAnimation: Animation }).heldAnimation = animation;
+          // Hold this naturally rendered frame; do not seek, alter duration, or set styles.
+          // Only the application may cancel it after the real preference change.
+          animation.pause();
+          void animation.ready.then(() => resolve({ sampledOpacity: opacity,
+            opacity: Number(getComputedStyle(element!).opacity), playState: animation.playState,
+            heldTime: Number(animation.currentTime) })).catch(reject);
+        } else requestAnimationFrame(sample);
       };
       requestAnimationFrame(sample);
     }));
     const clicked = select.click();
-    const opacity = await partial;
+    const { sampledOpacity, opacity, playState, heldTime } = await partial;
+    expect(sampledOpacity).toBeGreaterThan(0);
+    expect(sampledOpacity).toBeLessThan(1);
     expect(opacity).toBeGreaterThan(0);
     expect(opacity).toBeLessThan(1);
+    expect(playState, "native partial opacity must be held before crossing the media protocol boundary").toBe("paused");
+    const partialImage = testInfo.outputPath("paused-partial-frame.png");
+    await page.screenshot({ path: partialImage, animations: "allow" });
+    await testInfo.attach("paused-partial-frame", { path: partialImage, contentType: "image/png" });
     await page.emulateMedia({ reducedMotion: "reduce" });
-    const result = await page.evaluate(() => (window as unknown as { motionChange: Promise<{ atChange: number; finalOpacity: string | null; finalHeight: string | null; inert: boolean; policy: string | null }> }).motionChange);
+    const result = await page.evaluate(() => (window as unknown as { motionChange: Promise<MotionChange> }).motionChange);
     await clicked;
     const motionEvidence = testInfo.outputPath("rendered-interruption.json");
-    await writeFile(motionEvidence, JSON.stringify({ direction, partialOpacity: opacity, ...result }, null, 2));
+    await writeFile(motionEvidence, JSON.stringify({ direction, harnessControl: "pause native opacity at rendered partial frame",
+      partialOpacity: sampledOpacity, heldOpacity: opacity, heldTime, ...result }, null, 2));
     await testInfo.attach("rendered-interruption", { path: motionEvidence, contentType: "application/json" });
     expect(result.atChange, "preference must change before animation already settled").toBeGreaterThan(0);
     expect(result.atChange).toBeLessThan(1);
+    expect(result.trusted, "preference event must come from the browser, not a dispatched fixture").toBe(true);
+    expect(result.matches).toBe(true);
+    expect(result.heldStateAtChange).toBe("paused");
+    expect(result.heldTimeAtChange).toBe(heldTime);
+    expect(result.finalAnimationState, "application must cancel the held native animation").toBe("idle");
+    expect(result.timeOrigin, "preference changes without reloading the document").toBe(timeOrigin);
     expect(result.policy).toBe("instant");
     if (direction === "entry") {
       expect(result.finalOpacity).toBe("1");
