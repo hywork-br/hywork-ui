@@ -7,6 +7,29 @@ import {
 } from "./lib/inventory.mjs";
 
 for (const [before, after] of [
+  ["/** @jsxImportSource react */", "/** @jsxImportSource preact */"],
+  ["/** @jsxRuntime automatic */", "/** @jsxRuntime classic */"],
+  ["/** @jsx React.createElement */", "/** @jsx h */"],
+  ["/** @jsxFrag React.Fragment */", "/** @jsxFrag Fragment */"],
+  ["/** @jsxImportSource react */", ""],
+]) test(`preserves compiler directive semantics: ${before}`, () => {
+  assert.equal(
+    classifySourceDifference(`${before}\nexport const View = <><div /></>;`, `${after}\nexport const View = <><div /></>;`),
+    "api-or-behavior",
+  );
+});
+
+test("ordinary comments and formatting around an unchanged JSX directive remain format-only", () => {
+  assert.equal(
+    classifySourceDifference(
+      "/** @jsxImportSource react */\n// Original explanation\nexport const View=<div />;",
+      "// Revised explanation\n\n/** @jsxImportSource react */\nexport const View = <div />;\n",
+    ),
+    "format-only",
+  );
+});
+
+for (const [before, after] of [
   ['const city = "New York";', 'const city = "NewYork";'],
   ['function answer() { return\n42; }', 'function answer() { return 42; }'],
   ['const el = <span>New York</span>;', 'const el = <span>NewYork</span>;'],

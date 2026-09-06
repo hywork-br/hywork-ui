@@ -357,3 +357,31 @@ The exact `npm run test:visual` gate was executed: exit 1 on all three scenes at
 the explicit Linux-only guard (`darwin` host). Docker exists but `docker info`
 cannot connect to its daemon. This wave does not claim refreshed Linux pixel
 evidence and does not edit baselines; controller CI remains required for that gate.
+
+## Residual inventory review — JSX compiler pragmas (2026-09-05)
+
+Base `0a08f0fcef859380baa825d61790ecbbb5b4b34e`. Review confirmed the ten original
+fixes and found one remaining formatting-classification defect: removing comments
+also erased JSX compiler pragmas. A real TypeScript transpile probe emitted
+`react/jsx-runtime` for `@jsxImportSource react` and `preact/jsx-runtime` for
+`@jsxImportSource preact`, confirming that this comment changes runtime code.
+
+The inventory signature now combines printed syntax with TypeScript-parsed JSX
+pragma arguments: `jsximportsource`, `jsxruntime`, `jsx`, and `jsxfrag`. It preserves
+repeated-directive order and excludes source ranges. Ordinary prose and formatting
+around an unchanged pragma retain format-only classification. The migration docs
+state this boundary; no public library/UI implementation or draft status changed.
+
+RED: `node --test scripts/inventory.test.mjs` exited 1, five failed/eight passed.
+The five new cases cover changing import source, runtime, factory, fragment and
+removing import source. GREEN: `node --test scripts/inventory.test.mjs
+scripts/audit-consumers.test.mjs` exited 0, 16/16. Existing semantic whitespace and
+stable scorecard assertions were preserved. `npm run check` exited 0: 67 Node
+tests and 123 React tests/16 files, token/manifest guards, both tsconfigs and library
+build. `npm run build && npm run smoke:consumer` exited 0: library + Storybook
+build, clean Git dependency installation with dist/declarations/runtime imports,
+and the Next/Tailwind consumer production build all passed. The existing large
+Storybook chunk advisory remains. `git diff --check` passed. This parser-only
+residual does not change browser-rendered code, dependencies or baselines; native
+browser and Linux comparison gates were not repeated for this residual. The
+previously recorded Linux-host limitation remains outside this local correction.

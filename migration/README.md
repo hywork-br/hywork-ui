@@ -26,6 +26,9 @@ originais; `default` representa import default e `*` representa namespace/star.
 root ausente ou arquivo falha com exit nonzero. Uma árvore rastreada sem `.tsx`
 é uma leitura válida de zero componentes. A classificação `format-only` exige
 sintaxe equivalente, preservando strings, JSX e o efeito de quebras de linha em ASI.
+Diretivas JSX (`@jsxImportSource`, `@jsxRuntime`, `@jsx` e `@jsxFrag`) também entram
+na comparação porque alteram o código emitido; comentários comuns e mudanças de
+posição da mesma diretiva continuam sendo formatação.
 
 Veja também:
 

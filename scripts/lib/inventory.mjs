@@ -4,7 +4,18 @@ function normalizedSyntax(source) {
   const tree = ts.createSourceFile("component.tsx", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
   // Invalid/unsupported syntax cannot establish formatting equivalence.
   if (tree.parseDiagnostics.length) return null;
-  return ts.createPrinter({ removeComments: true, newLine: ts.NewLineKind.LineFeed }).printFile(tree);
+  // JSX pragmas are comments syntactically, but select the emitted runtime and
+  // factory. Preserve their parsed arguments (and repeated-directive order),
+  // excluding source positions so ordinary comment/layout edits remain cosmetic.
+  const jsxPragmas = [...tree.pragmas]
+    .filter(([name]) => ["jsx", "jsxfrag", "jsximportsource", "jsxruntime"].includes(name))
+    .sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0)
+    .map(([name, entries]) => [
+      name,
+      (Array.isArray(entries) ? entries : [entries]).map((entry) => entry.arguments),
+    ]);
+  const syntax = ts.createPrinter({ removeComments: true, newLine: ts.NewLineKind.LineFeed }).printFile(tree);
+  return JSON.stringify({ jsxPragmas, syntax });
 }
 
 export function classifySourceDifference(platformSource, builderSource) {
