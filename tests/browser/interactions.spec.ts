@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import { createRequire } from "node:module";
 import { writeFile } from "node:fs/promises";
 import { openStory, expectSettled } from "./helpers";
+import { installOpacityProbe, type OpacityProbeWindow } from "./native-opacity-probe";
 
 for (const surface of ["admin", "portal"]) {
   test(`${surface}: small Button respects the surface target floor`, async ({ page }, testInfo) => {
@@ -175,8 +176,25 @@ test("keyboard selection is immediate and visible focus uses the orange semantic
   expect(focus.color).toBe(focus.token);
 });
 
+test("native opacity observer reports bounded absence for instant keyboard entry", async ({ page }) => {
+  await page.addInitScript(installOpacityProbe);
+  await openStory(page, workspace);
+  const select = page.getByLabel("Selecionar página", { exact: true });
+  await select.focus();
+  await page.evaluate(() => (window as unknown as OpacityProbeWindow).opacityProbe.arm());
+  await page.keyboard.press("Space");
+  await page.evaluate(() => (window as unknown as OpacityProbeWindow).opacityProbe.actionComplete());
+  const result = await page.evaluate(() => (window as unknown as OpacityProbeWindow).opacityProbe.result);
+  expect(result.status).toBe("failed");
+  if (result.status !== "failed") throw new Error("Instant entry must not manufacture native motion evidence");
+  expect(result.reason).toBe("no-native-opacity-birth");
+  await expect(page.locator("[data-pilot-motion]")).toHaveAttribute("data-pilot-motion", "instant");
+  await expect(page.locator("[data-pilot-presence]")).toHaveCSS("opacity", "1");
+});
+
 for (const direction of ["entry", "exit"] as const) {
   test(`reduced preference interrupts rendered ${direction} mid-flight without reload`, async ({ page }, testInfo) => {
+    await page.addInitScript(installOpacityProbe);
     // Observe each real native MQL before returning it to application listeners.
     // Ordering between separate MediaQueryList objects is not portable across engines.
     await page.addInitScript(() => {
@@ -215,46 +233,17 @@ for (const direction of ["entry", "exit"] as const) {
     const timeOrigin = await page.evaluate(() => performance.timeOrigin);
     const select = page.getByLabel("Selecionar página", { exact: true });
     if (direction === "exit") { await select.click(); await expectSettled(page); }
-    // Arm the actual rendered partial-frame observer BEFORE the pointer action.
-    const partial = page.evaluate(() => new Promise<{ sampledOpacity: number; opacity: number;
-      playState: string; pending: boolean; heldTime: number; pauseFrameChecks: number }>((resolve, reject) => {
-      const sample = () => {
-        const element = document.querySelector("[data-pilot-presence]");
-        const opacity = element ? Number(getComputedStyle(element).opacity) : -1;
-        const animation = element?.getAnimations().find((candidate) => candidate.playState === "running"
-          && (candidate.effect as KeyframeEffect).getKeyframes().some((frame) => "opacity" in frame));
-        if (opacity > 0 && opacity < 1 && animation) {
-          (window as unknown as { heldAnimation: Animation }).heldAnimation = animation;
-          // Hold this naturally rendered frame; do not seek, alter duration, or set styles.
-          // Only the application may cancel it after the real preference change.
-          animation.pause();
-          let pauseFrameChecks = 0;
-          const commitPause = () => {
-            const heldOpacity = Number(getComputedStyle(element!).opacity);
-            const heldTime = animation.currentTime == null ? Number.NaN : Number(animation.currentTime);
-            if (animation.playState === "paused" && !animation.pending
-              && Number.isFinite(heldTime) && heldOpacity > 0 && heldOpacity < 1) {
-              resolve({ sampledOpacity: opacity, opacity: heldOpacity, playState: animation.playState,
-                pending: animation.pending, heldTime, pauseFrameChecks });
-              return;
-            }
-            if (pauseFrameChecks >= 4) {
-              reject(new Error(`native opacity pause did not commit: ${JSON.stringify({
-                opacity: heldOpacity, playState: animation.playState, pending: animation.pending,
-                currentTime: animation.currentTime, pauseFrameChecks,
-              })}`));
-              return;
-            }
-            pauseFrameChecks += 1;
-            requestAnimationFrame(commitPause);
-          };
-          queueMicrotask(commitPause);
-        } else requestAnimationFrame(sample);
-      };
-      requestAnimationFrame(sample);
-    }));
-    const clicked = select.click();
-    const { sampledOpacity, opacity, playState, pending, heldTime, pauseFrameChecks } = await partial;
+    // Acknowledge arming synchronously before dispatching the real pointer action.
+    await page.evaluate(() => (window as unknown as OpacityProbeWindow).opacityProbe.arm());
+    await select.click();
+    await page.evaluate(() => (window as unknown as OpacityProbeWindow).opacityProbe.actionComplete());
+    const partial = await page.evaluate(() => (window as unknown as OpacityProbeWindow).opacityProbe.result);
+    const observationEvidence = testInfo.outputPath("native-opacity-observation.json");
+    await writeFile(observationEvidence, JSON.stringify(partial, null, 2));
+    await testInfo.attach("native-opacity-observation", { path: observationEvidence, contentType: "application/json" });
+    if (partial.status === "failed") throw new Error(`Native opacity observation failed: ${JSON.stringify(partial)}`);
+    const { sampledOpacity, opacity, playState, pending, heldTime, pauseFrameChecks, source, sameNativeAnimation } = partial;
+    expect(sameNativeAnimation, "hold the exact native animation returned to Motion at birth").toBe(true);
     expect(sampledOpacity).toBeGreaterThan(0);
     expect(sampledOpacity).toBeLessThan(1);
     expect(opacity).toBeGreaterThan(0);
@@ -266,10 +255,10 @@ for (const direction of ["entry", "exit"] as const) {
     await testInfo.attach("paused-partial-frame", { path: partialImage, contentType: "image/png" });
     await page.emulateMedia({ reducedMotion: "reduce" });
     const result = await page.evaluate(() => (window as unknown as { motionChange: Promise<MotionChange> }).motionChange);
-    await clicked;
     const motionEvidence = testInfo.outputPath("rendered-interruption.json");
     await writeFile(motionEvidence, JSON.stringify({ direction,
-      harnessControl: "pause native opacity after bounded pending-state commit",
+      harnessControl: "observe native birth/play commitment; pause naturally partial opacity with bounded commitment",
+      observationSource: source, sameNativeAnimation,
       partialOpacity: sampledOpacity, heldOpacity: opacity, heldTime, pauseFrameChecks, ...result }, null, 2));
     await testInfo.attach("rendered-interruption", { path: motionEvidence, contentType: "application/json" });
     expect(result.atChange, "preference must change before animation already settled").toBeGreaterThan(0);

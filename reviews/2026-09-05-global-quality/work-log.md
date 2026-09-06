@@ -385,3 +385,55 @@ Storybook chunk advisory remains. `git diff --check` passed. This parser-only
 residual does not change browser-rendered code, dependencies or baselines; native
 browser and Linux comparison gates were not repeated for this residual. The
 previously recorded Linux-host limitation remains outside this local correction.
+
+## Residual CI harness — observe native animation startup (2026-09-06)
+
+Base `26292c6bb9f2b0b674b95a91203f09cb03c07608`. Supplied GitHub run
+`34008092269` passed quality and Linux visual comparisons (3/3), but Firefox
+entry interruption left the opacity observer pending. The downloaded trace shows
+the sampling evaluate starting at 48590.235 ms and the pointer action completing
+at 48683.227 ms, with no completed sampling result. The final screenshot contains
+the selected entry state. The old sampler had no terminal/budget branch: once a
+partial window was missed, it could poll forever. The trace does not record exact
+per-frame cadence; scheduler starvation is reproduced separately, deterministically.
+
+Inspected the installed Motion implementation: `start-waapi-animation.mjs` calls
+`element.animate`; `NativeAnimationExtended` can assign startTime after that call
+returns; native completion writes the final value and cancels the animation.
+The new test-only `tests/browser/native-opacity-probe.ts` observes that real birth
+and native ready/finished promises, with rendered-frame sampling as a fallback.
+It returns the exact Animation and passes original arguments unchanged. The test
+acknowledges arming before the pointer action, avoiding cross-protocol setup races.
+The only playback control remains pause, after naturally partial CSS opacity and
+native progress on a connected, nonzero-size element. No seek/currentTime write,
+style/timing/playback-rate change, sleep, retry or increased timeout was added.
+
+Liveness is explicit: native finish/cancel fails immediately if no partial sample
+was held; fallback sampling permits 16 frames, pause commitment four frames, and
+absent birth four frames after the action completes. Failures include native state,
+progress and observations. Native identity, strict partial opacity, committed pause,
+trusted native MQL event, identical held time at preference change, app cancellation
+to idle, correct entry/exit state and unchanged document timeOrigin remain asserted.
+JSON diagnostics and an actual held-frame PNG are attached before preference change.
+
+RED: `node --test scripts/native-opacity-probe.test.mjs` against the extracted old
+sampler failed all three tests (outcome remained undefined). The controlled scheduler
+withholds all observer frames while a born animation finishes, resolves native ready
+at partial progress without polling, and exercises absent birth. These fixtures
+prove observer scheduling/liveness only, not browser rendering. GREEN: the same
+command passed 3/3 with birth/ready observation. The real browser additionally
+checks bounded absence using the app's instant keyboard entry, with no fake animation.
+
+Executed gates: focused entry/exit Chromium/Firefox 4/4; full `npm run test:browser`
+32/32; `npm run check` exit 0 (70 Node, 123 React, both tsconfigs, token/manifest
+checks and library build); `npm run build` exit 0 (library and Storybook, existing
+large-chunk advisory). Full-suite Firefox entry evidence records native-ready source,
+opacity 0.000680879, held time 2.84 ms, pause commitment after one frame, same native
+Animation, trusted event at that same partial value/time, then idle/final opacity 1
+and height auto. Actual partial-frame screenshot was reviewed. This is native
+macOS browser evidence; the corrected harness still needs a fresh Linux CI run.
+No production code, Storybook fixture, dependency, baseline or public API changed.
+
+Harness gotcha: observe a short native animation at its creation/play-commit seam;
+late DOM/rAF polling alone cannot guarantee observing any partial window. A missed
+window must terminate with evidence rather than remain an unbounded Promise.
