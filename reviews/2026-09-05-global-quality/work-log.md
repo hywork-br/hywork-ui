@@ -268,10 +268,12 @@ attachment was produced, and the only unresolved branch after observing the real
 animation was the promise returned by `animation.ready`. The prior Linux run's
 0.0395517 entry partial disproves a missing animation or missing rendered frame.
 
-The observable cause is therefore the harness waiting indefinitely for Firefox
-Linux to resolve `ready` after `pause()`; the trace does not establish the browser's
-internal cause. Web Animations provides `pending` to report asynchronous play/pause
-operations. The harness now commits the pause by inspecting native state instead:
+The leading hypothesis is the harness waiting indefinitely for Firefox Linux to
+resolve `ready` after `pause()`. The trace does not distinguish that branch from
+the preceding frame-sampling loop and does not establish a browser-internal cause;
+evidence from the earlier run is contextual, not same-run proof. Web Animations
+provides `pending` to report asynchronous play/pause operations. The harness now
+commits the pause by inspecting native state instead:
 an initial microtask plus at most four animation-frame checks must observe the same
 opacity animation as paused, non-pending, with finite current time and opacity still
 strictly partial. Failure rejects immediately after the bounded checks with the
