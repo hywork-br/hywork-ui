@@ -121,7 +121,7 @@
 .hw-button[data-variant="outline"] { background: var(--hw-surface); border-color: var(--hw-border); color: var(--hw-text); }
 .hw-button[data-variant="quiet"] { background: transparent; color: var(--hw-text-secondary); }
 .hw-button[data-variant="danger"] { background: var(--hw-danger-strong); color: var(--hw-danger-strong-fg); }
-.hw-button[data-size="sm"] { min-height: var(--hw-control-height-sm); padding-inline: var(--hw-space-3); }
+.hw-button[data-size="sm"] { min-height: max(var(--hw-control-height-sm), var(--hw-target-min)); padding-inline: var(--hw-space-3); }
 .hw-button[data-size="lg"] { min-height: max(var(--hw-control-height), var(--hw-target-min)); padding-inline: var(--hw-space-6); }
 .hw-button[data-size="icon"] { flex: 0 0 auto; height: var(--hw-control-height); padding: 0; width: var(--hw-control-height); }
 .hw-button svg { height: 1rem; width: 1rem; }
@@ -380,6 +380,7 @@
 .hw-input:focus-visible,
 .hw-textarea:focus-visible,
 .hw-select:focus-visible,
+.hw-select__item:focus-visible,
 .hw-menu__item:focus-visible,
 .hw-tabs__trigger:focus-visible,
 .hw-stepper button:focus-visible,
@@ -392,6 +393,9 @@
 }
 
 /* A focused field has one orange perimeter, not a blue edge plus an orange ring. */
+/* The Radix scroll viewport clips outward rings on the first/last option. */
+.hw-select__item:focus-visible { outline-offset: calc(-1 * (var(--hw-focus-width) + var(--hw-focus-offset))); }
+
 .hw-input:focus-visible:not([aria-invalid="true"]),
 .hw-textarea:focus-visible:not([aria-invalid="true"]),
 .hw-select:focus-visible { border-color: transparent; }

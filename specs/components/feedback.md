@@ -44,6 +44,10 @@ Ações e dispensa são botões nomeados com foco visível. Não roubar foco par
 
 Consumidor possui dados, permissões, rede, persistência e regras de negócio. Não interprete ausência como zero nem retry visual como envio confirmado. Fixtures do laboratório não comprovam adoção.
 
+Identifique a operação dona de cada resultado. No piloto, salvar o rascunho após
+falha parcial de publicação produz confirmação própria; o retry continua no aviso
+contextual dos itens pendentes e nunca vira ação da confirmação de salvamento.
+
 ## Proveniência, status, owner e migração
 
 Draft em 2026-09-05. Owners: Hywork Product Design e Hywork Frontend. Justificativa estrutural: Avisos recuperáveis e confirmação explícita sem controlar persistência, permissão ou rede. Zero consumidores comprovados; promoção depende dos pilotos de outubro. Contrato executável: `stories/Feedback.stories.tsx#Recovery`.

@@ -53,6 +53,10 @@ de cursos, distribuição de telas ou implantação de assinaturas dos produtos.
 
 ## DataTable
 
+Um renderer fornecido é a autoridade da célula: retornos `null`, `undefined` e
+`false` deixam a célula vazia; `0` aparece como zero. O valor cru só é usado quando
+a coluna não fornece `render`.
+
 A tabela é semântica, responsiva por scroll e usa ação nomeada para ordenação.
 Colunas, células, paginação remota, seleção e regras de permissão ficam no
 consumidor.

@@ -18,6 +18,15 @@ Não existe codemod destrutivo nesta versão. O auditor mede adoção, mas não
 reescreve imports. Cada consumidor preserva seu auth, dados, feature flags e
 renderização de domínio.
 
+`audit-adoption` analisa imports e reexports estáticos pela sintaxe TypeScript:
+conta default, named, namespace e export star em runtime, excluindo declarações
+type-only, comentários e strings. `packageImportedNames` usa os nomes exportados
+originais; `default` representa import default e `*` representa namespace/star.
+`audit-consumers` exige que cada root seja uma árvore Git na revisão selecionada;
+root ausente ou arquivo falha com exit nonzero. Uma árvore rastreada sem `.tsx`
+é uma leitura válida de zero componentes. A classificação `format-only` exige
+sintaxe equivalente, preservando strings, JSX e o efeito de quebras de linha em ASI.
+
 Veja também:
 
 - [`october-checklist.md`](./october-checklist.md)

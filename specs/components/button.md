@@ -28,6 +28,9 @@ Papéis de ação, foreground, hover, borda, foco, altura, raio, espaçamento, d
 
 A API é única; `data-surface` ajusta densidade. Ações móveis mantêm alvo mínimo e podem ocupar a largura disponível.
 
+Mesmo `size="sm"` respeita `--hw-target-min`: pelo menos 32px no admin desktop
+e 44px no portal ou em viewport móvel. A altura compacta não pode reduzir esse piso.
+
 ## Teclado, foco e acessibilidade
 
 Mantém semântica de button/link, foco visível e `aria-busy`; loading e disabled bloqueiam ativação.

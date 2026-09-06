@@ -39,6 +39,12 @@ export const Recovery: Story = {
     await expect(canvas.getByRole("status")).toHaveTextContent(
       "Falhou: Cultura"
     );
+    await userEvent.click(canvas.getByRole("button", { name: "Salvar" }));
+    const saved = canvas.getByRole("status");
+    await expect(saved).toHaveTextContent("Rascunho salvo");
+    await expect(saved).toHaveAttribute("data-severity", "info");
+    await expect(within(saved).queryByRole("button", { name: /Tentar novamente/ })).not.toBeInTheDocument();
+    await expect(canvas.getByText("Pendentes: Cultura")).toBeVisible();
     await userEvent.click(
       canvas.getByRole("button", { name: "Tentar novamente 1 item" })
     );

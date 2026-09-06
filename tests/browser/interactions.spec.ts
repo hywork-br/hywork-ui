@@ -3,6 +3,60 @@ import { createRequire } from "node:module";
 import { writeFile } from "node:fs/promises";
 import { openStory, expectSettled } from "./helpers";
 
+for (const surface of ["admin", "portal"]) {
+  test(`${surface}: small Button respects the surface target floor`, async ({ page }, testInfo) => {
+    await openStory(page, "contracts-core-families--menus-contract", surface);
+    await page.getByRole("button", { name: "Ver contexto" }).click();
+    const small = page.getByRole("button", { name: "Fechar", exact: true });
+    await expect(small).toHaveAttribute("data-size", "sm");
+    await expectSettled(page);
+    const rect = await small.boundingBox();
+    expect(rect!.height).toBeGreaterThanOrEqual(surface === "admin" ? 32 : 44);
+    expect(rect!.width).toBeGreaterThanOrEqual(surface === "admin" ? 32 : 44);
+    const screenshot = testInfo.outputPath(`small-${surface}.png`);
+    await page.screenshot({ path: screenshot });
+    await testInfo.attach(`small-${surface}`, { path: screenshot, contentType: "image/png" });
+  });
+
+  test(`${surface}: Select ArrowDown focuses an unclipped orange option ring`, async ({ page }, testInfo) => {
+    await openStory(page, "contracts-core-families--select-contract", surface);
+    const trigger = page.getByRole("combobox", { name: "Status", exact: true });
+    await trigger.focus();
+    await page.keyboard.press("ArrowDown");
+    await expect(page.getByRole("option", { name: "Ativas", exact: true })).toBeFocused();
+    await page.keyboard.press("ArrowDown");
+    const option = page.getByRole("option", { name: "Arquivadas", exact: true });
+    await expect(option).toBeFocused();
+    await expectSettled(page);
+    const focus = await option.evaluate((element) => {
+      const css = getComputedStyle(element), rect = element.getBoundingClientRect();
+      const probe = document.createElement("i");
+      probe.style.color = "var(--hw-focus)";
+      element.append(probe);
+      const token = getComputedStyle(probe).color;
+      probe.remove();
+      const extent = Math.max(0, parseFloat(css.outlineWidth) + parseFloat(css.outlineOffset));
+      let unclipped = true;
+      for (let parent = element.parentElement; parent; parent = parent.parentElement) {
+        const style = getComputedStyle(parent), bounds = parent.getBoundingClientRect();
+        if (/(hidden|clip|auto|scroll)/.test(style.overflowX)) unclipped &&= rect.left - extent >= bounds.left && rect.right + extent <= bounds.right;
+        if (/(hidden|clip|auto|scroll)/.test(style.overflowY)) unclipped &&= rect.top - extent >= bounds.top && rect.bottom + extent <= bounds.bottom;
+      }
+      return { visible: element.matches(":focus-visible"), color: css.outlineColor, width: parseFloat(css.outlineWidth), token, unclipped };
+    });
+    expect(focus.visible).toBe(true);
+    expect(focus.width).toBeGreaterThanOrEqual(2);
+    expect(focus.color).toBe(focus.token);
+    expect(focus.token).toBe("rgb(233, 80, 27)");
+    expect(focus.unclipped).toBe(true);
+    const screenshot = testInfo.outputPath(`select-focus-${surface}.png`);
+    await page.screenshot({ path: screenshot });
+    await testInfo.attach(`select-focus-${surface}`, { path: screenshot, contentType: "image/png" });
+    await page.keyboard.press("Escape");
+    await expect(trigger).toBeFocused();
+  });
+}
+
 const require = createRequire(import.meta.url);
 const workspace = "lab-interface-details--workspace";
 

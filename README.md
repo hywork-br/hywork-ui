@@ -8,10 +8,18 @@ padrões de produto para superfícies admin e portal.
 Distribuído por tag Git imutável, como `@hywork/eslint-config`:
 
 ```bash
-npm install github:hywork-br/hywork-ui#v0.6.0
+npm install "github:hywork-br/hywork-ui#<tag-aprovada>"
 ```
 
+Substitua `<tag-aprovada>` por uma tag que contenha o preparo descrito abaixo.
 React 18.3 ou 19 é peer dependency.
+
+A instalação Git executa `prepare` → `build:lib` para gerar `dist/index.js` e
+as declarações TypeScript a partir da revisão selecionada. Scripts de instalação
+precisam estar habilitados; desabilitá-los não produz um pacote utilizável a
+partir do Git. O preparo compila somente a biblioteca, sem construir o Storybook.
+Tags anteriores a essa correção não ganham o novo preparo retroativamente: use
+uma revisão/tag que contenha este contrato ou o tarball já compilado da release.
 
 ## Usar
 
@@ -106,8 +114,11 @@ npm run audit:dependencies
 ```
 
 `npm run check` executa guardas de token/manifesto, testes Node/React/Axe,
-tipagem e build da biblioteca. `smoke:consumer` compila um fixture Next +
-Tailwind v3 pela API publicada. `npm run build` também compila o Storybook.
+tipagem e build da biblioteca. `smoke:consumer` primeiro instala uma revisão Git
+temporária sem `dist`, verifica os entrypoints e importa a API; depois compila um
+fixture Next + Tailwind v3 pela API publicada. `smoke:git` executa só a instalação
+isolada, sem alterar o npmrc do usuário. Esse smoke nunca é chamado por `prepare`.
+`npm run build` também compila o Storybook.
 
 O toolbar do Storybook alterna `admin` e `portal`. As histórias em `Contracts/`
 cobrem as 12 famílias; `Pilots/` compara TV, Assinaturas, Academy e Conteúdos

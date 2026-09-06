@@ -1,10 +1,16 @@
-function withoutWhitespace(source) {
-  return source.replace(/\s+/gu, "");
+import ts from "typescript";
+
+function normalizedSyntax(source) {
+  const tree = ts.createSourceFile("component.tsx", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  // Invalid/unsupported syntax cannot establish formatting equivalence.
+  if (tree.parseDiagnostics.length) return null;
+  return ts.createPrinter({ removeComments: true, newLine: ts.NewLineKind.LineFeed }).printFile(tree);
 }
 
 export function classifySourceDifference(platformSource, builderSource) {
   if (platformSource === builderSource) return "identical";
-  if (withoutWhitespace(platformSource) === withoutWhitespace(builderSource)) {
+  const platformSyntax = normalizedSyntax(platformSource);
+  if (platformSyntax !== null && platformSyntax === normalizedSyntax(builderSource)) {
     return "format-only";
   }
   return "api-or-behavior";

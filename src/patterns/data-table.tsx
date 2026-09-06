@@ -161,8 +161,9 @@ export function DataTable<T extends object>({
               )}
               {columns.map((column) => (
                 <td data-align={column.align ?? "start"} key={column.key}>
-                  {column.render?.(row) ??
-                    String((row as Record<string, unknown>)[column.key] ?? "")}
+                  {column.render
+                    ? column.render(row)
+                    : String((row as Record<string, unknown>)[column.key] ?? "")}
                 </td>
               ))}
             </tr>

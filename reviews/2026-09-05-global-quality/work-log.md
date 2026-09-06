@@ -289,3 +289,71 @@ The full native suite passed 22/22 (26.4s). Final partial opacity was Chromium e
 and `npm run check` exited 0; check covered 46 Node tests, 116 Vitest tests/15 files,
 both tsconfigs, tokens, manifest and the library build. No product/story, dependency,
 lockfile or visual-baseline change belongs to this round.
+
+## Final review wave — ten contract gaps (2026-09-05)
+
+Base `5b07e9d8865a8f941d93f88f8c6d4040175199fe`, local branch
+`codex/interface-craft`. The wave preserves the public API and draft status of
+new capabilities; it contains no product adoption or external mutation.
+
+Corrected contracts:
+
+1. DataTable respects explicit renderer results, including null/undefined/false/0.
+2. Git dependency installation runs library-only prepare. The clean Git smoke
+   starts without dist/node_modules, installs an immutable local Git revision,
+   verifies JS/declarations and imports Button/Avatar/DataTable. Prepare never
+   calls the smoke or builds Storybook. README requires a tag containing this fix;
+   existing tags are not silently assumed to gain a new lifecycle hook.
+3. Small Button uses the larger of compact height and the surface target floor.
+4. Select options receive semantic orange focus from ArrowDown. Their inset ring
+   avoids clipping by the actual Radix scrolling viewport.
+5. Adoption uses TypeScript import/export syntax, including runtime default,
+   named, namespace and star reexports; type-only and prose are excluded.
+6. Consumer roots must be Git trees at the selected revision. Missing/blob roots
+   fail; a tracked tree without components remains a valid zero.
+7. Token checks enumerate token CSS, including selection/collections/feedback/
+   theme-lab. Eight actual CLI mutations use isolated copies cleaned in finally.
+8. Avatar failure belongs to the URL that failed; a replacement URL creates img.
+9. Inventory formatting equivalence uses parsed syntax and retains string, JSX,
+   template and ASI semantics. Invalid syntax cannot prove format-only.
+10. Recovery feedback carries its operation identity. Save after partial bulk
+    failure is info without a bulk action; Cultura retains its contextual retry.
+
+Executed RED: focused Node suite 15 failed/10 passed; React regression suite
+4 failed/3 passed. Browser RED measured small heights 28/40px (expected 32/44),
+and Select option outline navy instead of orange. After adding the orange ring,
+the unchanged clipping assertion additionally failed in both browsers/surfaces.
+Clean Git installation without prepare failed because dist/index.js was absent.
+
+Executed GREEN: focused Node suite 25/25; React regressions plus feedback 16/16.
+Full `npm run check` exited 0 with 61 Node tests and 123 React tests/16 files,
+both tsconfigs, token and manifest guards, and library build. `npm run build`
+exited 0. `npm run smoke:consumer` exited 0: clean Git installation and actual
+runtime imports, then the Next/Tailwind consumer production build. `npm run
+test:browser` passed 30/30 in Chromium/Firefox; `npm run test:stories` passed
+64/64 and passed 64/64 again after extending the feedback journey with Save
+between partial failure and retry. The final target/focus rerun passed 8/8 with
+settled screenshots attached. Post-edit typecheck, token and documentation/spec
+checks passed; AST import verification found no duplicate local bindings in the
+13 edited tracked JS/TS files. No debug console.log or raw hex exists in the
+edited React implementation/story files, and `git diff --check` passed.
+
+`npm audit --omit=dev --audit-level=high` exited 0 with zero vulnerabilities.
+`npm audit --audit-level=high` exited 0 with five moderate findings in the existing
+test-runner/uuid development chain, no high/critical findings. The npm-run wrapper
+hit host-specific EALLOWSCRIPTS from the user's allow-scripts configuration; the
+direct command produced the actual audit above. The Git fixture uses a temporary
+empty user config and removes only the inherited matching config variables;
+the user's npmrc is untouched.
+
+Native focus/target PNGs are under `test-results/browser/`, including
+`interactions-admin-Select--f07c4-nclipped-orange-option-ring-chromium/select-focus-admin.png`
+and `interactions-portal-small--70d05-ts-the-surface-target-floor-chromium/small-portal.png`.
+Reviewed the actual select screenshot: readable Montserrat, orange ring fully
+inside the last option, no clipped text or ring. Target captures wait for native
+animations to settle and are attached to the Playwright report.
+
+The exact `npm run test:visual` gate was executed: exit 1 on all three scenes at
+the explicit Linux-only guard (`darwin` host). Docker exists but `docker info`
+cannot connect to its daemon. This wave does not claim refreshed Linux pixel
+evidence and does not edit baselines; controller CI remains required for that gate.

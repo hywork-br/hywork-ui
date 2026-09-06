@@ -37,6 +37,9 @@ Altura segue superfície; menu respeita viewport e Trigger ocupa a largura do co
 
 Combobox nomeado, setas navegam opções, Enter seleciona e Escape fecha com retorno de foco.
 
+O item focado pelas setas recebe o anel `--hw-focus`, além do fundo de destaque.
+O anel usa offset interno para permanecer inteiro dentro do viewport rolável do popup.
+
 ## Composição e erros comuns
 
 Label visível vem de Field quando o contexto exige. Não usar placeholder como nome acessível.

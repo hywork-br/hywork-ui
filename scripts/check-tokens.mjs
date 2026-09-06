@@ -37,7 +37,9 @@ const semantico = semComentarios(ler("semantico.css"));
 const admin = semComentarios(ler("admin.css"));
 const portal = semComentarios(ler("portal.css"));
 const whiteLabel = semComentarios(ler("white-label.css"));
-const componentes = semComentarios(ler("componentes.css"));
+const tokenFiles = readdirSync(path.join(RAIZ, "tokens"))
+  .filter((file) => file.endsWith(".css"))
+  .sort();
 
 /**
  * 0. Nenhum par declarado pode ficar sem checagem por erro de digitação no
@@ -112,7 +114,7 @@ for (const [nome, css] of [
  */
 const declaradosTodos = new Set(
   [
-    ...[primitivos, semantico, admin, portal, whiteLabel, componentes]
+    ...tokenFiles.map((file) => semComentarios(ler(file)))
       .join("\n")
       .matchAll(/^\s*(--[\w-]+):/gm),
   ].map((m) => m[1])
@@ -133,7 +135,7 @@ const implementationFiles = (directory) =>
 for (const file of [
   ...implementationFiles("src"),
   ...implementationFiles("stories"),
-  "tokens/componentes.css",
+  ...tokenFiles.filter((file) => file !== "primitivos.css").map((file) => `tokens/${file}`),
 ]) {
   const source = readFileSync(path.join(RAIZ, file), "utf8");
   const chunks = [];

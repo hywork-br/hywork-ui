@@ -24,6 +24,8 @@ function git(repo, args) {
 }
 
 function readComponentTree(repo, ref, root) {
+  const type = git(repo, ["cat-file", "-t", `${ref}:${root.replace(/\/+$/, "")}`]);
+  if (type !== "tree") throw new Error(`Consumer root is not a tree at ${ref}: ${root}`);
   const paths = git(repo, ["ls-tree", "-r", "--name-only", ref, root])
     .split("\n")
     .filter((path) => path.endsWith(".tsx"));

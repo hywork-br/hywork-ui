@@ -22,6 +22,10 @@ test("healthy checkout is accepted by the same token CLI", () => {
   assert.equal(result.status, 0, result.stdout + result.stderr);
 });
 for (const [name, file, mutation, expected] of [
+  ...["selection", "collections", "feedback", "theme-lab"].flatMap((name) => [
+    [`${name} CSS orphan`, `tokens/${name}.css`, ".mutation { color: var(--hw-missing); }", /referência a token inexistente/],
+    [`${name} CSS literal`, `tokens/${name}.css`, ".mutation { color: rgb(255, 0, 170); }", /literal/],
+  ]),
   [
     "component CSS orphan",
     "tokens/componentes.css",

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -31,6 +31,18 @@ function createConsumerFixture(name, files) {
   );
   return root;
 }
+
+test("audit-consumers rejects missing roots and blobs at the selected revision", () => {
+  const repo = createConsumerFixture("root-validation", { "ui/README.md": "Tracked tree, no components" });
+  for (const invalid of ["missing", "ui/README.md"]) {
+    const result = spawnSync(process.execPath, ["scripts/audit-consumers.mjs", "--platform-repo", repo, "--builder-repo", repo, "--platform-ref", "HEAD", "--builder-ref", "HEAD", "--platform-root", invalid, "--builder-root", "ui"], { encoding: "utf8" });
+    assert.notEqual(result.status, 0, `must reject ${invalid}`);
+    assert.equal(result.stdout, "");
+  }
+  const result = spawnSync(process.execPath, ["scripts/audit-consumers.mjs", "--platform-repo", repo, "--builder-repo", repo, "--platform-ref", "HEAD", "--builder-ref", "HEAD", "--platform-root", "ui", "--builder-root", "ui"], { encoding: "utf8" });
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(JSON.parse(result.stdout).summary.sharedComponents, 0);
+});
 
 test("audit-consumers measures shared components and real import files", () => {
   const platform = createConsumerFixture("platform", {

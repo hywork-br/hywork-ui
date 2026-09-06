@@ -20,7 +20,8 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
   ({ alt, className, name, size = "md", src, ...props }, ref) => {
-    const [failed, setFailed] = React.useState(false);
+    const [failedSrc, setFailedSrc] = React.useState<string>();
+    const failed = src !== undefined && failedSrc === src;
     return (
       <span
         aria-label={src && !failed ? undefined : name}
@@ -31,7 +32,7 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
         {...props}
       >
         {src && !failed ? (
-          <img src={src} alt={alt ?? name} onError={() => setFailed(true)} />
+          <img key={src} src={src} alt={alt ?? name} onError={() => setFailedSrc(src)} />
         ) : (
           <span aria-hidden="true">{initials(name)}</span>
         )}

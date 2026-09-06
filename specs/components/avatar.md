@@ -20,6 +20,9 @@ Raiz, imagem opcional e fallback de até duas iniciais.
 
 Imagem carregada, imagem quebrada, fallback e três tamanhos.
 
+A falha pertence ao URL que falhou: trocar `src` permite carregar a nova imagem
+e mantém seu nome acessível durante a recuperação.
+
 ## Tokens consumidos
 
 Superfície accent, foreground, borda, tipografia e escala de tamanho.

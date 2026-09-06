@@ -32,7 +32,11 @@ export function RecoveryDemo({ onDelete, onPublish }: RecoveryDemoProps) {
     [deleted, setDeleted] = React.useState(false);
   const [open, setOpen] = React.useState(false),
     [pending, setPending] = React.useState(false);
-  const [message, setMessage] = React.useState("");
+  const [feedback, setFeedback] = React.useState({ title: "", operation: "draft" });
+  const message = feedback.title;
+  function setMessage(title: string, operation = "draft") {
+    setFeedback({ title, operation });
+  }
   const [failed, setFailed] = React.useState<string[]>([]),
     [published, setPublished] = React.useState<string[]>([]);
   const lock = React.useRef(false),
@@ -49,10 +53,10 @@ export function RecoveryDemo({ onDelete, onPublish }: RecoveryDemoProps) {
       await (onDelete ? onDelete() : Promise.resolve());
       setDeleted(true);
       setOpen(false);
-      setMessage("Item excluído");
+      setMessage("Item excluído", "delete");
     } catch {
       setMessage(
-        "Não foi possível excluir. O item foi preservado. Tente novamente."
+        "Não foi possível excluir. O item foi preservado. Tente novamente.", "delete"
       );
     } finally {
       lock.current = false;
@@ -84,7 +88,7 @@ export function RecoveryDemo({ onDelete, onPublish }: RecoveryDemoProps) {
                 .map((item) => item.name)
                 .join(", ")}`
             : ""
-        }`
+        }`, "publish"
       );
     } catch {
       setFailed(ids);
@@ -92,7 +96,7 @@ export function RecoveryDemo({ onDelete, onPublish }: RecoveryDemoProps) {
         `Falha ao publicar: ${items
           .filter((item) => ids.includes(item.id))
           .map((item) => item.name)
-          .join(", ")}. Tente novamente.`
+          .join(", ")}. Tente novamente.`, "publish"
       );
     } finally {
       lock.current = false;
@@ -197,7 +201,7 @@ export function RecoveryDemo({ onDelete, onPublish }: RecoveryDemoProps) {
           disabled={!editable || conflict}
           onClick={() => {
             if (editable && !conflict)
-              setMessage("Rascunho salvo na simulação");
+              setMessage("Rascunho salvo na simulação", "save");
           }}
         >
           Salvar
@@ -208,7 +212,7 @@ export function RecoveryDemo({ onDelete, onPublish }: RecoveryDemoProps) {
           onClick={() => {
             if (editable) {
               setArchived(true);
-              setMessage("Item arquivado");
+              setMessage("Item arquivado", "archive");
             }
           }}
         >
@@ -291,7 +295,7 @@ export function RecoveryDemo({ onDelete, onPublish }: RecoveryDemoProps) {
       {message && !open && (
         <Toast
           title={message}
-          severity={failed.length ? "warning" : "info"}
+          severity={feedback.operation === "publish" && failed.length ? "warning" : "info"}
           onDismiss={() => setMessage("")}
           action={
             archived && !deleted && message === "Item arquivado"
@@ -305,7 +309,7 @@ export function RecoveryDemo({ onDelete, onPublish }: RecoveryDemoProps) {
                     }
                   },
                 }
-              : failed.length
+              : feedback.operation === "publish" && failed.length
               ? {
                   label: `Tentar novamente ${failed.length} ${
                     failed.length === 1 ? "item" : "itens"
@@ -317,7 +321,7 @@ export function RecoveryDemo({ onDelete, onPublish }: RecoveryDemoProps) {
           }
         />
       )}
-      {!message && failed.length > 0 && !open && (
+      {(!message || feedback.operation !== "publish") && failed.length > 0 && !open && (
         <InlineNotice
           announcement="off"
           severity="warning"
