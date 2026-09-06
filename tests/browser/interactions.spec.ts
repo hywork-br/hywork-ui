@@ -8,7 +8,8 @@ const workspace = "lab-interface-details--workspace";
 
 type MotionChange = {
   atChange: number; inert: boolean; trusted: boolean; matches: boolean;
-  heldStateAtChange: string | null; heldTimeAtChange: number | null;
+  heldStateAtChange: string | null; heldPendingAtChange: boolean | null;
+  heldTimeAtChange: number | null;
   finalOpacity: string | null; finalHeight: string | null; policy: string | null;
   finalAnimationState: string | null; timeOrigin: number;
 };
@@ -136,11 +137,12 @@ for (const direction of ["entry", "exit"] as const) {
           const atChange = before ? Number(getComputedStyle(before).opacity) : -1;
           const inert = !before || (before as HTMLElement).inert;
           const heldStateAtChange = probe.heldAnimation?.playState ?? null;
+          const heldPendingAtChange = probe.heldAnimation?.pending ?? null;
           const heldTimeAtChange = probe.heldAnimation?.currentTime == null ? null : Number(probe.heldAnimation.currentTime);
           requestAnimationFrame(() => requestAnimationFrame(() => {
             const element = document.querySelector("[data-pilot-presence]");
             resolve({ atChange, inert, trusted: event.isTrusted, matches: event.matches,
-              heldStateAtChange, heldTimeAtChange,
+              heldStateAtChange, heldPendingAtChange, heldTimeAtChange,
               finalAnimationState: probe.heldAnimation?.playState ?? null, timeOrigin: performance.timeOrigin,
               finalOpacity: element ? getComputedStyle(element).opacity : null,
               finalHeight: element ? (element as HTMLElement).style.height : null,
@@ -160,7 +162,8 @@ for (const direction of ["entry", "exit"] as const) {
     const select = page.getByLabel("Selecionar página", { exact: true });
     if (direction === "exit") { await select.click(); await expectSettled(page); }
     // Arm the actual rendered partial-frame observer BEFORE the pointer action.
-    const partial = page.evaluate(() => new Promise<{ sampledOpacity: number; opacity: number; playState: string; heldTime: number }>((resolve, reject) => {
+    const partial = page.evaluate(() => new Promise<{ sampledOpacity: number; opacity: number;
+      playState: string; pending: boolean; heldTime: number; pauseFrameChecks: number }>((resolve, reject) => {
       const sample = () => {
         const element = document.querySelector("[data-pilot-presence]");
         const opacity = element ? Number(getComputedStyle(element).opacity) : -1;
@@ -171,20 +174,39 @@ for (const direction of ["entry", "exit"] as const) {
           // Hold this naturally rendered frame; do not seek, alter duration, or set styles.
           // Only the application may cancel it after the real preference change.
           animation.pause();
-          void animation.ready.then(() => resolve({ sampledOpacity: opacity,
-            opacity: Number(getComputedStyle(element!).opacity), playState: animation.playState,
-            heldTime: Number(animation.currentTime) })).catch(reject);
+          let pauseFrameChecks = 0;
+          const commitPause = () => {
+            const heldOpacity = Number(getComputedStyle(element!).opacity);
+            const heldTime = animation.currentTime == null ? Number.NaN : Number(animation.currentTime);
+            if (animation.playState === "paused" && !animation.pending
+              && Number.isFinite(heldTime) && heldOpacity > 0 && heldOpacity < 1) {
+              resolve({ sampledOpacity: opacity, opacity: heldOpacity, playState: animation.playState,
+                pending: animation.pending, heldTime, pauseFrameChecks });
+              return;
+            }
+            if (pauseFrameChecks >= 4) {
+              reject(new Error(`native opacity pause did not commit: ${JSON.stringify({
+                opacity: heldOpacity, playState: animation.playState, pending: animation.pending,
+                currentTime: animation.currentTime, pauseFrameChecks,
+              })}`));
+              return;
+            }
+            pauseFrameChecks += 1;
+            requestAnimationFrame(commitPause);
+          };
+          queueMicrotask(commitPause);
         } else requestAnimationFrame(sample);
       };
       requestAnimationFrame(sample);
     }));
     const clicked = select.click();
-    const { sampledOpacity, opacity, playState, heldTime } = await partial;
+    const { sampledOpacity, opacity, playState, pending, heldTime, pauseFrameChecks } = await partial;
     expect(sampledOpacity).toBeGreaterThan(0);
     expect(sampledOpacity).toBeLessThan(1);
     expect(opacity).toBeGreaterThan(0);
     expect(opacity).toBeLessThan(1);
     expect(playState, "native partial opacity must be held before crossing the media protocol boundary").toBe("paused");
+    expect(pending, "native pause operation must be committed before changing the media preference").toBe(false);
     const partialImage = testInfo.outputPath("paused-partial-frame.png");
     await page.screenshot({ path: partialImage, animations: "allow" });
     await testInfo.attach("paused-partial-frame", { path: partialImage, contentType: "image/png" });
@@ -192,14 +214,16 @@ for (const direction of ["entry", "exit"] as const) {
     const result = await page.evaluate(() => (window as unknown as { motionChange: Promise<MotionChange> }).motionChange);
     await clicked;
     const motionEvidence = testInfo.outputPath("rendered-interruption.json");
-    await writeFile(motionEvidence, JSON.stringify({ direction, harnessControl: "pause native opacity at rendered partial frame",
-      partialOpacity: sampledOpacity, heldOpacity: opacity, heldTime, ...result }, null, 2));
+    await writeFile(motionEvidence, JSON.stringify({ direction,
+      harnessControl: "pause native opacity after bounded pending-state commit",
+      partialOpacity: sampledOpacity, heldOpacity: opacity, heldTime, pauseFrameChecks, ...result }, null, 2));
     await testInfo.attach("rendered-interruption", { path: motionEvidence, contentType: "application/json" });
     expect(result.atChange, "preference must change before animation already settled").toBeGreaterThan(0);
     expect(result.atChange).toBeLessThan(1);
     expect(result.trusted, "preference event must come from the browser, not a dispatched fixture").toBe(true);
     expect(result.matches).toBe(true);
     expect(result.heldStateAtChange).toBe("paused");
+    expect(result.heldPendingAtChange).toBe(false);
     expect(result.heldTimeAtChange).toBe(heldTime);
     expect(result.finalAnimationState, "application must cancel the held native animation").toBe("idle");
     expect(result.timeOrigin, "preference changes without reloading the document").toBe(timeOrigin);

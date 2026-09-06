@@ -258,3 +258,32 @@ Run 33999864794 also exposed the Firefox native evidence race fixed by `101d36b`
 that commit changes only the browser harness and this work log, so it cannot alter
 the story pixels copied from head `01a9d042`. A subsequent normal Linux CI run must
 prove the new baselines byte-for-byte and the corrected native motion gate together.
+
+## Review fix round 5 — Firefox Linux pause commitment
+
+Linux run 34005488691 passed quality, all three reviewed visual baselines and all
+64 Storybook contracts. Native passed 21/22. Firefox entry alone timed out inside
+the partial-frame page evaluation: the click completed in 93ms, no partial-frame
+attachment was produced, and the only unresolved branch after observing the real
+animation was the promise returned by `animation.ready`. The prior Linux run's
+0.0395517 entry partial disproves a missing animation or missing rendered frame.
+
+The observable cause is therefore the harness waiting indefinitely for Firefox
+Linux to resolve `ready` after `pause()`; the trace does not establish the browser's
+internal cause. Web Animations provides `pending` to report asynchronous play/pause
+operations. The harness now commits the pause by inspecting native state instead:
+an initial microtask plus at most four animation-frame checks must observe the same
+opacity animation as paused, non-pending, with finite current time and opacity still
+strictly partial. Failure rejects immediately after the bounded checks with the
+observed state. No test retry, elapsed-time sleep, duration/currentTime/style change
+or playback-rate fallback was added.
+
+The media event additionally records and asserts non-pending pause state alongside
+the unchanged held currentTime, trusted matching preference event, unchanged time
+origin, app cancellation to idle and final entry/exit settlement. Five repeated
+entry/exit runs per browser passed 20/20; every artifact committed on frame check 1.
+The full native suite passed 22/22 (26.4s). Final partial opacity was Chromium entry
+0.0525291/exit 0.892338 and Firefox entry 0.0378456/exit 0.973712. `npm run typecheck`
+and `npm run check` exited 0; check covered 46 Node tests, 116 Vitest tests/15 files,
+both tsconfigs, tokens, manifest and the library build. No product/story, dependency,
+lockfile or visual-baseline change belongs to this round.
