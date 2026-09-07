@@ -27,6 +27,9 @@ Em formulário, compartilha o preenchimento neutro e limite inferior do Input.
 Dentro de FilterBar, o trigger é contextual: texto e chevron sem caixa em
 repouso; hover/aberto usam superfície neutra. O portal não herda esse tratamento
 de toolbar. O chevron mantém seu tamanho mesmo quando o valor precisa truncar.
+`aria-invalid="true"` troca a linha inferior pelo mesmo papel semântico do
+FieldError e conserva essa linha durante foco. O anel continua sendo o canal de
+foco; o erro não depende somente dele nem é apagado pelo contexto de filtro.
 
 ## Tokens consumidos
 

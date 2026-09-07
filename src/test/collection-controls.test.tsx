@@ -7,6 +7,12 @@ import { Pagination, ColumnControl } from "../patterns/collection-controls";
 import { ContentCell } from "../components/table-cells";
 import { CollectionDemo } from "../../stories/collections/collection-demo";
 
+async function chooseStatus(label: "Todos" | "Publicado" | "Rascunho") {
+  const control = screen.getByRole("combobox", { name: "Status" });
+  await userEvent.click(control);
+  await userEvent.click(screen.getByRole("option", { name: label }));
+}
+
 describe("operational collections", () => {
   it("keeps focus in preferences when saving clears and disables the save action", async () => {
     sessionStorage.clear();
@@ -182,10 +188,7 @@ describe("operational collections", () => {
     fireEvent.change(screen.getByLabelText("Até"), {
       target: { value: "2026-09-30" },
     });
-    await userEvent.selectOptions(
-      screen.getByRole("combobox", { name: "Status" }),
-      "Publicado"
-    );
+    await chooseStatus("Publicado");
     expect(screen.getByText("1–1 de 1")).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Preferências de visualização" }));
     await userEvent.click(screen.getByText("Gerenciar visões"));
@@ -196,10 +199,7 @@ describe("operational collections", () => {
     await userEvent.click(screen.getByRole("button", { name: "Salvar visão" }));
     await userEvent.clear(screen.getByRole("searchbox"));
     await userEvent.type(screen.getByRole("searchbox"), "Cultura");
-    await userEvent.selectOptions(
-      screen.getByRole("combobox", { name: "Status" }),
-      "Rascunho"
-    );
+    await chooseStatus("Rascunho");
     expect(screen.getByText("0–0 de 0")).toBeInTheDocument();
     await userEvent.selectOptions(
       screen.getByLabelText("Visões salvas"),
@@ -207,6 +207,16 @@ describe("operational collections", () => {
     );
     expect(screen.getByRole("searchbox")).toHaveValue("Cultura");
     expect(screen.getByText("1–1 de 1")).toBeInTheDocument();
+  });
+  it("maps Todos back to the empty status criterion", async () => {
+    sessionStorage.clear();
+    render(<CollectionDemo />);
+    await chooseStatus("Rascunho");
+    expect(screen.queryByText("Cultura que aproxima")).not.toBeInTheDocument();
+    expect(screen.getByText("Boas-vindas à equipe")).toBeInTheDocument();
+    await chooseStatus("Todos");
+    expect(screen.getByText("Cultura que aproxima")).toBeInTheDocument();
+    expect(screen.getByText(/12 filtrados/)).toBeInTheDocument();
   });
   it("deselects only eligible page rows and uses controlled sorting", async () => {
     const change = vi.fn(),

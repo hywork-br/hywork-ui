@@ -85,6 +85,7 @@
 .hw-input,
 .hw-textarea,
 .hw-select,
+.hw-collection-select,
 .hw-menu__item,
 .hw-tabs__trigger,
 .hw-stepper button,
@@ -133,7 +134,8 @@
 .hw-label { color: var(--hw-text); font-size: var(--hw-body-size); font-weight: 500; }
 .hw-input,
 .hw-textarea,
-.hw-select {
+.hw-select,
+.hw-collection-select {
   background: var(--hw-input-surface);
   border: 1px solid transparent;
   border-bottom-color: var(--hw-input-border);
@@ -151,10 +153,12 @@
 .hw-textarea::placeholder { color: var(--hw-text-muted); }
 .hw-input[aria-invalid="true"],
 .hw-filter-bar__search .hw-input[aria-invalid="true"],
-.hw-textarea[aria-invalid="true"] { border-bottom-color: var(--hw-danger-strong); }
+.hw-textarea[aria-invalid="true"],
+.hw-select[aria-invalid="true"] { border-bottom-color: var(--hw-danger-strong); }
 .hw-input:disabled,
 .hw-textarea:disabled,
-.hw-select:disabled { cursor: not-allowed; opacity: 0.58; }
+.hw-select:disabled,
+.hw-collection-select:disabled { cursor: not-allowed; opacity: 0.58; }
 .hw-input[readonly],
 .hw-textarea[readonly] { border-bottom-style: dashed; }
 .hw-input::selection,
@@ -380,6 +384,7 @@
 .hw-input:focus-visible,
 .hw-textarea:focus-visible,
 .hw-select:focus-visible,
+.hw-collection-select:focus-visible,
 .hw-select__item:focus-visible,
 .hw-menu__item:focus-visible,
 .hw-tabs__trigger:focus-visible,
@@ -398,7 +403,8 @@
 
 .hw-input:focus-visible:not([aria-invalid="true"]),
 .hw-textarea:focus-visible:not([aria-invalid="true"]),
-.hw-select:focus-visible { border-color: transparent; }
+.hw-select:focus-visible:not([aria-invalid="true"]),
+.hw-collection-select:focus-visible { border-color: transparent; }
 .hw-table-wrap:focus-visible { outline: var(--hw-focus-width) solid var(--hw-focus); outline-offset: var(--hw-focus-offset); }
 
 @keyframes hw-spin { to { transform: rotate(360deg); } }
@@ -465,5 +471,5 @@
   .hw-filter-bar__filters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
   .hw-filter-bar__filters > :not(svg) { min-width: 0; width: 100%; }
   .hw-filter-bar__filters > .hw-button { grid-column: 1 / -1; }
-  .hw-input, .hw-textarea, select.hw-select { font-size: var(--hw-text-base); }
+  .hw-input, .hw-textarea, select.hw-select, .hw-collection-select { font-size: var(--hw-text-base); }
 }

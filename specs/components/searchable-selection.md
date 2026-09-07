@@ -26,6 +26,9 @@ busca remota ou carregamento embutido.
 A busca filtra labels locais sem diferenciar maiúsculas. Lista vazia tem mensagem;
 itens disabled permanecem identificados e não podem ser escolhidos. A seleção
 única fecha a lista; a múltipla alterna itens e expõe remoção individual.
+Os inputs pesquisáveis reutilizam superfície, linha-base, foco, disabled e erro
+do Field. Wrappers e consumidores podem organizar chips e dimensões, mas não
+repintam esses estados.
 
 ## Tokens consumidos
 

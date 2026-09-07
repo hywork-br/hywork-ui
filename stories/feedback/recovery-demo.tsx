@@ -10,6 +10,7 @@ import {
   Checkbox,
   DialogActions,
   InlineNotice,
+  Textarea,
   Toast,
 } from "../../src";
 
@@ -152,7 +153,7 @@ export function RecoveryDemo({ onDelete, onPublish }: RecoveryDemoProps) {
       )}
       <label className="hw-recovery-demo__draft">
         Rascunho
-        <textarea
+        <Textarea
           ref={draftRef}
           value={draft}
           readOnly={!editable}

@@ -62,9 +62,11 @@ describe("simulated recovery workspace", () => {
     render(<RecoveryDemo />);
     const user = userEvent.setup();
     const draft = screen.getByLabelText("Rascunho");
+    expect(draft).not.toHaveAttribute("readonly");
     await user.clear(draft);
     await user.type(draft, "Minha edição");
     await user.click(screen.getByLabelText("Simular offline"));
+    expect(draft).toHaveAttribute("readonly");
     expect(screen.getByRole("button", { name: "Salvar" })).toBeDisabled();
     expect(draft).toHaveValue("Minha edição");
     await user.click(screen.getByLabelText("Simular offline"));

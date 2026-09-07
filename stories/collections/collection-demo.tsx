@@ -4,7 +4,9 @@ import { PilotMotionPresence, PilotSaveNotice } from "../pilots/motion";
 import {
   Button,
   DataTable,
+  Input,
   MultiSelect,
+  Select,
   DateRangeField,
   ContentCell,
   PersonCell,
@@ -227,8 +229,7 @@ export function CollectionDemo({ renderEditor }: {
         <p>Histórias, novidades e conhecimento para conectar sua equipe.</p>
       </header>
       <div className="hw-filter-bar hw-collection-controls">
-        <input
-          className="hw-input"
+        <Input
           ref={searchRef}
           type="search"
           aria-label="Buscar conteúdos"
@@ -238,14 +239,18 @@ export function CollectionDemo({ renderEditor }: {
         />
         <label>
           Status{" "}
-          <select
-            value={criteria.status}
-            onChange={(e) => update({ status: e.target.value })}
-          >
-            <option value="">Todos</option>
-            <option>Publicado</option>
-            <option>Rascunho</option>
-          </select>
+          <Select
+            ariaLabel="Status"
+            value={criteria.status || "all"}
+            options={[
+              { value: "all", label: "Todos" },
+              { value: "Publicado", label: "Publicado" },
+              { value: "Rascunho", label: "Rascunho" },
+            ]}
+            onValueChange={(value) =>
+              update({ status: value === "all" ? "" : value })
+            }
+          />
         </label>
         <details className="hw-collection-disclosure">
           <summary>Mais filtros{advancedCount > 0 && <span> ({advancedCount})</span>}</summary>

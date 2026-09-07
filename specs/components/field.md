@@ -26,6 +26,9 @@ laranja de 2px com offset; invalid conserva a linha de erro inclusive no foco
 e dentro da busca contextual. A regra de busca só remove o limite de repouso,
 nunca erro ou foco. Label e mensagem continuam obrigatórios quando aplicáveis.
 Read-only usa linha tracejada; disabled preserva semântica nativa e reduz opacidade.
+Input e Textarea mantêm essa pintura quando compostos em demonstrações e fluxos:
+o consumidor define somente layout e tamanho específicos. FilterBar pode remover
+a linha neutra da busca em repouso, mas nunca sua linha de erro ou anel de foco.
 
 ## Tokens consumidos
 

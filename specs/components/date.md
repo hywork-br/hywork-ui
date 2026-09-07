@@ -18,7 +18,10 @@ DateField: label e props nativas. DateRangeField: label, value {from,to}, onValu
 
 ## Variantes e estados
 
-Exercite vazio, preenchido, desabilitado e recuperação quando aplicáveis. Estado controlado deve refletir a fonte de dados do consumidor.
+Exercite vazio, preenchido, desabilitado, somente leitura, inválido e recuperação
+quando aplicáveis. DateField reutiliza a superfície, linha-base, foco e estados
+do Input; consumidores controlam valor e layout sem repintar o campo. Estado
+controlado deve refletir a fonte de dados do consumidor.
 
 ## Tokens consumidos
 

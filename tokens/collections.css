@@ -85,16 +85,10 @@
   flex-wrap: wrap;
   min-width: 0;
 }
-.hw-collection-controls select,
 .hw-collection-select {
-  font: inherit;
-  color: var(--hw-text);
-  background: var(--hw-surface);
-  border: 0;
-  border-radius: var(--hw-control-radius);
-  min-height: var(--hw-control-height);
   max-width: 100%;
   min-width: var(--hw-control-height);
+  width: auto;
 }
 .hw-collection-controls input {
   max-width: 100%;
@@ -164,9 +158,7 @@
   max-width: 100%;
   min-width: 0;
 }
-.hw-collection-disclosure summary:focus-visible,
-.hw-collection-controls select:focus-visible,
-.hw-collection-select:focus-visible {
+.hw-collection-disclosure summary:focus-visible {
   outline: var(--hw-focus-width) solid var(--hw-focus);
   outline-offset: var(--hw-focus-offset);
 }
@@ -184,10 +176,6 @@
 @media (max-width: 40rem) {
   .hw-collection-preferences-trigger {
     margin-inline-start: 0;
-  }
-  .hw-collection-controls :is(input, select),
-  .hw-collection-select {
-    font-size: var(--hw-text-base);
   }
 }
 @media (max-width: 480px) {
