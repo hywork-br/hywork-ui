@@ -1,5 +1,28 @@
 # Contratos dos padrões de produto
 
+## AdminShell
+
+O shell organiza marca, workspace, navegação agrupada e utilidades; o consumidor
+continua dono do único landmark `main` e de todo o conteúdo da rota. A API plana
+anterior permanece válida. `group` apenas cria seções na ordem da primeira
+ocorrência, preservando também a ordem dos itens. `contentId` nomeia o alvo do
+skip link; quando omitido, o shell gera um ID único e focável no invólucro do
+conteúdo.
+
+`navigationTone="neutral"` é o padrão. `inverse` preserva contextos navy por
+tokens sem alterar a superfície do conteúdo e precisa ser aplicado explicitamente
+tanto na barra desktop quanto no painel portaled. `workspace` e `utility` são
+slots do consumidor e aparecem uma única vez em cada modo responsivo, evitando
+IDs acessíveis duplicados.
+
+Acima de 48rem, a barra lateral tem scroll independente e mantém o item atual com
+`aria-current="page"`. Em 48rem ou menos, Radix Dialog fornece modal, contenção e
+retorno de foco. Escape, backdrop, botão de fechar e navegação comum fecham o
+painel; clique modificado, nova aba e download preservam o comportamento nativo.
+Ao redimensionar aberto para desktop, o modal libera scroll/inert e o foco segue
+para o item atual da barra lateral. O consumidor não deve criar outro menu mobile,
+focus trap ou `main` em paralelo.
+
 ## ListPage
 
 O pacote é dono de:

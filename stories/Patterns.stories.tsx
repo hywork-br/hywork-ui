@@ -54,14 +54,21 @@ export const ListaPadronizada: Story = {
   render: () => (
     <AdminShell
       brand={<span>hywork</span>}
+      contentId="campaigns-content"
       currentItem="campaigns"
       navigation={[
-        { href: "#overview", icon: <LayoutDashboard aria-hidden="true" />, id: "overview", label: "Visão geral" },
-        { href: "#campaigns", icon: <Megaphone aria-hidden="true" />, id: "campaigns", label: "Campanhas" },
-        { href: "#analytics", icon: <BarChart3 aria-hidden="true" />, id: "analytics", label: "Analytics" },
-        { href: "#settings", icon: <Settings aria-hidden="true" />, id: "settings", label: "Configurações" },
+        { group: "Visão geral", href: "#overview", icon: <LayoutDashboard aria-hidden="true" />, id: "overview", label: "Visão geral" },
+        { group: "Conteúdo", href: "#campaigns", icon: <Megaphone aria-hidden="true" />, id: "campaigns", label: "Campanhas" },
+        { group: "Operação", href: "#analytics", icon: <BarChart3 aria-hidden="true" />, id: "analytics", label: "Analytics" },
+        { group: "Operação", href: "#settings", icon: <Settings aria-hidden="true" />, id: "settings", label: "Configurações" },
       ]}
       utility={<p className="hw-catalog__small">Ambiente de demonstração</p>}
+      workspace={
+        <div className="hw-navigation-story__workspace">
+          <strong>Comunicação interna</strong>
+          <span>Hywork Brasil</span>
+        </div>
+      }
     >
       <ListPage
         action={<Button onClick={fn()}><Plus aria-hidden="true" /> Nova campanha</Button>}
