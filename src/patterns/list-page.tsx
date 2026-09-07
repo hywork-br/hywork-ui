@@ -28,6 +28,8 @@ export interface ListPageProps<T> {
   noResults?: ListPageState;
   renderCollection?: (items: T[]) => React.ReactNode;
   renderItem: (item: T, index: number) => React.ReactNode;
+  /** Set false when the consumer toolbar owns the count announcement. */
+  showCount?: boolean;
   title: string;
   toolbar?: React.ReactNode;
   view?: "list" | "grid";
@@ -65,6 +67,7 @@ export function ListPage<T>({
   noResults = { title: "Nenhum resultado encontrado" },
   renderCollection,
   renderItem,
+  showCount = true,
   title,
   toolbar,
   view = "list",
@@ -122,9 +125,9 @@ export function ListPage<T>({
         {action ? <div className="hw-list-page__action">{action}</div> : null}
       </header>
       {toolbar ? <div className="hw-list-page__toolbar">{toolbar}</div> : null}
-      <p aria-live="polite" className="hw-list-page__count">
+      {showCount ? <p aria-live="polite" className="hw-list-page__count">
         {items.length} {items.length === 1 ? "item" : "itens"}
-      </p>
+      </p> : null}
       {body}
     </main>
   );

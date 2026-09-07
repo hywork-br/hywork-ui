@@ -14,6 +14,12 @@ O consumidor é dono de `items`, chave, célula/card, permissões e ações do
 domínio por `renderItem`. Tabelas usam `renderCollection`, preservando a contagem
 e os estados da casca sem transformar linhas em cards.
 
+`showCount?: boolean` é `true` por padrão. Quando a barra do consumidor já
+anuncia uma contagem específica do domínio, `showCount={false}` remove a
+contagem da casca do DOM para existir apenas um anúncio. O consumidor assume
+também a mensagem de contagem indisponível durante loading ou erro. Itens e
+estados de coleção continuam sendo renderizados normalmente.
+
 ## Filtros por feature
 
 A gramática é compartilhada; a taxonomia não:
