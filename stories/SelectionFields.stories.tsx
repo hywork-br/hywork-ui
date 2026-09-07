@@ -157,10 +157,16 @@ export const ValidationAndRetry: Story = {
 
     await userEvent.click(canvas.getByRole("button", { name: "Salvar" }));
     await expect(canvas.getByText("Escolha um status permitido.")).toBeVisible();
-    await expect(canvas.getByRole("combobox", { name: "Status" })).toHaveFocus();
+    const statusControl = canvas.getByRole("combobox", { name: "Status" });
+    await expect(statusControl).toHaveFocus();
 
-    await userEvent.click(canvas.getByRole("combobox", { name: "Status" }));
+    await userEvent.click(statusControl);
     await userEvent.click(body.getByRole("option", { name: "Publicado" }));
+    await waitFor(() => {
+      expect(statusControl).toHaveAttribute("aria-expanded", "false");
+      expect(statusControl).toHaveFocus();
+      expect(canvasElement).not.toHaveAttribute("aria-hidden");
+    });
     await userEvent.type(
       canvas.getByRole("combobox", { name: "Responsável" }),
       "Mar{ArrowDown}{Enter}",

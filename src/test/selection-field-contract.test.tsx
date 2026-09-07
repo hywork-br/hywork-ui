@@ -43,6 +43,9 @@ describe("selection field contract", () => {
     );
 
     const control = screen.getByRole("combobox", { name: "Status" });
+    expect((screen.getByText("Status") as HTMLLabelElement).control).toBe(
+      control,
+    );
     expect(control).toHaveAttribute("id", "status");
     expect(control).toHaveAttribute("aria-describedby", "status-error");
     expect(control).toHaveAttribute("aria-invalid", "true");
@@ -88,6 +91,9 @@ describe("selection field contract", () => {
     );
 
     const control = screen.getByRole("combobox", { name: "Responsável" });
+    expect((screen.getByText("Responsável") as HTMLLabelElement).control).toBe(
+      control,
+    );
     expect(control).toHaveAttribute("id", "owner");
     expect(control).toHaveAttribute(
       "aria-describedby",
@@ -122,6 +128,9 @@ describe("selection field contract", () => {
     );
 
     const control = screen.getByRole("combobox", { name: "Canais" });
+    expect((screen.getByText("Canais") as HTMLLabelElement).control).toBe(
+      control,
+    );
     expect(control).toHaveAttribute("id", "channels");
     expect(control).toHaveAttribute("aria-describedby", "channels-error");
     expect(control).toHaveAttribute("aria-invalid", "true");
