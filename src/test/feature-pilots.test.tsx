@@ -32,24 +32,24 @@ describe("reference feature journeys", () => {
     await user.click(screen.getByRole("button", { name: "Novo curso" }));
     await user.type(
       screen.getByRole("textbox", { name: "Nome do curso" }),
-      "Integração de equipes"
+      "Integração de equipes",
     );
     await user.click(
-      screen.getByRole("button", { name: "Salvar rascunho e voltar" })
+      screen.getByRole("button", { name: "Salvar rascunho e voltar" }),
     );
     await waitFor(() =>
-      expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
     );
     expect(
-      screen.getByRole("heading", { name: "Integração de equipes" })
+      screen.getByRole("heading", { name: "Integração de equipes" }),
     ).toBeInTheDocument();
     cleanup();
     mount(Academy);
     await user.click(
-      screen.getByRole("button", { name: "Editar Integração de equipes" })
+      screen.getByRole("button", { name: "Editar Integração de equipes" }),
     );
     expect(screen.getByRole("textbox", { name: "Nome do curso" })).toHaveValue(
-      "Integração de equipes"
+      "Integração de equipes",
     );
   });
 
@@ -58,28 +58,28 @@ describe("reference feature journeys", () => {
     mount(Academy);
     await user.click(screen.getByText("Cenários de demonstração"));
     await user.click(
-      screen.getByRole("checkbox", { name: "Falhar próximo salvamento" })
+      screen.getByRole("checkbox", { name: "Falhar próximo salvamento" }),
     );
     await user.click(screen.getByRole("button", { name: "Novo curso" }));
     await user.type(
       screen.getByRole("textbox", { name: "Nome do curso" }),
-      "Curso recuperado"
+      "Curso recuperado",
     );
     await user.dblClick(
-      screen.getByRole("button", { name: "Salvar rascunho e voltar" })
+      screen.getByRole("button", { name: "Salvar rascunho e voltar" }),
     );
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "Seus dados continuam aqui"
+      "Seus dados continuam aqui",
     );
     expect(screen.getByRole("textbox", { name: "Nome do curso" })).toHaveValue(
-      "Curso recuperado"
+      "Curso recuperado",
     );
     await user.click(screen.getByRole("button", { name: "Tentar novamente" }));
     await waitFor(() =>
-      expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
     );
     expect(
-      screen.getAllByRole("heading", { name: "Curso recuperado" })
+      screen.getAllByRole("heading", { name: "Curso recuperado" }),
     ).toHaveLength(1);
   });
 
@@ -89,25 +89,25 @@ describe("reference feature journeys", () => {
     await user.click(screen.getByRole("button", { name: "Novo curso" }));
     await user.type(
       screen.getByRole("textbox", { name: "Nome do curso" }),
-      "Não salvar"
+      "Não salvar",
     );
     await user.keyboard("{Escape}");
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     await user.click(
-      screen.getByRole("button", { name: "Continuar editando" })
+      screen.getByRole("button", { name: "Continuar editando" }),
     );
     expect(screen.getByRole("textbox", { name: "Nome do curso" })).toHaveValue(
-      "Não salvar"
+      "Não salvar",
     );
     await user.click(screen.getByRole("button", { name: "Cancelar" }));
     await user.click(
-      screen.getByRole("button", { name: "Descartar alterações" })
+      screen.getByRole("button", { name: "Descartar alterações" }),
     );
     await waitFor(() =>
-      expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
     );
     expect(
-      screen.queryByRole("heading", { name: "Não salvar" })
+      screen.queryByRole("heading", { name: "Não salvar" }),
     ).not.toBeInTheDocument();
   });
 
@@ -116,39 +116,39 @@ describe("reference feature journeys", () => {
     mount(Academy);
     await user.type(
       screen.getByRole("textbox", { name: "Buscar em Academy" }),
-      "conversas difíceis"
+      "novos colaboradores",
     );
     await user.click(
       screen.getByRole("button", {
-        name: "Editar Liderança em conversas difíceis",
-      })
+        name: "Editar Integração de novos colaboradores",
+      }),
     );
     const field = screen.getByRole("textbox", { name: "Nome do curso" });
     await user.clear(field);
     await user.type(field, "Liderança no dia a dia");
     await user.click(
-      screen.getByRole("button", { name: "Salvar alterações e voltar" })
+      screen.getByRole("button", { name: "Salvar alterações e voltar" }),
     );
     await waitFor(() =>
-      expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
     );
     const search = screen.getByRole("textbox", { name: "Buscar em Academy" });
-    expect(search).toHaveValue("conversas difíceis");
+    expect(search).toHaveValue("novos colaboradores");
     expect(window.location.search).toContain(
-      "pilot-academy-search=conversas+dif%C3%ADceis"
+      "pilot-academy-search=novos+colaboradores",
     );
     expect(
-      screen.queryByRole("heading", { name: "Liderança no dia a dia" })
+      screen.queryByRole("heading", { name: "Liderança no dia a dia" }),
     ).not.toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveTextContent(
-      "fora dos filtros atuais"
+      "fora dos filtros atuais",
     );
     await waitFor(() => expect(search).toHaveFocus());
     await user.click(
-      screen.getByRole("button", { name: "Limpar busca e filtros" })
+      screen.getByRole("button", { name: "Limpar busca e filtros" }),
     );
     expect(
-      screen.getByRole("heading", { name: "Liderança no dia a dia" })
+      screen.getByRole("heading", { name: "Liderança no dia a dia" }),
     ).toBeInTheDocument();
   });
 
@@ -157,19 +157,24 @@ describe("reference feature journeys", () => {
     mount(Conteudos);
     await user.click(screen.getByRole("combobox", { name: "Status" }));
     expect(
-      screen.queryByRole("option", { name: "Ativa" })
+      screen.queryByRole("option", { name: "Ativa" }),
     ).not.toBeInTheDocument();
     await user.click(screen.getByRole("option", { name: /^Publicado$/ }));
-    const table = screen.getByRole("table", { name: "Conteúdos publicados" });
+    const table = screen.getByRole("table", { name: "Conteúdos editoriais" });
     expect(within(table).getAllByRole("row")).toHaveLength(2);
     expect(within(table).getByText("Publicado")).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Remover Publicado" })
+      screen.getByRole("button", { name: "Remover Publicado" }),
     ).toBeInTheDocument();
   });
 
   it.each([
-    [TvCorporativa, "Novo canal", "Nome do canal", "Canal piloto"],
+    [
+      TvCorporativa,
+      "Nova configuração",
+      "Nome da configuração",
+      "Configuração piloto",
+    ],
     [
       AssinaturasEmail,
       "Nova assinatura",
@@ -185,14 +190,24 @@ describe("reference feature journeys", () => {
       await user.click(screen.getByRole("button", { name: action }));
       await user.type(screen.getByRole("textbox", { name: label }), name);
       await user.click(
-        screen.getByRole("button", { name: "Salvar rascunho e voltar" })
+        screen.getByRole("button", {
+          name:
+            action === "Nova configuração"
+              ? "Salvar configuração e voltar"
+              : "Salvar rascunho e voltar",
+        }),
       );
       await waitFor(() =>
-        expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
+        expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
       );
       expect(
-        screen.getByRole("button", { name: `Editar ${name}` })
+        screen.getByRole("button", { name: `Editar ${name}` }),
       ).toBeInTheDocument();
-    }
+      if (action === "Nova configuração") {
+        expect(
+          screen.getByRole("button", { name: `Editar ${name}` }).closest("tr"),
+        ).toHaveTextContent("Inativo");
+      }
+    },
   );
 });

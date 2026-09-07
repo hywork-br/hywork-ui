@@ -4,6 +4,40 @@ import { writeFile } from "node:fs/promises";
 import { openStory, expectSettled } from "./helpers";
 import { installOpacityProbe, type OpacityProbeWindow } from "./native-opacity-probe";
 
+for (const width of [1440, 390]) {
+  test(`audited priority domains preserve fields and layouts at ${width}px`, async ({ page }, testInfo) => {
+    test.setTimeout(60000);
+    await page.setViewportSize({ width, height: 1000 });
+    await openStory(page, "pilots-priority-features--academy");
+    await page.getByRole("combobox", { name: "Status", exact: true }).click();
+    await expect(page.getByRole("option", { name: "Inativo", exact: true })).toBeVisible();
+    await expect(page.getByRole("option", { name: "Agendado", exact: true })).toHaveCount(0);
+    await page.keyboard.press("Escape");
+    await page.screenshot({ path: testInfo.outputPath(`academy-${width}.png`), fullPage: true });
+
+    await openStory(page, "pilots-priority-features--conteudos");
+    await page.getByRole("button", { name: "Mais filtros" }).click();
+    await page.getByRole("combobox", { name: "Etiqueta", exact: true }).click();
+    await page.getByRole("option", { name: "Resultados", exact: true }).click();
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("table")).toContainText("Resultados do semestre");
+    await expect(page.getByRole("table").getByRole("row")).toHaveCount(2);
+    await page.screenshot({ path: testInfo.outputPath(`contents-${width}.png`), fullPage: true });
+
+    await openStory(page, "pilots-priority-features--tv-corporativa");
+    await expect(page.getByRole("table", { name: "Configurações de TV" })).toContainText("Conteúdos em destaque · Relógio");
+    await expect(page.getByRole("combobox", { name: "Unidade" })).toHaveCount(0);
+    await page.screenshot({ path: testInfo.outputPath(`tv-${width}.png`), fullPage: true });
+
+    await openStory(page, "pilots-priority-features--assinaturas-email");
+    await expect(page.locator('[data-layout="horizontal"]')).toHaveCSS("flex-direction", "row");
+    await expect(page.locator('[data-layout="vertical"]')).toHaveCSS("flex-direction", "column");
+    await expect(page.locator('[data-layout="compact"]')).toContainText("E-mail");
+    await expect(page.locator('[data-layout="compact"]')).not.toContainText("Telefone");
+    await page.screenshot({ path: testInfo.outputPath(`signatures-${width}.png`), fullPage: true });
+  });
+}
+
 for (const surface of ["admin", "portal"]) {
   test(`${surface}: small Button respects the surface target floor`, async ({ page }, testInfo) => {
     await openStory(page, "contracts-core-families--menus-contract", surface);

@@ -22,6 +22,7 @@ import {
   PopoverContent,
   PopoverTrigger,
   Select,
+  Textarea,
 } from "../../src";
 import {
   emptyFilters,
@@ -29,8 +30,9 @@ import {
   formatDate,
   matches,
   options,
-  periodOptions,
-  screenCountOptions,
+  facetLabels,
+  facetOptions,
+  typeLabel,
   readFilters,
   readItems,
   statusLabel,
@@ -132,11 +134,16 @@ function FeaturePilotContent({
     const next = entry ?? {
       id: crypto.randomUUID(),
       name: "",
-      status: "draft",
-      dimension: config.dimensions[0],
-      group: config.groups[0],
-      owner: config.owners[0],
-      quantity: 0,
+      status: config.initialStatus,
+      summary: "",
+      type: config.types?.[0]?.value,
+      category: config.categories?.[0],
+      author: config.authors?.[0],
+      tags: [],
+      modules: config.slug === "academy" ? [] : undefined,
+      widgets: config.slug === "tv" ? [] : undefined,
+      fields: config.slug === "email" ? ["Nome", "E-mail"] : undefined,
+      layout: config.slug === "email" ? ("compact" as const) : undefined,
       updated: fixtureDate,
     };
     setOriginal({ ...next });
@@ -178,14 +185,14 @@ function FeaturePilotContent({
       setNotice(
         excluded
           ? `“${saved.name}” foi salvo, mas está fora dos filtros atuais.`
-          : `“${saved.name}” salvo nesta sessão de demonstração.`
+          : `“${saved.name}” salvo nesta sessão de demonstração.`,
       );
       setItems(next);
       setNoticeSaved(true);
       setDraft(null);
     } catch {
       setError(
-        "Não foi possível salvar. Seus dados continuam aqui. Tente novamente."
+        "Não foi possível salvar. Seus dados continuam aqui. Tente novamente.",
       );
     } finally {
       inFlight.current = false;
@@ -193,26 +200,19 @@ function FeaturePilotContent({
     }
   }
   const labelFor = (key: keyof PilotFilters) => {
-    if (key === "quantity")
-      return `Telas: ${
-        screenCountOptions.find((option) => option.value === filters.quantity)
-          ?.label
-      }`;
-    if (key === "status") return statusLabel(config, filters[key]);
-    if (key === "period")
-      return `Atualizado: ${
-        periodOptions.find((o) => o.value === filters[key])?.label
-      }`;
     if (key === "search") return `Busca: ${filters.search}`;
-    return filters[key];
+    const label =
+      facetOptions(config, key).find((option) => option.value === filters[key])
+        ?.label ?? filters[key];
+    return key === "status" ? label : `${facetLabels[key]}: ${label}`;
   };
   const active = (Object.keys(filters) as Array<keyof PilotFilters>).filter(
-    (key) => filters[key] && filters[key] !== "all"
+    (key) => filters[key] && filters[key] !== "all",
   );
   const selectFilter = (
     key: keyof PilotFilters,
     label: string,
-    values: Option[]
+    values: Option[],
   ) => (
     <Select
       ariaLabel={label}
@@ -242,38 +242,15 @@ function FeaturePilotContent({
         <div className="hw-reference-card__top">
           <span>
             <Icon aria-hidden="true" />
-            {entry.dimension}
+            {typeLabel(config, entry.type) ??
+              (config.slug === "email" ? "Modelo de assinatura" : "")}
           </span>
           {badge(entry)}
         </div>
         <CardTitle as="h2">{entry.name}</CardTitle>
       </CardHeader>
       <CardContent>
-        {config.slug === "email" ? (
-          <div className="hw-pilot__signature">
-            <span aria-hidden="true" className="hw-pilot__signature-mark" />
-            <div>
-              <strong>Marina Costa</strong>
-              <span>
-                {entry.dimension === "Comercial"
-                  ? "Relacionamento com clientes"
-                  : "Equipe Hywork"}
-              </span>
-              <small>Prévia do template {entry.group}</small>
-            </div>
-          </div>
-        ) : (
-          <p className="hw-reference-card__summary">
-            {entry.quantity} {config.quantityLabel.toLocaleLowerCase("pt-BR")} ·{" "}
-            {entry.group}
-          </p>
-        )}
-        <p className="hw-reference-card__owner">
-          {config.ownerLabel}: {entry.owner}
-        </p>
-        {config.slug === "email" && (
-          <p className="hw-reference-card__owner">{entry.quantity} pessoas</p>
-        )}
+        <DomainPreview entry={entry} />
       </CardContent>
       <CardFooter>
         <span>Atualizado em {formatDate(entry.updated)}</span>
@@ -282,9 +259,9 @@ function FeaturePilotContent({
     </Card>
   );
   function editSelect(
-    key: "dimension" | "group" | "owner" | "status",
+    key: "type" | "category" | "author" | "status",
     label: string,
-    values: Option[]
+    values: Option[],
   ) {
     return (
       <Field>
@@ -295,7 +272,7 @@ function FeaturePilotContent({
           id={`edit-${config.slug}-${key}`}
           onChange={(event) =>
             setDraft(
-              (current) => current && { ...current, [key]: event.target.value }
+              (current) => current && { ...current, [key]: event.target.value },
             )
           }
           value={draft?.[key]}
@@ -351,14 +328,35 @@ function FeaturePilotContent({
                       render: (entry) => <strong>{entry.name}</strong>,
                     },
                     { key: "status", header: "Status", render: badge },
-                    { key: "dimension", header: config.dimensionLabel },
-                    ...(config.slug === "tv"
+                    ...(config.types
                       ? [
-                          { key: "quantity", header: config.quantityLabel },
-                          { key: "group", header: config.groupLabel },
+                          {
+                            key: "type",
+                            header: "Tipo",
+                            render: (entry: PilotItem) =>
+                              typeLabel(config, entry.type),
+                          },
                         ]
                       : []),
-                    { key: "owner", header: config.ownerLabel },
+                    ...(config.slug === "tv"
+                      ? [
+                          {
+                            key: "widgets",
+                            header: "Widgets",
+                            render: (entry: PilotItem) =>
+                              entry.widgets?.join(" · ") ??
+                              "Sem widgets nesta demonstração",
+                          },
+                        ]
+                      : [
+                          { key: "author", header: "Autor" },
+                          {
+                            key: "tags",
+                            header: "Etiquetas",
+                            render: (entry: PilotItem) =>
+                              entry.tags?.join(" · "),
+                          },
+                        ]),
                     {
                       key: "updated",
                       header: "Atualizado",
@@ -406,19 +404,22 @@ function FeaturePilotContent({
             }
             filters={
               <>
-                {selectFilter("status", "Status", config.statuses)}
-                {selectFilter(
-                  "dimension",
-                  config.dimensionLabel,
-                  options(config.dimensions)
-                )}
+                {config.quickFilters.map((key) => (
+                  <span key={key}>
+                    {selectFilter(
+                      key,
+                      facetLabels[key],
+                      facetOptions(config, key),
+                    )}
+                  </span>
+                ))}
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="quiet">
                       <SlidersHorizontal aria-hidden="true" />
                       Mais filtros
-                      {["group", "owner", "period", "quantity"].some(
-                        (key) => filters[key as keyof PilotFilters] !== "all"
+                      {config.moreFilters.some(
+                        (key) => filters[key as keyof PilotFilters] !== "all",
                       )
                         ? " · ativos"
                         : ""}
@@ -430,38 +431,18 @@ function FeaturePilotContent({
                     aria-label="Mais filtros"
                   >
                     <h2>Refinar resultados</h2>
-                    {config.slug === "tv" && (
-                      <Field>
-                        <Label>Quantidade de telas</Label>
+                    {config.moreFilters.map((key) => (
+                      <Field key={key}>
+                        <Label>{facetLabels[key]}</Label>
                         {selectFilter(
-                          "quantity",
-                          "Quantidade de telas",
-                          screenCountOptions
+                          key,
+                          facetLabels[key],
+                          facetOptions(config, key),
                         )}
                       </Field>
-                    )}
-                    <Field>
-                      <Label>{config.groupLabel}</Label>
-                      {selectFilter(
-                        "group",
-                        config.groupLabel,
-                        options(config.groups)
-                      )}
-                    </Field>
-                    <Field>
-                      <Label>{config.ownerLabel}</Label>
-                      {selectFilter(
-                        "owner",
-                        config.ownerLabel,
-                        options(config.owners)
-                      )}
-                    </Field>
-                    <Field>
-                      <Label>Atualizado em</Label>
-                      {selectFilter("period", "Atualizado em", periodOptions)}
-                    </Field>
+                    ))}
                     <FieldHint>
-                      Datas de demonstração: referência em 5 set. 2026.
+                      Datas de demonstração: referência em 7 set. 2026.
                     </FieldHint>
                   </AdvancedContent>
                 </Popover>
@@ -484,6 +465,7 @@ function FeaturePilotContent({
           Mockup interativo. Alterações ficam somente nesta aba; nenhum dado é
           enviado ao produto.
         </p>
+        <p>{config.coverage}</p>
         <label>
           <input
             checked={failNext}
@@ -552,7 +534,9 @@ function FeaturePilotContent({
                       <h2>Informações principais</h2>
                       <p>
                         {creating
-                          ? "Comece pelo rascunho. Você poderá editar os detalhes depois."
+                          ? config.initialStatus === "draft"
+                            ? "Comece pelo rascunho. Você poderá editar os detalhes depois."
+                            : "Comece por uma configuração inativa."
                           : "Atualize os detalhes e volte à mesma coleção."}
                       </p>
                     </div>
@@ -575,23 +559,34 @@ function FeaturePilotContent({
                     />
                   </Field>
                   <div className="hw-reference-editor__grid">
-                    {editSelect(
-                      "dimension",
-                      config.dimensionLabel,
-                      options(config.dimensions)
-                    )}
+                    {config.types && editSelect("type", "Tipo", config.types)}
                     {editSelect("status", "Status", config.statuses)}
-                    {editSelect(
-                      "group",
-                      config.groupLabel,
-                      options(config.groups)
-                    )}
-                    {editSelect(
-                      "owner",
-                      config.ownerLabel,
-                      options(config.owners)
-                    )}
+                    {config.categories &&
+                      editSelect(
+                        "category",
+                        "Categoria",
+                        options(config.categories),
+                      )}
+                    {config.authors &&
+                      editSelect("author", "Autor", options(config.authors))}
                   </div>
+                  <Field>
+                    <Label htmlFor={`edit-${config.slug}-summary`}>
+                      Descrição
+                    </Label>
+                    <Textarea
+                      id={`edit-${config.slug}-summary`}
+                      value={draft.summary}
+                      disabled={saving}
+                      onChange={(event) =>
+                        setDraft({ ...draft, summary: event.target.value })
+                      }
+                    />
+                  </Field>
+                  <section aria-label="Prévia de conteúdo">
+                    <h3>Prévia ilustrativa · somente leitura</h3>
+                    <DomainPreview entry={draft} />
+                  </section>
                   {error && <FieldError role="alert">{error}</FieldError>}
                   {saving && (
                     <p
@@ -615,8 +610,10 @@ function FeaturePilotContent({
                     {error
                       ? "Tentar novamente"
                       : creating
-                      ? "Salvar rascunho e voltar"
-                      : "Salvar alterações e voltar"}
+                        ? config.initialStatus === "draft"
+                          ? "Salvar rascunho e voltar"
+                          : "Salvar configuração e voltar"
+                        : "Salvar alterações e voltar"}
                   </Button>
                 </footer>
               </>
@@ -625,5 +622,56 @@ function FeaturePilotContent({
         )}
       </FocusMode>
     </div>
+  );
+}
+
+function DomainPreview({ entry }: { entry: PilotItem }) {
+  return (
+    <>
+      <p className="hw-reference-card__summary">{entry.summary}</p>
+      {entry.category && (
+        <p className="hw-reference-card__owner">Categoria: {entry.category}</p>
+      )}
+      {entry.author && (
+        <p className="hw-reference-card__owner">Autor: {entry.author}</p>
+      )}
+      {entry.tags?.length ? (
+        <p className="hw-reference-card__owner">
+          Etiquetas: {entry.tags.join(" · ")}
+        </p>
+      ) : null}
+      {entry.modules && (
+        <p className="hw-reference-card__owner">
+          Módulos:{" "}
+          {entry.modules.join(" · ") || "Nenhum módulo nesta demonstração"}
+        </p>
+      )}
+      {entry.widgets && (
+        <p className="hw-reference-card__owner">
+          Widgets:{" "}
+          {entry.widgets.join(" · ") || "Nenhum widget nesta demonstração"}
+        </p>
+      )}
+      {entry.layout && (
+        <div className="hw-pilot__signature" data-layout={entry.layout}>
+          {entry.layout !== "compact" && (
+            <span aria-hidden="true" className="hw-pilot__signature-mark" />
+          )}
+          <div>
+            <strong>
+              Prévia{" "}
+              {entry.layout === "horizontal"
+                ? "horizontal"
+                : entry.layout === "vertical"
+                  ? "vertical"
+                  : "compacta"}
+            </strong>
+            {entry.fields?.map((field) => (
+              <span key={field}>{field}</span>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
   );
 }

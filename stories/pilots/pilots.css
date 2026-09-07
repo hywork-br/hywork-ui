@@ -37,6 +37,15 @@
 .hw-reference-card__summary {
   margin-top: 0;
 }
+.hw-reference-card .hw-pilot__signature[data-layout="vertical"],
+.hw-reference-editor .hw-pilot__signature[data-layout="vertical"] {
+  align-items: flex-start;
+  flex-direction: column;
+}
+.hw-reference-card .hw-pilot__signature[data-layout="compact"],
+.hw-reference-editor .hw-pilot__signature[data-layout="compact"] {
+  padding: var(--hw-space-2);
+}
 .hw-reference-card__owner {
   color: var(--hw-text-muted);
   font-size: var(--hw-text-xs);

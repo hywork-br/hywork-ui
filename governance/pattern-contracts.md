@@ -26,14 +26,22 @@ A gramática é compartilhada; a taxonomia não:
 
 | Feature | Sempre visível | “Mais filtros” |
 |---|---|---|
-| Academy | busca, status, tipo | trilha, responsável, período |
-| Conteúdos | busca, status, tipo | autor, período |
-| TV corporativa | busca, status, unidade | tela, período |
-| Assinaturas | busca, status, público | template, unidade |
+| Academy | busca, status, tipo (curso/trilha) | categoria, período |
+| Conteúdos | busca, status, tipo (notícia/comunicado) | autor, etiquetas, período |
+| TV corporativa | busca, status (ativa/inativa) | período |
+| Assinaturas | busca, status (publicado/rascunho/arquivado) | período |
 | Campanhas | busca, status, canal | público, período, responsável |
 
 O `FilterBar` não conhece esses campos. Ele organiza controles passados pela
 feature e oferece chips/limpeza com comportamento previsível.
+
+Taxonomia dos quatro pilotos revisada contra o produto em 07/09/2026: Academy
+mantém categoria separada de tipo e estados ativo/rascunho/inativo. Conteúdos
+preserva três autores sintéticos e etiquetas com estados publicado/rascunho/arquivado.
+TV lista configurações com composição de widgets, sem alegar saúde de dispositivos.
+Assinaturas demonstra modelos horizontal/vertical/compacto e campos distintos, sem
+inventar público atribuído ou contagem de pessoas. As prévias são somente leitura;
+os editores salvam metadados na sessão de demonstração.
 
 O acabamento usa uma barra aberta, não um formulário dentro de um cartão.
 Busca tem superfície suave; filtros rápidos usam texto/chevron e opções em
