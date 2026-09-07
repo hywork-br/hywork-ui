@@ -14,7 +14,10 @@ Root, Trigger, Value, Icon, portal, Content, Viewport, Item e indicador.
 
 ## API e defaults
 
-`ariaLabel` e `options` obrigatórios; aceita value controlado, placeholder, name, disabled e `onValueChange`.
+`ariaLabel` e `options` obrigatórios; aceita value controlado, placeholder,
+`name`, `disabled`, `required` e `onValueChange`. `id`, `aria-describedby` e
+`aria-invalid` são encaminhados ao trigger focável. A ref pública aponta para
+esse `HTMLButtonElement`.
 
 ## Variantes e estados
 
@@ -36,6 +39,11 @@ Altura segue superfície; menu respeita viewport e Trigger ocupa a largura do co
 ## Teclado, foco e acessibilidade
 
 Combobox nomeado, setas navegam opções, Enter seleciona e Escape fecha com retorno de foco.
+Em formulários, `name` serializa o valor pelo controle nativo mantido pelo
+Radix e `required` preserva sua validação nativa. Label visível usa `htmlFor`
+com o `id` do trigger; ajuda e erro usam os IDs literais de
+`aria-describedby`, e o estado inválido chega ao mesmo trigger por
+`aria-invalid`.
 
 O item focado pelas setas recebe o anel `--hw-focus`, além do fundo de destaque.
 O anel usa offset interno para permanecer inteiro dentro do viewport rolável do popup.

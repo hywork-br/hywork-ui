@@ -10,6 +10,8 @@ export interface ComboboxOption {
 interface SelectionProps {
   options: ComboboxOption[];
   "aria-label": string;
+  "aria-describedby"?: string;
+  "aria-invalid"?: React.AriaAttributes["aria-invalid"];
   placeholder?: string;
   disabled?: boolean;
   className?: string;
@@ -30,14 +32,17 @@ function Selection({
   onValueChange,
   multiple,
   className,
+  forwardedRef,
   ...props
 }: SelectionProps & {
   value: string[];
   onValueChange: (value: string[]) => void;
   multiple: boolean;
+  forwardedRef: React.ForwardedRef<HTMLInputElement>;
 }) {
   const id = React.useId();
   const input = React.useRef<HTMLInputElement>(null);
+  React.useImperativeHandle(forwardedRef, () => input.current as HTMLInputElement, []);
   const [open, setOpen] = React.useState(false);
   const isOpen = open && !props.disabled;
   const [query, setQuery] = React.useState("");
@@ -202,16 +207,20 @@ function Selection({
     </div>
   );
 }
-export function Combobox({ value, onValueChange, ...props }: ComboboxProps) {
-  return (
+export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(
+  ({ value, onValueChange, ...props }, ref) => (
     <Selection
       {...props}
+      forwardedRef={ref}
       value={value ? [value] : []}
       onValueChange={(items) => onValueChange(items[0] ?? "")}
       multiple={false}
     />
-  );
-}
-export function MultiSelect(props: MultiSelectProps) {
-  return <Selection {...props} multiple />;
-}
+  ),
+);
+Combobox.displayName = "Combobox";
+
+export const MultiSelect = React.forwardRef<HTMLInputElement, MultiSelectProps>(
+  (props, ref) => <Selection {...props} forwardedRef={ref} multiple />,
+);
+MultiSelect.displayName = "MultiSelect";

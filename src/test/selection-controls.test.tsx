@@ -178,10 +178,12 @@ describe("selection controls", () => {
     expect(screen.getByRole("option", { name: "Academy" }).id).toBe(firstId);
   });
   it("keeps multi selections across searches and provides named removals and a count", async () => {
+    const ref = createRef<HTMLInputElement>();
     function Fixture() {
       const [value, setValue] = useState<string[]>([]);
       return (
         <MultiSelect
+          ref={ref}
           aria-label="Canais"
           options={options}
           value={value}
@@ -192,6 +194,7 @@ describe("selection controls", () => {
     const user = userEvent.setup();
     render(<Fixture />);
     const input = screen.getByRole("combobox");
+    expect(ref.current).toBe(input);
     await user.type(input, "Acad{ArrowDown}{Enter}");
     await user.clear(input);
     await user.type(input, "Camp{ArrowDown}{Enter}");
@@ -211,6 +214,7 @@ describe("selection controls", () => {
       "role",
       "status"
     );
+    expect(ref.current).toHaveFocus();
   });
   it("labels date endpoints and links invalid chronology to both inputs", () => {
     const change = vi.fn();

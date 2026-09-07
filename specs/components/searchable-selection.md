@@ -15,9 +15,11 @@ Exports: `Combobox`, `MultiSelect`. Conteúdo e ações são nomeados pelo consu
 ## API e defaults
 
 `options`, `value`, `onValueChange` e `aria-label` são obrigatórios; `disabled`,
-`placeholder`, `className` e `id` são opcionais. Combobox recebe uma string;
-MultiSelect recebe string[]. Opções têm value/label e description/disabled
-opcionais. Não há prop `invalid`, busca remota ou carregamento embutido.
+`placeholder`, `className`, `id`, `aria-describedby` e `aria-invalid` são
+opcionais. Combobox recebe uma string; MultiSelect recebe string[]. Opções têm
+value/label e description/disabled opcionais. As refs públicas de ambos os
+controles apontam para o `HTMLInputElement` pesquisável. Não há prop `invalid`,
+busca remota ou carregamento embutido.
 
 ## Variantes e estados
 
@@ -38,10 +40,18 @@ Montserrat preservada. Admin: alvo mínimo de 32px. Portal e mobile: 44px. Input
 O input expõe combobox/listbox e opção ativa por aria-activedescendant. Setas
 navegam somente opções habilitadas; Enter escolhe; Escape fecha e mantém foco no
 input. Sair do componente fecha a lista. Não substituir o nome acessível por placeholder.
+Label visível usa `htmlFor` com o `id` do input; ajuda e erro são associados
+pelos IDs fornecidos em `aria-describedby`, e `aria-invalid` chega ao mesmo
+alvo focável. A ref pública não substitui a ref interna usada para devolver foco
+ao input depois da remoção de um chip.
 
 ## Composição e erros comuns
 
-Consumidor possui dados, permissões, rede, persistência e regras de negócio. Não interprete ausência como zero nem retry visual como envio confirmado. Fixtures do laboratório não comprovam adoção.
+Consumidor possui dados, permissões, rede, persistência e regras de negócio. Os
+campos de busca customizados não ganham semântica nativa de `required`, submit
+ou serialização neste contrato: validação e envio permanecem responsabilidade
+do formulário que os contém. Não interprete ausência como zero nem retry visual
+como envio confirmado. Fixtures do laboratório não comprovam adoção.
 
 ## Proveniência, status, owner e migração
 

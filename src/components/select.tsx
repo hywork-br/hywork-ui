@@ -11,34 +11,53 @@ export interface SelectOption {
 }
 
 export interface SelectProps {
+  "aria-describedby"?: string;
+  "aria-invalid"?: React.AriaAttributes["aria-invalid"];
   ariaLabel: string;
   className?: string;
   disabled?: boolean;
+  id?: string;
   name?: string;
   onValueChange?: (value: string) => void;
   options: SelectOption[];
   placeholder?: string;
+  required?: boolean;
   value?: string;
 }
 
-export function Select({
-  ariaLabel,
-  className,
-  disabled,
-  name,
-  onValueChange,
-  options,
-  placeholder,
-  value,
-}: SelectProps) {
-  return (
+export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
+  (
+    {
+      "aria-describedby": ariaDescribedBy,
+      "aria-invalid": ariaInvalid,
+      ariaLabel,
+      className,
+      disabled,
+      id,
+      name,
+      onValueChange,
+      options,
+      placeholder,
+      required,
+      value,
+    },
+    ref,
+  ) => (
     <SelectPrimitive.Root
       disabled={disabled}
       name={name}
       onValueChange={onValueChange}
+      required={required}
       value={value}
     >
-      <SelectPrimitive.Trigger aria-label={ariaLabel} className={cn("hw-select", className)}>
+      <SelectPrimitive.Trigger
+        aria-describedby={ariaDescribedBy}
+        aria-invalid={ariaInvalid}
+        aria-label={ariaLabel}
+        className={cn("hw-select", className)}
+        id={id}
+        ref={ref}
+      >
         <SelectPrimitive.Value placeholder={placeholder} />
         <SelectPrimitive.Icon asChild>
           <ChevronDown aria-hidden="true" />
@@ -64,5 +83,6 @@ export function Select({
         </SelectPrimitive.Content>
       </SelectPrimitive.Portal>
     </SelectPrimitive.Root>
-  );
-}
+  ),
+);
+Select.displayName = "Select";
