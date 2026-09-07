@@ -181,14 +181,18 @@ function QuietFieldMatrix() {
         <FilterBar
           aria-label="Busca contextual"
           filters={
-            <Select
-              ariaLabel="Status contextual"
-              options={[
-                { value: "all", label: "Todos" },
-                { value: "published", label: "Publicado" },
-              ]}
-              value="all"
-            />
+            <Field>
+              <Label htmlFor="quiet-status-contextual">Status contextual</Label>
+              <Select
+                id="quiet-status-contextual"
+                ariaLabel="Status contextual"
+                options={[
+                  { value: "all", label: "Todos" },
+                  { value: "published", label: "Publicado" },
+                ]}
+                value="all"
+              />
+            </Field>
           }
           search={
             <Field>
@@ -196,10 +200,9 @@ function QuietFieldMatrix() {
               <Input
                 id="quiet-search-invalid"
                 aria-describedby="quiet-search-error"
+                defaultValue="Termo bloqueado"
                 invalid
                 type="search"
-                value="Termo bloqueado"
-                readOnly
               />
               <FieldError id="quiet-search-error">
                 Revise os termos usados na busca.
@@ -214,15 +217,14 @@ function QuietFieldMatrix() {
         <div className="hw-contract__form-grid">
           <Field>
             <Label htmlFor="quiet-text-disabled">Texto desabilitado</Label>
-            <Input id="quiet-text-disabled" disabled value="Sem permissão" readOnly />
+            <Input id="quiet-text-disabled" defaultValue="Sem permissão" disabled />
           </Field>
           <Field>
             <Label htmlFor="quiet-description-disabled">Descrição desabilitada</Label>
             <Textarea
               id="quiet-description-disabled"
+              defaultValue="Conteúdo indisponível"
               disabled
-              value="Conteúdo indisponível"
-              readOnly
             />
           </Field>
           <Field>
@@ -262,9 +264,8 @@ function QuietFieldMatrix() {
           <DateField
             id="quiet-date-disabled"
             label="Data desabilitada"
+            defaultValue="2026-09-07"
             disabled
-            value="2026-09-07"
-            readOnly
           />
         </div>
       </section>

@@ -37,6 +37,65 @@ for (const surface of ["admin", "portal"] as const) {
     await expect(control).toHaveCSS("border-bottom-color", errorColor);
   });
 
+  test(`${surface}: invalid and disabled examples do not masquerade as read-only`, async ({
+    page,
+  }) => {
+    await openStory(page, storyId, surface);
+    const invalidSearch = page.getByLabel("Busca inválida", { exact: true });
+    await expect(invalidSearch).not.toHaveAttribute("readonly", "");
+    await expect(invalidSearch).not.toHaveCSS("border-bottom-style", "dashed");
+
+    for (const name of [
+      "Texto desabilitado",
+      "Descrição desabilitada",
+      "Data desabilitada",
+    ]) {
+      const control = page.getByLabel(name, { exact: true });
+      await expect(control).toBeDisabled();
+      await expect(control).not.toHaveAttribute("readonly", "");
+    }
+  });
+
+  test(`${surface}: contextual selection has an associated label and distinct quiet paint`, async ({
+    page,
+  }) => {
+    await openStory(page, storyId, surface);
+    const formSelect = page.getByRole("combobox", {
+      name: "Categoria normal",
+      exact: true,
+    });
+    const contextualLabel = page.getByText("Status contextual", { exact: true });
+    const contextualSelect = page.getByRole("combobox", {
+      name: "Status contextual",
+      exact: true,
+    });
+    await expect(contextualLabel).toBeVisible();
+    await expect(contextualSelect).toHaveAttribute("id", "quiet-status-contextual");
+    expect(
+      await contextualLabel.evaluate(
+        (element) => (element as HTMLLabelElement).control?.id,
+      ),
+    ).toBe("quiet-status-contextual");
+    const [formPaint, contextualPaint] = await Promise.all([
+      formSelect.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return {
+          background: style.backgroundColor,
+          baseline: style.borderBottomColor,
+        };
+      }),
+      contextualSelect.evaluate((element) => {
+        const style = getComputedStyle(element);
+        return {
+          background: style.backgroundColor,
+          baseline: style.borderBottomColor,
+        };
+      }),
+    ]);
+    expect(contextualPaint.background).not.toBe(formPaint.background);
+    expect(contextualPaint.baseline).not.toBe(formPaint.baseline);
+  });
+
   for (const width of [390, 1440]) {
     test(`${surface} ${width}px: quiet field states retain their semantic cues`, async ({
       page,
