@@ -6,6 +6,7 @@ const config: StorybookConfig = {
     name: "@storybook/react-vite",
     options: {},
   },
+  staticDirs: ["./static"],
   stories: ["../stories/**/*.stories.@(ts|tsx)"],
 };
 
