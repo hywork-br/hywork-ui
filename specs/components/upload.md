@@ -34,6 +34,8 @@ Controles nomeados usam teclado nativo; foco laranja permanece visível. Busca n
 
 A seleção usa `Button outline` nomeado com a ação e o rótulo do campo. Enter ou Espaço abrem o seletor nativo por um input oculto, sem duplicar o alvo de Tab. `disabled` bloqueia ambos. O input mantém accept/multiple e limpa seu valor após seleção, permitindo escolher novamente o mesmo arquivo. Essa ação não inicia transporte: `onFilesChange` continua sendo a fronteira controlada pelo consumidor.
 
+Após seleção ou cancelamento, o foco retorna ao botão quando ficou perdido no documento ou no contêiner. Se o consumidor desabilitar temporariamente o campo durante leitura, o retorno aguarda sua reabilitação. Não desloca foco que já esteja em outro controle. A story `LocalSelectionFocus` exercita leitura local e continuidade por Tab, sem transporte remoto.
+
 ## Composição e erros comuns
 
 Consumidor possui dados, permissões, rede, persistência e regras de negócio. Não interprete ausência como zero nem retry visual como envio confirmado. Fixtures do laboratório não comprovam adoção.

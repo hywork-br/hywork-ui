@@ -34,13 +34,31 @@ export function FileUpload({
 }: FileUploadProps) {
   const id = React.useId();
   const input = React.useRef<HTMLInputElement>(null);
+  const trigger = React.useRef<HTMLButtonElement>(null);
+  const container = React.useRef<HTMLDivElement>(null);
+  const restoreFocus = React.useRef(false);
+  const [selectionEvent, notifySelection] = React.useReducer(value => value + 1, 0);
+  React.useEffect(() => {
+    const element = input.current;
+    const cancelled = () => { restoreFocus.current = true; notifySelection(); };
+    element?.addEventListener('cancel', cancelled);
+    return () => element?.removeEventListener('cancel', cancelled);
+  }, []);
+  React.useLayoutEffect(() => {
+    if (!restoreFocus.current || props.disabled) return;
+    restoreFocus.current = false;
+    const active = document.activeElement;
+    // Restore a lost/contained focus only; never steal focus from another control.
+    if (active === input.current || active === trigger.current || active === document.body || active === document.documentElement || (active && container.current && active.contains(container.current))) trigger.current?.focus();
+  }, [props.disabled, selectionEvent]);
   const selectionLabel = props.multiple ? "Selecionar arquivos" : "Selecionar arquivo";
   return (
-    <div className="hw-upload hw-field">
+    <div ref={container} className="hw-upload hw-field">
       <label className="hw-label" htmlFor={id}>
         {label}
       </label>
       <Button
+        ref={trigger}
         type="button"
         variant="outline"
         disabled={props.disabled}
@@ -56,9 +74,11 @@ export function FileUpload({
         id={id}
         type="file"
         onChange={(event) => {
+          restoreFocus.current = true;
           const files = Array.from(event.target.files ?? []);
           if (files.length) onFilesChange(files);
           event.target.value = "";
+          notifySelection();
         }}
       />
       <ul className="hw-upload__items">

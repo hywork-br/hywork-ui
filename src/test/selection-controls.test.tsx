@@ -301,4 +301,24 @@ describe("selection controls", () => {
     rerender(<FileUpload label="Imagem local" items={[]} onFilesChange={() => {}} disabled />);
     expect(trigger).toBeDisabled();
   });
+  it("restores file selection focus after the consumer finishes a disabled read", async () => {
+    const user = userEvent.setup();
+    const props = { label: 'Imagem local', items: [], onFilesChange: () => {} };
+    const { rerender } = render(<FileUpload {...props} onFilesChange={() => rerender(<FileUpload {...props} disabled />)} />);
+    const trigger = screen.getByRole('button', { name: 'Selecionar arquivo: Imagem local' });
+    trigger.focus();
+    await user.upload(screen.getByLabelText('Imagem local'), new File(['image'], 'local.png', { type: 'image/png' }));
+    expect(trigger).toBeDisabled(); trigger.blur();
+    rerender(<FileUpload {...props} />);
+    expect(trigger).toHaveFocus();
+  });
+  it("does not steal focus moved outside the upload during a pending read", async () => {
+    const user = userEvent.setup();
+    const outside = document.createElement('button'); document.body.append(outside);
+    const props = { label: 'Imagem local', items: [], onFilesChange: () => {} };
+    const { rerender } = render(<FileUpload {...props} onFilesChange={() => rerender(<FileUpload {...props} disabled />)} />);
+    await user.upload(screen.getByLabelText('Imagem local'), new File(['image'], 'local.png', { type: 'image/png' }));
+    outside.focus(); rerender(<FileUpload {...props} />);
+    expect(outside).toHaveFocus(); outside.remove();
+  });
 });

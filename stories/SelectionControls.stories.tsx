@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useEffect, useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import {
+  Button,
   Checkbox,
   Radio,
   Switch,
@@ -24,6 +25,21 @@ const options = [
   { value: "tv", label: "TV corporativa", disabled: true },
   { value: "campaigns", label: "Campanhas" },
 ];
+
+function LocalFileSelection() {
+  const [reading, setReading] = useState(false);
+  const [result, setResult] = useState('Nenhum arquivo lido.');
+  return <div className="hw-surface-admin">
+    <p>Leitura local para verificar o retorno de foco. Nenhum upload.</p>
+    <FileUpload label="Arquivo local" items={[]} disabled={reading} onFilesChange={files => {
+      setReading(true);
+      files[0].text().then(() => setResult(`Lido: ${files[0].name}`), () => setResult('Não foi possível ler o arquivo.')).finally(() => setReading(false));
+    }} />
+    <p role="status">{reading ? 'Lendo arquivo…' : result}</p>
+    <Button type="button" variant="quiet">Próxima ação</Button>
+  </div>;
+}
+export const LocalSelectionFocus: Story = { render: () => <LocalFileSelection /> };
 
 function Example() {
   const [channel, setChannel] = useState("");
