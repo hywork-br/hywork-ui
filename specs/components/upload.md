@@ -32,6 +32,8 @@ Montserrat preservada. Admin: alvo mínimo de 32px. Portal e mobile: 44px. Input
 
 Controles nomeados usam teclado nativo; foco laranja permanece visível. Busca navegável usa setas, Enter e Escape, quando aplicável. Estados trazem texto além da cor; movimento reduzido não impede operação.
 
+A seleção usa `Button outline` nomeado com a ação e o rótulo do campo. Enter ou Espaço abrem o seletor nativo por um input oculto, sem duplicar o alvo de Tab. `disabled` bloqueia ambos. O input mantém accept/multiple e limpa seu valor após seleção, permitindo escolher novamente o mesmo arquivo. Essa ação não inicia transporte: `onFilesChange` continua sendo a fronteira controlada pelo consumidor.
+
 ## Composição e erros comuns
 
 Consumidor possui dados, permissões, rede, persistência e regras de negócio. Não interprete ausência como zero nem retry visual como envio confirmado. Fixtures do laboratório não comprovam adoção.

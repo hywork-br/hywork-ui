@@ -289,7 +289,16 @@ describe("selection controls", () => {
         items={[{ id: "a", name: "a.pdf", progress: NaN, status: "uploading" }]}
       />
     );
-    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Cancelar|Tentar novamente/ })).not.toBeInTheDocument();
     expect(screen.getByRole("progressbar")).toHaveAttribute("value", "0");
+  });
+  it("provides a keyboard file picker trigger and disables it with the field", async () => {
+    const user = userEvent.setup();
+    const { rerender } = render(<FileUpload label="Imagem local" items={[]} onFilesChange={() => {}} />);
+    const trigger = screen.getByRole('button', { name: 'Selecionar arquivo: Imagem local' });
+    await user.tab(); expect(trigger).toHaveFocus();
+    expect(screen.getByLabelText('Imagem local')).not.toBeVisible();
+    rerender(<FileUpload label="Imagem local" items={[]} onFilesChange={() => {}} disabled />);
+    expect(trigger).toBeDisabled();
   });
 });

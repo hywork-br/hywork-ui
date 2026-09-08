@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Button } from "./button";
 
 export interface FileUploadItem {
   id: string;
@@ -32,13 +33,26 @@ export function FileUpload({
   ...props
 }: FileUploadProps) {
   const id = React.useId();
+  const input = React.useRef<HTMLInputElement>(null);
+  const selectionLabel = props.multiple ? "Selecionar arquivos" : "Selecionar arquivo";
   return (
     <div className="hw-upload hw-field">
       <label className="hw-label" htmlFor={id}>
         {label}
       </label>
+      <Button
+        type="button"
+        variant="outline"
+        disabled={props.disabled}
+        aria-label={`${selectionLabel}: ${label}`}
+        onClick={() => input.current?.click()}
+      >
+        {selectionLabel}
+      </Button>
       <input
         {...props}
+        ref={input}
+        hidden
         id={id}
         type="file"
         onChange={(event) => {
