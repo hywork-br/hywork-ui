@@ -36,7 +36,7 @@ export interface DialogContentProps
 export const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps
->(({ children, className, tone = "default", style, ...props }, ref) => {
+>(({ children, className, tone = "default", style, onEscapeKeyDown, ...props }, ref) => {
   const portalStyle = useScopedPortalStyle(style);
   return (
   <DialogPrimitive.Portal>
@@ -47,6 +47,13 @@ export const DialogContent = React.forwardRef<
       ref={ref}
       {...(tone === "alert" ? { role: "alertdialog" } : {})}
       {...props}
+      onEscapeKeyDown={(event) => {
+        onEscapeKeyDown?.(event);
+        // Radix handles Escape in native capture, before the selection's
+        // React key handler can close its popup and stop propagation.
+        // Leave the first Escape to that expanded control.
+        if (event.target instanceof Element && event.target.closest('[role="combobox"][aria-expanded="true"]')) event.preventDefault();
+      }}
       style={portalStyle}
     >
       {children}

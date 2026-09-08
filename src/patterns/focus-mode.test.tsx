@@ -4,6 +4,7 @@ import * as React from "react";
 import { describe, expect, it } from "vitest";
 
 import { FocusMode } from "./focus-mode";
+import { MultiSelect } from "../components/combobox";
 
 function Flow({ saving = false, removeOpener = false }: { saving?: boolean; removeOpener?: boolean }) {
   const [open, setOpen] = React.useState(false);
@@ -20,6 +21,23 @@ function Flow({ saving = false, removeOpener = false }: { saving?: boolean; remo
 }
 
 describe("FocusMode focus lifecycle", () => {
+  it("closes an expanded selection before Escape exits the editing surface", async () => {
+    const user = userEvent.setup();
+    function SelectionFlow() {
+      const [open, setOpen] = React.useState(true);
+      return <FocusMode open={open} title="Conteúdo" onExit={() => setOpen(false)}><MultiSelect aria-label="Público" value={[]} onValueChange={() => {}} options={[{ value: 'people', label: 'Pessoas' }]} /></FocusMode>;
+    }
+    render(<SelectionFlow />);
+    const input = screen.getByRole('combobox', { name: 'Público' });
+    await user.click(input);
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    await user.keyboard('{Escape}');
+    expect(screen.getByRole('dialog', { name: 'Conteúdo' })).toBeVisible();
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+    expect(input).toHaveFocus();
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  });
   it("restores the opener under StrictMode effect replay", async () => {
     const user = userEvent.setup();
     render(<React.StrictMode><Flow /></React.StrictMode>);
