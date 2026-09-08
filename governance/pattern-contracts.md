@@ -90,6 +90,12 @@ de cursos, distribuição de telas ou implantação de assinaturas dos produtos.
 
 ## DataTable
 
+ListPage limits its grid tracks and direct items to the available inline space, including nested
+consumer wrappers. A wide DataTable scrolls inside its named region; focusing an offscreen cell
+must not horizontally scroll the document or displace the page heading. The browser regression
+`scripts/verify-list-page-overflow.mjs` exercises the packaged React components with current CSS
+in Chromium and Firefox at desktop, tablet and narrow widths.
+
 Um renderer fornecido é a autoridade da célula: retornos `null`, `undefined` e
 `false` deixam a célula vazia; `0` aparece como zero. O valor cru só é usado quando
 a coluna não fornece `render`.

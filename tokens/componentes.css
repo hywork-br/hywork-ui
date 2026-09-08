@@ -313,6 +313,10 @@
 .hw-list-page__toolbar { border-bottom: 1px solid var(--hw-border); padding-block: var(--hw-space-4); }
 .hw-list-page__count { color: var(--hw-text-muted); font-size: var(--hw-text-xs); font-weight: 500; margin: 0; }
 .hw-list-page__items { display: grid; gap: var(--hw-row-gap); }
+.hw-list-page,
+.hw-list-page__items { grid-template-columns: minmax(0, 1fr); }
+.hw-list-page > *,
+.hw-list-page__items > * { min-width: 0; }
 .hw-list-page__items[data-view="grid"] { grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
 .hw-list-page__state { align-items: center; background: var(--hw-card); border: 1px dashed var(--hw-border-strong); border-radius: var(--hw-card-radius); display: grid; gap: var(--hw-space-3); justify-items: center; min-height: 18rem; padding: var(--hw-space-8); text-align: center; }
 .hw-list-page__state h2 { font-family: var(--hw-font-heading); font-size: var(--hw-text-lg); margin: 0; }
