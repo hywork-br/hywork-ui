@@ -5,6 +5,21 @@ import { expectSettled, openStory } from "./helpers";
 const storyId = "navigation-administration--grouped-responsive";
 const widths = [1440, 768, 390, 320] as const;
 
+for (const variant of ["no-current-item", "unknown-current-item"]) {
+  test(`mobile focus fallback: ${variant}`, async ({ page }, testInfo) => {
+    await page.setViewportSize({ width: 390, height: 800 });
+    await openStory(page, `navigation-administration--${variant}`, "admin");
+    const trigger = page.getByRole("button", { name: "Abrir navegação" });
+    await trigger.click();
+    const dialog = page.getByRole("dialog", { name: "Navegação principal" });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole("button", { name: "Fechar navegação" })).toBeFocused();
+    await capture(page, testInfo.outputPath(`navigation-${variant}.png`));
+    await page.keyboard.press("Escape");
+    await expect(trigger).toBeFocused();
+  });
+}
+
 async function capture(page: Parameters<typeof openStory>[0], path: string) {
   await expectSettled(page);
   await page.screenshot({

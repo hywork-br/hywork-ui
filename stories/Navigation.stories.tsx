@@ -272,3 +272,11 @@ type Story = StoryObj<typeof meta>;
 export const GroupedResponsive: Story = {
   render: () => <AdministrationNavigation />,
 };
+
+export const NoCurrentItem: Story = {
+  render: () => <AdminShell brand="hywork" navigation={navigation}><main>Escolha uma área</main></AdminShell>,
+};
+
+export const UnknownCurrentItem: Story = {
+  render: () => <AdminShell brand="hywork" currentItem="removed-area" navigation={navigation}><main>Área indisponível</main></AdminShell>,
+};

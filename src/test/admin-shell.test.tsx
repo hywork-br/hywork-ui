@@ -1,6 +1,9 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import * as React from "react";
+import { renderToString } from "react-dom/server";
+import { hydrateRoot } from "react-dom/client";
+import { act } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { AdminShell } from "../patterns/admin-shell";
@@ -25,6 +28,37 @@ function useMobileViewport() {
 afterEach(() => vi.unstubAllGlobals());
 
 describe("AdminShell navigation", () => {
+  it.each([undefined, "missing-id"])("focuses inside the mobile dialog when currentItem is %s", async (currentItem) => {
+    useMobileViewport();
+    const user = userEvent.setup();
+    render(<AdminShell brand="hywork" currentItem={currentItem} navigation={groupedNavigation}><main>Content</main></AdminShell>);
+    await user.click(screen.getByRole("button", { name: "Abrir navegação" }));
+    const dialog = screen.getByRole("dialog", { name: "Navegação principal" });
+    expect(dialog).toContainElement(document.activeElement as HTMLElement);
+  });
+
+  it("hydrates the server snapshot on a mobile viewport without discarding it", async () => {
+    vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
+    const tree = <AdminShell brand="hywork" navigation={groupedNavigation} workspace={<p>Workspace</p>}><main>Content</main></AdminShell>;
+    const clientWindow = window;
+    let html: string;
+    vi.stubGlobal("window", undefined);
+    try { html = renderToString(tree); }
+    finally { vi.stubGlobal("window", clientWindow); }
+    useMobileViewport();
+    const host = document.createElement("div");
+    host.innerHTML = html;
+    document.body.append(host);
+    const serverMain = host.querySelector("main");
+    const errors: unknown[] = [];
+    let root: ReturnType<typeof hydrateRoot> | undefined;
+    try {
+      await act(async () => { root = hydrateRoot(host, tree, { onRecoverableError: (error) => errors.push(error) }); });
+      expect(errors).toEqual([]);
+      expect(host.querySelector("main")).toBe(serverMain);
+    } finally { await act(async () => root?.unmount()); host.remove(); }
+  });
+
   it("keeps legacy flat navigation current-page behavior", () => {
     render(
       <AdminShell

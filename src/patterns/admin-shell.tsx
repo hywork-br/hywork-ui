@@ -51,11 +51,7 @@ export const AdminShell = React.forwardRef<HTMLDivElement, AdminShellProps>(
     const resolvedContentId =
       contentId ?? `hw-admin-content-${generatedContentId}`;
     const [mobileOpen, setMobileOpen] = React.useState(false);
-    const [isMobile, setIsMobile] = React.useState(() =>
-      typeof window !== "undefined" && typeof window.matchMedia === "function"
-        ? window.matchMedia(MOBILE_NAVIGATION_QUERY).matches
-        : false
-    );
+    const [isMobile, setIsMobile] = React.useState(false);
     const mobileOpenRef = React.useRef(mobileOpen);
     const desktopSidebarRef = React.useRef<HTMLElement>(null);
     const panelRef = React.useRef<HTMLDivElement>(null);
@@ -171,12 +167,14 @@ export const AdminShell = React.forwardRef<HTMLDivElement, AdminShellProps>(
               if (focusDesktopAfterResizeRef.current) event.preventDefault();
             }}
             onOpenAutoFocus={(event) => {
-              event.preventDefault();
               const current = panelRef.current?.querySelector<HTMLElement>(
                 '[aria-current="page"]'
               );
-              current?.focus({ preventScroll: true });
-              current?.scrollIntoView({ block: "center" });
+              if (current) {
+                event.preventDefault();
+                current.focus({ preventScroll: true });
+                current.scrollIntoView({ block: "center" });
+              }
             }}
             ref={panelRef}
           >
