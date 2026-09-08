@@ -5,7 +5,7 @@ import { expectSettled, openStory } from "./helpers";
 const storyId = "navigation-administration--grouped-responsive";
 const widths = [1440, 768, 390, 320] as const;
 
-for (const variant of ["no-current-item", "unknown-current-item"]) {
+for (const variant of ["no-current-item", "unknown-current-item", "empty-navigation"]) {
   test(`mobile focus fallback: ${variant}`, async ({ page }, testInfo) => {
     await page.setViewportSize({ width: 390, height: 800 });
     await openStory(page, `navigation-administration--${variant}`, "admin");
@@ -17,6 +17,13 @@ for (const variant of ["no-current-item", "unknown-current-item"]) {
     await capture(page, testInfo.outputPath(`navigation-${variant}.png`));
     await page.keyboard.press("Escape");
     await expect(trigger).toBeFocused();
+    await trigger.click();
+    await page.setViewportSize({ width: 1440, height: 800 });
+    await expect(dialog).not.toBeVisible();
+    const destination = variant === "empty-navigation" ? page.locator(".hw-admin-shell__content") : page.locator('.hw-admin-shell__sidebar .hw-shell-navigation a').first();
+    await expect(destination).toBeFocused();
+    await expect(destination).toBeInViewport();
+    await expect(page.locator("body")).not.toHaveCSS("overflow", "hidden");
   });
 }
 

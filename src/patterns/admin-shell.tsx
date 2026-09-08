@@ -54,6 +54,7 @@ export const AdminShell = React.forwardRef<HTMLDivElement, AdminShellProps>(
     const [isMobile, setIsMobile] = React.useState(false);
     const mobileOpenRef = React.useRef(mobileOpen);
     const desktopSidebarRef = React.useRef<HTMLElement>(null);
+    const contentRef = React.useRef<HTMLDivElement>(null);
     const panelRef = React.useRef<HTMLDivElement>(null);
     const focusDesktopAfterResizeRef = React.useRef(false);
 
@@ -82,7 +83,7 @@ export const AdminShell = React.forwardRef<HTMLDivElement, AdminShellProps>(
       focusDesktopAfterResizeRef.current = false;
       const current = desktopSidebarRef.current?.querySelector<HTMLElement>(
         '[aria-current="page"]'
-      );
+      ) ?? desktopSidebarRef.current?.querySelector<HTMLElement>(".hw-shell-navigation a[href]") ?? contentRef.current;
       current?.focus({ preventScroll: true });
       current?.scrollIntoView({ block: "nearest" });
     }, [isMobile, mobileOpen]);
@@ -151,6 +152,7 @@ export const AdminShell = React.forwardRef<HTMLDivElement, AdminShellProps>(
 
           <div
             className="hw-admin-shell__content"
+            ref={contentRef}
             id={resolvedContentId}
             tabIndex={-1}
           >

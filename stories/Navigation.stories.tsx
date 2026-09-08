@@ -280,3 +280,7 @@ export const NoCurrentItem: Story = {
 export const UnknownCurrentItem: Story = {
   render: () => <AdminShell brand="hywork" currentItem="removed-area" navigation={navigation}><main>Área indisponível</main></AdminShell>,
 };
+
+export const EmptyNavigation: Story = {
+  render: () => <AdminShell brand="hywork" navigation={[]}><main>Nenhuma área disponível</main></AdminShell>,
+};
