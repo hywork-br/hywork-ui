@@ -22,6 +22,8 @@
  */
 
 :root {
+  /* Color interpolation is independent from structural motion. */
+  --hw-duration-color: var(--hw-duration-base);
   /**
    * Cor primária do tema default: AZUL. DECIDIDO em 13/08/2026, e decidido
    * "por ora" — a alternativa era o laranja #E9501B do guideline de marca, e a
@@ -44,7 +46,10 @@
   --hw-primary: var(--hw-blue-mid);
   --hw-primary-hover: var(--hw-blue-deep);
   --hw-primary-fg: var(--hw-white);
+  /* Accent ink is independent from a tenant's potentially light button fill. */
+  --hw-primary-text: var(--hw-blue-mid);
   --hw-primary-soft: var(--hw-blue-tint);
+  --hw-primary-soft-fg: var(--hw-blue-mid);
 
   /* Secundária — sólido laranja escurecido para texto pequeno AA. O laranja
      puro permanece em dataviz e decoração, onde não carrega texto branco. */
@@ -56,6 +61,7 @@
 
   /* Superfícies — sempre em par com a tinta que vai por cima */
   --hw-surface: var(--hw-white);
+  --hw-theme-background: var(--hw-white);
   --hw-surface-fg: var(--hw-navy);
   --hw-surface-subtle: var(--hw-gray-tint);
   --hw-surface-subtle-fg: var(--hw-navy);

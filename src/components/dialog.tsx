@@ -2,6 +2,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import * as React from "react";
 
 import { cn } from "../lib/cn";
+import { useScopedPortalStyle } from "./theme-scope";
 
 export const Dialog = DialogPrimitive.Root;
 export const DialogTrigger = DialogPrimitive.Trigger;
@@ -35,7 +36,9 @@ export interface DialogContentProps
 export const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps
->(({ children, className, tone = "default", ...props }, ref) => (
+>(({ children, className, tone = "default", style, ...props }, ref) => {
+  const portalStyle = useScopedPortalStyle(style);
+  return (
   <DialogPrimitive.Portal>
     <DialogPrimitive.Overlay className="hw-dialog__overlay" />
     <DialogPrimitive.Content
@@ -44,11 +47,13 @@ export const DialogContent = React.forwardRef<
       ref={ref}
       {...(tone === "alert" ? { role: "alertdialog" } : {})}
       {...props}
+      style={portalStyle}
     >
       {children}
     </DialogPrimitive.Content>
   </DialogPrimitive.Portal>
-));
+  );
+});
 DialogContent.displayName = "DialogContent";
 
 export const DialogActions = React.forwardRef<

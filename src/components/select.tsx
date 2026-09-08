@@ -3,6 +3,7 @@ import { Check, ChevronDown } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "../lib/cn";
+import { useScopedPortalStyle } from "./theme-scope";
 
 export interface SelectOption {
   disabled?: boolean;
@@ -42,7 +43,9 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
       value,
     },
     ref,
-  ) => (
+  ) => {
+    const portalStyle = useScopedPortalStyle();
+    return (
     <SelectPrimitive.Root
       disabled={disabled}
       name={name}
@@ -64,7 +67,7 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
         </SelectPrimitive.Icon>
       </SelectPrimitive.Trigger>
       <SelectPrimitive.Portal>
-        <SelectPrimitive.Content className="hw-select__content" position="popper" sideOffset={8}>
+        <SelectPrimitive.Content className="hw-select__content" position="popper" sideOffset={8} style={portalStyle}>
           <SelectPrimitive.Viewport>
             {options.map((option) => (
               <SelectPrimitive.Item
@@ -83,6 +86,7 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
         </SelectPrimitive.Content>
       </SelectPrimitive.Portal>
     </SelectPrimitive.Root>
-  ),
+    );
+  },
 );
 Select.displayName = "Select";

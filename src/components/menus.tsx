@@ -4,6 +4,7 @@ import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import * as React from "react";
 
 import { cn } from "../lib/cn";
+import { useScopedPortalStyle } from "./theme-scope";
 
 export const DropdownMenu = DropdownPrimitive.Root;
 export const DropdownMenuTrigger = DropdownPrimitive.Trigger;
@@ -12,16 +13,20 @@ export const DropdownMenuGroup = DropdownPrimitive.Group;
 export const DropdownMenuContent = React.forwardRef<
   React.ElementRef<typeof DropdownPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DropdownPrimitive.Content>
->(({ className, sideOffset = 8, ...props }, ref) => (
+>(({ className, sideOffset = 8, style, ...props }, ref) => {
+  const portalStyle = useScopedPortalStyle(style);
+  return (
   <DropdownPrimitive.Portal>
     <DropdownPrimitive.Content
       className={cn("hw-menu", className)}
       ref={ref}
       sideOffset={sideOffset}
       {...props}
+      style={portalStyle}
     />
   </DropdownPrimitive.Portal>
-));
+  );
+});
 DropdownMenuContent.displayName = "DropdownMenuContent";
 
 export const DropdownMenuItem = React.forwardRef<
@@ -64,16 +69,20 @@ export const PopoverClose = PopoverPrimitive.Close;
 export const PopoverContent = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
->(({ className, sideOffset = 8, ...props }, ref) => (
+>(({ className, sideOffset = 8, style, ...props }, ref) => {
+  const portalStyle = useScopedPortalStyle(style);
+  return (
   <PopoverPrimitive.Portal>
     <PopoverPrimitive.Content
       className={cn("hw-popover", className)}
       ref={ref}
       sideOffset={sideOffset}
       {...props}
+      style={portalStyle}
     />
   </PopoverPrimitive.Portal>
-));
+  );
+});
 PopoverContent.displayName = "PopoverContent";
 
 export const TooltipProvider = TooltipPrimitive.Provider;
@@ -83,14 +92,18 @@ export const TooltipTrigger = TooltipPrimitive.Trigger;
 export const TooltipContent = React.forwardRef<
   React.ElementRef<typeof TooltipPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
->(({ className, sideOffset = 6, ...props }, ref) => (
+>(({ className, sideOffset = 6, style, ...props }, ref) => {
+  const portalStyle = useScopedPortalStyle(style);
+  return (
   <TooltipPrimitive.Portal>
     <TooltipPrimitive.Content
       className={cn("hw-tooltip", className)}
       ref={ref}
       sideOffset={sideOffset}
       {...props}
+      style={portalStyle}
     />
   </TooltipPrimitive.Portal>
-));
+  );
+});
 TooltipContent.displayName = "TooltipContent";

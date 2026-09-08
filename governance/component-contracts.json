@@ -2,6 +2,22 @@
   "schemaVersion": 1,
   "families": [
     {
+      "slug": "theme-scope",
+      "name": "ThemeScope",
+      "exports": ["ThemeScope", "useThemeScope"],
+      "status": "draft",
+      "owner": { "design": "Hywork Product Design", "frontend": "Hywork Frontend" },
+      "consumers": [],
+      "structuralCase": "Local validated tenant identity shared by React descendants and existing DS portals; no product adoption.",
+      "surfaces": ["admin", "portal"],
+      "viewports": ["desktop", "tablet", "mobile"],
+      "spec": "specs/components/theme-scope.md",
+      "storyFile": "stories/Themes.stories.tsx",
+      "storyExport": "ValidationLab",
+      "migrationWave": null,
+      "storyContract": "play"
+    },
+    {
       "slug": "button",
       "name": "Button",
       "exports": [
@@ -602,6 +618,19 @@
     }
   ],
   "utilities": [
+    {
+      "slug": "scoped-theme",
+      "kind": "utility",
+      "exports": ["defaultScopedTheme", "resolveScopedTheme", "resolveScopedThemeUpdate"],
+      "status": "draft",
+      "spec": "specs/utilities/scoped-theme.md",
+      "storyFile": "stories/Themes.stories.tsx",
+      "storyExport": "InvalidInitial",
+      "owner": { "design": "Hywork Product Design", "frontend": "Hywork Frontend" },
+      "consumers": [],
+      "structuralCase": "Required component-role validation and atomic fallback without DOM or storage.",
+      "storyContract": "play"
+    },
     {
       "slug": "theme-validation",
       "kind": "utility",

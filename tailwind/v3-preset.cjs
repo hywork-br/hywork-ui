@@ -16,16 +16,20 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        "duration-color": "var(--hw-duration-color)",
         "primary": "var(--hw-primary)",
         "primary-hover": "var(--hw-primary-hover)",
         "primary-fg": "var(--hw-primary-fg)",
+        "primary-text": "var(--hw-primary-text)",
         "primary-soft": "var(--hw-primary-soft)",
+        "primary-soft-fg": "var(--hw-primary-soft-fg)",
         "secondary": "var(--hw-secondary)",
         "secondary-hover": "var(--hw-secondary-hover)",
         "secondary-fg": "var(--hw-secondary-fg)",
         "secondary-soft": "var(--hw-secondary-soft)",
         "secondary-text": "var(--hw-secondary-text)",
         "surface": "var(--hw-surface)",
+        "theme-background": "var(--hw-theme-background)",
         "surface-fg": "var(--hw-surface-fg)",
         "surface-subtle": "var(--hw-surface-subtle)",
         "surface-subtle-fg": "var(--hw-surface-subtle-fg)",

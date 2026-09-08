@@ -1,4 +1,5 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
+import { renderToString } from "react-dom/server";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 
@@ -9,6 +10,7 @@ import {
 } from "../lib/theme-validation";
 import { ThemeLab } from "../../stories/themes/theme-lab";
 import { ValidationLab } from "../../stories/Themes.stories";
+import { defaultScopedTheme } from "../lib/scoped-theme";
 
 const labTheme = {
   primary: "#9f3714",
@@ -159,12 +161,44 @@ describe("tenant theme validation", () => {
 });
 
 describe("ThemeLab", () => {
+  it("requires a fresh local confirmation after accepting a different palette", async () => {
+    const user = userEvent.setup();
+    render(<ThemeLab initialTheme={labTheme} />);
+    const action = screen.getByRole("button", { name: "Continuar para revisar todas as unidades selecionadas" });
+    await user.click(action);
+    await user.click(screen.getByRole("button", { name: "Acento escuro aprovado" }));
+    expect(action).toHaveAttribute("aria-pressed", "false");
+    expect(screen.queryByText("Prévia confirmada localmente.")).not.toBeInTheDocument();
+    await user.click(action);
+    await user.click(screen.getByRole("button", { name: "Acento claro aprovado" }));
+    await user.click(screen.getByRole("button", { name: "Acento escuro aprovado" }));
+    expect(action).toHaveAttribute("aria-pressed", "false");
+  });
+
+  it("renders actual design-system controls without writing host color variables", () => {
+    render(<ThemeLab initialTheme={labTheme} />);
+    const preview = screen.getByTestId("theme-preview");
+    expect(preview.style.getPropertyValue("--color-primary")).toBe("");
+    expect(preview.style.getPropertyValue("--hw-primary")).toBe(labTheme.primary);
+    expect(within(preview).getByRole("button", { name: "Continuar para revisar todas as unidades selecionadas" })).toHaveClass("hw-button");
+    expect(screen.getByLabelText("Cor primária do tenant")).toHaveClass("hw-input");
+  });
+
+  it("rejects an invalid initial palette in the server-rendered preview", () => {
+    const html = renderToString(<ThemeLab initialTheme={{ ...labTheme, primary: "invalid-initial-color" }} />);
+    // Rejected text remains visible in the editor, never in applied CSS.
+    expect(html).not.toContain("--hw-primary:invalid-initial-color");
+    expect(html).not.toContain("--color-primary:invalid-initial-color");
+    expect(html).toContain(`--hw-primary:${defaultScopedTheme.primary}`);
+    expect(html).toContain("Rejeitada");
+  });
+
   it("keeps the last valid preview and explains a rejected native color edit", async () => {
     const user = userEvent.setup();
     render(<ThemeLab initialTheme={labTheme} />);
 
     const preview = screen.getByTestId("theme-preview");
-    const initialPrimary = preview.style.getPropertyValue("--color-primary");
+    const initialPrimary = preview.style.getPropertyValue("--hw-primary");
     const editor = screen.getByLabelText("Cor primária do tenant");
 
     await user.clear(editor);
@@ -175,7 +209,7 @@ describe("ThemeLab", () => {
     expect(screen.getByRole("alert")).toHaveTextContent(
       "Texto do botão sobre cor primária"
     );
-    expect(preview.style.getPropertyValue("--color-primary")).toBe(
+    expect(preview.style.getPropertyValue("--hw-primary")).toBe(
       initialPrimary
     );
     expect(screen.getByText("Protótipo de laboratório")).toBeInTheDocument();
@@ -194,7 +228,7 @@ describe("ThemeLab", () => {
     await user.type(editor, "#092938");
 
     expect(screen.getByRole("status")).toHaveTextContent("Aprovada");
-    expect(preview.style.getPropertyValue("--color-primary")).toBe("#092938");
+    expect(preview.style.getPropertyValue("--hw-primary")).toBe("#092938");
     expect(
       screen.getByRole("button", {
         name: "Continuar para revisar todas as unidades selecionadas",

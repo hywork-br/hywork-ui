@@ -20,14 +20,14 @@
       "files": [
         "tokens/primitivos.css"
       ],
-      "tokenCount": 58
+      "tokenCount": 59
     },
     {
       "name": "semantic",
       "files": [
         "tokens/semantico.css"
       ],
-      "tokenCount": 73
+      "tokenCount": 77
     },
     {
       "name": "component",
@@ -53,7 +53,7 @@
       "tokenCount": 0
     }
   ],
-  "tokenCount": 146,
+  "tokenCount": 151,
   "surfaces": [
     "admin",
     "portal"
@@ -113,6 +113,8 @@
     "TabsTrigger"
   ],
   "draft": [
+    "ThemeScope",
+    "useThemeScope",
     "Checkbox",
     "Radio",
     "Switch",
@@ -133,6 +135,9 @@
     "Banner",
     "InlineNotice",
     "Toast",
+    "defaultScopedTheme",
+    "resolveScopedTheme",
+    "resolveScopedThemeUpdate",
     "parseOpaqueCssColor",
     "contrastRatio",
     "validateTenantTheme",
@@ -147,6 +152,9 @@
   ],
   "deprecated": [],
   "utilities": [
+    "defaultScopedTheme",
+    "resolveScopedTheme",
+    "resolveScopedThemeUpdate",
     "parseOpaqueCssColor",
     "contrastRatio",
     "validateTenantTheme",

@@ -17,7 +17,8 @@ test("manifest exposes generated token layers and public exports", async () => {
     manifest.tokenLayers.map((layer) => layer.name),
     ["primitive", "semantic", "component", "surface", "theme"],
   );
-  assert.equal(manifest.tokenCount, 146);
+  // Three scoped color roles and two independent color-motion tokens.
+  assert.equal(manifest.tokenCount, 151);
   assert.deepEqual(manifest.exports, Object.keys(packageJson.exports).sort());
   assert.deepEqual(manifest.generatedFrom, [
     "governance/component-contracts.json",
@@ -53,5 +54,6 @@ test("manifest keeps new capabilities draft and distinguishes theme utilities", 
   assert.ok(manifest.draft.includes("Pagination"));
   assert.ok(manifest.draft.includes("validateTenantTheme"));
   assert.ok(!manifest.beta.includes("Checkbox"));
-  assert.deepEqual(manifest.utilities.sort(), ["NON_TEXT_CONTRAST", "NORMAL_TEXT_CONTRAST", "contrastRatio", "parseOpaqueCssColor", "validateTenantTheme"].sort());
+  assert.ok(manifest.draft.includes("ThemeScope"));
+  assert.deepEqual(manifest.utilities.sort(), ["NON_TEXT_CONTRAST", "NORMAL_TEXT_CONTRAST", "contrastRatio", "parseOpaqueCssColor", "validateTenantTheme", "defaultScopedTheme", "resolveScopedTheme", "resolveScopedThemeUpdate"].sort());
 });

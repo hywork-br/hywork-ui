@@ -1,198 +1,88 @@
-import { useMemo, useState, type CSSProperties } from "react";
-
-import {
-  validateTenantTheme,
-  type TenantThemeCandidate,
-  type ThemeValidationResult,
-} from "../../src/lib/theme-validation";
+import { useId, useState } from "react";
+import { Button, Field, Label, Input, InlineNotice, Select, ThemeScope, defaultScopedTheme, resolveScopedThemeUpdate, parseOpaqueCssColor, type ScopedThemeCandidate, type TenantThemeCandidate } from "../../src";
+import colors from "../../tokens/resolved-colors.json";
 import "../../tokens/theme-lab.css";
 
-type ThemeSample = {
-  id: string;
-  label: string;
-  primaryToken: string;
-  foregroundToken: string;
-};
-
-const samples: ThemeSample[] = [
-  {
-    id: "strong",
-    label: "Acento forte aprovado",
-    primaryToken: "--hw-rust-strong",
-    foregroundToken: "--hw-white",
-  },
-  {
-    id: "light",
-    label: "Acento claro aprovado",
-    primaryToken: "--hw-amber-tint",
-    foregroundToken: "--hw-navy",
-  },
-  {
-    id: "dark",
-    label: "Acento escuro aprovado",
-    primaryToken: "--hw-navy",
-    foregroundToken: "--hw-white",
-  },
-  {
-    id: "rejected",
-    label: "Combinação intencionalmente rejeitada",
-    primaryToken: "--hw-white",
-    foregroundToken: "--hw-white",
-  },
+const samples = [
+  { id: "strong", label: "Acento forte aprovado", theme: { ...defaultScopedTheme, primary: colors["--hw-rust-text"], primaryHover: colors["--hw-rust-strong"] } },
+  { id: "light", label: "Acento claro aprovado", theme: { ...defaultScopedTheme, primary: colors["--hw-amber-tint"], primaryHover: colors["--hw-peach"], primaryForeground: colors["--hw-navy"] } },
+  { id: "dark", label: "Acento escuro aprovado", theme: { ...defaultScopedTheme, primary: colors["--hw-navy"] } },
+  { id: "rejected", label: "Combinação intencionalmente rejeitada", theme: { ...defaultScopedTheme, primary: colors["--hw-white"] } },
 ];
 
-function resolvePrimitive(token: string) {
-  return getComputedStyle(document.documentElement).getPropertyValue(token).trim();
+/** Explicit compatibility for existing callers of the numerical utility.
+ * Required component adjacency checks never come from the caller's list.
+ */
+function initialCandidate(theme?: TenantThemeCandidate | ScopedThemeCandidate): ScopedThemeCandidate {
+  if (!theme) return samples[0].theme;
+  if (!("focusAdjacentSurfaces" in theme)) return theme;
+  return { ...defaultScopedTheme, primary: theme.primary, primaryHover: theme.primary,
+    primaryForeground: theme.primaryForeground, background: theme.background,
+    surface: theme.background, text: theme.text, focus: theme.focus };
 }
 
-function candidateFor(sample: ThemeSample): TenantThemeCandidate {
-  const background = resolvePrimitive("--hw-white");
-  return {
-    primary: resolvePrimitive(sample.primaryToken),
-    primaryForeground: resolvePrimitive(sample.foregroundToken),
-    background,
-    text: resolvePrimitive("--hw-navy"),
-    focus: resolvePrimitive("--hw-orange"),
-    focusAdjacentSurfaces: [{ name: "background", color: background }],
-  };
+function pickerValue(color: string) {
+  const parsed = parseOpaqueCssColor(color);
+  if (!parsed.ok) return defaultScopedTheme.primary;
+  return "#" + [parsed.value.red, parsed.value.green, parsed.value.blue].map((channel) => channel.toString(16).padStart(2, "0")).join("");
 }
 
-function ratioLabel(result: ThemeValidationResult) {
-  const check = result.checks.primaryForeground;
-  return check ? `${check.displayRatio.toLocaleString("pt-BR")}:1` : "indisponível";
+function PreviewControls({ primary = false, title, themeKey = "fixed" }: { primary?: boolean; title: string; themeKey?: string }) {
+  const id = useId();
+  const [confirmedTheme, setConfirmedTheme] = useState<string>();
+  const confirmed = confirmedTheme === themeKey;
+  const [audience, setAudience] = useState("all");
+  return <section className="theme-lab__preview" aria-labelledby={id + "-title"}>
+    <h2 id={id + "-title"}>{title}</h2>
+    <Field><Label htmlFor={id + "-name"}>Comunicado</Label><Input id={id + "-name"} value="Comunicação para todas as unidades" readOnly /></Field>
+    <Field><Label htmlFor={id + "-audience"}>Público</Label><Select id={id + "-audience"} ariaLabel={"Público · " + title} value={audience} onValueChange={setAudience} options={[{ value: "all", label: "Todas as unidades" }, { value: "selected", label: "Unidades selecionadas" }]} /></Field>
+    <Button aria-pressed={confirmed} className="theme-lab__primary-action" onClick={() => setConfirmedTheme(confirmed ? undefined : themeKey)}>
+      {primary ? "Continuar para revisar todas as unidades selecionadas" : "Confirmar exemplo · " + title}
+    </Button>
+    {confirmed ? <p role="status">{primary ? "Prévia confirmada localmente." : "Exemplo confirmado · " + title}</p> : null}
+  </section>;
 }
 
-export function ThemeLab({ initialTheme }: { initialTheme?: TenantThemeCandidate }) {
-  const initial = useMemo(
-    () => initialTheme ?? candidateFor(samples[0]),
-    [initialTheme]
-  );
-  const [applied, setApplied] = useState(initial);
-  const [draftPrimary, setDraftPrimary] = useState(initial.primary);
-  const [validation, setValidation] = useState(() =>
-    validateTenantTheme(initial)
-  );
-  const [hasEdited, setHasEdited] = useState(false);
-  const [previewConfirmed, setPreviewConfirmed] = useState(false);
+export function ThemeLab({ initialTheme }: { initialTheme?: TenantThemeCandidate | ScopedThemeCandidate }) {
+  const id = useId();
+  const [state, setState] = useState(() => ({ ...resolveScopedThemeUpdate(initialCandidate(initialTheme)), revision: 0 }));
+  const [draftPrimary, setDraftPrimary] = useState(() => initialCandidate(initialTheme).primary);
+  const [edited, setEdited] = useState(false);
+  const invalid = !state.validation.valid;
+  const primaryCheck = state.validation.checks.find((check) => check.foreground === "primaryForeground" && check.background === "primary");
+  const failures = state.validation.failures.map((failure) => failure.field === "primaryForeground/primary"
+    ? "Texto do botão sobre cor primária: contraste mínimo de 4,5:1 não atendido."
+    : failure.message.replaceAll("4.5:1", "4,5:1"));
 
-  function inspectPrimary(primary: string) {
-    setHasEdited(true);
-    setDraftPrimary(primary);
-    const result = validateTenantTheme({ ...applied, primary });
-    setValidation(result);
-    if (result.valid) setApplied((current) => ({ ...current, primary }));
+  function inspect(theme: ScopedThemeCandidate) {
+    setEdited(true);
+    setDraftPrimary(theme.primary);
+    setState((current) => {
+      const next = resolveScopedThemeUpdate(theme, current.applied);
+      const changed = JSON.stringify(next.applied) !== JSON.stringify(current.applied);
+      return { ...next, revision: current.revision + (changed ? 1 : 0) };
+    });
   }
 
-  function inspectSample(sample: ThemeSample) {
-    const candidate = candidateFor(sample);
-    const result = validateTenantTheme(candidate);
-    setHasEdited(true);
-    setDraftPrimary(candidate.primary);
-    setValidation(result);
-    if (result.valid) setApplied(candidate);
-  }
-
-  const previewStyle = {
-    "--color-primary": applied.primary,
-    "--color-primary-fg": applied.primaryForeground,
-    "--color-background": applied.background,
-    "--color-text": applied.text,
-  } as CSSProperties;
-
-  return (
-    <main className="theme-lab">
-      <header className="theme-lab__header">
-        <p className="theme-lab__eyebrow">Protótipo de laboratório</p>
-        <h1>Validação de tema do tenant</h1>
-        <p>
-          Confira pares semânticos antes de uma futura integração. Nenhuma
-          configuração é salva ou enviada.
-        </p>
-      </header>
-
-      <section className="theme-lab__editor" aria-labelledby="theme-editor-title">
-        <div>
-          <h2 id="theme-editor-title">Cores resolvidas</h2>
-          <p>
-            O preview só recebe a última combinação aprovada. O produto continua
-            dono de dados, permissões, rede, persistência e regras de negócio.
-          </p>
-        </div>
-        <label className="theme-lab__field">
-          <span>Cor primária do tenant</span>
-          <input
-            aria-invalid={hasEdited && !validation.valid}
-            onChange={(event) => inspectPrimary(event.target.value)}
-            spellCheck={false}
-            type="text"
-            value={draftPrimary}
-          />
-        </label>
-        <label className="theme-lab__field theme-lab__field--picker">
-          <span>Seletor nativo da cor primária</span>
-          <input
-            aria-invalid={hasEdited && !validation.valid}
-            onChange={(event) => inspectPrimary(event.target.value)}
-            type="color"
-            value={
-              /^#[\da-f]{6}$/i.test(applied.primary)
-                ? applied.primary
-                : resolvePrimitive("--hw-rust-strong")
-            }
-          />
-        </label>
-        {hasEdited && validation.valid ? (
-          <p className="theme-lab__result" role="status">
-            Aprovada — texto sobre primária: {ratioLabel(validation)}.
-          </p>
-        ) : null}
-        {hasEdited && !validation.valid ? (
-          <div className="theme-lab__result theme-lab__result--rejected" role="alert">
-            <strong>Rejeitada — o preview anterior foi preservado.</strong>
-            <ul>
-              {validation.failures.map((failure) => (
-                <li key={`${failure.code}-${failure.field}`}>{failure.message}</li>
-              ))}
-            </ul>
-          </div>
-        ) : null}
-      </section>
-
-      <div className="theme-lab__samples" aria-label="Combinações de laboratório" role="group">
-        {samples.map((sample) => (
-          <button key={sample.id} onClick={() => inspectSample(sample)} type="button">
-            {sample.label}
-          </button>
-        ))}
-      </div>
-
-      <section
-        className="theme-lab__preview"
-        data-testid="theme-preview"
-        style={previewStyle}
-      >
-        <div>
-          <p className="theme-lab__preview-kicker">Portal · caso móvel</p>
-          <h2>Comunicação para todas as unidades</h2>
-          <p>
-            A identidade do domínio permanece visível sem transformar este
-            laboratório em uma promessa de tema escuro para o produto inteiro.
-          </p>
-        </div>
-        <button
-          aria-pressed={previewConfirmed}
-          className="theme-lab__primary-action"
-          onClick={() => setPreviewConfirmed((current) => !current)}
-          type="button"
-        >
-          Continuar para revisar todas as unidades selecionadas
-        </button>
-        {previewConfirmed ? (
-          <p className="theme-lab__preview-confirmation" role="status">
-            Prévia confirmada localmente.
-          </p>
-        ) : null}
-      </section>
-    </main>
-  );
+  return <main className="theme-lab">
+    <header className="theme-lab__header">
+      <p className="theme-lab__eyebrow">Protótipo de laboratório</p>
+      <h1>Um sistema, diferentes identidades</h1>
+      <p>Compare temas nos componentes reais. Nenhuma configuração é salva ou enviada.</p>
+    </header>
+    <section className="theme-lab__editor" aria-labelledby={id + "-editor"}>
+      <div><h2 id={id + "-editor"}>Cores do workspace</h2><p>A prévia mantém o último tema válido. O padrão e o segundo workspace ficam independentes.</p></div>
+      <Field><Label htmlFor={id + "-primary"}>Cor primária do tenant</Label><Input id={id + "-primary"} aria-describedby={invalid ? id + "-feedback" : undefined} aria-invalid={invalid} onChange={(event) => inspect({ ...state.applied, primary: event.target.value })} spellCheck={false} value={draftPrimary} /></Field>
+      <Field className="theme-lab__picker"><Label htmlFor={id + "-picker"}>Seletor nativo da cor primária</Label><Input id={id + "-picker"} aria-describedby={invalid ? id + "-feedback" : undefined} aria-invalid={invalid} onChange={(event) => inspect({ ...state.applied, primary: event.target.value })} type="color" value={pickerValue(state.applied.primary)} /></Field>
+      {invalid ? <div className="theme-lab__result" id={id + "-feedback"}><InlineNotice announcement="assertive" severity="error" title="Rejeitada — a prévia segura foi preservada." description={<ul>{failures.map((message, index) => <li key={index + "-" + message}>{message}</li>)}</ul>} /></div>
+        : edited ? <div className="theme-lab__result"><InlineNotice title={"Aprovada — texto sobre primária: " + primaryCheck?.ratio?.toLocaleString("pt-BR", { maximumFractionDigits: 2 }) + ":1."} /></div> : null}
+    </section>
+    <div className="theme-lab__samples" aria-label="Combinações de laboratório" role="group">{samples.map((sample) => <Button key={sample.id} variant="outline" onClick={() => inspect(sample.theme)}>{sample.label}</Button>)}</div>
+    <ThemeScope theme={state.applied} data-testid="theme-preview"><PreviewControls primary title="Tema em edição" themeKey={String(state.revision)} /></ThemeScope>
+    <div className="theme-lab__comparison">
+      <PreviewControls title="Padrão Hywork" />
+      <ThemeScope theme={samples[2].theme} data-testid="theme-independent"><PreviewControls title="Outro workspace" /></ThemeScope>
+    </div>
+    <p className="theme-lab__footnote">Validação de papéis suportados pelo design system. Não implica tema escuro para todo o produto nem migração de consumidores.</p>
+  </main>;
 }

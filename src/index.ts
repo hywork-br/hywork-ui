@@ -22,3 +22,5 @@ export * from "./patterns/collection-controls";
 export * from "./components/table-cells";
 export * from "./components/feedback";
 export * from "./lib/theme-validation";
+export { ThemeScope, useThemeScope, type ThemeScopeProps } from "./components/theme-scope";
+export { defaultScopedTheme, resolveScopedTheme, resolveScopedThemeUpdate, type ScopedThemeCandidate } from "./lib/scoped-theme";

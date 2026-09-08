@@ -13,5 +13,6 @@ e permissão do tema. Não é um verificador universal de CSS nem de dark mode.
 
 Justificativa estrutural: pares semânticos seguros antes de aplicar marca do
 tenant. Draft em 2026-09-05, zero consumidores comprovados; piloto outubro
-necessário para promoção. Story executável:
-`stories/Themes.stories.tsx#ValidationLab`; testes numéricos em `src/test/`.
+necessário para promoção. Testes numéricos em `src/test/theme-validation.test.tsx`.
+`stories/Themes.stories.tsx#ValidationLab` exercita agora a camada de componentes
+com escopo em desenvolvimento, não uma garantia de cobertura universal desta utility.

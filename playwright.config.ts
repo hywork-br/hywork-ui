@@ -19,8 +19,8 @@ export default defineConfig({
     screenshot: "only-on-failure",
   },
   projects: [
-    { name: "chromium", testMatch: ["**/interactions.spec.ts", "**/navigation.spec.ts", "**/quiet-fields.spec.ts"], use: { browserName: "chromium" } },
-    { name: "firefox", testMatch: ["**/interactions.spec.ts", "**/navigation.spec.ts", "**/quiet-fields.spec.ts"], use: { browserName: "firefox" } },
+    { name: "chromium", testMatch: ["**/interactions.spec.ts", "**/navigation.spec.ts", "**/quiet-fields.spec.ts", "**/scoped-theme.spec.ts", "**/theme-lab.spec.ts"], use: { browserName: "chromium" } },
+    { name: "firefox", testMatch: ["**/interactions.spec.ts", "**/navigation.spec.ts", "**/quiet-fields.spec.ts", "**/scoped-theme.spec.ts", "**/theme-lab.spec.ts"], use: { browserName: "firefox" } },
     { name: "linux-visual", testMatch: "**/visual.spec.ts", use: { browserName: "chromium" } },
     { name: "comparator-proof", testMatch: "**/comparator-proof.spec.ts", snapshotPathTemplate: "{testDir}/../../test-results/comparator-baselines/{arg}{ext}", use: { browserName: "chromium" } },
   ],

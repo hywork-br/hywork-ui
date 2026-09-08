@@ -29,18 +29,32 @@ reprovado mesmo quando aparece como 4.5.
 
 ## Limite do laboratório
 
-A story `Labs/Temas de tenant` usa um adaptador restrito para demonstrar `--color-primary`,
-`--color-primary-fg`, `--color-background` e `--color-text`. Ela compara combinações fortes, claras,
-escuras e uma reprovação intencional usando primitives existentes. Uma edição inválida permanece
-visivelmente rejeitada e mantém o último preview legível.
+A story `Labs/Temas de tenant` agora usa componentes reais (`Button`, `Input`, `Select` e
+`InlineNotice`) com o `ThemeScope` público em status draft. O link `ValidationLab` foi mantido;
+`InvalidInitial` demonstra a rejeição na entrada. A comparação inclui tema em edição, padrão externo
+e outro workspace. Não escreve no namespace `--color-*`, que continua pertencendo à aplicação.
 
-Isso não conecta o `Button` existente às variáveis do tenant, não muda o tema global, não persiste
-preferências e não implementa dark mode do produto inteiro. Movimento permanece fora deste
-laboratório; teclado e `prefers-reduced-motion` não recebem esperas ou coreografia, e mudanças da
-preferência do sistema são atendidas pela media query ativa sem reload.
+A camada de componentes é separada da utility numérica descrita acima: valida também hover,
+tinta de acento, superfícies de campos/portais, foco e adjacências de feedback suportadas. Valores
+padrão são gerados dos tokens canônicos, sem consultar DOM durante SSR. Rejeição inicial usa o
+padrão validado; rejeição de edição mantém todos os valores do último tema válido. Amostras usam
+primitivos existentes. Chamadores legados desta story têm suas cores explicitamente expandidas;
+a lista de foco fornecida por eles não substitui as verificações obrigatórias do componente.
+
+O escopo tem API pública documentada em draft, mas ainda não foi promovido em artefato aceito. Não há alteração de tema global,
+persistência ou dark mode do produto inteiro. CSS externo arbitrário não está coberto pela
+validação. Movimento e densidade permanecem nos componentes/tokens compartilhados, não em
+implementações locais de botões e campos.
+
+Dentro de `ThemeScope`, mudanças de cor são instantâneas, inclusive hover de cor: interpolar
+dois pares válidos pode produzir texto ilegível no meio. `--hw-duration-color` é separado das
+durações estruturais e propagado aos portais. Abertura de diálogos/menus não é desativada;
+fora do escopo, o comportamento de cor existente permanece. Não representa suporte a CSS
+arbitrário de consumidores nem prova de contraste em animações externas.
 
 O CTA longo do preview alterna apenas uma confirmação local e identificada. Ele existe para permitir
 inspeção real do par primária/foreground e do foco; não navega, não envia e não persiste dados.
+Uma nova paleta válida exige nova confirmação, sem desmontar campos nem apagar o público escolhido.
 
 ## Responsabilidade da integração futura
 
