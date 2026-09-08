@@ -130,6 +130,11 @@ Etapa futura é desabilitada. Etapa concluída pode ser reaberta via
 `onStepChange`. O texto dos CTAs continua no fluxo: o Stepper não inventa
 “Avançar” nem executa submit.
 
+Todas as etapas permanecem visíveis no espaço disponível. A sequência pode
+ocupar mais de uma linha; rótulos longos quebram sem encolher o marcador.
+Não esconder etapas futuras em uma faixa de rolagem horizontal: controles
+desabilitados não podem depender de foco por teclado para serem revelados.
+
 ## Status antes da migração
 
 Os seis padrões permanecem `draft` em setembro. Testes, stories e revisão visual

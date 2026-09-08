@@ -409,15 +409,16 @@
 .hw-focus-mode__header svg { height: 1rem; width: 1rem; }
 .hw-focus-mode__body { margin: 0 auto; max-width: 72rem; min-height: 0; overflow: auto; padding: var(--hw-space-8); width: 100%; }
 
-.hw-stepper { display: flex; gap: 0; list-style: none; margin: 0; overflow-x: auto; padding: 0; }
-.hw-stepper li { align-items: center; display: flex; flex: 1; min-width: max-content; }
+.hw-stepper { display: flex; flex-wrap: wrap; gap: var(--hw-space-2) 0; list-style: none; margin: 0; padding: 0; }
+.hw-stepper li { align-items: center; display: flex; flex: 1 1 auto; min-width: 0; max-width: 100%; }
 .hw-stepper li:not(:last-child)::after { background: var(--hw-border); content: ""; flex: 1; height: 1px; min-width: var(--hw-space-8); }
 .hw-stepper li[data-status="complete"]:not(:last-child)::after { background: var(--hw-primary-text); }
-.hw-stepper button { align-items: center; background: transparent; border: 0; color: var(--hw-text-muted); display: flex; font-size: var(--hw-label-size); font-weight: 700; gap: var(--hw-space-2); padding: var(--hw-space-2); }
+.hw-stepper button { align-items: center; background: transparent; border: 0; color: var(--hw-text-muted); display: flex; font-size: var(--hw-label-size); font-weight: 700; gap: var(--hw-space-2); min-width: 0; padding: var(--hw-space-2); text-align: start; }
+.hw-stepper button > span:last-child { min-width: 0; overflow-wrap: anywhere; }
 .hw-stepper button:not(:disabled) { color: var(--hw-text); cursor: pointer; }
 .hw-stepper li[data-status="complete"] button,
 .hw-stepper li[data-status="current"] button { color: var(--hw-text); }
-.hw-stepper__marker { align-items: center; background: var(--hw-neutral-soft); border: 1px solid var(--hw-border-strong); border-radius: var(--hw-radius-full); display: flex; height: 1.75rem; justify-content: center; width: 1.75rem; }
+.hw-stepper__marker { align-items: center; background: var(--hw-neutral-soft); border: 1px solid var(--hw-border-strong); border-radius: var(--hw-radius-full); display: flex; flex-shrink: 0; height: 1.75rem; justify-content: center; width: 1.75rem; }
 .hw-stepper li[data-status="complete"] .hw-stepper__marker { background: var(--hw-primary); border-color: var(--hw-primary); color: var(--hw-primary-fg); }
 .hw-stepper li[data-status="current"] .hw-stepper__marker { background: var(--hw-surface-subtle); border: 2px solid var(--hw-primary-text); color: var(--hw-primary-text); }
 .hw-stepper svg { height: 0.875rem; width: 0.875rem; }
