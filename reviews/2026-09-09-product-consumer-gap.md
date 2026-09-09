@@ -61,3 +61,7 @@ O levantamento de arquivos mede superfície de código, não uso em produção. 
 - Mobbin: [Shopify — gerenciamento de páginas](https://mobbin.com/screens/c913d209-7c60-4c78-9e7c-3c991de3f04d), usado como referência de hierarquia compacta, busca e filtros em uma coleção web administrativa.
 - 21st.dev: [Origin UI Table](https://21st.dev/@originui/components/table) e [Table with Filters](https://21st.dev/@felipemenezes098/components/table-12), registrados como candidatos de estudo; nenhum código foi recuperado ou incorporado.
 - Appllama: busca semântica de aprendizagem mobile em 09/09/2026. Resultados de referência: `ELSA Speak` / `Progress Activity` (`oth_i4o4u`), `Mimo` / `Practice Tab` (`oth_6yea0`) e `Imprint` / `Visual Courses Intro` (`onb_5m021`). Foram usados apenas para observar prioridade de progresso, próxima ação e descoberta; não são especificação de implementação Hywork.
+
+## Modelo de cobertura
+
+O registro mantém dois eixos independentes: `coverage` descreve o estado de adoção do design system; `labCoverage` descreve a evidência demonstrada no `hywork-experiments` (`demonstrated`, `grouped` ou `future`). Assim, uma tela navegável no Lab não é confundida com adoção no produto, e capacidades futuras ou não comprovadas continuam fora do denominador atual.

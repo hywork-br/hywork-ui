@@ -15,6 +15,7 @@
     "future",
     "unknown"
   ],
+  "labCoverageStates": ["demonstrated", "grouped", "future", "unknown"],
   "availabilityStates": [
     "current-code",
     "production-confirmed",
@@ -29,6 +30,7 @@
       "label": "Acesso e onboarding",
       "availability": "current-code",
       "coverage": "inventory",
+      "labCoverage": "grouped",
       "routes": [
         "src/app/[locale]/(auth)/login/page.tsx",
         "src/app/[locale]/(auth)/sign-up/page.tsx",
@@ -44,6 +46,7 @@
       "label": "Home e navegação do workspace",
       "availability": "current-code",
       "coverage": "inventory",
+      "labCoverage": "demonstrated",
       "routes": ["src/app/[locale]/(plataform)/workspace/[space]/(home)/page.tsx", "src/app/[locale]/(plataform)/workspace/page.tsx"],
       "journeys": ["open-workspace", "switch-space", "navigate-home", "empty-home"]
     },
@@ -52,6 +55,7 @@
       "label": "Analytics e engajamento",
       "availability": "current-code",
       "coverage": "inventory",
+      "labCoverage": "demonstrated",
       "routes": [
         "src/app/[locale]/(plataform)/workspace/[space]/analytics-engajamento/page.tsx",
         "src/app/[locale]/(plataform)/workspace/[space]/analytics/page.tsx"
@@ -63,6 +67,7 @@
       "label": "Modelos, preview e builder",
       "availability": "current-code",
       "coverage": "inventory",
+      "labCoverage": "grouped",
       "routes": [
         "src/app/[locale]/(plataform)/workspace/[space]/site-models/page.tsx",
         "src/app/[locale]/(plataform)/constructor/[workspaceId]/page.tsx",
@@ -76,6 +81,7 @@
       "label": "Conteúdos",
       "availability": "current-code",
       "coverage": "inventory",
+      "labCoverage": "demonstrated",
       "routes": ["src/app/[locale]/(plataform)/workspace/[space]/(home)/news/page.tsx"],
       "journeys": ["list", "search", "filter", "create", "edit", "segment", "preview", "publish-if-available"]
     },
@@ -84,6 +90,7 @@
       "label": "Campanhas",
       "availability": "unknown",
       "coverage": "inventory",
+      "labCoverage": "future",
       "routes": [],
       "journeys": ["list", "filter", "detail", "configuration", "draft", "error-retry"]
     },
@@ -92,6 +99,7 @@
       "label": "Reconhecimentos, feed e fórum",
       "availability": "current-code",
       "coverage": "inventory",
+      "labCoverage": "demonstrated",
       "routes": [
         "src/app/[locale]/(plataform)/workspace/[space]/reconhecimentos/page.tsx",
         "src/app/[locale]/(plataform)/workspace/[space]/reconhecimentos/novo/page.tsx",
@@ -105,6 +113,7 @@
       "label": "TV Corporativa e Assinatura de Email",
       "availability": "current-code",
       "coverage": "inventory",
+      "labCoverage": "demonstrated",
       "routes": [
         "src/app/[locale]/(plataform)/workspace/[space]/(home)/tv-corporativa/page.tsx",
         "src/app/[locale]/(plataform)/workspace/[space]/(home)/assinatura-email/page.tsx",
@@ -118,6 +127,7 @@
       "label": "Academy",
       "availability": "addon-dependent",
       "coverage": "inventory",
+      "labCoverage": "demonstrated",
       "routes": [
         "src/app/[locale]/(plataform)/workspace/[space]/(home)/academy/page.tsx",
         "src/app/[locale]/(plataform)/workspace/[space]/(home)/academy/novo/page.tsx"
@@ -129,6 +139,7 @@
       "label": "Gestão de Documentos e Aceites",
       "availability": "current-code",
       "coverage": "inventory",
+      "labCoverage": "demonstrated",
       "routes": ["src/app/[locale]/(plataform)/workspace/[space]/documents/page.tsx"],
       "journeys": ["dashboard", "folders", "upload", "version", "review", "accept", "logs", "settings"]
     },
@@ -137,6 +148,7 @@
       "label": "Integrações, importação e dados",
       "availability": "addon-dependent",
       "coverage": "inventory",
+      "labCoverage": "grouped",
       "routes": [
         "src/app/[locale]/(plataform)/workspace/[space]/integrations/page.tsx",
         "src/app/[locale]/(plataform)/workspace/[space]/integrations/[id]/select/page.tsx",
@@ -153,6 +165,7 @@
       "label": "HyStore — marketplace de apps",
       "availability": "addon-dependent",
       "coverage": "inventory",
+      "labCoverage": "demonstrated",
       "routes": [
         "src/app/[locale]/(plataform)/workspace/[space]/hystore/page.tsx",
         "src/app/[locale]/(plataform)/workspace/[space]/hystore/[id]/page.tsx"
@@ -164,6 +177,7 @@
       "label": "Administração, pessoas e estrutura",
       "availability": "current-code",
       "coverage": "inventory",
+      "labCoverage": "grouped",
       "routes": [
         "src/app/[locale]/(plataform)/configurations/profile/page.tsx",
         "src/app/[locale]/(plataform)/configurations/spaces/page.tsx",
@@ -181,6 +195,7 @@
       "label": "Portal do colaborador",
       "availability": "current-code",
       "coverage": "inventory",
+      "labCoverage": "grouped",
       "routes": [
         "src/app/[locale]/page.tsx",
         "src/app/[locale]/(plataform)/workspace/[space]/(home)/page.tsx",
@@ -194,6 +209,7 @@
       "label": "Laboratório e rotas internas de composição",
       "availability": "current-code",
       "coverage": "inventory",
+      "labCoverage": "demonstrated",
       "routes": [
         "src/app/[locale]/(admin)/design-system-example/page.tsx"
       ],

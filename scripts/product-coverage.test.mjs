@@ -19,12 +19,15 @@ test("product coverage domains have unique IDs and valid states", () => {
 
   const availability = new Set(coverage.availabilityStates);
   const states = new Set(coverage.coverageStates);
+  const labStates = new Set(coverage.labCoverageStates);
 
   for (const domain of coverage.domains) {
     assert.match(domain.id, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
     assert.ok(domain.label);
     assert.ok(availability.has(domain.availability), `${domain.id} has an unknown availability`);
     assert.ok(states.has(domain.coverage), `${domain.id} has an unknown coverage state`);
+    assert.ok(labStates.has(domain.labCoverage), `${domain.id} has an unknown Lab coverage state`);
+    if (domain.labCoverage === "future") assert.equal(domain.productionKeys?.length ?? 0, 0, `${domain.id} future Lab surface cannot map production keys`);
     assert.ok(Array.isArray(domain.routes));
     assert.ok(Array.isArray(domain.journeys) && domain.journeys.length > 0);
     assert.equal(new Set(domain.journeys).size, domain.journeys.length, `${domain.id} repeats a journey`);
