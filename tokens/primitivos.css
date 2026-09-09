@@ -143,9 +143,9 @@
   --hw-radius-full: 9999px;
 
   /* Movimento — curto e discreto; sem parallax, sem animação demonstrativa */
-  --hw-duration-fast: 120ms;
+  --hw-duration-fast: 160ms;
   --hw-duration-none: 0ms;
-  --hw-duration-base: 160ms;
+  --hw-duration-base: 240ms;
   --hw-duration-slow: 200ms;
   --hw-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --hw-ease-out: cubic-bezier(0.4, 0, 1, 1);
