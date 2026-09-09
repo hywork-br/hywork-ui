@@ -218,6 +218,13 @@
   color: var(--hw-card-fg);
   overflow: hidden;
 }
+
+.hw-separator {
+  background: var(--hw-border);
+  flex: 0 0 auto;
+}
+.hw-separator[data-orientation="horizontal"] { height: 1px; width: 100%; }
+.hw-separator[data-orientation="vertical"] { height: 100%; min-height: var(--hw-target-min); width: 1px; }
 .hw-card__header,
 .hw-card__content,
 .hw-card__footer { padding: var(--hw-space-4); }

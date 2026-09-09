@@ -266,6 +266,22 @@
       "storyContract": "play"
     },
     {
+      "slug": "separator",
+      "name": "Separator",
+      "exports": ["Separator"],
+      "status": "draft",
+      "owner": { "design": "Hywork Product Design", "frontend": "Hywork Frontend" },
+      "consumers": ["hywork-plataform", "hw-cloud-builder"],
+      "structuralCase": "Divisão visual e semântica usada por toolbars, previews, documentos e configurações.",
+      "surfaces": ["admin", "portal"],
+      "viewports": ["desktop", "mobile"],
+      "spec": "specs/components/separator.md",
+      "storyFile": "stories/Contracts.stories.tsx",
+      "storyExport": "SeparatorContract",
+      "migrationWave": 2,
+      "storyContract": "play"
+    },
+    {
       "slug": "card",
       "name": "Card",
       "exports": [

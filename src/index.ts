@@ -9,6 +9,7 @@ export * from "./components/field";
 export * from "./components/menus";
 export * from "./components/progress";
 export * from "./components/select";
+export * from "./components/separator";
 export * from "./components/skeleton";
 export * from "./components/slider";
 export * from "./components/tabs";

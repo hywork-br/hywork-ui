@@ -51,6 +51,7 @@ import {
   PopoverTrigger,
   Progress,
   Select,
+  Separator,
   Skeleton,
   Slider,
   Tabs,
@@ -470,5 +471,35 @@ export const BreadcrumbContract: Story = {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole("link", { name: "Coleção" })).toHaveAttribute("href", "#colecao");
     await expect(canvas.getByText("Registros")).toHaveAttribute("aria-current", "page");
+  },
+};
+
+export const SeparatorContract: Story = {
+  name: "Separator · grupos de conteúdo",
+  render: () => (
+    <ContractFrame title="Separator">
+      <div className="hw-contract__form-grid">
+        <section aria-labelledby="separator-content-title">
+          <h2 id="separator-content-title">Conteúdo</h2>
+          <Separator />
+          <p>Uma divisão visual entre resumo e detalhes da publicação.</p>
+        </section>
+        <section aria-labelledby="separator-actions-title">
+          <h2 id="separator-actions-title">Ações</h2>
+          <div className="hw-contract__row">
+            <span>Admin</span>
+            <Separator aria-label="Divisor entre superfícies" decorative={false} orientation="vertical" />
+            <span>Portal</span>
+          </div>
+        </section>
+      </div>
+    </ContractFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("separator", { name: "Divisor entre superfícies" })).toHaveAttribute(
+      "aria-orientation",
+      "vertical",
+    );
   },
 };
