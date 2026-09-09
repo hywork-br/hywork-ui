@@ -1,0 +1,232 @@
+{
+  "schemaVersion": 1,
+  "baseline": {
+    "productRepository": "hywork-br/hywork-plataform",
+    "productCommit": "f176ed3c1730b2f24553c92534805edfb7605894",
+    "capturedAt": "2026-09-09",
+    "scope": "web product routes and journeys verified in the repository; production availability remains a separate evidence field"
+  },
+  "coverageStates": [
+    "inventory",
+    "contracted",
+    "demonstrated",
+    "verified",
+    "production-adopted",
+    "future",
+    "unknown"
+  ],
+  "labCoverageStates": ["demonstrated", "grouped", "future", "unknown"],
+  "labCoverageSemantics": {
+    "demonstrated": "one current product surface is represented in the Lab",
+    "grouped": "a demonstrated Lab surface represents multiple current product routes or keys",
+    "future": "a concept intentionally outside the current product denominator",
+    "unknown": "evidence is insufficient to classify the Lab surface"
+  },
+  "availabilityStates": [
+    "current-code",
+    "production-confirmed",
+    "addon-dependent",
+    "permission-dependent",
+    "future",
+    "unknown"
+  ],
+  "domains": [
+    {
+      "id": "access-and-onboarding",
+      "label": "Acesso e onboarding",
+      "availability": "current-code",
+      "coverage": "inventory",
+      "labCoverage": "grouped",
+      "routes": [
+        "src/app/[locale]/(auth)/login/page.tsx",
+        "src/app/[locale]/(auth)/sign-up/page.tsx",
+        "src/app/[locale]/(auth)/invite/[token]/page.tsx",
+        "src/app/[locale]/(auth)/onboarding/page.tsx",
+        "src/app/[locale]/(auth)/select-environment/page.tsx",
+        "src/app/[locale]/(plataform)/onboarding/welcome/page.tsx"
+      ],
+      "journeys": ["login", "invite", "onboarding", "select-environment", "session-expired"]
+    },
+    {
+      "id": "workspace-home",
+      "label": "Home e navegação do workspace",
+      "availability": "current-code",
+      "coverage": "inventory",
+      "labCoverage": "demonstrated",
+      "routes": ["src/app/[locale]/(plataform)/workspace/[space]/(home)/page.tsx", "src/app/[locale]/(plataform)/workspace/page.tsx"],
+      "journeys": ["open-workspace", "switch-space", "navigate-home", "empty-home"]
+    },
+    {
+      "id": "analytics",
+      "label": "Analytics e engajamento",
+      "availability": "current-code",
+      "coverage": "inventory",
+      "labCoverage": "demonstrated",
+      "routes": [
+        "src/app/[locale]/(plataform)/workspace/[space]/analytics-engajamento/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/analytics/page.tsx"
+      ],
+      "journeys": ["overview", "filter", "dependent-filter", "drill-down", "empty", "error-retry"]
+    },
+    {
+      "id": "models-and-builder",
+      "label": "Modelos, preview e builder",
+      "availability": "current-code",
+      "coverage": "inventory",
+      "labCoverage": "grouped",
+      "routes": [
+        "src/app/[locale]/(plataform)/workspace/[space]/site-models/page.tsx",
+        "src/app/[locale]/(plataform)/constructor/[workspaceId]/page.tsx",
+        "src/app/[locale]/(plataform)/preview/[id]/page.tsx",
+        "src/app/[locale]/(plataform)/preview-model/[id]/page.tsx"
+      ],
+      "journeys": ["catalog", "detail", "edit", "preview", "dirty-state", "publish-if-available"]
+    },
+    {
+      "id": "content",
+      "label": "Conteúdos",
+      "availability": "current-code",
+      "coverage": "inventory",
+      "labCoverage": "demonstrated",
+      "routes": ["src/app/[locale]/(plataform)/workspace/[space]/(home)/news/page.tsx"],
+      "journeys": ["list", "search", "filter", "create", "edit", "segment", "preview", "publish-if-available"]
+    },
+    {
+      "id": "campaigns",
+      "label": "Campanhas",
+      "availability": "unknown",
+      "coverage": "inventory",
+      "labCoverage": "future",
+      "routes": [],
+      "journeys": ["list", "filter", "detail", "configuration", "draft", "error-retry"]
+    },
+    {
+      "id": "recognition-and-community",
+      "label": "Reconhecimentos, feed e fórum",
+      "availability": "current-code",
+      "coverage": "inventory",
+      "labCoverage": "demonstrated",
+      "routes": [
+        "src/app/[locale]/(plataform)/workspace/[space]/reconhecimentos/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/reconhecimentos/novo/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/reconhecimentos/[id]/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/forum/settings/page.tsx"
+      ],
+      "journeys": ["feed", "comment", "recognize", "detail", "forum-settings", "moderation-if-available"]
+    },
+    {
+      "id": "tv-and-email",
+      "label": "TV Corporativa e Assinatura de Email",
+      "availability": "current-code",
+      "coverage": "inventory",
+      "labCoverage": "demonstrated",
+      "routes": [
+        "src/app/[locale]/(plataform)/workspace/[space]/(home)/tv-corporativa/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/(home)/assinatura-email/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/(home)/assinatura-email/novo/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/(home)/assinatura-email/[id]/page.tsx"
+      ],
+      "journeys": ["list", "filter", "create", "edit", "preview", "save-error"]
+    },
+    {
+      "id": "academy",
+      "label": "Academy",
+      "availability": "addon-dependent",
+      "coverage": "inventory",
+      "labCoverage": "demonstrated",
+      "routes": [
+        "src/app/[locale]/(plataform)/workspace/[space]/(home)/academy/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/(home)/academy/novo/page.tsx"
+      ],
+      "journeys": ["catalog", "search", "filter", "course-detail", "create", "edit", "progress", "completion-if-available"]
+    },
+    {
+      "id": "documents-and-acceptance",
+      "label": "Gestão de Documentos e Aceites",
+      "availability": "current-code",
+      "coverage": "inventory",
+      "labCoverage": "demonstrated",
+      "routes": ["src/app/[locale]/(plataform)/workspace/[space]/documents/page.tsx"],
+      "journeys": ["dashboard", "folders", "upload", "version", "review", "accept", "logs", "settings"]
+    },
+    {
+      "id": "integrations",
+      "label": "Integrações, importação e dados",
+      "availability": "addon-dependent",
+      "coverage": "inventory",
+      "labCoverage": "grouped",
+      "routes": [
+        "src/app/[locale]/(plataform)/workspace/[space]/integrations/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/integrations/[id]/select/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/integrations/rh/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/integrations/rh-hcm/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/integrations/senior/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/databases/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/databases/[collection]/page.tsx"
+      ],
+      "journeys": ["integration-hub", "connect", "map", "import", "progress", "partial-error", "collection", "schema", "records"]
+    },
+    {
+      "id": "hystore",
+      "label": "HyStore — marketplace de apps",
+      "availability": "addon-dependent",
+      "coverage": "inventory",
+      "labCoverage": "demonstrated",
+      "routes": [
+        "src/app/[locale]/(plataform)/workspace/[space]/hystore/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/hystore/[id]/page.tsx"
+      ],
+      "journeys": ["discover", "filter", "app-detail", "availability", "activate-if-available", "entitlement"]
+    },
+    {
+      "id": "administration",
+      "label": "Administração, pessoas e estrutura",
+      "availability": "current-code",
+      "coverage": "inventory",
+      "labCoverage": "grouped",
+      "routes": [
+        "src/app/[locale]/(plataform)/configurations/profile/page.tsx",
+        "src/app/[locale]/(plataform)/configurations/spaces/page.tsx",
+        "src/app/[locale]/(plataform)/configurations/users/page.tsx",
+        "src/app/[locale]/(plataform)/configurations/groups/page.tsx",
+        "src/app/[locale]/(plataform)/configurations/organizational-structure/page.tsx",
+        "src/app/[locale]/(plataform)/configurations/people-events-notifications/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/configurations/users/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/configurations/spaces/page.tsx"
+      ],
+      "journeys": ["profile", "spaces", "invite", "roles", "groups", "org-tree", "notifications", "security", "mfa-if-available"]
+    },
+    {
+      "id": "employee-portal",
+      "label": "Portal do colaborador",
+      "availability": "current-code",
+      "coverage": "inventory",
+      "labCoverage": "grouped",
+      "routes": [
+        "src/app/[locale]/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/(home)/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/(home)/academy/page.tsx",
+        "src/app/[locale]/(plataform)/workspace/[space]/documents/page.tsx"
+      ],
+      "journeys": ["home", "search", "calendar-if-available", "birthday-if-available", "learning", "documents", "profile", "notifications"]
+    },
+    {
+      "id": "lab-and-design-system",
+      "label": "Laboratório e rotas internas de composição",
+      "availability": "current-code",
+      "coverage": "inventory",
+      "labCoverage": "demonstrated",
+      "routes": [
+        "src/app/[locale]/(admin)/design-system-example/page.tsx"
+      ],
+      "journeys": ["browse-lab", "open-feature-surface", "inspect-component"]
+    }
+  ],
+  "futureOrUnverified": [
+    "performance-evaluation",
+    "leader-led-rituals-pdi-1on1",
+    "rewards-shop",
+    "native-mobile-app",
+    "production-adoption"
+  ]
+}
