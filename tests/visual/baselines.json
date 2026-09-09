@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-09-01",
+  "source": "Storybook local do @hywork/ui; dados ilustrativos e sem conexão com produtos",
+  "baselines": [
+    {
+      "file": "tv-admin.png",
+      "story": "pilots-priority-features--tv-corporativa",
+      "surface": "admin",
+      "viewport": "desktop"
+    },
+    {
+      "file": "email-admin.png",
+      "story": "pilots-priority-features--assinaturas-email",
+      "surface": "admin",
+      "viewport": "desktop"
+    },
+    {
+      "file": "academy-admin.png",
+      "story": "pilots-priority-features--academy",
+      "surface": "admin",
+      "viewport": "desktop"
+    },
+    {
+      "file": "conteudos-admin.png",
+      "story": "pilots-priority-features--conteudos",
+      "surface": "admin",
+      "viewport": "desktop"
+    },
+    {
+      "file": "foundation-admin.png",
+      "story": "foundation-catálogo--componentes",
+      "surface": "admin",
+      "viewport": "desktop",
+      "families": ["button", "textarea", "badge", "avatar", "skeleton", "card"]
+    },
+    {
+      "file": "foundation-portal.png",
+      "story": "foundation-catálogo--componentes",
+      "surface": "portal",
+      "viewport": "desktop",
+      "families": ["button", "textarea", "badge", "avatar", "skeleton", "card"]
+    },
+    {
+      "file": "field-mobile.png",
+      "story": "contracts-core-families--field-contract",
+      "surface": "admin",
+      "viewport": "mobile",
+      "families": ["field"]
+    },
+    {
+      "file": "dialog-mobile.png",
+      "story": "contracts-core-families--dialog-contract",
+      "surface": "admin",
+      "viewport": "mobile",
+      "families": ["dialog"]
+    },
+    {
+      "file": "tv-mobile.png",
+      "story": "pilots-priority-features--tv-corporativa",
+      "surface": "admin",
+      "viewport": "mobile"
+    },
+    {
+      "file": "academy-mobile.png",
+      "story": "pilots-priority-features--academy",
+      "surface": "portal",
+      "viewport": "mobile"
+    },
+    {
+      "file": "menus-admin.png",
+      "story": "contracts-core-families--menus-contract",
+      "surface": "admin",
+      "viewport": "desktop",
+      "families": ["menus"]
+    },
+    {
+      "file": "tooltip-mobile.png",
+      "story": "contracts-core-families--tooltip-contract",
+      "surface": "admin",
+      "viewport": "mobile",
+      "families": ["tooltip"]
+    },
+    {
+      "file": "select-mobile.png",
+      "story": "contracts-core-families--select-contract",
+      "surface": "admin",
+      "viewport": "mobile",
+      "families": ["select"]
+    },
+    {
+      "file": "tabs-mobile.png",
+      "story": "contracts-core-families--tabs-contract",
+      "surface": "admin",
+      "viewport": "mobile",
+      "families": ["tabs"]
+    }
+  ]
+}

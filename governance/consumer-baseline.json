@@ -1,0 +1,297 @@
+{
+  "generatedAt": "2026-09-01T14:39:56.039Z",
+  "sources": {
+    "platform": {
+      "repo": "/Users/vitorferreira/Documents/hywork/projects/hywork-plataform",
+      "ref": "origin/main",
+      "revision": "40199afdb8713610a375d988e9eb1d038240e9ae",
+      "root": "src/components/ui"
+    },
+    "builder": {
+      "repo": "/Users/vitorferreira/Documents/hywork/projects/hw-cloud-builder",
+      "ref": "origin/main",
+      "revision": "f4988697a0af23e9b8c7cd0db17a57b7dcdb29af",
+      "root": "components/ui"
+    }
+  },
+  "summary": {
+    "platformComponents": 75,
+    "builderComponents": 56,
+    "sharedComponents": 45,
+    "identical": 19,
+    "formatOnly": 0,
+    "apiOrBehavior": 26
+  },
+  "components": [
+    {
+      "name": "accordion",
+      "difference": "identical",
+      "platformImports": 64,
+      "builderImports": 1
+    },
+    {
+      "name": "alert-dialog",
+      "difference": "identical",
+      "platformImports": 13,
+      "builderImports": 10
+    },
+    {
+      "name": "alert",
+      "difference": "api-or-behavior",
+      "platformImports": 15,
+      "builderImports": 3
+    },
+    {
+      "name": "animated-tooltip",
+      "difference": "api-or-behavior",
+      "platformImports": 0,
+      "builderImports": 0
+    },
+    {
+      "name": "avatar",
+      "difference": "api-or-behavior",
+      "platformImports": 34,
+      "builderImports": 36
+    },
+    {
+      "name": "badge",
+      "difference": "api-or-behavior",
+      "platformImports": 94,
+      "builderImports": 17
+    },
+    {
+      "name": "breadcrumb",
+      "difference": "identical",
+      "platformImports": 0,
+      "builderImports": 0
+    },
+    {
+      "name": "button",
+      "difference": "api-or-behavior",
+      "platformImports": 249,
+      "builderImports": 96
+    },
+    {
+      "name": "card",
+      "difference": "identical",
+      "platformImports": 87,
+      "builderImports": 13
+    },
+    {
+      "name": "checkbox",
+      "difference": "identical",
+      "platformImports": 19,
+      "builderImports": 4
+    },
+    {
+      "name": "collapse-menu-button",
+      "difference": "api-or-behavior",
+      "platformImports": 1,
+      "builderImports": 0
+    },
+    {
+      "name": "collapsible",
+      "difference": "identical",
+      "platformImports": 2,
+      "builderImports": 1
+    },
+    {
+      "name": "command",
+      "difference": "identical",
+      "platformImports": 11,
+      "builderImports": 3
+    },
+    {
+      "name": "dialog",
+      "difference": "api-or-behavior",
+      "platformImports": 72,
+      "builderImports": 37
+    },
+    {
+      "name": "dropdown-menu",
+      "difference": "api-or-behavior",
+      "platformImports": 37,
+      "builderImports": 18
+    },
+    {
+      "name": "footer",
+      "difference": "identical",
+      "platformImports": 0,
+      "builderImports": 0
+    },
+    {
+      "name": "form",
+      "difference": "api-or-behavior",
+      "platformImports": 19,
+      "builderImports": 2
+    },
+    {
+      "name": "image-uploader",
+      "difference": "api-or-behavior",
+      "platformImports": 11,
+      "builderImports": 0
+    },
+    {
+      "name": "input",
+      "difference": "api-or-behavior",
+      "platformImports": 160,
+      "builderImports": 26
+    },
+    {
+      "name": "label",
+      "difference": "identical",
+      "platformImports": 125,
+      "builderImports": 13
+    },
+    {
+      "name": "mode-toggle",
+      "difference": "api-or-behavior",
+      "platformImports": 0,
+      "builderImports": 0
+    },
+    {
+      "name": "multi-select",
+      "difference": "api-or-behavior",
+      "platformImports": 11,
+      "builderImports": 4
+    },
+    {
+      "name": "organizational-structure-selector",
+      "difference": "api-or-behavior",
+      "platformImports": 12,
+      "builderImports": 5
+    },
+    {
+      "name": "pagination",
+      "difference": "api-or-behavior",
+      "platformImports": 5,
+      "builderImports": 2
+    },
+    {
+      "name": "placeholder-content",
+      "difference": "identical",
+      "platformImports": 0,
+      "builderImports": 0
+    },
+    {
+      "name": "popover",
+      "difference": "api-or-behavior",
+      "platformImports": 10,
+      "builderImports": 5
+    },
+    {
+      "name": "progress",
+      "difference": "api-or-behavior",
+      "platformImports": 3,
+      "builderImports": 5
+    },
+    {
+      "name": "radio-group",
+      "difference": "identical",
+      "platformImports": 4,
+      "builderImports": 1
+    },
+    {
+      "name": "recent-sales",
+      "difference": "identical",
+      "platformImports": 0,
+      "builderImports": 0
+    },
+    {
+      "name": "scroll-area",
+      "difference": "identical",
+      "platformImports": 22,
+      "builderImports": 4
+    },
+    {
+      "name": "select",
+      "difference": "api-or-behavior",
+      "platformImports": 46,
+      "builderImports": 7
+    },
+    {
+      "name": "separator",
+      "difference": "identical",
+      "platformImports": 18,
+      "builderImports": 2
+    },
+    {
+      "name": "sheet",
+      "difference": "identical",
+      "platformImports": 3,
+      "builderImports": 0
+    },
+    {
+      "name": "sidebar-toggle",
+      "difference": "api-or-behavior",
+      "platformImports": 0,
+      "builderImports": 0
+    },
+    {
+      "name": "skeleton",
+      "difference": "api-or-behavior",
+      "platformImports": 43,
+      "builderImports": 14
+    },
+    {
+      "name": "slider",
+      "difference": "api-or-behavior",
+      "platformImports": 39,
+      "builderImports": 0
+    },
+    {
+      "name": "spinner",
+      "difference": "identical",
+      "platformImports": 2,
+      "builderImports": 0
+    },
+    {
+      "name": "switch",
+      "difference": "api-or-behavior",
+      "platformImports": 91,
+      "builderImports": 3
+    },
+    {
+      "name": "table",
+      "difference": "api-or-behavior",
+      "platformImports": 20,
+      "builderImports": 2
+    },
+    {
+      "name": "tabs",
+      "difference": "api-or-behavior",
+      "platformImports": 29,
+      "builderImports": 1
+    },
+    {
+      "name": "text-generate-effect",
+      "difference": "api-or-behavior",
+      "platformImports": 0,
+      "builderImports": 0
+    },
+    {
+      "name": "textarea",
+      "difference": "api-or-behavior",
+      "platformImports": 31,
+      "builderImports": 9
+    },
+    {
+      "name": "toast",
+      "difference": "identical",
+      "platformImports": 2,
+      "builderImports": 2
+    },
+    {
+      "name": "toaster",
+      "difference": "identical",
+      "platformImports": 1,
+      "builderImports": 2
+    },
+    {
+      "name": "tooltip",
+      "difference": "identical",
+      "platformImports": 25,
+      "builderImports": 4
+    }
+  ]
+}

@@ -1,0 +1,187 @@
+# Contratos dos padrões de produto
+
+## AdminShell
+
+O shell organiza marca, workspace, navegação agrupada e utilidades; o consumidor
+continua dono do único landmark `main` e de todo o conteúdo da rota. A API plana
+anterior permanece válida. `group` apenas cria seções na ordem da primeira
+ocorrência, preservando também a ordem dos itens. `contentId` nomeia o alvo do
+skip link; quando omitido, o shell gera um ID único e focável no invólucro do
+conteúdo.
+
+`navigationTone="neutral"` é o padrão. `inverse` preserva contextos navy por
+tokens sem alterar a superfície do conteúdo e precisa ser aplicado explicitamente
+tanto na barra desktop quanto no painel portaled. `workspace` e `utility` são
+slots do consumidor e aparecem uma única vez em cada modo responsivo, evitando
+IDs acessíveis duplicados.
+
+Acima de 48rem, a barra lateral tem scroll independente e mantém o item atual com
+`aria-current="page"`. Em 48rem ou menos, Radix Dialog fornece modal, contenção e
+retorno de foco. Escape, backdrop, botão de fechar e navegação comum fecham o
+painel; clique modificado, nova aba e download preservam o comportamento nativo.
+Ao redimensionar aberto para desktop, o modal libera scroll/inert e o foco segue
+para o item atual da barra lateral. O consumidor não deve criar outro menu mobile,
+focus trap ou `main` em paralelo.
+
+## ListPage
+
+O pacote é dono de:
+
+- título, descrição e ação principal;
+- slot de busca e filtros;
+- contagem com atualização anunciada;
+- loading, vazio, sem resultado e erro com retry;
+- layout de lista ou grade.
+
+O consumidor é dono de `items`, chave, célula/card, permissões e ações do
+domínio por `renderItem`. Tabelas usam `renderCollection`, preservando a contagem
+e os estados da casca sem transformar linhas em cards.
+
+`showCount?: boolean` é `true` por padrão. Quando a barra do consumidor já
+anuncia uma contagem específica do domínio, `showCount={false}` remove a
+contagem da casca do DOM para existir apenas um anúncio. O consumidor assume
+também a mensagem de contagem indisponível durante loading ou erro. Itens e
+estados de coleção continuam sendo renderizados normalmente.
+
+## Filtros por feature
+
+A gramática é compartilhada; a taxonomia não:
+
+| Feature | Sempre visível | “Mais filtros” |
+|---|---|---|
+| Academy | busca, status, tipo (curso/trilha) | categoria, período |
+| Conteúdos | busca, status, tipo (notícia/comunicado) | autor, etiquetas, período |
+| TV corporativa | busca, status (ativa/inativa) | período |
+| Assinaturas | busca, status (publicado/rascunho/arquivado) | período |
+| Campanhas | busca, status, canal | público, período, responsável |
+
+O `FilterBar` não conhece esses campos. Ele organiza controles passados pela
+feature e oferece chips/limpeza com comportamento previsível.
+
+Taxonomia dos quatro pilotos revisada contra o produto em 07/09/2026: Academy
+mantém categoria separada de tipo e estados ativo/rascunho/inativo. Conteúdos
+preserva três autores sintéticos e etiquetas com estados publicado/rascunho/arquivado.
+TV lista configurações com composição de widgets, sem alegar saúde de dispositivos.
+Assinaturas demonstra modelos horizontal/vertical/compacto e campos distintos, sem
+inventar público atribuído ou contagem de pessoas. As prévias são somente leitura;
+os editores salvam metadados na sessão de demonstração.
+
+O acabamento usa uma barra aberta, não um formulário dentro de um cartão.
+Busca tem superfície suave; filtros rápidos usam texto/chevron e opções em
+popover. Foco, invalid e semântica permanecem explícitos. Remover um chip tem
+alvo próprio de 32px no desktop e 44px no admin estreito ou de toque. “Mais
+filtros” e ações repetidas da coleção usam Button quiet nos pilotos.
+
+No mobile estreito, os filtros rápidos compartilham duas colunas e a ação de filtros avançados
+ocupa uma linha própria. A comparação de referência mantém o mesmo conteúdo e muda somente
+essa disposição. Em dispositivo de ponteiro grosseiro, os tokens admin aumentam os controles
+para 44px; desktop preserva densidade. Os campos desta tabela são exemplos de pilotos, não
+uma promessa de capacidade da API dos produtos.
+
+O consumidor serializa busca e filtros na URL. Os pilotos do Storybook usam
+query params por feature e demonstram que abrir/fechar `FocusMode` não desmonta
+a lista, não perde filtros e não move o scroll do contexto pai.
+
+Os pilotos de prioridade salvam fixtures em `sessionStorage`, com namespace e validação próprios;
+não usam backend. Erro mantém o formulário para retry; saída suja confirma descarte. Se um item
+editado deixa de corresponder ao filtro, ele não é forçado na coleção: a mensagem explica o
+resultado e o foco retorna à busca. A edição demonstrada é de metadados, não o editor completo
+de cursos, distribuição de telas ou implantação de assinaturas dos produtos.
+
+## DataTable
+
+ListPage limits its grid tracks and direct items to the available inline space, including nested
+consumer wrappers. A wide DataTable scrolls inside its named region; focusing an offscreen cell
+must not horizontally scroll the document or displace the page heading. The browser regression
+`scripts/verify-list-page-overflow.mjs` exercises the packaged React components with current CSS
+in Chromium and Firefox at desktop, tablet and narrow widths.
+
+Um renderer fornecido é a autoridade da célula: retornos `null`, `undefined` e
+`false` deixam a célula vazia; `0` aparece como zero. O valor cru só é usado quando
+a coluna não fornece `render`.
+
+A tabela é semântica, responsiva por scroll e usa ação nomeada para ordenação.
+Colunas, células, paginação remota, seleção e regras de permissão ficam no
+consumidor.
+
+## FocusMode
+
+- usa diálogo modal fullscreen para conter e devolver foco;
+- saída sempre nomeada (`Sair de {fluxo}`);
+- Escape chama `onExit`;
+- o consumidor preserva rota-pai, filtros, scroll e rascunho;
+- confirmação de descarte é responsabilidade do fluxo, não do shell.
+
+O opener é capturado em `onOpenAutoFocus`, antes do autofocus do modal. X,
+Escape, dismiss e fechamento controlado devolvem o foco ao opener conectado.
+`returnFocusRef?: React.RefObject<HTMLElement | null>` permite indicar um
+destino preferido (por exemplo, a busca após salvar e remover a linha filtrada).
+Se esse destino não aceita foco, tenta o opener. O destino deve ser focável,
+como um input ou heading com `tabIndex={-1}`; `body` nunca é um fallback válido.
+Se o opener desaparecer, o consumidor precisa fornecer um destino persistente.
+
+`exitDisabled?: boolean` bloqueia X, Escape e dismiss durante o salvamento.
+O consumidor ainda pode encerrar pela prop `open`, após concluir a operação.
+Formulário sujo e confirmação de descarte continuam no fluxo. A descrição
+opcional só é associada quando existe; o foco continua contido pelo Radix.
+
+O cabeçalho ocupa apenas sua altura natural e o corpo usa o espaço restante
+com scroll próprio. Portais usam a família tipográfica do design system.
+Indicadores de loading de ListPage e Skeleton ficam estáticos com movimento
+reduzido, preservando sua identificação acessível.
+
+## Stepper
+
+Etapa futura é desabilitada. Etapa concluída pode ser reaberta via
+`onStepChange`. O texto dos CTAs continua no fluxo: o Stepper não inventa
+“Avançar” nem executa submit.
+
+Todas as etapas permanecem visíveis no espaço disponível. A sequência pode
+ocupar mais de uma linha; rótulos longos quebram sem encolher o marcador.
+Não esconder etapas futuras em uma faixa de rolagem horizontal: controles
+desabilitados não podem depender de foco por teclado para serem revelados.
+
+## Status antes da migração
+
+Os seis padrões permanecem `draft` em setembro. Testes, stories e revisão visual
+provam o contrato no pacote; promoção a `beta` exige os pilotos reais de outubro.
+
+## Coleções, feedback e tema — contratos draft de setembro
+
+`Pagination`, `ColumnControl`, `DensityControl` e `SavedViews` fornecem controles
+controlados. O consumidor continua dono da busca/filtro/ordenação efetiva, seleção
+entre páginas, identidade, elegibilidade, permissões, rede, payload e persistência.
+Salvar uma visão limpa seu nome e devolve foco ao campo, mantendo o botão vazio
+desabilitado e permitindo Tab/Escape. O callback não representa confirmação de
+persistência remota. Taxonomias e ações mantêm a identidade do domínio.
+
+As famílias choice, searchable-selection, date, upload, table-cells,
+collection-controls e feedback estão registradas como `draft`, com zero
+consumidores comprovados e justificativa estrutural em suas specs. Os cinco
+exports de validação/contraste são utilities, não componentes React. O manifesto
+agrupa os exports pelo status real do catálogo; sua geração e integridade são gates.
+
+Upload fornece seleção/remoção controladas; transporte, cancelamento, progresso,
+limites e persistência reais permanecem no consumidor. Feedback apresenta o estado
+fornecido: confirmação, retry e idempotência são decisões do fluxo. Tema exige pares
+semânticos e superfícies adjacentes explícitas; aplicar a marca e salvar o tema são
+responsabilidades do consumidor.
+
+## Gates executáveis e limite da evidência
+
+`npm run check` valida catálogo, manifesto, tipos e testes de comportamento.
+`npm run build` gera biblioteca e Storybook estático. `npm run test:stories`
+executa stories/play e a configuração a11y em Chromium e Firefox;
+`npm run test:browser` verifica teclado nativo, foco, reflow, alvos, axe e mudanças
+de preferência durante frames reais de entrada/saída. A instrumentação do teste
+observa o evento antes do listener da aplicação; não aumenta durações do piloto.
+
+`npm run test:visual` compara cenas determinísticas no container Linux fixado em
+CI, com fontes locais carregadas e UI assentada. Imagem ausente ou diferente falha;
+artefatos de falha são enviados para revisão humana. O procedimento e a proveniência
+das 14 imagens históricas estão em `tests/visual/README.md`. `npm run test:comparator`
+demonstra que uma alteração visual controlada falha e que restaurar a fixture passa.
+
+Movimento continua somente no laboratório. Teclado e reduced motion são imediatos,
+inclusive quando a preferência muda sem reload; controles em saída ficam inertes.
+Nenhum gate autoriza migração, adoção ou promoção antes dos pilotos de outubro.

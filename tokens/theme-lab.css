@@ -1,0 +1,22 @@
+/* Demonstration layout only. Actual controls and colors belong to the DS. */
+.theme-lab { color: var(--hw-text); display: grid; font-family: var(--hw-font-body); gap: var(--hw-space-6); margin: 0 auto; max-width: 72rem; padding: var(--hw-space-8); }
+.theme-lab__header, .theme-lab__editor, .theme-lab__preview { display: grid; gap: var(--hw-space-4); min-width: 0; }
+.theme-lab__header { max-width: 48rem; }
+.theme-lab__header h1, .theme-lab__header p, .theme-lab__editor h2, .theme-lab__editor p, .theme-lab__preview h2, .theme-lab__preview p { margin: 0; }
+.theme-lab__header h1 { font-size: var(--hw-page-title-size); }
+.theme-lab__editor h2, .theme-lab__preview h2 { font-size: var(--hw-text-lg); }
+.theme-lab__eyebrow { color: var(--hw-text-muted); font-size: var(--hw-text-xs); font-weight: 700; }
+.theme-lab__editor { align-items: start; grid-template-columns: minmax(0, 1fr) minmax(12rem, 0.6fr) minmax(9rem, 0.4fr); }
+.theme-lab__picker input { width: 4rem; padding: var(--hw-space-1); }
+.theme-lab__result { grid-column: 1 / -1; }
+.theme-lab__result ul { margin: var(--hw-space-2) 0 0; padding-left: var(--hw-space-4); }
+.theme-lab__samples { display: flex; flex-wrap: wrap; gap: var(--hw-space-2); }
+.theme-lab__preview { border-top: 1px solid var(--hw-border); padding-top: var(--hw-space-6); }
+.theme-lab__primary-action { justify-self: start; max-width: 100%; }
+.theme-lab__comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--hw-space-6); }
+.theme-lab__footnote { color: var(--hw-text-muted); font-size: var(--hw-text-sm); }
+@media (max-width: 42rem) {
+  .theme-lab { padding: var(--hw-space-4); }
+  .theme-lab__editor, .theme-lab__comparison { grid-template-columns: minmax(0, 1fr); }
+  .theme-lab__primary-action { justify-self: stretch; width: 100%; }
+}

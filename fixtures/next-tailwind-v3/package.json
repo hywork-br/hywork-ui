@@ -1,0 +1,19 @@
+{
+  "name": "@hywork/ui-consumer-smoke",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "next build --webpack"
+  },
+  "dependencies": {
+    "@hywork/ui": "file:../..",
+    "next": "16.3.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17"
+  }
+}
