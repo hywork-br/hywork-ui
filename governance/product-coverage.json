@@ -16,6 +16,12 @@
     "unknown"
   ],
   "labCoverageStates": ["demonstrated", "grouped", "future", "unknown"],
+  "labCoverageSemantics": {
+    "demonstrated": "one current product surface is represented in the Lab",
+    "grouped": "a demonstrated Lab surface represents multiple current product routes or keys",
+    "future": "a concept intentionally outside the current product denominator",
+    "unknown": "evidence is insufficient to classify the Lab surface"
+  },
   "availabilityStates": [
     "current-code",
     "production-confirmed",
