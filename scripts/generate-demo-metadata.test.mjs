@@ -13,8 +13,14 @@ import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import { parsePackOutput } from "./generate-demo-metadata.mjs";
 
 const generatorPath = fileURLToPath(new URL("./generate-demo-metadata.mjs", import.meta.url));
+
+test("parses npm pack JSON when npm prefixes ANSI color codes", () => {
+  const output = '\u001b[34mCLI\u001b[39m[{"filename":"hywork-ui-0.6.0.tgz"}]';
+  assert.deepEqual(parsePackOutput(output), [{ filename: "hywork-ui-0.6.0.tgz" }]);
+});
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, { encoding: "utf8", ...options });

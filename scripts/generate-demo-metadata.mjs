@@ -27,6 +27,14 @@ function sha256(path) {
   return createHash("sha256").update(readFileSync(path)).digest("hex");
 }
 
+const ANSI_ESCAPE_SEQUENCE = /\u001B\[[0-?]*[ -/]*[@-~]/g;
+
+export function parsePackOutput(output) {
+  const cleanOutput = output.replace(ANSI_ESCAPE_SEQUENCE, "").trim();
+  const jsonStart = cleanOutput.indexOf("[");
+  return JSON.parse(jsonStart > 0 ? cleanOutput.slice(jsonStart) : cleanOutput);
+}
+
 function packHash(root) {
   const destination = mkdtempSync(join(tmpdir(), "hywork-demo-pack-"));
   try {
@@ -37,7 +45,7 @@ function packHash(root) {
     );
     let filename;
     try {
-      [{ filename }] = JSON.parse(output);
+      [{ filename }] = parsePackOutput(output);
     } catch (error) {
       fail(`npm pack returned unreadable JSON: ${error.message}`);
     }
