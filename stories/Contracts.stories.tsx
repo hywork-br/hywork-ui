@@ -8,8 +8,18 @@ import {
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogTitle,
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
   Avatar,
   Badge,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
   Button,
   Card,
   CardContent,
@@ -39,8 +49,10 @@ import {
   PopoverClose,
   PopoverContent,
   PopoverTrigger,
+  Progress,
   Select,
   Skeleton,
+  Slider,
   Tabs,
   TabsContent,
   TabsList,
@@ -371,4 +383,92 @@ export const TabsContract: Story = {
       </Tabs>
     </ContractFrame>
   ),
+};
+
+export const ProgressContract: Story = {
+  name: "Progress · estados operacionais",
+  render: () => (
+    <ContractFrame title="Progress">
+      <div className="hw-story-stack" style={{ maxWidth: "32rem" }}>
+        <Progress aria-label="Importação em andamento" value={42} />
+        <Progress aria-label="Importação concluída" value={100} />
+        <Progress aria-label="Importação aguardando início" value={0} />
+      </div>
+    </ContractFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("progressbar", { name: "Importação em andamento" })).toHaveAttribute("aria-valuenow", "42");
+    await expect(canvas.getByRole("progressbar", { name: "Importação concluída" })).toHaveAttribute("data-state", "complete");
+  },
+};
+
+export const AccordionContract: Story = {
+  name: "Accordion · configurações agrupadas",
+  render: () => (
+    <ContractFrame title="Accordion">
+      <Accordion defaultValue="content">
+        <AccordionItem value="content">
+          <AccordionTrigger>Conteúdo</AccordionTrigger>
+          <AccordionContent>Selecione o modelo e o canal desta composição.</AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="audience">
+          <AccordionTrigger>Público</AccordionTrigger>
+          <AccordionContent>Defina as áreas e pessoas que poderão visualizar o conteúdo.</AccordionContent>
+        </AccordionItem>
+        <AccordionItem disabled value="automation">
+          <AccordionTrigger>Automação (em breve)</AccordionTrigger>
+          <AccordionContent>Esta capacidade ainda não está disponível nesta demonstração.</AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </ContractFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const audience = canvas.getByRole("button", { name: "Público" });
+    await userEvent.click(audience);
+    await expect(audience).toHaveAttribute("aria-expanded", "true");
+    await expect(canvas.getByRole("region", { name: "Público" })).toBeVisible();
+  },
+};
+
+export const SliderContract: Story = {
+  name: "Slider · ajustes contínuos",
+  render: () => (
+    <ContractFrame title="Slider">
+      <div className="hw-story-stack" style={{ maxWidth: "32rem" }}>
+        <p>Opacidade · 72%</p>
+        <Slider aria-label="Opacidade" defaultValue={[72]} max={100} />
+        <p>Margem · 24–72 px</p>
+        <Slider aria-label="Margem" defaultValue={[24, 72]} max={120} />
+      </div>
+    </ContractFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.tab();
+    await expect(canvas.getByRole("slider", { name: "Opacidade" })).toHaveFocus();
+  },
+};
+
+export const BreadcrumbContract: Story = {
+  name: "Breadcrumb · contexto de localização",
+  render: () => (
+    <ContractFrame title="Breadcrumb">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem><BreadcrumbLink href="#dados">Dados</BreadcrumbLink></BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem><BreadcrumbLink href="#colecao">Coleção</BreadcrumbLink></BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem><BreadcrumbPage>Registros</BreadcrumbPage></BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    </ContractFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("link", { name: "Coleção" })).toHaveAttribute("href", "#colecao");
+    await expect(canvas.getByText("Registros")).toHaveAttribute("aria-current", "page");
+  },
 };
