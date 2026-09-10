@@ -11,6 +11,11 @@ ocorrência, preservando também a ordem dos itens. `contentId` nomeia o alvo do
 skip link; quando omitido, o shell gera um ID único e focável no invólucro do
 conteúdo.
 
+O atributo `data-surface` é derivado da prop `surface` tanto no root quanto nos
+portais. Atributos repassados não podem sobrescrever essa decisão em apenas uma
+parte do shell. Identidade e seleção de workspace continuam sendo dados do
+consumidor; o componente não cria sessões ou espaços.
+
 `navigationTone="neutral"` é o padrão. `inverse` preserva contextos navy por
 tokens sem alterar a superfície do conteúdo e precisa ser aplicado explicitamente
 tanto na barra desktop quanto no painel portaled. `workspace` e `utility` são
@@ -148,6 +153,20 @@ ocupar mais de uma linha; rótulos longos quebram sem encolher o marcador.
 Não esconder etapas futuras em uma faixa de rolagem horizontal: controles
 desabilitados não podem depender de foco por teclado para serem revelados.
 
+## TreeView
+
+Compartilha a navegação hierárquica de pastas, estruturas e camadas: uma parada
+Tab, setas, Home/End, busca por prefixo e foco independente de seleção. IDs são
+estáveis e únicos. Um item desabilitado é folha, exige motivo textual e continua
+navegável para leitura desse motivo. Ramos sem permissão de seleção usam a
+árvore somente leitura, não um ancestral desabilitado que bloqueia seus filhos.
+
+Recolher ou remover um nó recupera foco apenas quando a árvore o possuía; não
+rouba foco de um formulário vizinho. Expandir não seleciona, e clicar no recuo
+do grupo não ativa seu ancestral. Ações de importar, mover, excluir, autorização
+e persistência são da feature. O contrato completo está na
+[spec do TreeView](../specs/components/tree-view.md).
+
 ## Status antes da migração
 
 Os seis padrões permanecem `draft` em setembro. Testes, stories e revisão visual
@@ -163,8 +182,11 @@ desabilitado e permitindo Tab/Escape. O callback não representa confirmação d
 persistência remota. Taxonomias e ações mantêm a identidade do domínio.
 
 As famílias choice, searchable-selection, date, upload, table-cells,
-collection-controls e feedback estão registradas como `draft`, com zero
-consumidores comprovados e justificativa estrutural em suas specs. Os cinco
+collection-controls e feedback estão registradas como `draft`, com justificativa
+estrutural em suas specs. A lista `consumers` do catálogo registra destinos de
+integração, não comprova adoção em produção. As composições locais de Experiments
+exercitam seleção, upload e feedback; isso não promove seu status nem representa
+consumidores de produção migrados. Os cinco
 exports de validação/contraste são utilities, não componentes React. O manifesto
 agrupa os exports pelo status real do catálogo; sua geração e integridade são gates.
 
@@ -173,6 +195,34 @@ limites e persistência reais permanecem no consumidor. Feedback apresenta o est
 fornecido: confirmação, retry e idempotência são decisões do fluxo. Tema exige pares
 semânticos e superfícies adjacentes explícitas; aplicar a marca e salvar o tema são
 responsabilidades do consumidor.
+
+A seleção local de `FileUpload` devolve foco ao botão quando ele se perdeu no
+documento, inclusive depois de uma leitura que desabilitou temporariamente o
+campo. Não rouba foco de outro controle. `accept` é apenas uma indicação ao
+seletor nativo: o consumidor valida bytes, formato e limite antes de persistir
+ou exibir qualquer prévia. Progresso, retry e conclusão precisam corresponder
+ao estado real da simulação; selecionar um arquivo não significa enviá-lo.
+
+## Storybook e Experiments: provas diferentes, mesmo artefato
+
+O Storybook verifica APIs reutilizáveis e estados controlados. Experiments
+compõe jornadas de negócio com fixtures e armazenamento local; suas coleções,
+rascunhos, versões, permissões e resultados não pertencem ao pacote. O wrapper
+de aplicação `ActionDrawer`, por exemplo, compõe `FocusMode` e implementa
+descarte/gravação: não é um export adicional de `@hywork/ui`.
+
+Uma jornada só pode ser anunciada como verificada quando houver fonte,
+implementação e uma asserção executada sobre seu resultado. Uma story aberta,
+um item no inventário, um token em comum ou uma mensagem de sucesso não bastam.
+Erros de leitura são indisponibilidade, nunca coleção vazia ou ativação inativa.
+Ativação de aplicativo, configuração de integração e resgate de recompensas
+são estados separados; HyStore é exclusivamente a loja de aplicativos.
+
+Ao apresentar ambos, conferir revisão limpa, checksum do arquivo instalável e
+manifesto dos arquivos instalados no consumidor, além do metadata servido pelo
+Storybook. Versão textual igual não prova paridade. Uma alteração compartilhada
+exige novo artefato identificado e repetição dos testes de quem o consome.
+Essas provas são locais; PR aberto, merge e publicação são etapas distintas.
 
 ## Gates executáveis e limite da evidência
 
