@@ -4,6 +4,18 @@ import { writeFile } from "node:fs/promises";
 import { openStory, expectSettled } from "./helpers";
 import { installOpacityProbe, type OpacityProbeWindow } from "./native-opacity-probe";
 
+test('long focus content stays readable without overflowing on mobile', async ({page}, testInfo) => {
+  await page.setViewportSize({width:390,height:844}); await page.emulateMedia({reducedMotion:'reduce'});
+  await openStory(page,'patterns-modo-foco--long-content','portal');
+  await page.getByRole('button',{name:'Abrir conteúdo longo',exact:true}).click(); await expectSettled(page);
+  const sizes = await page.locator('.hw-focus-mode, .hw-focus-mode__header, .hw-focus-mode__body').evaluateAll(elements => elements.map(element => ({client:element.clientWidth,scroll:element.scrollWidth,right:element.getBoundingClientRect().right})));
+  for(const size of sizes) { expect(size.scroll).toBeLessThanOrEqual(size.client+1); expect(size.right).toBeLessThanOrEqual(391); }
+  await expect(page.getByRole('button',{name:'Sair de '+'A'.repeat(160),exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'Concluir leitura',exact:true}).scrollIntoViewIfNeeded();
+  await page.screenshot({path:testInfo.outputPath('focus-long-mobile.png')});
+  await page.keyboard.press('Escape'); await expect(page.getByRole('button',{name:'Abrir conteúdo longo',exact:true})).toBeFocused();
+});
+
 for (const width of [1440, 390]) {
   test(`audited priority domains preserve fields and layouts at ${width}px`, async ({ page }, testInfo) => {
     test.setTimeout(60000);

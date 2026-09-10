@@ -28,6 +28,13 @@ function useMobileViewport() {
 afterEach(() => vi.unstubAllGlobals());
 
 describe("AdminShell navigation", () => {
+  it("keeps portal density on the root and the portaled mobile navigation", async () => {
+    useMobileViewport(); const user = userEvent.setup();
+    const {container} = render(<AdminShell brand="hywork" surface="portal" navigation={groupedNavigation}><main>Portal</main></AdminShell>);
+    expect(container.querySelector('.hw-admin-shell')).toHaveAttribute('data-surface','portal');
+    await user.click(screen.getByRole('button',{name:'Abrir navegação'}));
+    expect(screen.getByRole('dialog',{name:'Navegação principal'})).toHaveAttribute('data-surface','portal');
+  });
   it.each([undefined, "missing-id"])("focuses inside the mobile dialog when currentItem is %s", async (currentItem) => {
     useMobileViewport();
     const user = userEvent.setup();

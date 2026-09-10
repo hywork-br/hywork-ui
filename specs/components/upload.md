@@ -22,6 +22,8 @@ Exercite vazio, preenchido, desabilitado e recuperação quando aplicáveis. Est
 
 ## Tokens consumidos
 
+Cada arquivo usa `Progress` do próprio pacote, com nome acessível e valor limitado a 0–100, em vez do progresso visual nativo do navegador. Nomes sem espaços quebram dentro da largura disponível. Estado textual permanece visível além da cor; o consumidor continua responsável pela operação.
+
 Papéis `--hw-surface`/`--hw-surface-fg`, `--hw-muted`/`--hw-muted-fg`, `--hw-focus` e tokens de tamanho da superfície; veja `tokens/componentes.css`. Sem cores arbitrárias.
 
 ## Admin, portal e mobile

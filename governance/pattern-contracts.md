@@ -2,6 +2,8 @@
 
 ## AdminShell
 
+`surface="admin"` permanece o padrão. `surface="portal"` usa a densidade de leitura/toque tanto no shell quanto na navegação móvel portaled, sem outro menu paralelo no consumidor. Não altera os papéis ou destinos de domínio.
+
 O shell organiza marca, workspace, navegação agrupada e utilidades; o consumidor
 continua dono do único landmark `main` e de todo o conteúdo da rota. A API plana
 anterior permanece válida. `group` apenas cria seções na ordem da primeira
@@ -127,6 +129,11 @@ opcional só é associada quando existe; o foco continua contido pelo Radix.
 
 O cabeçalho ocupa apenas sua altura natural e o corpo usa o espaço restante
 com scroll próprio. Portais usam a família tipográfica do design system.
+Título, descrição e texto longo sem espaços quebram dentro da largura disponível.
+A coluna do diálogo e seus itens podem encolher; o botão de saída não encolhe
+nem sai da tela. Tabelas ou editores largos continuam responsáveis por sua
+rolagem interna, sem alargar o diálogo. A story `LongContent` cobre título de
+160 caracteres e nome de arquivo longo, inclusive em 390px.
 Indicadores de loading de ListPage e Skeleton ficam estáticos com movimento
 reduzido, preservando sua identificação acessível.
 
