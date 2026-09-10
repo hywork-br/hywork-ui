@@ -29,11 +29,60 @@ afterEach(() => vi.unstubAllGlobals());
 
 describe("AdminShell navigation", () => {
   it("keeps portal density on the root and the portaled mobile navigation", async () => {
-    useMobileViewport(); const user = userEvent.setup();
-    const {container} = render(<AdminShell brand="hywork" surface="portal" navigation={groupedNavigation}><main>Portal</main></AdminShell>);
-    expect(container.querySelector('.hw-admin-shell')).toHaveAttribute('data-surface','portal');
-    await user.click(screen.getByRole('button',{name:'Abrir navegação'}));
-    expect(screen.getByRole('dialog',{name:'Navegação principal'})).toHaveAttribute('data-surface','portal');
+    useMobileViewport();
+    const user = userEvent.setup();
+    const { container } = render(
+      <AdminShell
+        brand="hywork"
+        navigation={groupedNavigation}
+        surface="portal"
+      >
+        <main>Portal</main>
+      </AdminShell>
+    );
+    expect(container.querySelector(".hw-admin-shell")).toHaveAttribute(
+      "data-surface",
+      "portal"
+    );
+    await user.click(
+      screen.getByRole("button", { name: "Abrir navegação" })
+    );
+    expect(
+      screen.getByRole("dialog", { name: "Navegação principal" })
+    ).toHaveAttribute("data-surface", "portal");
+  });
+
+  it("keeps contract-owned shell attributes authoritative over passthrough props", async () => {
+    useMobileViewport();
+    const user = userEvent.setup();
+    const conflictingAttributes = {
+      "data-navigation-tone": "inverse",
+      "data-surface": "admin",
+    };
+    const { container } = render(
+      <AdminShell
+        {...conflictingAttributes}
+        brand="hywork"
+        navigation={groupedNavigation}
+        navigationTone="neutral"
+        surface="portal"
+      >
+        <main>Portal</main>
+      </AdminShell>
+    );
+
+    const root = container.querySelector(".hw-admin-shell");
+    expect(root).toHaveAttribute("data-surface", "portal");
+    expect(root).toHaveAttribute("data-navigation-tone", "neutral");
+
+    await user.click(
+      screen.getByRole("button", { name: "Abrir navegação" })
+    );
+    const dialog = screen.getByRole("dialog", {
+      name: "Navegação principal",
+    });
+    expect(dialog).toHaveAttribute("data-surface", "portal");
+    expect(dialog).toHaveAttribute("data-navigation-tone", "neutral");
   });
   it.each([undefined, "missing-id"])("focuses inside the mobile dialog when currentItem is %s", async (currentItem) => {
     useMobileViewport();

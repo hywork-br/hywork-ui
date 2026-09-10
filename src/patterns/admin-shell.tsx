@@ -112,11 +112,11 @@ export const AdminShell = React.forwardRef<HTMLDivElement, AdminShellProps>(
     return (
       <Dialog open={mobileOpen} onOpenChange={updateOpen}>
         <div
+          {...props}
           className={cn("hw-admin-shell", className)}
           data-navigation-tone={navigationTone}
           data-surface={surface}
           ref={ref}
-          {...props}
         >
           <a
             className="hw-admin-shell__skip-link"

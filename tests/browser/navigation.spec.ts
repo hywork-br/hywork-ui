@@ -5,15 +5,26 @@ import { expectSettled, openStory } from "./helpers";
 const storyId = "navigation-administration--grouped-responsive";
 const widths = [1440, 768, 390, 320] as const;
 
-test('portal shell keeps touch density and focus in mobile navigation', async ({page}, testInfo) => {
-  await page.setViewportSize({width:390,height:844}); await page.emulateMedia({reducedMotion:'reduce'});
-  await openStory(page,'navigation-administration--employee-portal','admin');
-  await expect(page.locator('.hw-admin-shell')).toHaveAttribute('data-surface','portal');
-  const trigger = page.getByRole('button',{name:'Abrir navegação'}); await trigger.click();
-  const dialog = page.getByRole('dialog',{name:'Navegação principal'}); await expect(dialog).toHaveAttribute('data-surface','portal');
-  const link = dialog.getByRole('link',{name:'Meu dia',exact:true}); await expect(link).toBeFocused();
+test("portal shell keeps touch density and focus in mobile navigation", async ({
+  page,
+}, testInfo) => {
+  await page.setViewportSize({ height: 844, width: 390 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await openStory(page, "navigation-administration--employee-portal", "admin");
+  await expect(page.locator(".hw-admin-shell")).toHaveAttribute(
+    "data-surface",
+    "portal"
+  );
+  const trigger = page.getByRole("button", { name: "Abrir navegação" });
+  await trigger.click();
+  const dialog = page.getByRole("dialog", { name: "Navegação principal" });
+  await expect(dialog).toHaveAttribute("data-surface", "portal");
+  const link = dialog.getByRole("link", { exact: true, name: "Meu dia" });
+  await expect(link).toBeFocused();
   expect((await link.boundingBox())!.height).toBeGreaterThanOrEqual(44);
-  await capture(page,testInfo.outputPath('portal-navigation-mobile.png')); await page.keyboard.press('Escape'); await expect(trigger).toBeFocused();
+  await capture(page, testInfo.outputPath("portal-navigation-mobile.png"));
+  await page.keyboard.press("Escape");
+  await expect(trigger).toBeFocused();
 });
 
 for (const variant of ["no-current-item", "unknown-current-item", "empty-navigation"]) {
