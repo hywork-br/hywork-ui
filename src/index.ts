@@ -1,5 +1,6 @@
 export * from "./components/avatar";
 export * from "./components/accordion";
+export * from "./components/tree-view";
 export * from "./components/badge";
 export * from "./components/breadcrumb";
 export * from "./components/button";

@@ -234,6 +234,22 @@
       "storyContract": "play"
     },
     {
+      "slug": "tree-view",
+      "name": "TreeView",
+      "exports": ["TreeView"],
+      "status": "draft",
+      "owner": { "design": "Hywork Product Design", "frontend": "Hywork Frontend" },
+      "consumers": ["hywork-experiments"],
+      "structuralCase": "Navegação hierárquica de pastas, camadas e estruturas; entidades, permissões e persistência pertencem ao consumidor.",
+      "surfaces": ["admin", "portal"],
+      "viewports": ["desktop", "mobile"],
+      "spec": "specs/components/tree-view.md",
+      "storyFile": "stories/TreeView.stories.tsx",
+      "storyExport": "Navigation",
+      "migrationWave": 2,
+      "storyContract": "play"
+    },
+    {
       "slug": "slider",
       "name": "Slider",
       "exports": ["Slider"],
