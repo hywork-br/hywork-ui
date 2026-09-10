@@ -2,14 +2,17 @@ import * as React from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "../lib/cn";
 
-export interface TreeNode {
+interface TreeNodeBase {
   id: string;
   label: string;
   description?: string;
   icon?: React.ReactNode;
-  disabled?: boolean;
-  children?: readonly TreeNode[];
 }
+export type TreeNode = TreeNodeBase &
+  (
+    | { disabled?: false; children?: readonly TreeNode[] }
+    | { disabled: true; description: string; children?: never }
+  );
 export interface TreeViewProps {
   ariaLabel: string;
   nodes: readonly TreeNode[];
@@ -51,6 +54,13 @@ export function TreeView({
       items.forEach((node) => {
         if (!node.id || all.has(node.id))
           throw new Error("TreeView nodes require unique nonempty IDs");
+        if (
+          node.disabled &&
+          (!node.description?.trim() || node.children !== undefined)
+        )
+          throw new Error(
+            "TreeView disabled leaves require a reason and cannot contain descendants"
+          );
         const entry = { node, parent };
         all.set(node.id, entry);
         if (shown) visible.push(entry);
@@ -198,13 +208,15 @@ export function TreeView({
           onKeyDown={(event) => {
             if (event.target === event.currentTarget) keydown(event, node);
           }}
-          onClick={(event) => {
-            event.stopPropagation();
-            focus(node.id);
-            select(node);
-          }}
         >
-          <div className="hw-tree__row">
+          <div
+            className="hw-tree__row"
+            onClick={(event) => {
+              event.stopPropagation();
+              focus(node.id);
+              select(node);
+            }}
+          >
             {branch ? (
               <button
                 type="button"

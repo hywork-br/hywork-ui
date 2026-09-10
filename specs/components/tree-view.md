@@ -10,7 +10,7 @@ Use em hierarquias pequenas e carregadas no cliente. Evite para navegação glob
 
 ## Anatomia e slots
 
-`TreeView` recebe `TreeNode[]`: id único, label textual, description opcional, icon decorativo, disabled e children. Renderiza árvore/listas aninhadas semanticamente; cada item tem nome próprio e descrição separada, sem incorporar nomes dos descendentes.
+`TreeView` recebe `TreeNode[]`: id único, label textual, description opcional e icon decorativo. Nós disponíveis podem ter children. A união discriminada exige description não vazia e proíbe children quando disabled é true; a mesma regra é validada em runtime. Renderiza árvore/listas aninhadas semanticamente; cada item tem nome próprio e descrição separada, sem incorporar nomes dos descendentes.
 
 ## API e defaults
 
@@ -18,7 +18,7 @@ Estado controlado: `expandedIds`/`onExpandedChange`, `selectedId`/`onSelectionCh
 
 ## Variantes e estados
 
-Aberto/fechado, selecionado/não selecionado, disabled com motivo em description, read-only e vazio. Foco é separado da seleção. Dados removidos ou ramo recolhido recuperam o foco no ancestral visível ou primeiro item, somente se a árvore estava com foco. Não há animação de altura nem dependência de motion.
+Aberto/fechado, selecionado/não selecionado, folha disabled com motivo obrigatório em description, read-only e vazio. Ramos navegáveis sem permissão de seleção usam read-only da árvore, nunca aria-disabled em um ancestral. Foco é separado da seleção. Dados removidos ou ramo recolhido recuperam o foco no ancestral visível ou primeiro item, somente se a árvore estava com foco. Não há animação de altura nem dependência de motion. Somente a linha do item ativa seleção; clicar no espaço/recuo do grupo não seleciona o ancestral.
 
 ## Tokens consumidos
 

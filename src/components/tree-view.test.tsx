@@ -1,5 +1,5 @@
 import * as React from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { TreeView, type TreeNode } from "./tree-view";
@@ -89,7 +89,7 @@ describe("TreeView", () => {
         readOnly
       />
     );
-    await user.click(screen.getByRole("treeitem", { name: "Pessoas" }));
+    await user.click(screen.getByText("Pessoas"));
     await user.keyboard("{Enter}");
     expect(select).not.toHaveBeenCalled();
   });
@@ -104,7 +104,7 @@ describe("TreeView", () => {
     const { rerender } = render(
       <TreeView {...props} expandedIds={["company"]} />
     );
-    await user.click(screen.getByRole("treeitem", { name: "Pessoas" }));
+    await user.click(screen.getByText("Pessoas"));
     rerender(<TreeView {...props} expandedIds={[]} />);
     expect(screen.getByRole("treeitem", { name: "Empresa" })).toHaveFocus();
     expect(
@@ -123,5 +123,85 @@ describe("TreeView", () => {
         />
       )
     ).toThrow("unique");
+  });
+  it("does not select an ancestor when the empty child-group area is clicked", () => {
+    const select = vi.fn();
+    render(
+      <TreeView
+        ariaLabel="Pastas"
+        nodes={nodes}
+        expandedIds={["company"]}
+        onExpandedChange={vi.fn()}
+        onSelectionChange={select}
+      />
+    );
+    fireEvent.click(screen.getByRole("group"));
+    expect(select).not.toHaveBeenCalled();
+  });
+  it.each([
+    { id: "blocked", label: "Blocked", disabled: true },
+    {
+      id: "blocked",
+      label: "Blocked",
+      disabled: true,
+      description: "Unavailable",
+      children: [{ id: "child", label: "Child" }],
+    },
+  ])(
+    "rejects unavailable nodes without a reason or with descendants",
+    (invalid) => {
+      expect(() =>
+        render(
+          <TreeView
+            ariaLabel="Pastas"
+            nodes={[invalid as unknown as TreeNode]}
+            expandedIds={[]}
+            onExpandedChange={vi.fn()}
+            onSelectionChange={vi.fn()}
+          />
+        )
+      ).toThrow("disabled leaves require a reason");
+    }
+  );
+  it("recovers focus after node removal but does not steal focus from outside", async () => {
+    const user = userEvent.setup();
+    const props = {
+      ariaLabel: "Pastas",
+      onExpandedChange: vi.fn(),
+      onSelectionChange: vi.fn(),
+      expandedIds: ["company"],
+    };
+    const reduced: TreeNode[] = [{ id: "company", label: "Empresa" }];
+    const { rerender } = render(
+      <>
+        <button>Fora da árvore</button>
+        <TreeView {...props} nodes={nodes} />
+      </>
+    );
+    await user.click(screen.getByText("Pessoas"));
+    rerender(
+      <>
+        <button>Fora da árvore</button>
+        <TreeView {...props} nodes={reduced} />
+      </>
+    );
+    expect(screen.getByRole("treeitem", { name: "Empresa" })).toHaveFocus();
+    rerender(
+      <>
+        <button>Fora da árvore</button>
+        <TreeView {...props} nodes={nodes} />
+      </>
+    );
+    await user.click(screen.getByText("Pessoas"));
+    await user.click(screen.getByRole("button", { name: "Fora da árvore" }));
+    rerender(
+      <>
+        <button>Fora da árvore</button>
+        <TreeView {...props} nodes={reduced} />
+      </>
+    );
+    expect(
+      screen.getByRole("button", { name: "Fora da árvore" })
+    ).toHaveFocus();
   });
 });
