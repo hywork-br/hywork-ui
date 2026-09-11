@@ -1,11 +1,12 @@
-export type PartialOpacity = {
+export type HeldOpacity = {
   status: "held";
-  sampledOpacity: number;
   opacity: number;
+  progress: number;
   playState: string;
   pending: boolean;
   heldTime: number;
-  pauseFrameChecks: number;
+  seekTime: number;
+  commitFrames: number;
   source: string;
   sameNativeAnimation: boolean;
   observations: unknown;
@@ -16,14 +17,23 @@ export type OpacityProbeWindow = Window & {
   opacityProbe: {
     arm: () => void;
     actionComplete: () => void;
-    result: Promise<PartialOpacity | OpacityFailure>;
+    result: Promise<HeldOpacity | OpacityFailure>;
   };
 };
 
-/** Test-only browser observer. Kept serializable for Playwright addInitScript. */
+/**
+ * Test-only browser observer. Kept serializable for Playwright addInitScript.
+ *
+ * The app's own native opacity animation is frozen at birth and seeked to a
+ * test-chosen point, so the partial frame never depends on the real clock or
+ * on the browser painting a frame before a 160-240 ms animation ends.
+ */
 export function installOpacityProbe() {
   const probe = window as unknown as OpacityProbeWindow;
   const nativeAnimate = Element.prototype.animate;
+  // Half of the native active duration: far from both ends, so any monotonic
+  // opacity curve yields a strictly partial value.
+  const holdFraction = 0.5;
   let onBirth: ((element: Element, animation: Animation) => void) | undefined;
   let onActionComplete: (() => void) | undefined;
   Element.prototype.animate = function (...args: Parameters<Element["animate"]>) {
@@ -39,14 +49,14 @@ export function installOpacityProbe() {
       if (onBirth) throw new Error("opacity observer already armed");
       probe.opacityProbe.result = new Promise((resolve) => {
         let settled = false, candidate: Animation | undefined, element: Element | undefined;
-        let sampleFrames = 0, birthFrames = 0, pauseFrameChecks = 0, pausing = false;
+        let birthFrames = 0, commitFrames = 0, seekTime = Number.NaN;
         const frames = new Set<number>();
         const observations: unknown[] = [];
         const frame = (callback: () => void) => {
           const id = requestAnimationFrame(() => { frames.delete(id); if (!settled) callback(); });
           frames.add(id);
         };
-        const finish = (result: PartialOpacity | OpacityFailure) => {
+        const finish = (result: HeldOpacity | OpacityFailure) => {
           if (settled) return;
           settled = true;
           frames.forEach(cancelAnimationFrame);
@@ -59,45 +69,55 @@ export function installOpacityProbe() {
           playState: candidate?.playState, pending: candidate?.pending,
           currentTime: candidate?.currentTime, startTime: candidate?.startTime,
           progress: candidate?.effect?.getComputedTiming().progress,
-          sampleFrames, birthFrames, pauseFrameChecks,
+          seekTime, birthFrames, commitFrames,
         });
         const fail = (reason: string) => finish({ status: "failed", reason,
           diagnostics: { ...state(reason), observations } });
-        const sample = (source: string) => {
-          if (settled || pausing || !candidate || !element) return;
-          const snapshot = state(source);
-          observations.push(snapshot);
-          const opacity = snapshot.opacity!;
-          if (snapshot.playState === "finished" || snapshot.playState === "idle") {
-            fail("finished-before-partial");
-            return;
-          }
-          const rect = element.getBoundingClientRect();
-          if (snapshot.playState !== "running" || !(opacity > 0 && opacity < 1)
-            || !(Number(snapshot.progress) > 0 && Number(snapshot.progress) < 1)
-            || !element.isConnected || rect.width <= 0 || rect.height <= 0) return;
+        const hold = () => {
+          if (settled || !candidate || !element) return;
           const animation = candidate;
           const target = element;
+          observations.push(state("before-hold"));
+          if (animation.playState === "finished" || animation.playState === "idle") {
+            fail("settled-before-hold");
+            return;
+          }
           const sameNativeAnimation = animation instanceof Animation
             && (animation.effect as KeyframeEffect).target === target
             && target.getAnimations().includes(animation);
           if (!sameNativeAnimation) { fail("native-animation-identity-mismatch"); return; }
-          pausing = true;
+          const timing = animation.effect!.getComputedTiming();
+          const activeDuration = Number(timing.activeDuration);
+          if (!(activeDuration > 0) || !Number.isFinite(activeDuration)) { fail("no-finite-native-duration"); return; }
+          seekTime = Number(timing.delay ?? 0) + activeDuration * holdFraction;
           probe.heldAnimation = animation;
-          // This is the only playback control: hold a naturally advanced value.
+          // The only playback control: freeze, then seek. Seeking a pause-pending
+          // animation completes the pause synchronously (Web Animations).
           animation.pause();
-          const commitPause = () => {
-            const heldOpacity = Number(getComputedStyle(target).opacity);
+          animation.currentTime = seekTime;
+          observations.push(state("held"));
+          const commit = () => {
             const heldTime = animation.currentTime == null ? Number.NaN : Number(animation.currentTime);
-            if (animation.playState === "paused" && !animation.pending
-              && Number.isFinite(heldTime) && heldOpacity > 0 && heldOpacity < 1) {
-              finish({ status: "held", sampledOpacity: opacity, opacity: heldOpacity,
-                playState: animation.playState, pending: animation.pending, heldTime,
-                pauseFrameChecks, source, sameNativeAnimation, observations });
-            } else if (pauseFrameChecks >= 4) fail("pause-not-committed");
-            else { pauseFrameChecks += 1; frame(commitPause); }
+            if (animation.playState !== "paused") { fail("hold-overridden"); return; }
+            if (heldTime !== seekTime) { fail("hold-time-moved"); return; }
+            const opacity = Number(getComputedStyle(target).opacity);
+            const progress = Number(animation.effect?.getComputedTiming().progress);
+            const rect = target.getBoundingClientRect();
+            if (!animation.pending && opacity > 0 && opacity < 1 && progress > 0 && progress < 1
+              && target.isConnected && rect.width > 0 && rect.height > 0) {
+              finish({ status: "held", opacity, progress, playState: animation.playState,
+                pending: animation.pending, heldTime, seekTime, commitFrames,
+                source: "native-birth", sameNativeAnimation, observations });
+            } else if (commitFrames >= 16) fail("hold-not-rendered");
+            else {
+              // Only layout may still be settling (e.g. a JS height tween from 0).
+              // Bounded by frames, not by elapsed time: the held value cannot expire.
+              commitFrames += 1;
+              observations.push(state("commit-frame"));
+              frame(commit);
+            }
           };
-          queueMicrotask(commitPause);
+          commit();
         };
         onBirth = (target, animation) => {
           if (!target.matches("[data-pilot-presence]")
@@ -106,20 +126,11 @@ export function installOpacityProbe() {
           candidate = animation;
           element = target;
           observations.push(state("native-birth"));
-          // Observe native play commitment as well as rendered-frame callbacks.
-          // Motion may synchronously set startTime after Element.animate returns.
-          animation.ready.then(() => sample("native-ready"), () => { if (!settled) fail("cancelled-before-partial"); });
-          animation.finished.then(() => { if (!settled) fail("finished-before-partial"); },
-            () => { if (!settled) fail("cancelled-before-partial"); });
-          const sampleFrame = () => {
-            if (settled || pausing) return;
-            sampleFrames += 1;
-            sample("native-frame");
-            if (settled || pausing) return;
-            if (sampleFrames >= 16) fail("partial-frame-budget-exhausted");
-            else frame(sampleFrame);
-          };
-          frame(sampleFrame);
+          animation.finished.then(() => { if (!settled) fail("finished-before-hold"); },
+            () => { if (!settled) fail("cancelled-before-hold"); });
+          // Motion may assign startTime right after Element.animate returns, which
+          // would resume a paused animation; hold once its constructor has run.
+          queueMicrotask(hold);
         };
         onActionComplete = () => {
           // Start the absent-birth bound after the actual pointer action, not

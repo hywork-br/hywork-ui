@@ -148,9 +148,7 @@ const workspace = "lab-interface-details--workspace";
 type MotionChange = {
   atChange: number; inert: boolean; trusted: boolean; matches: boolean;
   heldStateAtChange: string | null; heldPendingAtChange: boolean | null;
-  heldTimeAtChange: number | null;
-  finalOpacity: string | null; finalHeight: string | null; policy: string | null;
-  finalAnimationState: string | null; timeOrigin: number;
+  heldTimeAtChange: number | null; timeOrigin: number;
 };
 
 for (const key of ["Escape", "Tab"] as const) {
@@ -290,20 +288,12 @@ for (const direction of ["entry", "exit"] as const) {
           if (!event.matches || observed) return;
           observed = true;
           const before = document.querySelector("[data-pilot-presence]");
-          const atChange = before ? Number(getComputedStyle(before).opacity) : -1;
-          const inert = !before || (before as HTMLElement).inert;
-          const heldStateAtChange = probe.heldAnimation?.playState ?? null;
-          const heldPendingAtChange = probe.heldAnimation?.pending ?? null;
-          const heldTimeAtChange = probe.heldAnimation?.currentTime == null ? null : Number(probe.heldAnimation.currentTime);
-          requestAnimationFrame(() => requestAnimationFrame(() => {
-            const element = document.querySelector("[data-pilot-presence]");
-            resolve({ atChange, inert, trusted: event.isTrusted, matches: event.matches,
-              heldStateAtChange, heldPendingAtChange, heldTimeAtChange,
-              finalAnimationState: probe.heldAnimation?.playState ?? null, timeOrigin: performance.timeOrigin,
-              finalOpacity: element ? getComputedStyle(element).opacity : null,
-              finalHeight: element ? (element as HTMLElement).style.height : null,
-              policy: document.querySelector("[data-pilot-motion]")?.getAttribute("data-pilot-motion") ?? null });
-          }));
+          resolve({ atChange: before ? Number(getComputedStyle(before).opacity) : -1,
+            inert: !before || (before as HTMLElement).inert, trusted: event.isTrusted, matches: event.matches,
+            heldStateAtChange: probe.heldAnimation?.playState ?? null,
+            heldPendingAtChange: probe.heldAnimation?.pending ?? null,
+            heldTimeAtChange: probe.heldAnimation?.currentTime == null ? null : Number(probe.heldAnimation.currentTime),
+            timeOrigin: performance.timeOrigin });
         };
         window.matchMedia = (query) => {
           const media = nativeMatchMedia(query);
@@ -326,10 +316,11 @@ for (const direction of ["entry", "exit"] as const) {
     await writeFile(observationEvidence, JSON.stringify(partial, null, 2));
     await testInfo.attach("native-opacity-observation", { path: observationEvidence, contentType: "application/json" });
     if (partial.status === "failed") throw new Error(`Native opacity observation failed: ${JSON.stringify(partial)}`);
-    const { sampledOpacity, opacity, playState, pending, heldTime, pauseFrameChecks, source, sameNativeAnimation } = partial;
+    const { opacity, progress, playState, pending, heldTime, seekTime, commitFrames, source, sameNativeAnimation } = partial;
     expect(sameNativeAnimation, "hold the exact native animation returned to Motion at birth").toBe(true);
-    expect(sampledOpacity).toBeGreaterThan(0);
-    expect(sampledOpacity).toBeLessThan(1);
+    expect(heldTime, "held at the test-chosen point, not wherever the real clock left it").toBe(seekTime);
+    expect(progress).toBeGreaterThan(0);
+    expect(progress).toBeLessThan(1);
     expect(opacity).toBeGreaterThan(0);
     expect(opacity).toBeLessThan(1);
     expect(playState, "native partial opacity must be held before crossing the media protocol boundary").toBe("paused");
@@ -339,28 +330,38 @@ for (const direction of ["entry", "exit"] as const) {
     await testInfo.attach("paused-partial-frame", { path: partialImage, contentType: "image/png" });
     await page.emulateMedia({ reducedMotion: "reduce" });
     const result = await page.evaluate(() => (window as unknown as { motionChange: Promise<MotionChange> }).motionChange);
+    // The held animation cannot advance or finish on its own: only the app's
+    // reaction to the preference can cancel it, so waiting for that is no race.
+    await expect.poll(() => page.evaluate(() => (window as unknown as OpacityProbeWindow).heldAnimation?.playState ?? null),
+      { message: "application must cancel the held native animation" }).toBe("idle");
+    const settled = await page.evaluate(() => {
+      const element = document.querySelector("[data-pilot-presence]");
+      return { finalOpacity: element ? getComputedStyle(element).opacity : null,
+        finalHeight: element ? (element as HTMLElement).style.height : null,
+        policy: document.querySelector("[data-pilot-motion]")?.getAttribute("data-pilot-motion") ?? null,
+        timeOrigin: performance.timeOrigin };
+    });
     const motionEvidence = testInfo.outputPath("rendered-interruption.json");
     await writeFile(motionEvidence, JSON.stringify({ direction,
-      harnessControl: "observe native birth/play commitment; pause naturally partial opacity with bounded commitment",
+      harnessControl: "hold the app's native opacity animation at birth, seeked to half its active duration",
       observationSource: source, sameNativeAnimation,
-      partialOpacity: sampledOpacity, heldOpacity: opacity, heldTime, pauseFrameChecks, ...result }, null, 2));
+      heldOpacity: opacity, heldProgress: progress, heldTime, seekTime, commitFrames, ...result, settled }, null, 2));
     await testInfo.attach("rendered-interruption", { path: motionEvidence, contentType: "application/json" });
-    expect(result.atChange, "preference must change before animation already settled").toBeGreaterThan(0);
-    expect(result.atChange).toBeLessThan(1);
+    expect(result.atChange, "preference must change while the held partial frame is on screen").toBe(opacity);
     expect(result.trusted, "preference event must come from the browser, not a dispatched fixture").toBe(true);
     expect(result.matches).toBe(true);
     expect(result.heldStateAtChange).toBe("paused");
     expect(result.heldPendingAtChange).toBe(false);
     expect(result.heldTimeAtChange).toBe(heldTime);
-    expect(result.finalAnimationState, "application must cancel the held native animation").toBe("idle");
     expect(result.timeOrigin, "preference changes without reloading the document").toBe(timeOrigin);
-    expect(result.policy).toBe("instant");
+    expect(settled.timeOrigin, "interruption settles without reloading the document").toBe(timeOrigin);
+    expect(settled.policy).toBe("instant");
     if (direction === "entry") {
-      expect(result.finalOpacity).toBe("1");
-      expect(result.finalHeight).toBe("auto");
+      expect(settled.finalOpacity).toBe("1");
+      expect(settled.finalHeight).toBe("auto");
     } else {
       expect(result.inert, "outgoing controls already inert at preference change").toBe(true);
-      expect(result.finalOpacity).toBeNull();
+      await expect(page.locator("[data-pilot-presence]")).toHaveCount(0);
       await expect(page.getByRole("button", { name: "Limpar seleção de todas as páginas" })).toHaveCount(0);
     }
     await page.emulateMedia({ reducedMotion: "no-preference" });
