@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Button } from "./button";
+import { Progress } from "./progress";
 
 export interface FileUploadItem {
   id: string;
@@ -86,7 +87,7 @@ export function FileUpload({
           <li key={item.id}>
             <span>{item.name}</span>
             <span>{statusLabels[item.status]}</span>
-            <progress
+            <Progress
               aria-label={item.name}
               max={100}
               value={

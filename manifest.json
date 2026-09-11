@@ -120,6 +120,7 @@
     "AccordionItem",
     "AccordionTrigger",
     "AccordionContent",
+    "TreeView",
     "Slider",
     "Breadcrumb",
     "BreadcrumbList",

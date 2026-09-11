@@ -8,6 +8,7 @@ import {
   CardTitle,
   Field,
   FocusMode,
+  FileUpload,
   Input,
   Label,
   Stepper,
@@ -186,3 +187,34 @@ function FocusModeExample() {
   );
 }
 export const CriacaoDeCampanha: Story = { render: () => <FocusModeExample /> };
+
+function LongContentExample() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div data-surface="portal">
+      <Button onClick={() => setOpen(true)}>Abrir conteúdo longo</Button>
+      <FocusMode
+        description="Título dinâmico sem espaços; controles e leitura permanecem disponíveis no celular."
+        onExit={() => setOpen(false)}
+        open={open}
+        title={"A".repeat(160)}
+      >
+        <p>{"Conteudo".repeat(50)}</p>
+        <FileUpload
+          items={[
+            {
+              id: "local",
+              name: `${"Documento".repeat(30)}.pdf`,
+              progress: 100,
+              status: "complete",
+            },
+          ]}
+          label="Arquivo local"
+          onFilesChange={() => undefined}
+        />
+        <Button onClick={() => setOpen(false)}>Concluir leitura</Button>
+      </FocusMode>
+    </div>
+  );
+}
+export const LongContent: Story = { render: () => <LongContentExample /> };

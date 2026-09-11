@@ -284,3 +284,30 @@ export const UnknownCurrentItem: Story = {
 export const EmptyNavigation: Story = {
   render: () => <AdminShell brand="hywork" navigation={[]}><main>Nenhuma área disponível</main></AdminShell>,
 };
+
+export const EmployeePortal: Story = {
+  render: () => (
+    <AdminShell
+      brand="hywork"
+      currentItem="day"
+      navigation={[
+        { href: "#portal-day", id: "day", label: "Meu dia" },
+        {
+          href: "#portal-documents",
+          id: "documents",
+          label: "Meus documentos",
+        },
+      ]}
+      surface="portal"
+    >
+      <main id="portal-day">
+        <h1>Meu portal</h1>
+        <p>As mesmas regras de navegação, com densidade de leitura.</p>
+        <section id="portal-documents">
+          <h2>Meus documentos</h2>
+          <p>Consulte os documentos disponíveis na sua organização.</p>
+        </section>
+      </main>
+    </AdminShell>
+  ),
+};

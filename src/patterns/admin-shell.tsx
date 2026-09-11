@@ -27,6 +27,7 @@ export interface AdminShellProps extends React.HTMLAttributes<HTMLDivElement> {
   contentId?: string;
   navigation: AdminNavigationItem[];
   navigationTone?: "neutral" | "inverse";
+  surface?: "admin" | "portal";
   utility?: React.ReactNode;
   workspace?: React.ReactNode;
 }
@@ -41,6 +42,7 @@ export const AdminShell = React.forwardRef<HTMLDivElement, AdminShellProps>(
       currentItem,
       navigation,
       navigationTone = "neutral",
+      surface = "admin",
       utility,
       workspace,
       ...props
@@ -110,11 +112,11 @@ export const AdminShell = React.forwardRef<HTMLDivElement, AdminShellProps>(
     return (
       <Dialog open={mobileOpen} onOpenChange={updateOpen}>
         <div
+          {...props}
           className={cn("hw-admin-shell", className)}
           data-navigation-tone={navigationTone}
-          data-surface="admin"
+          data-surface={surface}
           ref={ref}
-          {...props}
         >
           <a
             className="hw-admin-shell__skip-link"
@@ -165,6 +167,7 @@ export const AdminShell = React.forwardRef<HTMLDivElement, AdminShellProps>(
             aria-describedby={undefined}
             className="hw-shell-navigation-panel"
             data-navigation-tone={navigationTone}
+            data-surface={surface}
             onCloseAutoFocus={(event) => {
               if (focusDesktopAfterResizeRef.current) event.preventDefault();
             }}

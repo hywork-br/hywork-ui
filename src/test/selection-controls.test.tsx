@@ -19,6 +19,11 @@ const options = [
 ];
 
 describe("selection controls", () => {
+  it("renders upload progress with the shared tokenized progress contract", () => {
+    render(<FileUpload label="Arquivo local" onFilesChange={() => undefined} items={[{ id:'a',name:'document.pdf',status:'complete',progress:100 }]} />);
+    expect(screen.getByRole('progressbar', {name:'document.pdf'})).toHaveClass('hw-progress');
+    expect(screen.getByRole('progressbar', {name:'document.pdf'})).toHaveAttribute('aria-valuenow','100');
+  });
   it.each([false, true])(
     "closes and blocks an open selection when disabled (multiple=%s)",
     async (multiple) => {
@@ -266,11 +271,11 @@ describe("selection controls", () => {
       />
     );
     expect(screen.getByRole("progressbar", { name: "a.pdf" })).toHaveAttribute(
-      "value",
+      "aria-valuenow",
       "100"
     );
     expect(screen.getByRole("progressbar", { name: "b.pdf" })).toHaveAttribute(
-      "value",
+      "aria-valuenow",
       "0"
     );
     await user.click(screen.getByRole("button", { name: "Cancelar a.pdf" }));
@@ -290,7 +295,7 @@ describe("selection controls", () => {
       />
     );
     expect(screen.queryByRole("button", { name: /Cancelar|Tentar novamente/ })).not.toBeInTheDocument();
-    expect(screen.getByRole("progressbar")).toHaveAttribute("value", "0");
+    expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "0");
   });
   it("provides a keyboard file picker trigger and disables it with the field", async () => {
     const user = userEvent.setup();
