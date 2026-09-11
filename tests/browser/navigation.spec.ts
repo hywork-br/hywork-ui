@@ -141,10 +141,64 @@ for (const reducedMotion of ["no-preference", "reduce"] as const) {
           name: "Visão geral",
           exact: true,
         });
-        const newPagePromise = page.context().waitForEvent("page");
+        await page.evaluate(() => {
+          const activations: {
+            button: number;
+            insideDestination: boolean;
+            prevented: boolean;
+            type: string;
+          }[] = [];
+          (
+            window as unknown as { __hwModifiedActivations: typeof activations }
+          ).__hwModifiedActivations = activations;
+          const record = (event: MouseEvent) => {
+            activations.push({
+              button: event.button,
+              insideDestination: Boolean(
+                (event.target as Element | null)?.closest(
+                  'a[href="#destination-overview"]'
+                )
+              ),
+              prevented: event.defaultPrevented,
+              type: event.type,
+            });
+          };
+          window.addEventListener("auxclick", record);
+          window.addEventListener("click", record);
+        });
         await modifiedDestination.click({ button: "middle" });
-        const newPage = await newPagePromise;
-        await newPage.close();
+        await modifiedDestination.click({ modifiers: ["ControlOrMeta"] });
+        expect(
+          await page.evaluate(
+            () =>
+              (
+                window as unknown as {
+                  __hwModifiedActivations?: {
+                    button: number;
+                    insideDestination: boolean;
+                    prevented: boolean;
+                    type: string;
+                  }[];
+                }
+              ).__hwModifiedActivations ?? []
+          )
+        ).toEqual([
+          {
+            button: 1,
+            insideDestination: true,
+            prevented: false,
+            type: "auxclick",
+          },
+          {
+            button: 0,
+            insideDestination: true,
+            prevented: false,
+            type: "click",
+          },
+        ]);
+        for (const openedPage of page.context().pages()) {
+          if (openedPage !== page) await openedPage.close();
+        }
         await expect(dialog).toBeVisible();
         const panelBounds = await dialog.boundingBox();
         expect(panelBounds?.y).toBe(0);
