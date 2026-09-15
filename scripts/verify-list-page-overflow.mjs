@@ -17,7 +17,7 @@ for (const [name, engine] of [['chromium', chromium], ['firefox', firefox]]) {
         columns: ['Nome do campo', 'Preenchimento obrigatório', 'Identificador permanente', 'Ações'].map((header, index) => ({ key: String(index), header, render: () => React.createElement('button', null, `Editar propriedade ${index}`) })),
       });
       const markup = renderToStaticMarkup(React.createElement(ListPage, { title: 'Coleção da equipe', items: [table], renderItem: item => React.createElement('div', null, item) }));
-      await page.setContent(`<html data-superficie="admin"><body>${markup}</body></html>`);
+      await page.setContent(`<html data-surface="admin"><body>${markup}</body></html>`);
       await page.addStyleTag({ content: `* { box-sizing: border-box; } body { margin: 0; } ${css}` });
       await page.getByRole('button', { name: 'Editar propriedade 3' }).focus();
       expect(await page.evaluate(() => ({ overflow: document.documentElement.scrollWidth > innerWidth, shifted: scrollX !== 0 })), `${name} ${width}`).toEqual({ overflow: false, shifted: false });

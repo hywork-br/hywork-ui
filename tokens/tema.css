@@ -9,7 +9,7 @@
  * As duas superfícies convivem: o mesmo bundle serve os dois consumidores, e
  * cada aplicação escolhe a sua pelo atributo no elemento raiz.
  *
- *   <html data-superficie="admin">   ou   <html data-superficie="portal">
+ *   <html data-surface="admin">   ou   <html data-surface="portal">
  *
  * Funciona em Tailwind v3 e v4 sem tradução, porque são CSS variables e nada
  * mais. Quem está em v4 e quiser os utilitários automáticos importa também o

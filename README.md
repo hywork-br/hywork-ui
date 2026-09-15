@@ -21,6 +21,22 @@ partir do Git. O preparo compila somente a biblioteca, sem construir o Storybook
 Tags anteriores a essa correção não ganham o novo preparo retroativamente: use
 uma revisão/tag que contenha este contrato ou o tarball já compilado da release.
 
+Esse preparo roda num sub-install do próprio npm. Se o `~/.npmrc` da máquina
+tiver `allow-scripts=<pacote>`, o sub-install recebe a configuração como flag e
+a instalação falha com `EALLOWSCRIPTS` (`--allow-scripts is not allowed in
+project-scoped installs`), mesmo que o pacote listado ali não tenha nenhuma
+relação com este — observado em npm 11.19.0 / Node 26.7.0, 15/09/2026. O
+contorno é instalar com um userconfig isolado:
+
+```bash
+: > /tmp/npmrc-vazio
+npm_config_userconfig=/tmp/npmrc-vazio \
+  npm install "github:hywork-br/hywork-ui#<tag-aprovada>"
+```
+
+Exportar `npm_config_allow_scripts=` vazio não resolve: o sub-install relê o
+arquivo do usuário.
+
 ## Usar
 
 Importe o tema uma única vez no CSS global e marque a superfície na raiz:
