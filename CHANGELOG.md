@@ -34,6 +34,65 @@ tem `npm outdated` para descobrir o que mudou. Aqui é o único lugar.
 - o modo foco não herda a transição centralizada do modal comum;
 - navegação, fluxo e ações não criam overflow no breakpoint mobile.
 
+### Incluído na tag v0.6.0 (15/09)
+
+A entrada acima foi escrita em 01/09. A tag `v0.6.0` é cortada de `main`
+(`3713f80`) e leva também o que entrou depois disso, pelos PRs #7 e #8. Os três
+changesets pendentes são consumidos aqui, sem mudar a versão: o primeiro
+(`quiet-tables-learn`) descreve a biblioteca React, os contratos executáveis do
+Storybook, os padrões de produto e a governança de migração de outubro, tudo já
+registrado acima; os outros dois estão detalhados nesta seção.
+
+**Adicionado**
+
+- `TreeView`, status `draft`: navegação hierárquica controlada
+  (`expandedIds`/`onExpandedChange`, `selectedId`/`onSelectionChange`,
+  `ariaLabel` obrigatório), uma parada de Tab, setas, Home/End, busca por
+  prefixo sem acentos, foco separado da seleção, modo somente leitura e
+  recuperação de foco ao recolher ou remover nós — com spec, contrato no
+  catálogo, entrada no manifesto, story `Navigation` com play e estilos só com
+  tokens existentes (#7);
+- `AdminShell` aceita `surface="admin" | "portal"`, padrão `admin`, aplicado no
+  shell e no painel de navegação móvel em portal (#7).
+
+**Corrigido**
+
+- ações indisponíveis de `Button` slotted são barradas antes dos handlers de
+  captura do filho, o estado de carregamento preserva as dimensões e o
+  `FocusMode` devolve o foco ao acionador por alvo de retorno explícito, com
+  trava de saída opcional;
+- layout de modal, tipografia de portal, badges de grade, referências de
+  espaçamento e estados de carregamento sob movimento reduzido;
+- `TreeNode` vira união discriminada: item desabilitado é folha e exige motivo
+  em `description`, validado também em runtime; o clique de seleção sai do
+  `treeitem` e vai para a linha, então clicar no recuo de um grupo não
+  seleciona o ancestral (#7);
+- `FocusMode` mantém título, corpo e nomes de arquivo longos dentro de viewport
+  estreito, sem empurrar o botão de sair (#7);
+- `FileUpload` desenha o progresso com o `Progress` tokenizado do pacote, em vez
+  do `<progress>` nativo do navegador (#7);
+- os props repassados ao `AdminShell` são aplicados antes de `className`,
+  `data-surface` e `data-navigation-tone`, então um `data-surface` vindo do
+  consumidor não faz o root divergir do portal (#7).
+
+**Documentação e testes**
+
+- contratos compartilhados de jornada e adoção em
+  `governance/pattern-contracts.md`: `TreeView`, autoridade de `data-surface`,
+  foco e `accept` do `FileUpload`, e a diferença entre a prova do Storybook e a
+  prova de jornada no lab — a lista `consumers` do catálogo registra destino de
+  integração, não adoção em produção (#7);
+- o teste de interrupção de movimento segura a animação nativa pausada na
+  metade da duração ativa e espera a reação do app, em vez de disputar com o
+  relógio real e amostrar num quadro fixo (#8);
+- o teste de navegação observa na própria página que o clique do meio e o
+  clique com modificador chegam ao link sem `preventDefault`, em vez de esperar
+  o navegador materializar a aba nova (#8).
+
+As duas últimas mudanças são só de teste: nenhuma linha de código de produção
+foi alterada por elas. Os padrões continuam `draft` até o gate de adoção de
+outubro.
+
 ### Limite
 
 Nenhum produto foi migrado, publicado ou alterado nesta linha.
