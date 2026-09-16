@@ -11,6 +11,7 @@ import {
   FileUpload,
   Input,
   Label,
+  Select,
   Stepper,
   Textarea,
 } from "../src";
@@ -233,3 +234,53 @@ function LongContentExample() {
   );
 }
 export const LongContent: Story = { render: () => <LongContentExample /> };
+
+/* Entrega Select → modo de foco. O Radix põe `pointer-events: none` no `body`
+   enquanto um Select está aberto e devolve ao fechar; se o diálogo montar nos
+   frames entre uma coisa e outra, o conteúdo herda o bloqueio e o clique se
+   perde — `elementsFromPoint` responde o overlay no lugar do controle. A story
+   existe para essa sequência ser clicável por teste, e não só descrita. */
+function SelectHandoffExample() {
+  const [open, setOpen] = useState(false);
+  const [channel, setChannel] = useState("intranet");
+  const [confirmed, setConfirmed] = useState(0);
+  return (
+    <div className="hw-reference-pilot">
+      <Field>
+        <Label htmlFor="handoff-channel">Canal</Label>
+        <Select
+          ariaLabel="Canal"
+          id="handoff-channel"
+          onValueChange={setChannel}
+          options={[
+            { label: "Intranet", value: "intranet" },
+            { label: "E-mail", value: "email" },
+            { label: "TV corporativa", value: "tv" },
+          ]}
+          value={channel}
+        />
+      </Field>
+      <Button onClick={() => setOpen(true)}>Abrir modo de foco</Button>
+      <FocusMode
+        actions={
+          <Button onClick={() => setConfirmed((total) => total + 1)}>Confirmar canal</Button>
+        }
+        back={<Button onClick={() => setOpen(false)} variant="outline">Voltar</Button>}
+        measure="form"
+        onExit={() => setOpen(false)}
+        open={open}
+        title="Entrega do Select para o modo de foco"
+      >
+        <Field>
+          <Label htmlFor="handoff-note">Observação</Label>
+          <Input id="handoff-note" />
+        </Field>
+        <p>Canal escolhido antes de entrar: {channel}.</p>
+        {/* Dentro do diálogo: um modal esconde o resto da página da árvore
+            acessível, e um contador fora dele não teria como ser lido. */}
+        <p role="status">Confirmações registradas: {confirmed}</p>
+      </FocusMode>
+    </div>
+  );
+}
+export const SelectHandoff: Story = { render: () => <SelectHandoffExample /> };

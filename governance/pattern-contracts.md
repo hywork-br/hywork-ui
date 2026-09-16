@@ -44,6 +44,13 @@ Ao redimensionar aberto para desktop, o modal libera scroll/inert e o foco segue
 para o item atual da barra lateral. O consumidor não deve criar outro menu mobile,
 focus trap ou `main` em paralelo.
 
+O conteúdo do diálogo é interativo desde o frame em que monta. O Radix desliga o
+ponteiro no `body` ao abrir o modal e só marca o conteúdo num efeito posterior à
+primeira pintura; nesse intervalo o overlay seria o único elemento com ponteiro e
+o primeiro clique viraria "clique fora", fechando o modo de foco. O padrão
+declara `pointer-events: auto` no conteúdo, sem `!important`, para que o Radix
+continue podendo desligar um diálogo que ficou por baixo de outro.
+
 ## ListPage
 
 O pacote é dono de:

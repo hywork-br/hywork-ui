@@ -578,3 +578,84 @@ for (const surface of ["admin", "portal"] as const) {
     await page.screenshot({ path: testInfo.outputPath(`destructive-outline-${surface}.png`) });
   });
 }
+
+/* Primeiro clique dentro de um diálogo recém-aberto.
+ *
+ * Foi reportado como entrega Select → modo de foco. A medição diz outra coisa: o
+ * mesmo buraco existe sem tocar no Select. O Radix desliga o ponteiro no `body`
+ * ao abrir o modal e só escreve `pointer-events: auto` no CONTEÚDO num efeito
+ * depois da primeira pintura — em Chromium sobram 2 a 3 frames em que o conteúdo
+ * herda `none` e o overlay, que está ABAIXO no z-index, é o único com ponteiro.
+ * Nesses frames o clique do usuário vira "clique fora" e fecha o diálogo. O
+ * Firefox nunca mostrou a janela, o que é exatamente por que isso precisa de um
+ * teste nos dois: um navegador sozinho diria que não existe.
+ */
+for (const viaSelect of [false, true] as const) {
+  test(`dialog content owns the first click after mounting${viaSelect ? " (right after a Select)" : ""}`, async ({
+    page,
+  }) => {
+    await openStory(page, "patterns-modo-foco--select-handoff", "admin");
+    if (viaSelect) {
+      await page.getByRole("combobox", { name: "Canal" }).click();
+      await page.getByRole("option", { name: "E-mail" }).click();
+    }
+
+    /* Amostra TODOS os frames da janela, não um só: medir um frame escolhido a
+       dedo passa verde mesmo com o defeito presente — foi o que este teste fez
+       na primeira versão, e a mutação do CSS provou que ele não pegava nada. */
+    await page.evaluate(() => {
+      (window as unknown as { __mountWindow?: Promise<unknown> }).__mountWindow = new Promise(
+        (resolve) => {
+          const frames: Array<{ frame: number; inline: string; owner: string; pointerEvents: string }> = [];
+          const observer = new MutationObserver(() => {
+            const content = document.querySelector<HTMLElement>(".hw-focus-mode");
+            if (!content) return;
+            observer.disconnect();
+            const sample = (frame: number) => {
+              const action = [...content.querySelectorAll("button")].find((button) =>
+                button.textContent?.includes("Confirmar"),
+              );
+              if (action) {
+                const box = action.getBoundingClientRect();
+                const top = document.elementsFromPoint(
+                  box.left + box.width / 2,
+                  box.top + box.height / 2,
+                )[0];
+                frames.push({
+                  frame,
+                  inline: content.style.pointerEvents,
+                  owner: top ? `${top.tagName}.${String(top.className).split(" ")[0]}` : "",
+                  pointerEvents: getComputedStyle(content).pointerEvents,
+                });
+              }
+              if (frame < 5) requestAnimationFrame(() => sample(frame + 1));
+              else resolve(frames);
+            };
+            sample(0);
+          });
+          observer.observe(document.body, { childList: true, subtree: true });
+        },
+      );
+    });
+
+    await page.getByRole("button", { name: "Abrir modo de foco" }).click();
+    const window_ = (await page.evaluate(
+      () => (window as unknown as { __mountWindow: Promise<unknown> }).__mountWindow,
+    )) as Array<{ frame: number; inline: string; owner: string; pointerEvents: string }>;
+    console.log(`dialog mount window (select=${viaSelect}): ${JSON.stringify(window_)}`);
+
+    expect(window_.length).toBeGreaterThan(0);
+    for (const frame of window_) {
+      const detail = JSON.stringify(frame);
+      expect(frame.pointerEvents, detail).toBe("auto");
+      expect(frame.owner, `o overlay não pode receber o ponto: ${detail}`).not.toContain(
+        "hw-dialog__overlay",
+      );
+    }
+
+    // E o clique tem que CONTAR, em vez de fechar o diálogo por fora.
+    await page.getByRole("button", { name: "Confirmar canal" }).click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+    await expect(page.getByRole("status")).toHaveText("Confirmações registradas: 1");
+  });
+}

@@ -286,6 +286,16 @@
   transform: translate(-50%, -50%);
   width: 100%;
   z-index: 51;
+  /* Radix desliga o ponteiro no `body` ao abrir o modal e só escreve
+     `pointer-events: auto` NESTE elemento num efeito depois da primeira
+     pintura. Em Chromium isso deixa 2 a 3 frames (~28-43ms, medido em 16/09)
+     com o conteúdo herdando `none` enquanto o overlay, que fica abaixo no
+     z-index, é o único com ponteiro: `elementsFromPoint` responde o overlay e o
+     primeiro clique do usuário vira "clique fora", que FECHA o diálogo. A regra
+     abaixo vale só enquanto o estilo inline do Radix não existe — quando ele
+     chega, inline vence, inclusive para dizer `none` a um diálogo que ficou por
+     baixo de outro. Não é `!important` justamente para não roubar essa decisão. */
+  pointer-events: auto;
 }
 .hw-dialog__title { font-family: var(--hw-font-heading); font-size: var(--hw-text-xl); margin: 0; }
 .hw-dialog__description { color: var(--hw-text-muted); margin: 0; }

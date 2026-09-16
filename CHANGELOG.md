@@ -69,6 +69,24 @@ nó do consumidor e o `gap` que faltava no `Badge`.
   rótulo vizinho começa a 16px do centro da caixa, então um alvo de 44px roubaria
   6px do clique do controle anterior. O alvo confortável de 32px (admin) e 44px
   (portal, mobile e ponteiro grosso) continua sendo o rótulo clicável.
+- **O primeiro clique dentro de um diálogo recém-aberto caía no overlay.**
+  Chegou reportado como entrega `Select` → `FocusMode`, mas a medição por frame
+  desmentiu a causa: o buraco existe **sem tocar no Select**, e existe nos dois
+  navegadores. O Radix desliga o ponteiro no `body` ao abrir o modal e só escreve
+  `pointer-events: auto` no CONTEÚDO num efeito depois da primeira pintura — 2 a
+  3 frames (~28–43 ms) em Chromium, 1 a 2 em Firefox, em que o conteúdo herda
+  `none` e o overlay, que está ABAIXO no z-index, é o único elemento com
+  ponteiro. Nesses frames `elementsFromPoint` responde `div.hw-dialog__overlay` e
+  o clique do usuário vira "clique fora", que fecha o diálogo.
+  `.hw-dialog__content` passa a declarar `pointer-events: auto`. A regra vale
+  apenas enquanto o estilo inline do Radix não existe; quando ele chega, inline
+  vence — inclusive para dizer `none` a um diálogo que ficou por baixo de outro.
+  Não é `!important` justamente para não roubar essa decisão, e não é
+  `setTimeout`, porque a espera fixa não tem como saber de que lado do efeito
+  está. Story `Patterns/Modo foco · SelectHandoff` e guarda em
+  `tests/browser/interactions.spec.ts`, que amostra **todos** os frames da janela:
+  a primeira versão media um frame escolhido a dedo e passava verde com o defeito
+  presente — removida a linha do CSS, a guarda atual reprova nos quatro combos.
 - **`Badge` colava o ícone no rótulo.** O selo era `inline-flex` sem `gap`, e o
   consumidor corrigia com margem no glifo. O espaço passa a ser do selo
   (`--hw-space-1`) e o ícone entra na escala pequena (`--hw-space-3`), para a
