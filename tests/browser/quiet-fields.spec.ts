@@ -1,6 +1,22 @@
 import { expect, test } from "@playwright/test";
 
 import { expectSettled, openStory } from "./helpers";
+import { contrastRatio } from "../../src/lib/theme-validation";
+
+/** Preenchimento, baseline e a superfície REALMENTE pintada em volta — é contra
+ *  ela que a WCAG 1.4.11 mede o limite do controle, e era ela que o gate de
+ *  token não olhava. */
+const quietPaint = (element: Element) => {
+  const style = getComputedStyle(element);
+  let surface: Element | null = element.parentElement;
+  let around = "";
+  while (surface) {
+    around = getComputedStyle(surface).backgroundColor;
+    if (around !== "rgba(0, 0, 0, 0)" && around !== "transparent") break;
+    surface = surface.parentElement;
+  }
+  return { around, background: style.backgroundColor, baseline: style.borderBottomColor };
+};
 
 const storyId = "contracts-quiet-fields--state-matrix";
 
@@ -77,23 +93,20 @@ for (const surface of ["admin", "portal"] as const) {
       ),
     ).toBe("quiet-status-contextual");
     const [formPaint, contextualPaint] = await Promise.all([
-      formSelect.evaluate((element) => {
-        const style = getComputedStyle(element);
-        return {
-          background: style.backgroundColor,
-          baseline: style.borderBottomColor,
-        };
-      }),
-      contextualSelect.evaluate((element) => {
-        const style = getComputedStyle(element);
-        return {
-          background: style.backgroundColor,
-          baseline: style.borderBottomColor,
-        };
-      }),
+      formSelect.evaluate(quietPaint),
+      contextualSelect.evaluate(quietPaint),
     ]);
+    /* O que separa filtro de campo é o PREENCHIMENTO: o filtro é transparente
+       sobre o chrome, o campo é preenchido. O que NÃO pode diferir é existir:
+       apagar a baseline do filtro deixava o controle a 1:1 contra o entorno em
+       seis coleções, com o gate verde. */
     expect(contextualPaint.background).not.toBe(formPaint.background);
-    expect(contextualPaint.baseline).not.toBe(formPaint.baseline);
+    for (const paint of [formPaint, contextualPaint]) {
+      // Baseline transparente não tem razão de contraste: vale zero, não "sem
+      // dado" — foi exatamente assim que o controle sumiu e o gate ficou verde.
+      const boundary = contrastRatio(paint.baseline, paint.around) ?? 0;
+      expect(boundary, `limite do controle: ${JSON.stringify(paint)}`).toBeGreaterThanOrEqual(3);
+    }
   });
 
   for (const width of [390, 1440]) {

@@ -5,6 +5,90 @@ Formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Este arquivo existe porque a distribuição é por **tag git**: o consumidor não
 tem `npm outdated` para descobrir o que mudou. Aqui é o único lugar.
 
+## [0.6.1] — 2026-09-15
+
+Lado design system do review de 15/09 (`team/ux-ui/reviews/2026-09-15-experiments-review`),
+que mediu 27 rotas × 6 viewports do consumidor e isolou no Storybook o que nasce
+aqui. Sem mudança de API que quebre consumidor: tudo é prop nova ou correção de
+contrato.
+
+### Corrigido
+
+- **Campo quieto sem limite visível.** A `FilterBar` apagava a borda da busca e
+  dos selects (`border-color: transparent`), e o entorno do admin é o mesmo
+  cinza do preenchimento: o controle media **1,00:1** contra o piso de 3:1 da
+  WCAG 1.4.11, em 78 de 162 combos e 6 coleções — e **1,10:1** mesmo na story
+  isolada, de entorno branco. A baseline volta; o que separa filtro de campo de
+  formulário passa a ser o preenchimento, não a ausência de limite. Medido
+  agora, no render: **3,310:1** sobre a superfície sutil e **3,641:1** sobre
+  branco.
+- **Trilho de progresso em duas linhas.** O `Stepper` só compactava em
+  `@media (max-width: 48rem)` — viewport —, enquanto o contêiner real é o
+  formulário, de largura igual em 1440 e em 1024. A adaptação passa a ser por
+  CONTÊINER (`container-type: inline-size`), e o trilho troca de modo em vez de
+  quebrar: uma linha em 320, 390, 672, 768, 1024 e 1440, completo quando os
+  nomes cabem e compacto (marcadores numerados + nome do passo atual) quando
+  não. O rótulo de cada passo continua no nome acessível do botão.
+- **Foco inicial do modo de foco caía na saída.** `FocusMode` leva o foco ao
+  primeiro tabbable do corpo (R29); a saída só recebe o foco quando o corpo não
+  oferece parada de teclado.
+- **Item ativo da navegação só por cor.** `AdminShell` passa a marcar o item
+  atual com filete de acento de 3px, fundo `--hw-nav-active` e peso maior que o
+  dos vizinhos (R2). O tom `inverse` usa o mesmo tratamento em vez de pintar o
+  item inteiro com a primária; o laranja é o único da tela.
+- **Margem física em layout localizável:** `margin-left` vira
+  `margin-inline-start` na barra de filtros.
+
+### Adicionado
+
+- `FocusMode` ganha `back` e `actions`: uma faixa fixa (terceira linha do grid
+  do diálogo, fora do corpo que rola) com Voltar à esquerda e primária à direita
+  em todos os passos (R27). A medição encontrava a primária abaixo da dobra na
+  última etapa nos seis viewports.
+- `FocusMode` ganha `measure="form" | "page"`: a medida de leitura do formulário
+  (48rem) vem do padrão, sem o consumidor empilhar um segundo `max-width` — eram
+  dois tetos concorrentes deixando o formulário com 46,7% da tela. Quando o
+  corpo hospeda também o trilho de progresso, a classe `hw-focus-mode__content`
+  põe a medida na coluna dos campos e deixa o trilho com a largura do modo de
+  foco: medida de leitura é regra de prosa, não de chrome.
+- Tokens `--hw-nav-active`, `--hw-nav-active-fg` e `--hw-nav-active-rail`
+  (cores, gateadas) e `--hw-measure-page`, `--hw-measure-form`,
+  `--hw-nav-active-rail-width` (medidas).
+- Story `Patterns/Stepper · FullWidth`, para o modo completo ao lado do
+  `Constrained`, que é o contêiner de 672px onde o trilho quebrava.
+- `FocusMode` ganha `titleAs` (`h1`–`h6`, padrão `h2`): o consumidor decide o
+  nível do título da tarefa sem perder o nome acessível do diálogo. Um modo de
+  foco toma a tela inteira, e o esboço de headings costuma querer `h1` ali.
+- Alvo do `Switch` sobe para 24px (WCAG 2.2, 2.5.8) por pseudo-elemento, sem
+  mudar os 32×20 desenhados. Medido em Chromium e Firefox, em 390 e 1440.
+
+### Conhecido
+
+- **Checkbox e radio continuam com a caixa de 16px.** Com aparência nativa eles
+  ignoram borda, padding e pseudo-elemento nos dois navegadores (medido em
+  15/09); ampliar o alvo do próprio controle exigiria `appearance: none` e
+  desenho à mão, perdendo `accent-color` — decisão de desenho, não de correção.
+  O que responde pela WCAG 2.5.8 hoje é a exceção de espaçamento (32px entre
+  centros, contra os 24px do círculo da regra) e o rótulo clicável, que ocupa a
+  linha e mede 32px no admin e 44px abaixo de 640px. Os três estão medidos em
+  `tests/browser/interactions.spec.ts`.
+
+### Alterado
+
+- `--hw-gray` escurece de `#8c8c8c` para `#868686`: a baseline do campo passava
+  o piso de 3:1 com 0,06 de margem sobre a superfície do admin. Agora
+  **3,310:1** ali e 3,641:1 sobre branco — o cinza mais claro que dá 3,3:1 nas
+  duas superfícies.
+- `--hw-gray-text` escurece de `#707070` para `#6e6e6e` (decisão do Vitor): o
+  texto de apoio media **4,50:1 exato** sobre `#f4f4f4`, AA com margem 0,00.
+  Agora **4,636:1** ali e **5,099:1** sobre branco — o cinza mais claro que dá
+  4,6:1 e 5:1, respectivamente.
+- O gate `check-tokens` passa a resolver papéis DENTRO da superfície (admin e
+  portal) e mede os pares que a tela renderiza: `--hw-chrome` × borda de campo,
+  texto de apoio e filete do item ativo, mais `--hw-surface-subtle` × borda de
+  campo. O piso do texto de apoio sobre `#f4f4f4` sobe para 4,6. Três mutações
+  de PAPEL provam a guarda em `scripts/token-usage.test.mjs`.
+
 ## [0.6.0] — 2026-09-01
 
 ### Adicionado

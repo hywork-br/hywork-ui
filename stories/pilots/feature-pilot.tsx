@@ -94,6 +94,7 @@ function FeaturePilotContent({
   const [confirmExit, setConfirmExit] = useState(false);
   const [failNext, setFailNext] = useState(false);
   const [returnToSearch, setReturnToSearch] = useState(false);
+  const editorFormId = `edit-${config.slug}-form`;
   const searchRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const continueRef = useRef<HTMLButtonElement>(null);
@@ -476,8 +477,34 @@ function FeaturePilotContent({
         </label>
       </details>
       <FocusMode
+        actions={
+          draft && !confirmExit ? (
+            <Button form={editorFormId} loading={saving} type="submit">
+              {error
+                ? "Tentar novamente"
+                : creating
+                  ? config.initialStatus === "draft"
+                    ? "Salvar rascunho e voltar"
+                    : "Salvar configuração e voltar"
+                  : "Salvar alterações e voltar"}
+            </Button>
+          ) : null
+        }
+        back={
+          draft && !confirmExit ? (
+            <Button
+              disabled={saving}
+              onClick={requestExit}
+              type="button"
+              variant="outline"
+            >
+              Cancelar
+            </Button>
+          ) : null
+        }
         description="Demonstração local · os dados ficam nesta aba"
         exitDisabled={saving}
+        measure="form"
         onExit={requestExit}
         open={!!draft}
         returnFocusRef={returnToSearch ? searchRef : undefined}
@@ -490,18 +517,26 @@ function FeaturePilotContent({
         {draft && (
           <form
             className="hw-reference-editor"
+            id={editorFormId}
             onSubmit={(event) => {
               event.preventDefault();
               void save();
             }}
           >
             {confirmExit ? (
+              /* Confirmação que bloqueia a saída é alertdialog, com nome e
+                 descrição apontados: alert sozinho anuncia como aviso e não
+                 como decisão que espera resposta (WAI-ARIA APG). */
               <section
+                aria-describedby={`${editorFormId}-confirm-text`}
+                aria-labelledby={`${editorFormId}-confirm-title`}
                 className="hw-reference-confirm"
-                aria-label="Confirmar saída"
+                role="alertdialog"
               >
-                <h2>Descartar as alterações?</h2>
-                <p>
+                <h2 id={`${editorFormId}-confirm-title`}>
+                  Descartar as alterações?
+                </h2>
+                <p id={`${editorFormId}-confirm-text`}>
                   O que você editou ainda não foi salvo. Você pode continuar de
                   onde parou.
                 </p>
@@ -597,25 +632,6 @@ function FeaturePilotContent({
                     </p>
                   )}
                 </div>
-                <footer className="hw-reference-editor__footer">
-                  <Button
-                    disabled={saving}
-                    onClick={requestExit}
-                    type="button"
-                    variant="outline"
-                  >
-                    Cancelar
-                  </Button>
-                  <Button loading={saving} type="submit">
-                    {error
-                      ? "Tentar novamente"
-                      : creating
-                        ? config.initialStatus === "draft"
-                          ? "Salvar rascunho e voltar"
-                          : "Salvar configuração e voltar"
-                        : "Salvar alterações e voltar"}
-                  </Button>
-                </footer>
               </>
             )}
           </form>

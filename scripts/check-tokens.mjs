@@ -213,17 +213,28 @@ if (falhas.length) {
 }
 
 // 3. Contraste dos pares bg/fg
-const valorDe = (token, vistos = new Set()) => {
+/**
+ * Resolve um papel até o hex. `camada` é o CSS de uma superfície (admin ou
+ * portal) consultado ANTES da semântica: papéis como --hw-chrome só existem
+ * ali, e resolvem em valores diferentes por superfície. Sem isso o gate não
+ * conseguia medir a superfície que a tela de fato renderiza — foi assim que
+ * o campo quieto do admin ficou a 1:1 contra o entorno com o CI verde.
+ */
+const valorDe = (token, camada = null, vistos = new Set()) => {
   if (vistos.has(token)) return null; // ciclo: já reportado acima
   vistos.add(token);
   const direto = primitivos.match(
     new RegExp(`^\\s*${token}:\\s*(#[0-9a-fA-F]{3,8})`, "m")
   );
   if (direto) return direto[1];
-  const ref = semantico.match(
-    new RegExp(`^\\s*${token}:\\s*var\\((--hw-[\\w-]+)\\)`, "m")
-  );
-  return ref ? valorDe(ref[1], vistos) : null;
+  for (const css of [camada, semantico]) {
+    if (!css) continue;
+    const ref = css.match(
+      new RegExp(`^\\s*${token}:\\s*var\\((--hw-[\\w-]+)\\)`, "m")
+    );
+    if (ref) return valorDe(ref[1], camada, vistos);
+  }
+  return null;
 };
 
 const canal = (c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
@@ -277,7 +288,7 @@ const PARES = [
   [
     "--hw-surface-subtle",
     "--hw-text-muted",
-    4.5,
+    4.6,
     "texto de apoio sobre superfície sutil",
   ],
   [
@@ -296,8 +307,11 @@ const PARES = [
   ["--hw-card", "--hw-card-fg", 4.5, "texto em cartão"],
   ["--hw-surface", "--hw-input-border", 3.0, "limite visível de campo"],
   ["--hw-input-surface", "--hw-input-border", 3.0, "limite sobre campo preenchido"],
+  ["--hw-surface-subtle", "--hw-input-border", 3.0, "limite de campo sobre superfície sutil"],
+  ["--hw-nav-active", "--hw-nav-active-fg", 4.5, "item ativo da navegação"],
+  ["--hw-nav-active", "--hw-nav-active-rail", 3.0, "filete do item ativo (WCAG 1.4.11)"],
   ["--hw-input-surface", "--hw-input-surface-fg", 4.5, "texto em campo preenchido"],
-  ["--hw-input-surface", "--hw-text-muted", 4.5, "placeholder em campo preenchido"],
+  ["--hw-input-surface", "--hw-text-muted", 4.6, "placeholder em campo preenchido"],
   ["--hw-surface", "--hw-focus", 3.0, "anel de foco (WCAG 1.4.11)"],
   ["--hw-danger", "--hw-danger-fg", 3.0, "estado de erro"],
   ["--hw-warning", "--hw-warning-fg", 3.0, "estado de atenção"],
@@ -322,26 +336,49 @@ const PARES = [
   ["--hw-neutral-soft", "--hw-neutral-soft-fg", 4.5, "selo suave neutro"],
 ];
 
-for (const [bg, fg, piso, papel] of PARES) {
-  const [vbg, vfg] = [valorDe(bg), valorDe(fg)];
+/** Pares que só existem DENTRO de uma superfície. O mesmo papel resolve em
+ *  valores diferentes no admin e no portal, e é a superfície renderizada que
+ *  chega ao olho: no admin o chrome é o mesmo cinza do preenchimento do campo,
+ *  então medir a baseline só contra branco aprova um campo invisível. */
+const CAMADAS_DE_SUPERFICIE = { admin, portal };
+const PARES_DE_SUPERFICIE = [
+  ["--hw-chrome", "--hw-chrome-fg", 4.5, "texto sobre o chrome"],
+  ["--hw-chrome", "--hw-input-border", 3.0, "limite de campo sobre o chrome"],
+  ["--hw-chrome", "--hw-text-muted", 4.6, "texto de apoio sobre o chrome"],
+  [
+    "--hw-chrome",
+    "--hw-nav-active-rail",
+    3.0,
+    "filete do item ativo contra o chrome",
+  ],
+];
+
+const medir = (bg, fg, piso, papel, camada = null, superficie = "") => {
+  const [vbg, vfg] = [valorDe(bg, camada), valorDe(fg, camada)];
+  const nome = superficie ? `${papel} (${superficie})` : papel;
   if (!vbg || !vfg) {
     /* Falha dura, e não aviso: um par que não resolve é um par que NÃO FOI
        checado. Tratar isso como ruído foi o que deixou o gate de contraste
        passar verde sem avaliar cor nenhuma depois de um rename. */
     falhas.push(
-      `contraste ${papel}: token não resolve (${!vbg ? bg : fg}) — ` +
+      `contraste ${nome}: token não resolve (${!vbg ? bg : fg}) — ` +
         `o par não foi verificado, o que é pior que reprovar`
     );
-    continue;
+    return;
   }
   const r = razao(vbg, vfg);
   if (r < piso) {
     falhas.push(
-      `contraste ${papel}: ${vbg} sobre ${vfg} dá ${r.toFixed(2)}:1, ` +
+      `contraste ${nome}: ${vbg} sobre ${vfg} dá ${r.toFixed(2)}:1, ` +
         `abaixo do piso de ${piso}:1`
     );
   }
-}
+};
+
+for (const [bg, fg, piso, papel] of PARES) medir(bg, fg, piso, papel);
+for (const [superficie, css] of Object.entries(CAMADAS_DE_SUPERFICIE))
+  for (const [bg, fg, piso, papel] of PARES_DE_SUPERFICIE)
+    medir(bg, fg, piso, papel, css, superficie);
 
 if (falhas.length) {
   console.error("FAIL tokens:");

@@ -368,3 +368,95 @@ for (const direction of ["entry", "exit"] as const) {
     await expect(page.locator("[data-pilot-motion]")).toHaveAttribute("data-pilot-motion", "full");
   });
 }
+
+/**
+ * A faixa de ações é linha do diálogo, não fim do formulário. A medição de
+ * 15/09 encontrou a primária abaixo da dobra na etapa 2 em cinco dos seis
+ * viewports e na última etapa em TODOS — o passo em que o usuário salva era o
+ * passo em que o botão de salvar ficava mais longe da vista.
+ */
+for (const width of [1440, 1280, 1024, 768, 390, 320]) {
+  test(`${width}: back and primary stay visible in every step of the focus flow`, async ({ page }, testInfo) => {
+    await page.setViewportSize({ width, height: width < 768 ? 568 : 800 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await openStory(page, "patterns-modo-foco--criacao-de-campanha", "admin");
+    await page.getByRole("button", { name: "Criar campanha", exact: true }).click();
+    const dialog = page.getByRole("dialog", { name: "Criar campanha" });
+    // R29: o foco entra no primeiro campo do corpo, não na saída.
+    await expect(dialog.getByLabel("Canal")).toBeFocused();
+    const band = page.locator(".hw-focus-mode__actions");
+    for (const step of ["Continuar para público", "Continuar para conteúdo", "Revisar campanha", "Salvar rascunho local"]) {
+      const primary = page.getByRole("button", { name: step, exact: true });
+      await expect(primary).toBeInViewport({ ratio: 1 });
+      await expect(page.getByRole("button", { name: "Voltar", exact: true })).toBeInViewport({ ratio: 1 });
+      const geometry = await band.evaluate((element) => {
+        const rect = element.getBoundingClientRect();
+        return { bottom: rect.bottom, height: rect.height, inner: window.innerHeight };
+      });
+      expect(geometry.bottom).toBeLessThanOrEqual(geometry.inner + 1);
+      expect(geometry.height).toBeGreaterThan(0);
+      if (step === "Salvar rascunho local") break;
+      if (step === "Revisar campanha") {
+        await page.getByLabel("Título da campanha").fill("Integração");
+        await page.getByLabel("Mensagem").fill("Rascunho local.");
+      }
+      await primary.click();
+    }
+    await page.screenshot({ path: testInfo.outputPath(`focus-actions-${width}.png`) });
+  });
+}
+
+/**
+ * Alvo de toque das seleções. A caixa nativa tem 16px de desenho e não aceita
+ * borda, padding nem pseudo-elemento (medido nos dois navegadores): o que
+ * precisa medir é o que RECEBE o clique. Duas coisas, então — a exceção de
+ * espaçamento da WCAG 2.5.8 (círculos de 24px que não se cruzam) e o rótulo
+ * clicável, que é a linha inteira e respeita o mínimo da superfície. O switch,
+ * esse sim, leva o alvo a 24px por pseudo-elemento.
+ */
+for (const width of [1440, 390]) {
+  test(`${width}: selection controls hand the click to a target that meets the minimum`, async ({ page }, testInfo) => {
+    await page.setViewportSize({ width, height: width < 768 ? 844 : 900 });
+    await openStory(page, "components-seleção--interactive", "admin");
+    const minimum = width < 640 ? 44 : 32;
+    const measured = await page.evaluate((floor) => {
+      const controls = [...document.querySelectorAll<HTMLInputElement>(".hw-choice")];
+      const centre = (element: Element) => {
+        const box = element.getBoundingClientRect();
+        return { x: box.left + box.width / 2, y: box.top + box.height / 2, box };
+      };
+      return controls.map((input) => {
+        const own = centre(input);
+        const label = input.closest("label");
+        const labelBox = label?.getBoundingClientRect();
+        const reach = (dx: number, dy: number) =>
+          document.elementFromPoint(own.x + dx, own.y + dy) === input;
+        // Exceção de espaçamento: nenhum outro controle dentro de 24px de centro a centro.
+        const crowded = controls.some((other) => {
+          if (other === input) return false;
+          const neighbour = centre(other);
+          return Math.hypot(neighbour.x - own.x, neighbour.y - own.y) < 24;
+        });
+        return {
+          name: input.getAttribute("aria-label") ?? label?.textContent?.trim().slice(0, 28) ?? input.type,
+          box: [Math.round(own.box.width), Math.round(own.box.height)],
+          label: labelBox ? [Math.round(labelBox.width), Math.round(labelBox.height)] : null,
+          switch: input.classList.contains("hw-switch"),
+          hit24: reach(-11, -11) && reach(11, 11),
+          spaced: !crowded,
+          labelMeets: labelBox ? labelBox.height >= floor : false,
+        };
+      });
+    }, minimum);
+    console.log(`selection targets ${width}: ${JSON.stringify(measured)}`);
+    expect(measured.length).toBeGreaterThan(0);
+    for (const control of measured) {
+      const detail = JSON.stringify(control);
+      // Ou o próprio alvo tem 24px, ou os círculos de 24px não se cruzam.
+      expect(control.hit24 || control.spaced, `WCAG 2.5.8: ${detail}`).toBe(true);
+      expect(control.labelMeets, `rótulo clicável: ${detail}`).toBe(true);
+      if (control.switch) expect(control.hit24, `alvo do switch: ${detail}`).toBe(true);
+    }
+    await page.screenshot({ path: testInfo.outputPath(`selection-targets-${width}.png`) });
+  });
+}

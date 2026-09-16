@@ -1,6 +1,6 @@
 {
   "name": "@hywork/ui",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Design system da Hywork — tokens, componentes React e padrões de produto",
   "private": true,
   "type": "module",

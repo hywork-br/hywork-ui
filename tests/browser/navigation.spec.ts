@@ -307,3 +307,41 @@ for (const reducedMotion of ["no-preference", "reduce"] as const) {
     }
   });
 }
+
+/**
+ * R2: o item ativo não é distinguido só por cor. Filete de acento na borda
+ * inicial, fundo próprio e peso maior que o dos vizinhos — e o filete é o único
+ * laranja do chrome, nos dois tons de navegação.
+ */
+for (const [story, tone] of [
+  ["grouped-responsive", "inverse"],
+  ["employee-portal", "neutral"],
+] as const) {
+  test(`${tone} navigation marks the current item with more than colour`, async ({ page }, testInfo) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await openStory(page, `navigation-administration--${story}`, "admin");
+    const current = page.locator('.hw-admin-shell__sidebar .hw-shell-navigation a[aria-current="page"]');
+    const sibling = page.locator('.hw-admin-shell__sidebar .hw-shell-navigation a:not([aria-current="page"])').first();
+    const paint = await current.evaluate((element) => {
+      const style = getComputedStyle(element);
+      const other = element.parentElement?.querySelector<HTMLElement>('a:not([aria-current="page"])');
+      const otherStyle = other ? getComputedStyle(other) : null;
+      return {
+        rail: style.borderInlineStartWidth,
+        railColor: style.borderInlineStartColor,
+        background: style.backgroundColor,
+        weight: Number(style.fontWeight),
+        siblingBackground: otherStyle?.backgroundColor,
+        siblingWeight: Number(otherStyle?.fontWeight ?? 0),
+      };
+    });
+    expect(paint.rail).toBe("3px");
+    expect(paint.railColor).toBe("rgb(233, 80, 27)");
+    expect(paint.background).toBe("rgb(13, 51, 71)");
+    expect(paint.background).not.toBe(paint.siblingBackground);
+    expect(paint.weight).toBeGreaterThan(paint.siblingWeight);
+    await expect(sibling).toBeVisible();
+    await page.screenshot({ path: testInfo.outputPath(`navigation-current-${tone}.png`) });
+  });
+}

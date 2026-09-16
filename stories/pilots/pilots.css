@@ -90,12 +90,12 @@
   font-size: var(--hw-text-base);
   margin: 0;
 }
+/* A medida de leitura vem do padrão (measure="form"); empilhar um segundo teto
+   aqui foi o que deixou o formulário com metade da tela que o modo de foco
+   tomou. */
 .hw-reference-editor {
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
-  min-height: 100%;
-  max-width: 52rem;
 }
 .hw-reference-editor__content {
   display: grid;
@@ -126,17 +126,6 @@
   gap: var(--hw-space-6);
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
-.hw-reference-editor__footer {
-  background: var(--hw-surface);
-  border-top: 1px solid var(--hw-border);
-  bottom: 0;
-  display: flex;
-  gap: var(--hw-space-3);
-  justify-content: flex-end;
-  margin-top: auto;
-  padding-block: var(--hw-space-4);
-  position: sticky;
-}
 .hw-reference-confirm {
   padding-block: var(--hw-space-8);
 }
@@ -158,11 +147,5 @@
   .hw-reference-editor__grid {
     gap: var(--hw-space-4);
     grid-template-columns: minmax(0, 1fr);
-  }
-  .hw-reference-editor__footer {
-    flex-wrap: wrap;
-  }
-  .hw-reference-editor__footer > * {
-    flex: 1 1 auto;
   }
 }

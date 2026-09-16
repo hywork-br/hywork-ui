@@ -81,3 +81,61 @@ for (const [name, file, mutation, expected] of [
     }
   });
 }
+
+/**
+ * Mutação de PAPEL, não de sintaxe. Os casos acima provam que o gate acusa
+ * token inexistente e cor literal; estes provam que ele acusa a DECISÃO — um
+ * limite de campo que some contra a superfície renderizada e um texto de apoio
+ * de volta ao piso exato. A guarda de contraste passou verde por uma versão
+ * inteira medindo pares que a tela não renderiza; sem mutação isso não aparece.
+ */
+for (const [name, from, to, expected] of [
+  [
+    "limite de campo igual ao preenchimento",
+    "--hw-input-border: var(--hw-gray);",
+    "--hw-input-border: var(--hw-gray-tint);",
+    /limite de campo sobre o chrome \(admin\)/,
+  ],
+  [
+    "texto de apoio de volta ao piso exato",
+    "--hw-text-muted: var(--hw-gray-text);",
+    "--hw-text-muted: var(--hw-gray-strong);",
+    /texto de apoio sobre o chrome \(admin\)/,
+  ],
+  [
+    "filete do item ativo sem contraste sobre o próprio fundo",
+    "--hw-nav-active-rail: var(--hw-orange);",
+    "--hw-nav-active-rail: var(--hw-rust-text);",
+    /filete do item ativo/,
+  ],
+]) {
+  test(`token gate rejects ${name}`, () => {
+    const fixture = mkdtempSync(path.join(tmpdir(), "hywork-token-role-"));
+    try {
+      for (const entry of [
+        "tokens",
+        "src",
+        "stories",
+        "README.md",
+        "AGENTS.md",
+        "CONTRIBUTING.md",
+      ])
+        cpSync(path.join(root, entry), path.join(fixture, entry), {
+          recursive: true,
+        });
+      const target = path.join(fixture, "tokens/semantico.css");
+      const prior = readFileSync(target, "utf8");
+      assert.ok(prior.includes(from), `${from} must exist to be mutated`);
+      writeFileSync(target, prior.replace(from, to));
+      const result = spawnSync(
+        process.execPath,
+        [path.join(root, "scripts/check-tokens.mjs"), fixture],
+        { encoding: "utf8" }
+      );
+      assert.equal(result.status, 1, result.stdout + result.stderr);
+      assert.match(result.stderr, expected);
+    } finally {
+      rmSync(fixture, { recursive: true, force: true });
+    }
+  });
+}
