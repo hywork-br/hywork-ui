@@ -5,6 +5,126 @@ Formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Este arquivo existe porque a distribuição é por **tag git**: o consumidor não
 tem `npm outdated` para descobrir o que mudou. Aqui é o único lugar.
 
+## [0.6.2] — 2026-09-16
+
+Backlog do review de 15/09 no lado do design system, mais o que o consumidor
+reportou contornando no código dele. Sem breaking change: uma variante nova de
+`Button`, checkbox e radio desenhados pelo DS em vez do navegador, uma forma nova
+(opcional) do slot `workspace` do `AdminShell`, um seletor que deixa de alcançar
+nó do consumidor e o `gap` que faltava no `Badge`.
+
+### Adicionado
+
+- **`Button` ganha `variant="danger-outline"`** — a ação destrutiva em CONTORNO
+  que a R13 pede. Borda e texto em `--hw-danger-strong` sobre `--hw-surface`;
+  hover preenche com o par `--hw-danger-soft`/`--hw-danger-soft-fg`; o foco usa o
+  anel do sistema. Medido no render, em admin e portal, em Chromium e Firefox:
+  em repouso, texto **5,15:1** (piso 4,5 do texto pequeno) e limite do controle
+  **5,15:1** contra o entorno branco da story — **4,68:1** contra
+  `--hw-surface-subtle`, que é o entorno real do admin (piso 3:1 da WCAG 1.4.11);
+  no hover, campo `--hw-danger-soft` com **4,50:1** de texto e de borda; anel de
+  foco **3,73:1** contra a superfície. O hover fica na margem do piso porque usa
+  o par suave de erro que o sistema já declara e já gateia — o cinza neutro de
+  hover das outras variantes daria 4,68:1, mas apagaria o único canal que diz
+  "isto destrói" justo no instante do ponteiro. A API continua um enum plano de
+  variantes: não entrou prop de tom cruzando com a variante, porque só uma
+  combinação de perigo é aprovada. `danger` sólido permanece para a tela cujo
+  resultado desejado É destruir.
+- Story `Contracts/Core families · DestructiveChoice` com o par da R13:
+  destrutiva em contorno e afirmativa `primary` em colunas iguais, custo dito em
+  número ("Descartar 12 alterações"). O `play` mede largura, papel de cada
+  paint e contraste; `tests/browser/interactions.spec.ts` mede hover e
+  `:focus-visible` com ponteiro e teclado reais, porque `userEvent` dispara
+  evento sintético e não acende nenhum dos dois no CSS.
+- **`AdminShell.workspace` aceita um resumo** — `{ name, meta?, media? }`, além
+  do nó livre que já aceitava. Com o resumo, quem escreve os elementos pintados é
+  o shell (`hw-admin-shell__workspace-name`, `…-meta`, `…-media`); `media` é o
+  lugar do chip de tenant.
+- Story `Components/Seleção · ChoiceStateMatrix`: vazio, marcado, parcial,
+  inválido e indisponível, para checkbox e radio, com o `play` comparando cada
+  paint com o papel resolvido em runtime.
+- `Badge` aceita ícone Lucide antes do rótulo, com a separação vindo do selo.
+
+### Corrigido
+
+- **Checkbox e radio deixavam o limite do controle para o navegador.** Com
+  aparência nativa, a borda era o que cada motor quisesse pintar, e nenhum gate
+  media: no pixel, Chromium desenhava **4,13:1** sobre a superfície sutil (passa)
+  e **Firefox 2,90:1**, abaixo do piso de 3:1 da WCAG 1.4.11 — o controle
+  reprovava num dos dois navegadores e o CI ficava verde. A caixa de 16px também
+  não aceitava borda, padding nem pseudo-elemento, então o alvo do próprio
+  controle estava preso ali.
+  Agora os dois são desenhados pelo DS com `appearance: none`: limite em
+  `--hw-input-border` (**3,64:1** sobre `--hw-surface` e **3,31:1** sobre
+  `--hw-surface-subtle`, os dois já medidos pelo gate de token), preenchimento
+  `--hw-primary` no estado marcado com a marca em `--hw-primary-fg` (**5,28:1**),
+  `aria-invalid` em `--hw-danger-strong` como nos outros campos, `disabled` com a
+  mesma opacidade dos campos e radio redondo. A marca do checkbox e o ponto do
+  radio são **geometria recortada** (`clip-path`) sobre a tinta do par: sem SVG
+  com cor própria, sem hex. `accent-color` sai do controle — ele não pinta mais
+  nada.
+  O alvo do próprio controle sobe a **24×24** por pseudo-elemento, sem mexer nos
+  16px de desenho, confirmado por `elementsFromPoint` nos quatro cantos, em
+  Chromium e Firefox, em 390 e 1440. Ele fica em 24 e não em 44 de propósito: o
+  rótulo vizinho começa a 16px do centro da caixa, então um alvo de 44px roubaria
+  6px do clique do controle anterior. O alvo confortável de 32px (admin) e 44px
+  (portal, mobile e ponteiro grosso) continua sendo o rótulo clicável.
+- **O primeiro clique dentro de um diálogo recém-aberto caía no overlay.**
+  Chegou reportado como entrega `Select` → `FocusMode`, mas a medição por frame
+  desmentiu a causa: o buraco existe **sem tocar no Select**, e existe nos dois
+  navegadores. O Radix desliga o ponteiro no `body` ao abrir o modal e só escreve
+  `pointer-events: auto` no CONTEÚDO num efeito depois da primeira pintura — 2 a
+  3 frames (~28–43 ms) em Chromium, 1 a 2 em Firefox, em que o conteúdo herda
+  `none` e o overlay, que está ABAIXO no z-index, é o único elemento com
+  ponteiro. Nesses frames `elementsFromPoint` responde `div.hw-dialog__overlay` e
+  o clique do usuário vira "clique fora", que fecha o diálogo.
+  `.hw-dialog__content` passa a declarar `pointer-events: auto`. A regra vale
+  apenas enquanto o estilo inline do Radix não existe; quando ele chega, inline
+  vence — inclusive para dizer `none` a um diálogo que ficou por baixo de outro.
+  Não é `!important` justamente para não roubar essa decisão, e não é
+  `setTimeout`, porque a espera fixa não tem como saber de que lado do efeito
+  está. Story `Patterns/Modo foco · SelectHandoff` e guarda em
+  `tests/browser/interactions.spec.ts`, que amostra **todos** os frames da janela:
+  a primeira versão media um frame escolhido a dedo e passava verde com o defeito
+  presente — removida a linha do CSS, a guarda atual reprova nos quatro combos.
+- **`Badge` colava o ícone no rótulo.** O selo era `inline-flex` sem `gap`, e o
+  consumidor corrigia com margem no glifo. O espaço passa a ser do selo
+  (`--hw-space-1`) e o ícone entra na escala pequena (`--hw-space-3`), para a
+  altura de 1,5rem ser a mesma com e sem ícone — medido em 24px nos dois casos,
+  nos dois navegadores, com a separação real entre glifo e texto em 4px.
+- **`.hw-admin-shell__workspace span` alcançava qualquer `span`.** O slot recebe
+  nó do consumidor, e o CSS mirava `strong` e `span` por TIPO: a sigla do tenant
+  dentro de um chip herdava a tinta de apoio da barra — rust por baixo,
+  `--hw-text-inverse-secondary` por cima, **1,98:1** — e o consumidor só saía
+  disso com `style` inline (hywork-experiments, `mockup-shell.tsx`). O padrão
+  agora pinta apenas as classes que ele mesmo escreve; a quebra de palavra passa
+  a ser herdada do invólucro, o que preserva o comportamento para qualquer nó.
+  Medido nas duas tonalidades de navegação, em Chromium e Firefox: chip do tenant
+  em **5,15:1** (branco sobre rust, o par que o próprio chip declara) e linha de
+  apoio com tinta distinta da do nome.
+
+### Alterado
+
+- O gate `check-tokens` passa a medir dois pares novos: `--hw-surface` ×
+  `--hw-danger-strong` (piso 4,5, a tinta da destrutiva em contorno, medido
+  5,15:1) e `--hw-surface-subtle` × `--hw-danger-strong` (piso 3,0, o limite do
+  controle contra o entorno real do admin, que não é branco, medido 4,68:1).
+- Nó livre no slot `workspace` deixa de receber a tinta de apoio automaticamente.
+  Quem dependia de `<span>` para a segunda linha passa ao resumo — é a forma que
+  o shell desenha e mede.
+
+### Conhecido
+
+- **Nenhuma variante de `Button` pinta `:active`.** Com ponteiro o pressionar
+  acontece sobre o hover, que já mudou o campo; com teclado o anel de foco é o
+  que responde. `danger-outline` seguiu a decisão do sistema em vez de inaugurar
+  um tratamento só seu.
+- O `Switch` continua com os 32×20 desenhados e alvo de 24px por
+  pseudo-elemento, como em 0.6.1. O que mudou nesta versão foi checkbox e radio.
+- `accent-color` permanece em `.hw-upload progress`, que é um `<progress>`
+  nativo e não faz parte desta correção: tirar de lá devolveria a barra ao azul
+  padrão do navegador sem substituto desenhado.
+
 ## [0.6.1] — 2026-09-15
 
 Lado design system do review de 15/09 (`team/ux-ui/reviews/2026-09-15-experiments-review`),
@@ -64,7 +184,8 @@ contrato.
 
 ### Conhecido
 
-- **Checkbox e radio continuam com a caixa de 16px.** Com aparência nativa eles
+- **Checkbox e radio continuam com a caixa de 16px.** *(Resolvido em 0.6.2, com
+  `appearance: none`.)* Com aparência nativa eles
   ignoram borda, padding e pseudo-elemento nos dois navegadores (medido em
   15/09); ampliar o alvo do próprio controle exigiria `appearance: none` e
   desenho à mão, perdendo `accent-color` — decisão de desenho, não de correção.

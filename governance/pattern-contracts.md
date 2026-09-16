@@ -22,6 +22,14 @@ tanto na barra desktop quanto no painel portaled. `workspace` e `utility` são
 slots do consumidor e aparecem uma única vez em cada modo responsivo, evitando
 IDs acessíveis duplicados.
 
+`workspace` aceita duas formas. Como nó, o shell apenas posiciona: nada dentro é
+pintado pelo padrão, e o consumidor é dono inteiro daquele conteúdo. Como resumo
+(`{ name, meta?, media? }`), o shell desenha `hw-admin-shell__workspace-name`,
+`…-meta` e `…-media`, e são essas classes — e só elas — que o CSS mira. O padrão
+não estiliza `strong` ou `span` por tipo dentro do slot: fazia a sigla do tenant
+num chip herdar a tinta de apoio da barra e exigia estilo inline no consumidor
+para voltar ao par correto.
+
 O item atual carrega três canais, e nenhum deles é só cor (R2): filete de acento
 de 3px na borda inicial, fundo `--hw-nav-active` e peso maior que o dos vizinhos.
 O filete compensa o próprio recuo, para o rótulo continuar alinhado. O laranja
@@ -35,6 +43,13 @@ painel; clique modificado, nova aba e download preservam o comportamento nativo.
 Ao redimensionar aberto para desktop, o modal libera scroll/inert e o foco segue
 para o item atual da barra lateral. O consumidor não deve criar outro menu mobile,
 focus trap ou `main` em paralelo.
+
+O conteúdo do diálogo é interativo desde o frame em que monta. O Radix desliga o
+ponteiro no `body` ao abrir o modal e só marca o conteúdo num efeito posterior à
+primeira pintura; nesse intervalo o overlay seria o único elemento com ponteiro e
+o primeiro clique viraria "clique fora", fechando o modo de foco. O padrão
+declara `pointer-events: auto` no conteúdo, sem `!important`, para que o Radix
+continue podendo desligar um diálogo que ficou por baixo de outro.
 
 ## ListPage
 

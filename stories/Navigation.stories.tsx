@@ -229,12 +229,13 @@ function AdministrationNavigation() {
           ) : null}
         </div>
       }
-      workspace={
-        <div className="hw-navigation-story__workspace">
-          <strong>Workspace Pessoas, Cultura e Comunicação Corporativa</strong>
-          <span>Hywork Brasil · ambiente demonstrativo</span>
-        </div>
-      }
+      workspace={{
+        media: (
+          <span className="hw-navigation-story__tenant-chip">PC</span>
+        ),
+        meta: "Hywork Brasil · ambiente demonstrativo",
+        name: "Workspace Pessoas, Cultura e Comunicação Corporativa",
+      }}
     >
       <main className="hw-navigation-story__main">
         <header>

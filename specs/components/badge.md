@@ -10,7 +10,7 @@ Use para status compacto. Evite como botão, contador sem contexto ou única evi
 
 ## Anatomia e slots
 
-Span de conteúdo curto com tom semântico aplicado por `data-tone`.
+Span de conteúdo curto com tom semântico aplicado por `data-tone`, opcionalmente precedido de um ícone Lucide. A separação entre ícone e rótulo é do selo (`gap`), não margem posta pelo consumidor no glifo, e o ícone entra na escala pequena para a altura de 1,5rem ser a mesma com e sem ele — medido em `BadgeContract`.
 
 ## API e defaults
 
@@ -22,7 +22,7 @@ Neutral, info, success, warning e danger; suporta labels extensos sem largura fi
 
 ## Tokens consumidos
 
-Pares semânticos de superfície/foreground, tipografia, raio e espaçamento compacto.
+Pares semânticos de superfície/foreground, tipografia, raio e espaçamento compacto (`--hw-space-1` entre ícone e rótulo, `--hw-space-3` no glifo).
 
 ## Admin, portal e mobile
 

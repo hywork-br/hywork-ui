@@ -63,12 +63,7 @@ export const ListaPadronizada: Story = {
         { group: "Operação", href: "#settings", icon: <Settings aria-hidden="true" />, id: "settings", label: "Configurações" },
       ]}
       utility={<p className="hw-catalog__small">Ambiente de demonstração</p>}
-      workspace={
-        <div className="hw-navigation-story__workspace">
-          <strong>Comunicação interna</strong>
-          <span>Hywork Brasil</span>
-        </div>
-      }
+      workspace={{ meta: "Hywork Brasil", name: "Comunicação interna" }}
     >
       <ListPage
         action={<Button onClick={fn()}><Plus aria-hidden="true" /> Nova campanha</Button>}

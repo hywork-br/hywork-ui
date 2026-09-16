@@ -3,6 +3,7 @@ import { createRequire } from "node:module";
 import { writeFile } from "node:fs/promises";
 import { openStory, expectSettled } from "./helpers";
 import { installOpacityProbe, type OpacityProbeWindow } from "./native-opacity-probe";
+import { contrastRatio } from "../../src/lib/theme-validation";
 
 test("long focus content stays readable without overflowing on mobile", async ({
   page,
@@ -407,12 +408,16 @@ for (const width of [1440, 1280, 1024, 768, 390, 320]) {
 }
 
 /**
- * Alvo de toque das seleções. A caixa nativa tem 16px de desenho e não aceita
- * borda, padding nem pseudo-elemento (medido nos dois navegadores): o que
- * precisa medir é o que RECEBE o clique. Duas coisas, então — a exceção de
- * espaçamento da WCAG 2.5.8 (círculos de 24px que não se cruzam) e o rótulo
- * clicável, que é a linha inteira e respeita o mínimo da superfície. O switch,
- * esse sim, leva o alvo a 24px por pseudo-elemento.
+ * Alvo de toque das seleções. Os três controles são desenhados pelo DS com
+ * `appearance: none`, então o pseudo-elemento vale em todos: o alvo do próprio
+ * controle vai a 24px sem mexer nos 16px desenhados, e é isso que se mede por
+ * `elementsFromPoint` — o que RECEBE o clique, não o que aparece. O alvo
+ * confortável (32px no admin, 44px no portal e abaixo de 640px) continua sendo
+ * o rótulo clicável, que ocupa a linha inteira.
+ *
+ * O limite do controle também entra aqui: com aparência nativa ele era o cinza
+ * que cada navegador escolhia (Firefox reprovava o piso de 3:1 da WCAG 1.4.11),
+ * e agora é `--hw-input-border`, medido contra a superfície realmente pintada.
  */
 for (const width of [1440, 390]) {
   test(`${width}: selection controls hand the click to a target that meets the minimum`, async ({ page }, testInfo) => {
@@ -425,12 +430,25 @@ for (const width of [1440, 390]) {
         const box = element.getBoundingClientRect();
         return { x: box.left + box.width / 2, y: box.top + box.height / 2, box };
       };
+      const around = (element: Element) => {
+        let node: Element | null = element.parentElement;
+        while (node) {
+          const paint = getComputedStyle(node).backgroundColor;
+          const parts = paint.match(/[\d.]+/g);
+          if (parts && (parts.length < 4 || Number(parts[3]) > 0)) return paint;
+          node = node.parentElement;
+        }
+        return "";
+      };
       return controls.map((input) => {
         const own = centre(input);
         const label = input.closest("label");
         const labelBox = label?.getBoundingClientRect();
+        const style = getComputedStyle(input);
+        // elementsFromPoint, e não elementFromPoint: o rótulo cobre o controle na
+        // pilha, e o que importa é o controle RECEBER o ponto, não estar no topo.
         const reach = (dx: number, dy: number) =>
-          document.elementFromPoint(own.x + dx, own.y + dy) === input;
+          document.elementsFromPoint(own.x + dx, own.y + dy).includes(input);
         // Exceção de espaçamento: nenhum outro controle dentro de 24px de centro a centro.
         const crowded = controls.some((other) => {
           if (other === input) return false;
@@ -439,10 +457,13 @@ for (const width of [1440, 390]) {
         });
         return {
           name: input.getAttribute("aria-label") ?? label?.textContent?.trim().slice(0, 28) ?? input.type,
+          appearance: style.appearance,
+          around: around(input),
+          boundary: style.borderTopColor,
           box: [Math.round(own.box.width), Math.round(own.box.height)],
           label: labelBox ? [Math.round(labelBox.width), Math.round(labelBox.height)] : null,
           switch: input.classList.contains("hw-switch"),
-          hit24: reach(-11, -11) && reach(11, 11),
+          hit24: reach(-11, -11) && reach(11, 11) && reach(-11, 11) && reach(11, -11),
           spaced: !crowded,
           labelMeets: labelBox ? labelBox.height >= floor : false,
         };
@@ -452,11 +473,189 @@ for (const width of [1440, 390]) {
     expect(measured.length).toBeGreaterThan(0);
     for (const control of measured) {
       const detail = JSON.stringify(control);
-      // Ou o próprio alvo tem 24px, ou os círculos de 24px não se cruzam.
-      expect(control.hit24 || control.spaced, `WCAG 2.5.8: ${detail}`).toBe(true);
+      // Agora o alvo é do PRÓPRIO controle, nos três. A exceção de espaçamento
+      // segue medida, porque ela é o que impede um alvo de roubar o vizinho.
+      expect(control.appearance, `controle desenhado pelo DS: ${detail}`).toBe("none");
+      expect(control.hit24, `WCAG 2.5.8 no próprio controle: ${detail}`).toBe(true);
+      expect(control.spaced, `alvos de 24px não se cruzam: ${detail}`).toBe(true);
       expect(control.labelMeets, `rótulo clicável: ${detail}`).toBe(true);
-      if (control.switch) expect(control.hit24, `alvo do switch: ${detail}`).toBe(true);
+      // WCAG 1.4.11: o limite do controle contra a superfície realmente pintada.
+      expect(
+        contrastRatio(control.boundary, control.around) ?? 0,
+        `limite do controle: ${detail}`,
+      ).toBeGreaterThanOrEqual(3);
     }
     await page.screenshot({ path: testInfo.outputPath(`selection-targets-${width}.png`) });
+  });
+}
+
+/* R13 — destrutiva em CONTORNO. O contrato do Storybook mede o repouso; aqui
+   medem-se os estados que só existem com ponteiro e teclado reais: `userEvent`
+   dispara evento sintético e NÃO acende `:hover` nem `:focus-visible` no CSS. */
+for (const surface of ["admin", "portal"] as const) {
+  test(`${surface}: destructive outline keeps its rust boundary through hover and focus`, async ({
+    page,
+  }, testInfo) => {
+    await openStory(page, "contracts-core-families--destructive-choice", surface);
+    const destructive = page.getByRole("button", { name: "Descartar 12 alterações" });
+    const affirmative = page.getByRole("button", { name: "Continuar editando" });
+
+    const read = () =>
+      destructive.evaluate((element) => {
+        const style = getComputedStyle(element);
+        // Fundo translúcido = "este ancestral não pinta nada". Lido pela alfa do
+        // valor computado, sem escrever uma cor literal no repositório.
+        const opaque = (value: string) => {
+          const parts = value.match(/[\d.]+/g);
+          return Boolean(parts) && (parts!.length < 4 || Number(parts![3]) > 0);
+        };
+        let node: Element | null = element.parentElement;
+        let around = "";
+        while (node) {
+          around = getComputedStyle(node).backgroundColor;
+          if (opaque(around)) break;
+          node = node.parentElement;
+        }
+        return {
+          around,
+          background: style.backgroundColor,
+          border: style.borderTopColor,
+          color: style.color,
+          outlineColor: style.outlineColor,
+          outlineWidth: parseFloat(style.outlineWidth),
+          visible: element.matches(":focus-visible"),
+        };
+      });
+
+    // Valor computado do papel, para esperar o campo CHEGAR nele.
+    const resolved = (token: string) =>
+      page.evaluate((name) => {
+        const probe = document.createElement("span");
+        probe.style.backgroundColor = `var(${name})`;
+        document.body.append(probe);
+        const value = getComputedStyle(probe).backgroundColor;
+        probe.remove();
+        return value;
+      }, token);
+
+    const rest = await read();
+    await destructive.hover();
+    /* `background` está na lista de transição do botão: ler logo após o ponteiro
+       devolve o valor INTERPOLADO, quase o de repouso — e "mudou de cor" como
+       condição de parada aceita o primeiro passo da interpolação. O teste mediria
+       um branco levemente sujo e chamaria isso de hover. A condição é chegar ao
+       papel, não sair do repouso. */
+    await expect(destructive).toHaveCSS("background-color", await resolved("--hw-danger-soft"));
+    const hover = await read();
+    await page.mouse.move(0, 0);
+    await expect(destructive).toHaveCSS("background-color", rest.background);
+    await affirmative.focus();
+    await page.keyboard.press("Shift+Tab");
+    await expect(destructive).toBeFocused();
+    const focus = await read();
+    console.log(
+      `destructive outline ${surface}: ${JSON.stringify({ rest, hover, focus })}`,
+    );
+
+    // Repouso: contorno sobre a superfície, borda e tinta no mesmo papel.
+    expect(rest.background).toBe(rest.around);
+    expect(rest.border).toBe(rest.color);
+    expect(contrastRatio(rest.color, rest.background) ?? 0).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(rest.border, rest.around) ?? 0).toBeGreaterThanOrEqual(3);
+
+    // Hover: preenche com o par suave de erro; a tinta de erro permanece.
+    expect(hover.background).not.toBe(rest.background);
+    expect(hover.color).toBe(rest.color);
+    expect(contrastRatio(hover.color, hover.background) ?? 0).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(hover.border, hover.background) ?? 0).toBeGreaterThanOrEqual(3);
+
+    // Foco: anel do sistema, e a borda de erro continua desenhada por baixo.
+    expect(focus.visible).toBe(true);
+    expect(focus.outlineWidth).toBeGreaterThanOrEqual(2);
+    expect(focus.border).toBe(rest.border);
+    expect(contrastRatio(focus.outlineColor, focus.around) ?? 0).toBeGreaterThanOrEqual(3);
+
+    await page.screenshot({ path: testInfo.outputPath(`destructive-outline-${surface}.png`) });
+  });
+}
+
+/* Primeiro clique dentro de um diálogo recém-aberto.
+ *
+ * Foi reportado como entrega Select → modo de foco. A medição diz outra coisa: o
+ * mesmo buraco existe sem tocar no Select. O Radix desliga o ponteiro no `body`
+ * ao abrir o modal e só escreve `pointer-events: auto` no CONTEÚDO num efeito
+ * depois da primeira pintura — em Chromium sobram 2 a 3 frames em que o conteúdo
+ * herda `none` e o overlay, que está ABAIXO no z-index, é o único com ponteiro.
+ * Nesses frames o clique do usuário vira "clique fora" e fecha o diálogo. O
+ * Firefox nunca mostrou a janela, o que é exatamente por que isso precisa de um
+ * teste nos dois: um navegador sozinho diria que não existe.
+ */
+for (const viaSelect of [false, true] as const) {
+  test(`dialog content owns the first click after mounting${viaSelect ? " (right after a Select)" : ""}`, async ({
+    page,
+  }) => {
+    await openStory(page, "patterns-modo-foco--select-handoff", "admin");
+    if (viaSelect) {
+      await page.getByRole("combobox", { name: "Canal" }).click();
+      await page.getByRole("option", { name: "E-mail" }).click();
+    }
+
+    /* Amostra TODOS os frames da janela, não um só: medir um frame escolhido a
+       dedo passa verde mesmo com o defeito presente — foi o que este teste fez
+       na primeira versão, e a mutação do CSS provou que ele não pegava nada. */
+    await page.evaluate(() => {
+      (window as unknown as { __mountWindow?: Promise<unknown> }).__mountWindow = new Promise(
+        (resolve) => {
+          const frames: Array<{ frame: number; inline: string; owner: string; pointerEvents: string }> = [];
+          const observer = new MutationObserver(() => {
+            const content = document.querySelector<HTMLElement>(".hw-focus-mode");
+            if (!content) return;
+            observer.disconnect();
+            const sample = (frame: number) => {
+              const action = [...content.querySelectorAll("button")].find((button) =>
+                button.textContent?.includes("Confirmar"),
+              );
+              if (action) {
+                const box = action.getBoundingClientRect();
+                const top = document.elementsFromPoint(
+                  box.left + box.width / 2,
+                  box.top + box.height / 2,
+                )[0];
+                frames.push({
+                  frame,
+                  inline: content.style.pointerEvents,
+                  owner: top ? `${top.tagName}.${String(top.className).split(" ")[0]}` : "",
+                  pointerEvents: getComputedStyle(content).pointerEvents,
+                });
+              }
+              if (frame < 5) requestAnimationFrame(() => sample(frame + 1));
+              else resolve(frames);
+            };
+            sample(0);
+          });
+          observer.observe(document.body, { childList: true, subtree: true });
+        },
+      );
+    });
+
+    await page.getByRole("button", { name: "Abrir modo de foco" }).click();
+    const window_ = (await page.evaluate(
+      () => (window as unknown as { __mountWindow: Promise<unknown> }).__mountWindow,
+    )) as Array<{ frame: number; inline: string; owner: string; pointerEvents: string }>;
+    console.log(`dialog mount window (select=${viaSelect}): ${JSON.stringify(window_)}`);
+
+    expect(window_.length).toBeGreaterThan(0);
+    for (const frame of window_) {
+      const detail = JSON.stringify(frame);
+      expect(frame.pointerEvents, detail).toBe("auto");
+      expect(frame.owner, `o overlay não pode receber o ponto: ${detail}`).not.toContain(
+        "hw-dialog__overlay",
+      );
+    }
+
+    // E o clique tem que CONTAR, em vez de fechar o diálogo por fora.
+    await page.getByRole("button", { name: "Confirmar canal" }).click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+    await expect(page.getByRole("status")).toHaveText("Confirmações registradas: 1");
   });
 }

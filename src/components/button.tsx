@@ -4,7 +4,18 @@ import * as React from "react";
 
 import { cn } from "../lib/cn";
 
-export type ButtonVariant = "primary" | "secondary" | "outline" | "quiet" | "danger";
+/**
+ * `danger-outline` é a ação destrutiva em CONTORNO (R13): o botão mais pesado
+ * da tela tem que ser o afirmativo, não o que destrói. O `danger` sólido fica
+ * para quando destruir É o resultado desejado da tela inteira.
+ */
+export type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "outline"
+  | "quiet"
+  | "danger"
+  | "danger-outline";
 export type ButtonSize = "sm" | "md" | "lg" | "icon";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

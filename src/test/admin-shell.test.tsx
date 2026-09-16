@@ -182,6 +182,54 @@ describe("AdminShell navigation", () => {
     ).toEqual(["Home", "Academy", "Usuários"]);
   });
 
+  /* O slot aceitava só nó, e o CSS pintava `strong`/`span` por TIPO dentro dele:
+     qualquer `span` do consumidor herdava a tinta de apoio da barra. Com o
+     resumo, quem escreve os elementos pintados é o shell. */
+  it("renders the workspace summary itself and leaves consumer nodes alone", () => {
+    const { container } = render(
+      <AdminShell
+        brand="hywork"
+        navigation={groupedNavigation}
+        workspace={{
+          media: <span data-testid="tenant-chip">VN</span>,
+          meta: "Hywork Brasil",
+          name: "Comunicação interna",
+        }}
+      >
+        <main>Academy</main>
+      </AdminShell>
+    );
+
+    const slot = container.querySelector(".hw-admin-shell__workspace")!;
+    expect(slot).toHaveAttribute("data-summary", "");
+    expect(slot.querySelector(".hw-admin-shell__workspace-name")).toHaveTextContent(
+      "Comunicação interna"
+    );
+    expect(slot.querySelector(".hw-admin-shell__workspace-meta")).toHaveTextContent(
+      "Hywork Brasil"
+    );
+    const chip = screen.getByTestId("tenant-chip");
+    expect(chip.className).toBe("");
+    expect(chip.closest(".hw-admin-shell__workspace-media")).not.toBeNull();
+    expect(slot.querySelectorAll(".hw-admin-shell__workspace-meta")).toHaveLength(1);
+  });
+
+  it("keeps the plain node slot unstyled and unmarked", () => {
+    const { container } = render(
+      <AdminShell
+        brand="hywork"
+        navigation={groupedNavigation}
+        workspace={<div><span data-testid="free-span">Qualquer nó</span></div>}
+      >
+        <main>Academy</main>
+      </AdminShell>
+    );
+    const slot = container.querySelector(".hw-admin-shell__workspace")!;
+    expect(slot).not.toHaveAttribute("data-summary");
+    expect(slot.querySelector(".hw-admin-shell__workspace-meta")).toBeNull();
+    expect(screen.getByTestId("free-span").className).toBe("");
+  });
+
   it("places workspace and utility once inside the mobile Radix dialog", async () => {
     useMobileViewport();
     const user = userEvent.setup();

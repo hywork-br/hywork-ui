@@ -16,9 +16,26 @@ Raiz interativa, indicador opcional de loading, ícone Lucide opcional e label o
 
 `variant="primary"`, `size="md"`, `type="button"`, `loading=false`; aceita props nativas e `asChild`.
 
+A API é um enum plano de variantes: não existe prop de tom cruzando com a variante, porque só uma combinação de perigo é aprovada.
+
 ## Variantes e estados
 
-Primary, secondary, outline, quiet e danger; tamanhos sm/md/lg/icon; hover, active, focus, disabled e loading.
+Primary, secondary, outline, quiet, danger e `danger-outline`; tamanhos
+sm/md/lg/icon; hover, focus, disabled e loading.
+
+`variant="danger-outline"` é a ação destrutiva em CONTORNO, e é a forma padrão de
+oferecer destruição ao lado de uma afirmativa: borda e texto em
+`--hw-danger-strong` sobre `--hw-surface` (5,15:1 medido no render, acima do
+4,5:1 do texto e do 3:1 que a WCAG 1.4.11 pede do limite), hover preenchendo com
+o par `--hw-danger-soft`/`--hw-danger-soft-fg`, foco no anel do sistema. O par
+vai na mesma largura, com a afirmativa carregando o peso — quando a destrutiva é
+o botão cheio, o elemento mais pesado da tela é o que destrói. `danger` sólido
+continua existindo para a tela cujo resultado desejado É destruir.
+
+O sistema não pinta `:active` em nenhuma variante de Button: com ponteiro, o
+pressionar acontece sobre o estado de hover, que já mudou o campo; com teclado, o
+anel de foco é o que responde. `danger-outline` segue essa decisão em vez de
+inaugurar um tratamento só seu.
 
 ## Tokens consumidos
 

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Info, MoreHorizontal } from "lucide-react";
+import { CircleCheck, Info, MoreHorizontal, TriangleAlert } from "lucide-react";
 import { expect, fn, userEvent, waitFor, within } from "storybook/test";
 
 import {
@@ -63,6 +63,8 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
+  contrastRatio,
+  parseOpaqueCssColor,
 } from "../src";
 
 const meta = {
@@ -109,11 +111,77 @@ export const ButtonContract: Story = {
         <Button onClick={fn()} variant="outline">Salvar rascunho</Button>
         <Button onClick={fn()} variant="quiet">Cancelar</Button>
         <Button onClick={fn()} variant="danger">Excluir campanha</Button>
+        <Button onClick={fn()} variant="danger-outline">Descartar rascunho</Button>
         <Button disabled>Sem permissão</Button>
         <Button loading>Publicando</Button>
       </div>
     </ContractFrame>
   ),
+};
+
+/** Superfície REALMENTE pintada atrás do controle: é contra ela que a WCAG
+ *  1.4.11 mede o limite, e não contra o fundo que o próprio botão declara.
+ *  `parseOpaqueCssColor` reprova o fundo translúcido, que é o sinal de "este
+ *  ancestral não pinta nada" — comparar com a string de transparente colocaria
+ *  uma cor literal aqui dentro. */
+function paintedAround(element: Element) {
+  let node: Element | null = element.parentElement;
+  while (node) {
+    const around = getComputedStyle(node).backgroundColor;
+    if (parseOpaqueCssColor(around).ok) return around;
+    node = node.parentElement;
+  }
+  return "";
+}
+
+export const DestructiveChoice: Story = {
+  render: () => (
+    <ContractFrame title="Button · escolha destrutiva">
+      <div className="hw-contract__decision">
+        <p>
+          Sair agora descarta <strong>12 alterações</strong> feitas nesta sessão.
+        </p>
+        <div className="hw-contract__decision-actions">
+          <Button onClick={fn()} variant="danger-outline">
+            Descartar 12 alterações
+          </Button>
+          <Button onClick={fn()}>Continuar editando</Button>
+        </div>
+      </div>
+    </ContractFrame>
+  ),
+  /* R13 — a destrutiva vai em CONTORNO rust, na mesma largura da afirmativa, e a
+     afirmativa é a que carrega o peso. Medido no render: jsdom não resolve
+     custom property, então este contrato só vale no navegador. */
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const destructive = canvas.getByRole("button", { name: "Descartar 12 alterações" });
+    const affirmative = canvas.getByRole("button", { name: "Continuar editando" });
+
+    await expect(destructive.getBoundingClientRect().width).toBeCloseTo(
+      affirmative.getBoundingClientRect().width,
+      1,
+    );
+
+    await expect(destructive).toHaveAttribute("data-variant", "danger-outline");
+    await expect(affirmative).toHaveAttribute("data-variant", "primary");
+
+    const around = paintedAround(destructive);
+    const destructivePaint = getComputedStyle(destructive);
+    const affirmativePaint = getComputedStyle(affirmative);
+
+    // Contorno: o fundo é a superfície; quem tem campo preenchido é a afirmativa.
+    await expect(destructivePaint.backgroundColor).toBe(around);
+    await expect(affirmativePaint.backgroundColor).not.toBe(around);
+
+    const text = contrastRatio(destructivePaint.color, destructivePaint.backgroundColor);
+    const boundary = contrastRatio(destructivePaint.borderTopColor, around);
+    await expect(text ?? 0).toBeGreaterThanOrEqual(4.5);
+    await expect(boundary ?? 0).toBeGreaterThanOrEqual(3);
+    // Borda e tinta vêm do MESMO papel: um contorno com duas famílias de rust
+    // seria um token novo nascendo aqui.
+    await expect(destructivePaint.borderTopColor).toBe(destructivePaint.color);
+  },
 };
 
 export const FieldContract: Story = {
@@ -204,8 +272,42 @@ export const BadgeContract: Story = {
         <Badge tone="warning">Agendada</Badge>
         <Badge tone="danger">Falha no envio</Badge>
       </div>
+      {/* Com ícone: a separação é do selo, não margem que o consumidor põe no
+          glifo — e a altura não pode mudar por causa dele. */}
+      <div className="hw-contract__row">
+        <Badge tone="success" data-testid="badge-icon">
+          <CircleCheck aria-hidden="true" />
+          Publicada
+        </Badge>
+        <Badge tone="danger">
+          <TriangleAlert aria-hidden="true" />
+          Falha no envio
+        </Badge>
+        <Badge tone="success" data-testid="badge-plain">
+          Publicada
+        </Badge>
+      </div>
     </ContractFrame>
   ),
+  /* O ícone não pode empurrar a altura do selo, e o espaço entre glifo e rótulo
+     tem que existir sem margem do consumidor. */
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const withIcon = canvas.getByTestId("badge-icon");
+    const plain = canvas.getByTestId("badge-plain");
+    await expect(withIcon.getBoundingClientRect().height).toBe(
+      plain.getBoundingClientRect().height,
+    );
+    const gap = parseFloat(getComputedStyle(withIcon).columnGap);
+    await expect(gap).toBeGreaterThan(0);
+    const glyph = withIcon.querySelector("svg")!;
+    const label = glyph.nextSibling as Text;
+    const range = document.createRange();
+    range.selectNodeContents(label);
+    await expect(
+      Math.round(range.getBoundingClientRect().left - glyph.getBoundingClientRect().right),
+    ).toBe(Math.round(gap));
+  },
 };
 
 export const AvatarContract: Story = {
