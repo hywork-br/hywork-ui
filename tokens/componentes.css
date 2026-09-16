@@ -48,6 +48,11 @@
 .hw-contract__person { align-items: center; display: flex; gap: var(--hw-space-3); min-width: 0; }
 .hw-contract__person > span { display: grid; min-width: 0; }
 .hw-contract__person small { color: var(--hw-text-muted); overflow-wrap: anywhere; }
+/* Par R13: a destrutiva em contorno e a afirmativa ocupam colunas iguais, para
+   que "mesma largura" seja estrutura e não coincidência de rótulo. */
+.hw-contract__decision { display: grid; gap: var(--hw-space-4); max-width: 34rem; }
+.hw-contract__decision p { margin: 0; }
+.hw-contract__decision-actions { display: grid; gap: var(--hw-space-3); grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .hw-contract__loading { display: grid; gap: var(--hw-space-6); }
 .hw-contract__skeleton-avatar { border-radius: 50%; height: var(--hw-target-min); width: var(--hw-target-min); }
 .hw-contract__skeleton-copy { display: grid; flex: 1; gap: var(--hw-space-2); }
@@ -133,6 +138,12 @@
 .hw-button[data-variant="outline"] { background: var(--hw-surface); border-color: var(--hw-border); color: var(--hw-text); }
 .hw-button[data-variant="quiet"] { background: transparent; color: var(--hw-text-secondary); }
 .hw-button[data-variant="danger"] { background: var(--hw-danger-strong); color: var(--hw-danger-strong-fg); }
+/* Destrutiva em CONTORNO (R13). Borda e tinta no mesmo papel que o sólido usa
+   como fundo: sobre --hw-surface o par dá 5,15:1, acima do 4,5:1 do texto e
+   bem acima do 3:1 que a WCAG 1.4.11 pede do limite. Existe porque a hierarquia
+   da tela tem que pesar no afirmativo: quando o destrutivo é o botão cheio, o
+   mais pesado da tela é o que destrói. */
+.hw-button[data-variant="danger-outline"] { background: var(--hw-surface); border-color: var(--hw-danger-strong); color: var(--hw-danger-strong); }
 .hw-button[data-size="sm"] { min-height: max(var(--hw-control-height-sm), var(--hw-target-min)); padding-inline: var(--hw-space-3); }
 .hw-button[data-size="lg"] { min-height: max(var(--hw-control-height), var(--hw-target-min)); padding-inline: var(--hw-space-6); }
 .hw-button[data-size="icon"] { flex: 0 0 auto; height: var(--hw-control-height); padding: 0; width: var(--hw-control-height); }
@@ -438,10 +449,17 @@
 .hw-admin-shell__mobile-header { display: none; }
 .hw-admin-shell__sidebar { background: var(--hw-chrome); border-right: 1px solid var(--hw-border); color: var(--hw-chrome-fg); display: flex; flex-direction: column; gap: var(--hw-space-4); height: 100dvh; overflow-y: auto; padding: var(--hw-space-4); position: sticky; top: 0; }
 .hw-admin-shell__brand { font-family: var(--hw-font-heading); font-size: var(--hw-text-lg); font-weight: 800; min-width: 0; overflow-wrap: anywhere; padding: var(--hw-space-2); }
-.hw-admin-shell__workspace { display: grid; font-size: var(--hw-label-size); gap: var(--hw-space-1); min-width: 0; padding: 0 var(--hw-space-2); }
-.hw-admin-shell__workspace strong,
-.hw-admin-shell__workspace span { overflow-wrap: anywhere; }
-.hw-admin-shell__workspace span { color: var(--hw-text-muted); }
+/* O slot aceita qualquer nó do consumidor, então NADA aqui pode mirar um
+   elemento por tipo: `.hw-admin-shell__workspace span` alcançava a sigla do
+   tenant dentro de um chip e só saía com estilo inline no consumidor. A quebra
+   de palavra é herdada pelo invólucro; a tinta mira as classes que o shell
+   escreve ao receber o resumo (`AdminWorkspaceSummary`). */
+.hw-admin-shell__workspace { display: grid; font-size: var(--hw-label-size); gap: var(--hw-space-1); min-width: 0; overflow-wrap: anywhere; padding: 0 var(--hw-space-2); }
+.hw-admin-shell__workspace[data-summary] { align-items: center; display: flex; gap: var(--hw-space-3); }
+.hw-admin-shell__workspace-media { flex: 0 0 auto; }
+.hw-admin-shell__workspace-text { display: grid; gap: var(--hw-space-1); min-width: 0; }
+.hw-admin-shell__workspace-name { font-weight: 700; }
+.hw-admin-shell__workspace-meta { color: var(--hw-text-muted); }
 .hw-shell-navigation { display: grid; gap: var(--hw-space-4); min-width: 0; }
 .hw-shell-navigation__group { display: grid; gap: var(--hw-space-1); min-width: 0; }
 .hw-shell-navigation__group-label { color: var(--hw-text-muted); font-size: var(--hw-text-xs); font-weight: 700; margin: 0; padding: 0 var(--hw-space-3); }
@@ -470,9 +488,9 @@
 .hw-admin-shell[data-navigation-tone="inverse"] .hw-shell-navigation a,
 .hw-shell-navigation-panel[data-navigation-tone="inverse"] .hw-shell-navigation a { color: var(--hw-text-inverse-secondary); }
 .hw-admin-shell[data-navigation-tone="inverse"] .hw-shell-navigation__group-label,
-.hw-admin-shell[data-navigation-tone="inverse"] .hw-admin-shell__workspace span,
+.hw-admin-shell[data-navigation-tone="inverse"] .hw-admin-shell__workspace-meta,
 .hw-shell-navigation-panel[data-navigation-tone="inverse"] .hw-shell-navigation__group-label,
-.hw-shell-navigation-panel[data-navigation-tone="inverse"] .hw-admin-shell__workspace span { color: var(--hw-text-inverse-secondary); }
+.hw-shell-navigation-panel[data-navigation-tone="inverse"] .hw-admin-shell__workspace-meta { color: var(--hw-text-inverse-secondary); }
 .hw-admin-shell[data-navigation-tone="inverse"] .hw-shell-navigation a:hover,
 .hw-shell-navigation-panel[data-navigation-tone="inverse"] .hw-shell-navigation a:hover { background: var(--hw-surface); color: var(--hw-surface-fg); }
 .hw-navigation-story__main { display: grid; gap: var(--hw-space-8); padding: var(--hw-space-8); }
@@ -484,6 +502,9 @@
 .hw-navigation-story__main > section { display: grid; gap: var(--hw-space-4); }
 .hw-navigation-story__destinations { display: grid; gap: var(--hw-space-3); grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .hw-navigation-story__destinations article { background: var(--hw-card); border: 1px solid var(--hw-border); border-radius: var(--hw-card-radius); overflow-wrap: anywhere; padding: var(--hw-space-4); }
+/* Chip do tenant DENTRO do slot de workspace: é a forma exata que o consumidor
+   reportou, e serve de prova de que o shell não pinta mais `span` alheio. */
+.hw-navigation-story__tenant-chip { align-items: center; background: var(--hw-secondary); border-radius: var(--hw-radius-sm); color: var(--hw-secondary-fg); display: inline-flex; font-size: var(--hw-text-xs); font-weight: 700; height: var(--hw-space-8); justify-content: center; width: var(--hw-space-8); }
 .hw-navigation-story__account { display: grid; gap: var(--hw-space-2); }
 .hw-navigation-story__account p { font-size: var(--hw-text-xs); margin: 0; overflow-wrap: anywhere; padding: 0 var(--hw-space-3); }
 
@@ -622,6 +643,9 @@
   .hw-button[data-variant="secondary"]:hover:not(:disabled, [aria-disabled="true"]) { background: var(--hw-secondary-hover); }
   .hw-button[data-variant="outline"]:hover:not(:disabled, [aria-disabled="true"]),
   .hw-button[data-variant="quiet"]:hover:not(:disabled, [aria-disabled="true"]) { background: var(--hw-interactive-hover); color: var(--hw-interactive-hover-fg); }
+  /* O hover preenche com o par SUAVE de erro em vez do cinza neutro: o cinza
+     apagaria o único canal que diz "isto destrói" no momento do ponteiro. */
+  .hw-button[data-variant="danger-outline"]:hover:not(:disabled, [aria-disabled="true"]) { background: var(--hw-danger-soft); color: var(--hw-danger-soft-fg); }
   .hw-focus-mode__header > button:hover:not(:disabled) { background: var(--hw-interactive-hover); }
   .hw-filter-bar__filters .hw-select:hover:not(:disabled),
   .hw-filter-chip button:hover { background: var(--hw-interactive-hover); color: var(--hw-interactive-hover-fg); }

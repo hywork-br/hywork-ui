@@ -22,6 +22,14 @@ tanto na barra desktop quanto no painel portaled. `workspace` e `utility` são
 slots do consumidor e aparecem uma única vez em cada modo responsivo, evitando
 IDs acessíveis duplicados.
 
+`workspace` aceita duas formas. Como nó, o shell apenas posiciona: nada dentro é
+pintado pelo padrão, e o consumidor é dono inteiro daquele conteúdo. Como resumo
+(`{ name, meta?, media? }`), o shell desenha `hw-admin-shell__workspace-name`,
+`…-meta` e `…-media`, e são essas classes — e só elas — que o CSS mira. O padrão
+não estiliza `strong` ou `span` por tipo dentro do slot: fazia a sigla do tenant
+num chip herdar a tinta de apoio da barra e exigia estilo inline no consumidor
+para voltar ao par correto.
+
 O item atual carrega três canais, e nenhum deles é só cor (R2): filete de acento
 de 3px na borda inicial, fundo `--hw-nav-active` e peso maior que o dos vizinhos.
 O filete compensa o próprio recuo, para o rótulo continuar alinhado. O laranja

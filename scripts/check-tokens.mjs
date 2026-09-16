@@ -323,6 +323,21 @@ const PARES = [
     4.5,
     "erro sólido com texto pequeno",
   ],
+  /* Destrutiva em CONTORNO (R13): o MESMO papel pinta a tinta e a borda, então
+     o piso do texto (4,5) cobre também o limite do controle (3,0). A segunda
+     linha mede a borda contra o entorno real do admin, que não é branco. */
+  [
+    "--hw-surface",
+    "--hw-danger-strong",
+    4.5,
+    "ação destrutiva em contorno",
+  ],
+  [
+    "--hw-surface-subtle",
+    "--hw-danger-strong",
+    3.0,
+    "limite da ação destrutiva sobre superfície sutil (WCAG 1.4.11)",
+  ],
   [
     "--hw-muted-strong",
     "--hw-muted-strong-fg",

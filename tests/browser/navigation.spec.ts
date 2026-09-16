@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 import { expectSettled, openStory } from "./helpers";
+import { contrastRatio } from "../../src/lib/theme-validation";
 
 const storyId = "navigation-administration--grouped-responsive";
 const widths = [1440, 768, 390, 320] as const;
@@ -343,5 +344,48 @@ for (const [story, tone] of [
     expect(paint.weight).toBeGreaterThan(paint.siblingWeight);
     await expect(sibling).toBeVisible();
     await page.screenshot({ path: testInfo.outputPath(`navigation-current-${tone}.png`) });
+  });
+}
+
+/* O slot de workspace recebe nó do consumidor. Antes desta versão o CSS mirava
+   `strong` e `span` por TIPO, então a sigla do tenant dentro de um chip herdava
+   a tinta de apoio da barra: rust por baixo, azul-claro por cima, 1,98:1 — e o
+   consumidor só saía disso com estilo inline. Agora o shell pinta apenas as
+   classes que ele mesmo escreve. */
+for (const [tone, story] of [
+  ["inverse", "navigation-administration--grouped-responsive"],
+  ["neutral", "patterns-central-de-campanhas--lista-padronizada"],
+] as const) {
+  test(`${tone}: the workspace slot paints only what the shell renders`, async ({
+    page,
+  }, testInfo) => {
+    await openStory(page, story, "admin");
+    const slot = page.locator(".hw-admin-shell__sidebar .hw-admin-shell__workspace");
+    await expect(slot).toHaveAttribute("data-summary", "");
+
+    const measured = await slot.evaluate((element) => {
+      const read = (selector: string) => {
+        const node = element.querySelector<HTMLElement>(selector);
+        if (!node) return null;
+        const style = getComputedStyle(node);
+        return { background: style.backgroundColor, color: style.color };
+      };
+      return {
+        chip: read(".hw-navigation-story__tenant-chip"),
+        meta: read(".hw-admin-shell__workspace-meta"),
+        name: read(".hw-admin-shell__workspace-name"),
+      };
+    });
+    console.log(`workspace paint ${tone}: ${JSON.stringify(measured)}`);
+
+    expect(measured.meta, "o shell continua marcando a linha de apoio").not.toBeNull();
+    expect(measured.name?.color).not.toBe(measured.meta?.color);
+    if (measured.chip) {
+      // O chip é nó do consumidor: mantém o par que ele declara, não o da barra.
+      expect(measured.chip.color).not.toBe(measured.meta?.color);
+      const ratio = contrastRatio(measured.chip.color, measured.chip.background) ?? 0;
+      expect(ratio, `sigla do tenant: ${JSON.stringify(measured.chip)}`).toBeGreaterThanOrEqual(4.5);
+    }
+    await page.screenshot({ path: testInfo.outputPath(`workspace-${tone}.png`) });
   });
 }

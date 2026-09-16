@@ -21,6 +21,24 @@ export interface AdminNavigationItem {
   group?: string;
 }
 
+/**
+ * Resumo do workspace DESENHADO PELO SHELL. Existe porque a alternativa era o
+ * CSS alcançar `strong` e `span` soltos dentro do slot — e aí qualquer `span`
+ * do consumidor (a sigla do tenant num chip, por exemplo) herdava a tinta de
+ * apoio da barra e só saía com estilo inline. Aqui o shell renderiza os
+ * elementos e o seletor mira a classe que ele mesmo escreveu.
+ *
+ * `workspace` continua aceitando qualquer nó: nesse caso o shell só posiciona,
+ * sem pintar nada dentro.
+ */
+export interface AdminWorkspaceSummary {
+  media?: React.ReactNode;
+  meta?: React.ReactNode;
+  name: React.ReactNode;
+}
+
+export type AdminShellWorkspace = React.ReactNode | AdminWorkspaceSummary;
+
 export interface AdminShellProps extends React.HTMLAttributes<HTMLDivElement> {
   brand: React.ReactNode;
   currentItem?: string;
@@ -29,7 +47,40 @@ export interface AdminShellProps extends React.HTMLAttributes<HTMLDivElement> {
   navigationTone?: "neutral" | "inverse";
   surface?: "admin" | "portal";
   utility?: React.ReactNode;
-  workspace?: React.ReactNode;
+  workspace?: AdminShellWorkspace;
+}
+
+function isWorkspaceSummary(value: AdminShellWorkspace): value is AdminWorkspaceSummary {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    !Array.isArray(value) &&
+    !React.isValidElement(value) &&
+    "name" in value
+  );
+}
+
+function WorkspaceSlot({ workspace }: { workspace: AdminShellWorkspace }) {
+  const summary = isWorkspaceSummary(workspace) ? workspace : null;
+  return (
+    <div className="hw-admin-shell__workspace" data-summary={summary ? "" : undefined}>
+      {summary ? (
+        <>
+          {summary.media ? (
+            <span className="hw-admin-shell__workspace-media">{summary.media}</span>
+          ) : null}
+          <span className="hw-admin-shell__workspace-text">
+            <strong className="hw-admin-shell__workspace-name">{summary.name}</strong>
+            {summary.meta ? (
+              <span className="hw-admin-shell__workspace-meta">{summary.meta}</span>
+            ) : null}
+          </span>
+        </>
+      ) : (
+        (workspace as React.ReactNode)
+      )}
+    </div>
+  );
 }
 
 export const AdminShell = React.forwardRef<HTMLDivElement, AdminShellProps>(
@@ -142,9 +193,7 @@ export const AdminShell = React.forwardRef<HTMLDivElement, AdminShellProps>(
           {!isMobile ? (
             <aside className="hw-admin-shell__sidebar" ref={desktopSidebarRef}>
               <div className="hw-admin-shell__brand">{brand}</div>
-              {workspace ? (
-                <div className="hw-admin-shell__workspace">{workspace}</div>
-              ) : null}
+              {workspace ? <WorkspaceSlot workspace={workspace} /> : null}
               <ShellNavigation currentItem={currentItem} items={navigation} />
               {utility ? (
                 <div className="hw-admin-shell__utility">{utility}</div>
@@ -195,9 +244,7 @@ export const AdminShell = React.forwardRef<HTMLDivElement, AdminShellProps>(
                 </button>
               </DialogClose>
             </header>
-            {workspace ? (
-              <div className="hw-admin-shell__workspace">{workspace}</div>
-            ) : null}
+            {workspace ? <WorkspaceSlot workspace={workspace} /> : null}
             <div className="hw-shell-navigation-panel__body">
               <ShellNavigation
                 currentItem={currentItem}

@@ -3,6 +3,7 @@ import { createRequire } from "node:module";
 import { writeFile } from "node:fs/promises";
 import { openStory, expectSettled } from "./helpers";
 import { installOpacityProbe, type OpacityProbeWindow } from "./native-opacity-probe";
+import { contrastRatio } from "../../src/lib/theme-validation";
 
 test("long focus content stays readable without overflowing on mobile", async ({
   page,
@@ -458,5 +459,95 @@ for (const width of [1440, 390]) {
       if (control.switch) expect(control.hit24, `alvo do switch: ${detail}`).toBe(true);
     }
     await page.screenshot({ path: testInfo.outputPath(`selection-targets-${width}.png`) });
+  });
+}
+
+/* R13 — destrutiva em CONTORNO. O contrato do Storybook mede o repouso; aqui
+   medem-se os estados que só existem com ponteiro e teclado reais: `userEvent`
+   dispara evento sintético e NÃO acende `:hover` nem `:focus-visible` no CSS. */
+for (const surface of ["admin", "portal"] as const) {
+  test(`${surface}: destructive outline keeps its rust boundary through hover and focus`, async ({
+    page,
+  }, testInfo) => {
+    await openStory(page, "contracts-core-families--destructive-choice", surface);
+    const destructive = page.getByRole("button", { name: "Descartar 12 alterações" });
+    const affirmative = page.getByRole("button", { name: "Continuar editando" });
+
+    const read = () =>
+      destructive.evaluate((element) => {
+        const style = getComputedStyle(element);
+        // Fundo translúcido = "este ancestral não pinta nada". Lido pela alfa do
+        // valor computado, sem escrever uma cor literal no repositório.
+        const opaque = (value: string) => {
+          const parts = value.match(/[\d.]+/g);
+          return Boolean(parts) && (parts!.length < 4 || Number(parts![3]) > 0);
+        };
+        let node: Element | null = element.parentElement;
+        let around = "";
+        while (node) {
+          around = getComputedStyle(node).backgroundColor;
+          if (opaque(around)) break;
+          node = node.parentElement;
+        }
+        return {
+          around,
+          background: style.backgroundColor,
+          border: style.borderTopColor,
+          color: style.color,
+          outlineColor: style.outlineColor,
+          outlineWidth: parseFloat(style.outlineWidth),
+          visible: element.matches(":focus-visible"),
+        };
+      });
+
+    // Valor computado do papel, para esperar o campo CHEGAR nele.
+    const resolved = (token: string) =>
+      page.evaluate((name) => {
+        const probe = document.createElement("span");
+        probe.style.backgroundColor = `var(${name})`;
+        document.body.append(probe);
+        const value = getComputedStyle(probe).backgroundColor;
+        probe.remove();
+        return value;
+      }, token);
+
+    const rest = await read();
+    await destructive.hover();
+    /* `background` está na lista de transição do botão: ler logo após o ponteiro
+       devolve o valor INTERPOLADO, quase o de repouso — e "mudou de cor" como
+       condição de parada aceita o primeiro passo da interpolação. O teste mediria
+       um branco levemente sujo e chamaria isso de hover. A condição é chegar ao
+       papel, não sair do repouso. */
+    await expect(destructive).toHaveCSS("background-color", await resolved("--hw-danger-soft"));
+    const hover = await read();
+    await page.mouse.move(0, 0);
+    await expect(destructive).toHaveCSS("background-color", rest.background);
+    await affirmative.focus();
+    await page.keyboard.press("Shift+Tab");
+    await expect(destructive).toBeFocused();
+    const focus = await read();
+    console.log(
+      `destructive outline ${surface}: ${JSON.stringify({ rest, hover, focus })}`,
+    );
+
+    // Repouso: contorno sobre a superfície, borda e tinta no mesmo papel.
+    expect(rest.background).toBe(rest.around);
+    expect(rest.border).toBe(rest.color);
+    expect(contrastRatio(rest.color, rest.background) ?? 0).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(rest.border, rest.around) ?? 0).toBeGreaterThanOrEqual(3);
+
+    // Hover: preenche com o par suave de erro; a tinta de erro permanece.
+    expect(hover.background).not.toBe(rest.background);
+    expect(hover.color).toBe(rest.color);
+    expect(contrastRatio(hover.color, hover.background) ?? 0).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(hover.border, hover.background) ?? 0).toBeGreaterThanOrEqual(3);
+
+    // Foco: anel do sistema, e a borda de erro continua desenhada por baixo.
+    expect(focus.visible).toBe(true);
+    expect(focus.outlineWidth).toBeGreaterThanOrEqual(2);
+    expect(focus.border).toBe(rest.border);
+    expect(contrastRatio(focus.outlineColor, focus.around) ?? 0).toBeGreaterThanOrEqual(3);
+
+    await page.screenshot({ path: testInfo.outputPath(`destructive-outline-${surface}.png`) });
   });
 }

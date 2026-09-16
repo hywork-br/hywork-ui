@@ -5,6 +5,72 @@ Formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Este arquivo existe porque a distribuição é por **tag git**: o consumidor não
 tem `npm outdated` para descobrir o que mudou. Aqui é o único lugar.
 
+## [0.6.2] — 2026-09-16
+
+Backlog do review de 15/09 no lado do design system. Sem breaking change: uma
+variante nova de `Button`, uma forma nova (opcional) do slot `workspace` do
+`AdminShell` e um seletor que deixa de alcançar nó do consumidor.
+
+### Adicionado
+
+- **`Button` ganha `variant="danger-outline"`** — a ação destrutiva em CONTORNO
+  que a R13 pede. Borda e texto em `--hw-danger-strong` sobre `--hw-surface`;
+  hover preenche com o par `--hw-danger-soft`/`--hw-danger-soft-fg`; o foco usa o
+  anel do sistema. Medido no render, em admin e portal, em Chromium e Firefox:
+  em repouso, texto **5,15:1** (piso 4,5 do texto pequeno) e limite do controle
+  **5,15:1** contra o entorno branco da story — **4,68:1** contra
+  `--hw-surface-subtle`, que é o entorno real do admin (piso 3:1 da WCAG 1.4.11);
+  no hover, campo `--hw-danger-soft` com **4,50:1** de texto e de borda; anel de
+  foco **3,73:1** contra a superfície. O hover fica na margem do piso porque usa
+  o par suave de erro que o sistema já declara e já gateia — o cinza neutro de
+  hover das outras variantes daria 4,68:1, mas apagaria o único canal que diz
+  "isto destrói" justo no instante do ponteiro. A API continua um enum plano de
+  variantes: não entrou prop de tom cruzando com a variante, porque só uma
+  combinação de perigo é aprovada. `danger` sólido permanece para a tela cujo
+  resultado desejado É destruir.
+- Story `Contracts/Core families · DestructiveChoice` com o par da R13:
+  destrutiva em contorno e afirmativa `primary` em colunas iguais, custo dito em
+  número ("Descartar 12 alterações"). O `play` mede largura, papel de cada
+  paint e contraste; `tests/browser/interactions.spec.ts` mede hover e
+  `:focus-visible` com ponteiro e teclado reais, porque `userEvent` dispara
+  evento sintético e não acende nenhum dos dois no CSS.
+- **`AdminShell.workspace` aceita um resumo** — `{ name, meta?, media? }`, além
+  do nó livre que já aceitava. Com o resumo, quem escreve os elementos pintados é
+  o shell (`hw-admin-shell__workspace-name`, `…-meta`, `…-media`); `media` é o
+  lugar do chip de tenant.
+
+### Corrigido
+
+- **`.hw-admin-shell__workspace span` alcançava qualquer `span`.** O slot recebe
+  nó do consumidor, e o CSS mirava `strong` e `span` por TIPO: a sigla do tenant
+  dentro de um chip herdava a tinta de apoio da barra — rust por baixo,
+  `--hw-text-inverse-secondary` por cima, **1,98:1** — e o consumidor só saía
+  disso com `style` inline (hywork-experiments, `mockup-shell.tsx`). O padrão
+  agora pinta apenas as classes que ele mesmo escreve; a quebra de palavra passa
+  a ser herdada do invólucro, o que preserva o comportamento para qualquer nó.
+  Medido nas duas tonalidades de navegação, em Chromium e Firefox: chip do tenant
+  em **5,15:1** (branco sobre rust, o par que o próprio chip declara) e linha de
+  apoio com tinta distinta da do nome.
+
+### Alterado
+
+- O gate `check-tokens` passa a medir dois pares novos: `--hw-surface` ×
+  `--hw-danger-strong` (piso 4,5, a tinta da destrutiva em contorno, medido
+  5,15:1) e `--hw-surface-subtle` × `--hw-danger-strong` (piso 3,0, o limite do
+  controle contra o entorno real do admin, que não é branco, medido 4,68:1).
+- Nó livre no slot `workspace` deixa de receber a tinta de apoio automaticamente.
+  Quem dependia de `<span>` para a segunda linha passa ao resumo — é a forma que
+  o shell desenha e mede.
+
+### Conhecido
+
+- **Nenhuma variante de `Button` pinta `:active`.** Com ponteiro o pressionar
+  acontece sobre o hover, que já mudou o campo; com teclado o anel de foco é o
+  que responde. `danger-outline` seguiu a decisão do sistema em vez de inaugurar
+  um tratamento só seu.
+- `.hw-choice` continua com a caixa de 16px (decisão de desenho registrada em
+  0.6.1) e não foi tocada aqui.
+
 ## [0.6.1] — 2026-09-15
 
 Lado design system do review de 15/09 (`team/ux-ui/reviews/2026-09-15-experiments-review`),
