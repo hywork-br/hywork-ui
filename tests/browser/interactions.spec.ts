@@ -408,12 +408,16 @@ for (const width of [1440, 1280, 1024, 768, 390, 320]) {
 }
 
 /**
- * Alvo de toque das seleções. A caixa nativa tem 16px de desenho e não aceita
- * borda, padding nem pseudo-elemento (medido nos dois navegadores): o que
- * precisa medir é o que RECEBE o clique. Duas coisas, então — a exceção de
- * espaçamento da WCAG 2.5.8 (círculos de 24px que não se cruzam) e o rótulo
- * clicável, que é a linha inteira e respeita o mínimo da superfície. O switch,
- * esse sim, leva o alvo a 24px por pseudo-elemento.
+ * Alvo de toque das seleções. Os três controles são desenhados pelo DS com
+ * `appearance: none`, então o pseudo-elemento vale em todos: o alvo do próprio
+ * controle vai a 24px sem mexer nos 16px desenhados, e é isso que se mede por
+ * `elementsFromPoint` — o que RECEBE o clique, não o que aparece. O alvo
+ * confortável (32px no admin, 44px no portal e abaixo de 640px) continua sendo
+ * o rótulo clicável, que ocupa a linha inteira.
+ *
+ * O limite do controle também entra aqui: com aparência nativa ele era o cinza
+ * que cada navegador escolhia (Firefox reprovava o piso de 3:1 da WCAG 1.4.11),
+ * e agora é `--hw-input-border`, medido contra a superfície realmente pintada.
  */
 for (const width of [1440, 390]) {
   test(`${width}: selection controls hand the click to a target that meets the minimum`, async ({ page }, testInfo) => {
@@ -426,12 +430,25 @@ for (const width of [1440, 390]) {
         const box = element.getBoundingClientRect();
         return { x: box.left + box.width / 2, y: box.top + box.height / 2, box };
       };
+      const around = (element: Element) => {
+        let node: Element | null = element.parentElement;
+        while (node) {
+          const paint = getComputedStyle(node).backgroundColor;
+          const parts = paint.match(/[\d.]+/g);
+          if (parts && (parts.length < 4 || Number(parts[3]) > 0)) return paint;
+          node = node.parentElement;
+        }
+        return "";
+      };
       return controls.map((input) => {
         const own = centre(input);
         const label = input.closest("label");
         const labelBox = label?.getBoundingClientRect();
+        const style = getComputedStyle(input);
+        // elementsFromPoint, e não elementFromPoint: o rótulo cobre o controle na
+        // pilha, e o que importa é o controle RECEBER o ponto, não estar no topo.
         const reach = (dx: number, dy: number) =>
-          document.elementFromPoint(own.x + dx, own.y + dy) === input;
+          document.elementsFromPoint(own.x + dx, own.y + dy).includes(input);
         // Exceção de espaçamento: nenhum outro controle dentro de 24px de centro a centro.
         const crowded = controls.some((other) => {
           if (other === input) return false;
@@ -440,10 +457,13 @@ for (const width of [1440, 390]) {
         });
         return {
           name: input.getAttribute("aria-label") ?? label?.textContent?.trim().slice(0, 28) ?? input.type,
+          appearance: style.appearance,
+          around: around(input),
+          boundary: style.borderTopColor,
           box: [Math.round(own.box.width), Math.round(own.box.height)],
           label: labelBox ? [Math.round(labelBox.width), Math.round(labelBox.height)] : null,
           switch: input.classList.contains("hw-switch"),
-          hit24: reach(-11, -11) && reach(11, 11),
+          hit24: reach(-11, -11) && reach(11, 11) && reach(-11, 11) && reach(11, -11),
           spaced: !crowded,
           labelMeets: labelBox ? labelBox.height >= floor : false,
         };
@@ -453,10 +473,17 @@ for (const width of [1440, 390]) {
     expect(measured.length).toBeGreaterThan(0);
     for (const control of measured) {
       const detail = JSON.stringify(control);
-      // Ou o próprio alvo tem 24px, ou os círculos de 24px não se cruzam.
-      expect(control.hit24 || control.spaced, `WCAG 2.5.8: ${detail}`).toBe(true);
+      // Agora o alvo é do PRÓPRIO controle, nos três. A exceção de espaçamento
+      // segue medida, porque ela é o que impede um alvo de roubar o vizinho.
+      expect(control.appearance, `controle desenhado pelo DS: ${detail}`).toBe("none");
+      expect(control.hit24, `WCAG 2.5.8 no próprio controle: ${detail}`).toBe(true);
+      expect(control.spaced, `alvos de 24px não se cruzam: ${detail}`).toBe(true);
       expect(control.labelMeets, `rótulo clicável: ${detail}`).toBe(true);
-      if (control.switch) expect(control.hit24, `alvo do switch: ${detail}`).toBe(true);
+      // WCAG 1.4.11: o limite do controle contra a superfície realmente pintada.
+      expect(
+        contrastRatio(control.boundary, control.around) ?? 0,
+        `limite do controle: ${detail}`,
+      ).toBeGreaterThanOrEqual(3);
     }
     await page.screenshot({ path: testInfo.outputPath(`selection-targets-${width}.png`) });
   });

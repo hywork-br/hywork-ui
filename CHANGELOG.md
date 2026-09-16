@@ -7,9 +7,11 @@ tem `npm outdated` para descobrir o que mudou. Aqui é o único lugar.
 
 ## [0.6.2] — 2026-09-16
 
-Backlog do review de 15/09 no lado do design system. Sem breaking change: uma
-variante nova de `Button`, uma forma nova (opcional) do slot `workspace` do
-`AdminShell` e um seletor que deixa de alcançar nó do consumidor.
+Backlog do review de 15/09 no lado do design system, mais o que o consumidor
+reportou contornando no código dele. Sem breaking change: uma variante nova de
+`Button`, checkbox e radio desenhados pelo DS em vez do navegador, uma forma nova
+(opcional) do slot `workspace` do `AdminShell`, um seletor que deixa de alcançar
+nó do consumidor e o `gap` que faltava no `Badge`.
 
 ### Adicionado
 
@@ -38,9 +40,40 @@ variante nova de `Button`, uma forma nova (opcional) do slot `workspace` do
   do nó livre que já aceitava. Com o resumo, quem escreve os elementos pintados é
   o shell (`hw-admin-shell__workspace-name`, `…-meta`, `…-media`); `media` é o
   lugar do chip de tenant.
+- Story `Components/Seleção · ChoiceStateMatrix`: vazio, marcado, parcial,
+  inválido e indisponível, para checkbox e radio, com o `play` comparando cada
+  paint com o papel resolvido em runtime.
+- `Badge` aceita ícone Lucide antes do rótulo, com a separação vindo do selo.
 
 ### Corrigido
 
+- **Checkbox e radio deixavam o limite do controle para o navegador.** Com
+  aparência nativa, a borda era o que cada motor quisesse pintar, e nenhum gate
+  media: no pixel, Chromium desenhava **4,13:1** sobre a superfície sutil (passa)
+  e **Firefox 2,90:1**, abaixo do piso de 3:1 da WCAG 1.4.11 — o controle
+  reprovava num dos dois navegadores e o CI ficava verde. A caixa de 16px também
+  não aceitava borda, padding nem pseudo-elemento, então o alvo do próprio
+  controle estava preso ali.
+  Agora os dois são desenhados pelo DS com `appearance: none`: limite em
+  `--hw-input-border` (**3,64:1** sobre `--hw-surface` e **3,31:1** sobre
+  `--hw-surface-subtle`, os dois já medidos pelo gate de token), preenchimento
+  `--hw-primary` no estado marcado com a marca em `--hw-primary-fg` (**5,28:1**),
+  `aria-invalid` em `--hw-danger-strong` como nos outros campos, `disabled` com a
+  mesma opacidade dos campos e radio redondo. A marca do checkbox e o ponto do
+  radio são **geometria recortada** (`clip-path`) sobre a tinta do par: sem SVG
+  com cor própria, sem hex. `accent-color` sai do controle — ele não pinta mais
+  nada.
+  O alvo do próprio controle sobe a **24×24** por pseudo-elemento, sem mexer nos
+  16px de desenho, confirmado por `elementsFromPoint` nos quatro cantos, em
+  Chromium e Firefox, em 390 e 1440. Ele fica em 24 e não em 44 de propósito: o
+  rótulo vizinho começa a 16px do centro da caixa, então um alvo de 44px roubaria
+  6px do clique do controle anterior. O alvo confortável de 32px (admin) e 44px
+  (portal, mobile e ponteiro grosso) continua sendo o rótulo clicável.
+- **`Badge` colava o ícone no rótulo.** O selo era `inline-flex` sem `gap`, e o
+  consumidor corrigia com margem no glifo. O espaço passa a ser do selo
+  (`--hw-space-1`) e o ícone entra na escala pequena (`--hw-space-3`), para a
+  altura de 1,5rem ser a mesma com e sem ícone — medido em 24px nos dois casos,
+  nos dois navegadores, com a separação real entre glifo e texto em 4px.
 - **`.hw-admin-shell__workspace span` alcançava qualquer `span`.** O slot recebe
   nó do consumidor, e o CSS mirava `strong` e `span` por TIPO: a sigla do tenant
   dentro de um chip herdava a tinta de apoio da barra — rust por baixo,
@@ -68,8 +101,11 @@ variante nova de `Button`, uma forma nova (opcional) do slot `workspace` do
   acontece sobre o hover, que já mudou o campo; com teclado o anel de foco é o
   que responde. `danger-outline` seguiu a decisão do sistema em vez de inaugurar
   um tratamento só seu.
-- `.hw-choice` continua com a caixa de 16px (decisão de desenho registrada em
-  0.6.1) e não foi tocada aqui.
+- O `Switch` continua com os 32×20 desenhados e alvo de 24px por
+  pseudo-elemento, como em 0.6.1. O que mudou nesta versão foi checkbox e radio.
+- `accent-color` permanece em `.hw-upload progress`, que é um `<progress>`
+  nativo e não faz parte desta correção: tirar de lá devolveria a barra ao azul
+  padrão do navegador sem substituto desenhado.
 
 ## [0.6.1] — 2026-09-15
 
@@ -130,7 +166,8 @@ contrato.
 
 ### Conhecido
 
-- **Checkbox e radio continuam com a caixa de 16px.** Com aparência nativa eles
+- **Checkbox e radio continuam com a caixa de 16px.** *(Resolvido em 0.6.2, com
+  `appearance: none`.)* Com aparência nativa eles
   ignoram borda, padding e pseudo-elemento nos dois navegadores (medido em
   15/09); ampliar o alvo do próprio controle exigiria `appearance: none` e
   desenho à mão, perdendo `accent-color` — decisão de desenho, não de correção.

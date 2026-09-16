@@ -1,19 +1,25 @@
 /**
- * ALVO de toque da caixa nativa. Medido nos dois navegadores em 15/09: um
- * checkbox com aparência nativa IGNORA borda, padding e pseudo-elemento — o
- * Chromium até desenha ::after, o Firefox não, e nenhum dos dois aumenta a
- * caixa de 16px. Trocar por appearance:none resolveria o alvo desenhando o
- * controle à mão, e aí perde-se accent-color e o desenho muda: fora do escopo
- * desta correção.
+ * Checkbox e radio DESENHADOS PELO DS.
  *
- * O que sustenta a WCAG 2.5.8 aqui, então, é a EXCEÇÃO DE ESPAÇAMENTO: a
- * margem de 8px mantém 32px entre os centros de duas caixas, mais que os 24px
- * do círculo da regra. E o alvo confortável de toque é o rótulo clicável
- * abaixo, que ocupa a linha inteira e respeita o mínimo da superfície (44px
- * abaixo de 640px). Os dois são medidos em `tests/browser/interactions.spec.ts`.
+ * Com aparência nativa o limite do controle era o que cada navegador quisesse
+ * pintar, e ninguém media: no pixel, Chromium desenhava #767676 sobre #f4f4f4
+ * (4,13:1, passa) e Firefox #8f8f9d (2,90:1, REPROVA o 3:1 de limite de controle
+ * da WCAG 1.4.11). A caixa também não aceitava borda, padding nem
+ * pseudo-elemento, então o alvo ficava preso nos 16px desenhados.
+ *
+ * Com `appearance: none` o limite passa a ser --hw-input-border, que o gate de
+ * token já mede contra --hw-surface e contra --hw-surface-subtle, e o alvo sobe
+ * a 24px por pseudo-elemento — a mesma técnica do switch — sem mexer nos 16px
+ * de desenho. A marca é GEOMETRIA recortada sobre a tinta do par
+ * --hw-primary/--hw-primary-fg: nada de SVG com cor solta dentro.
+ *
+ * O alvo confortável de 32px (admin) ou 44px (portal e ponteiro grosso) continua
+ * sendo o rótulo clicável, que ocupa a linha. O pseudo-elemento fica em 24px de
+ * propósito: medido em 16/09, o rótulo vizinho começa a 16px do centro da caixa,
+ * então um alvo de 44px roubaria 6px do clique do controle anterior. Os dois
+ * números saem de `tests/browser/interactions.spec.ts`, por `elementsFromPoint`.
  */
 .hw-choice {
-  accent-color: var(--hw-primary);
   inline-size: var(--hw-space-4);
   block-size: var(--hw-space-4);
   margin: var(--hw-space-2);
@@ -23,6 +29,59 @@
 }
 .hw-choice:disabled {
   cursor: not-allowed;
+}
+.hw-choice:not(.hw-switch) {
+  appearance: none;
+  background: var(--hw-surface);
+  border: 1px solid var(--hw-input-border);
+  /* O raio generoso da marca vira círculo numa caixa de 16px: metade dele. */
+  border-radius: calc(var(--hw-radius-sm) / 2);
+  box-sizing: border-box;
+  flex: 0 0 auto;
+}
+.hw-choice[type="radio"] {
+  border-radius: var(--hw-radius-full);
+}
+.hw-choice:not(.hw-switch):checked,
+.hw-choice[type="checkbox"]:not(.hw-switch):indeterminate {
+  background: var(--hw-primary);
+  border-color: var(--hw-primary);
+}
+.hw-choice:not(.hw-switch):disabled {
+  opacity: 0.58;
+}
+.hw-choice:not(.hw-switch)[aria-invalid="true"] {
+  border-color: var(--hw-danger-strong);
+}
+.hw-choice[type="checkbox"]:not(.hw-switch):checked::before,
+.hw-choice[type="checkbox"]:not(.hw-switch):indeterminate::before,
+.hw-choice[type="radio"]:checked::before {
+  background: var(--hw-primary-fg);
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+.hw-choice[type="checkbox"]:not(.hw-switch):checked::before {
+  clip-path: polygon(42% 84%, 14% 56%, 24% 46%, 42% 64%, 76% 22%, 86% 32%);
+}
+/* Indeterminado depois de marcado: os dois estados podem coexistir, e o traço
+   é o que descreve a verdade da seleção parcial. */
+.hw-choice[type="checkbox"]:not(.hw-switch):indeterminate::before {
+  clip-path: polygon(22% 44%, 78% 44%, 78% 56%, 22% 56%);
+}
+.hw-choice[type="radio"]:checked::before {
+  border-radius: var(--hw-radius-full);
+  inset: 28%;
+}
+/* Alvo de 24px (WCAG 2.5.8) sem alterar os 16px desenhados. */
+.hw-choice:not(.hw-switch)::after {
+  block-size: var(--hw-space-6);
+  content: "";
+  inline-size: var(--hw-space-6);
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  position: absolute;
+  translate: -50% -50%;
 }
 label:has(> .hw-choice) {
   display: inline-flex;
@@ -202,4 +261,9 @@ label:has(> .hw-choice) {
   display: inline-flex;
   align-items: center;
   min-block-size: var(--hw-target-min);
+}
+.hw-choice-states {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hw-space-2) var(--hw-space-6);
 }

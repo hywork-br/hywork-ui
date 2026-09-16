@@ -139,7 +139,7 @@
       "storyExport": "BadgeContract",
       "migrationWave": 2,
       "storyFile": "stories/Contracts.stories.tsx",
-      "storyContract": "smoke"
+      "storyContract": "play"
     },
     {
       "slug": "avatar",

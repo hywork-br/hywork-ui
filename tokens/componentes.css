@@ -190,17 +190,22 @@
 .hw-field__hint { color: var(--hw-text-muted); }
 .hw-field__error { color: var(--hw-danger-strong); font-weight: 600; }
 
+/* O selo é inline-flex sem separação: com ícone, o glifo colava no texto e o
+   consumidor corrigia com margem no ícone. O gap é do selo, e o ícone entra na
+   escala pequena para a altura de 1,5rem continuar a mesma com e sem ele. */
 .hw-badge {
   align-items: center;
   border-radius: var(--hw-radius-full);
   display: inline-flex;
   font-size: var(--hw-text-xs);
   font-weight: 600;
+  gap: var(--hw-space-1);
   justify-self: start;
   line-height: 1;
   min-height: 1.5rem;
   padding: 0 var(--hw-space-2);
 }
+.hw-badge svg { flex: 0 0 auto; height: var(--hw-space-3); width: var(--hw-space-3); }
 .hw-badge[data-tone="neutral"] { background: var(--hw-neutral-soft); color: var(--hw-neutral-soft-fg); }
 .hw-badge[data-tone="info"] { background: var(--hw-info-soft); color: var(--hw-info-soft-fg); }
 .hw-badge[data-tone="success"] { background: var(--hw-success-soft); color: var(--hw-success-soft-fg); }

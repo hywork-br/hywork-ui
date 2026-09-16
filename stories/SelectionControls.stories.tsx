@@ -10,6 +10,7 @@ import {
   MultiSelect,
   DateField,
   DateRangeField,
+  FieldError,
   FileUpload,
   type FileUploadItem,
 } from "../src";
@@ -214,5 +215,120 @@ export const Interactive: Story = {
     await expect(input).toHaveAttribute("aria-expanded", "false");
     await userEvent.keyboard("{ArrowDown}{Escape}");
     await expect(input).toHaveFocus();
+  },
+};
+
+/* Estados desenhados pelo DS: caixa vazia, marcada, parcial, inválida e
+   indisponível, mais o radio nos mesmos estados. Existe porque com aparência
+   nativa não havia o que medir — o limite do controle era decisão do navegador,
+   e o Firefox reprovava o piso de 3:1. Nada aqui é controle falso: menos os
+   `disabled`, todos operam de verdade. */
+function ChoiceStates() {
+  const [marked, setMarked] = useState(true);
+  const [empty, setEmpty] = useState(false);
+  const [partial, setPartial] = useState<"partial" | boolean>("partial");
+  const [accepted, setAccepted] = useState(false);
+  const [pick, setPick] = useState("sim");
+  return (
+    <div className="hw-selection-demo">
+      <h2>Estados de escolha</h2>
+      <div className="hw-choice-states">
+        <label>
+          <Checkbox checked={marked} onChange={(event) => setMarked(event.target.checked)} /> Marcada
+        </label>
+        <label>
+          <Checkbox checked={empty} onChange={(event) => setEmpty(event.target.checked)} /> Vazia
+        </label>
+        <label>
+          <Checkbox
+            checked={partial === true}
+            indeterminate={partial === "partial"}
+            onChange={(event) => setPartial(event.target.checked)}
+          />{" "}
+          Parcial
+        </label>
+        <label>
+          <Checkbox
+            aria-describedby={accepted ? undefined : "choice-invalid-error"}
+            aria-invalid={accepted ? undefined : "true"}
+            checked={accepted}
+            onChange={(event) => setAccepted(event.target.checked)}
+          />{" "}
+          Inválida
+        </label>
+        <label>
+          <Checkbox checked disabled onChange={() => undefined} /> Indisponível marcada
+        </label>
+        <label>
+          <Checkbox disabled checked={false} onChange={() => undefined} /> Indisponível vazia
+        </label>
+      </div>
+      {accepted ? null : (
+        <FieldError id="choice-invalid-error">Aceite os termos para continuar.</FieldError>
+      )}
+      <fieldset className="hw-date-range">
+        <legend className="hw-label">Exclusiva</legend>
+        <div className="hw-choice-states">
+          {[
+            { value: "sim", label: "Sim" },
+            { value: "nao", label: "Não" },
+          ].map((item) => (
+            <label key={item.value}>
+              <Radio
+                name="choice-states"
+                value={item.value}
+                checked={pick === item.value}
+                onChange={() => setPick(item.value)}
+              />
+              {item.label}
+            </label>
+          ))}
+          <label>
+            <Radio name="choice-states-off" disabled checked onChange={() => undefined} /> Indisponível
+          </label>
+        </div>
+      </fieldset>
+    </div>
+  );
+}
+
+export const ChoiceStateMatrix: Story = {
+  render: () => <ChoiceStates />,
+  /* jsdom não resolve custom property; este contrato só diz a verdade no
+     navegador, e é lá que ele roda. */
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const marked = canvas.getByRole("checkbox", { name: "Marcada" });
+    const empty = canvas.getByRole("checkbox", { name: "Vazia" });
+    const invalid = canvas.getByRole("checkbox", { name: "Inválida" });
+    const radio = canvas.getByRole("radio", { name: "Sim" });
+
+    // Valor computado do papel, para comparar com o que a tela pinta.
+    const role = (token: string) => {
+      const probe = document.createElement("span");
+      probe.style.backgroundColor = `var(${token})`;
+      canvasElement.append(probe);
+      const value = getComputedStyle(probe).backgroundColor;
+      probe.remove();
+      return value;
+    };
+
+    // O limite do controle é do DS, não do navegador: era aí que o Firefox
+    // pintava um cinza de 2,90:1 e nenhum gate media.
+    await expect(getComputedStyle(empty).appearance).toBe("none");
+    await expect(getComputedStyle(empty).borderTopColor).toBe(role("--hw-input-border"));
+    await expect(getComputedStyle(empty).backgroundColor).toBe(role("--hw-surface"));
+    await expect(getComputedStyle(marked).backgroundColor).toBe(role("--hw-primary"));
+    await expect(getComputedStyle(marked, "::before").backgroundColor).toBe(role("--hw-primary-fg"));
+    await expect(getComputedStyle(radio).backgroundColor).toBe(role("--hw-primary"));
+    await expect(getComputedStyle(invalid).borderTopColor).toBe(role("--hw-danger-strong"));
+
+    // Desenhar o controle não pode custar o comportamento nativo do input.
+    await userEvent.click(empty);
+    await expect(empty).toBeChecked();
+    await expect(getComputedStyle(empty).backgroundColor).toBe(role("--hw-primary"));
+    await userEvent.click(empty);
+    await expect(empty).not.toBeChecked();
+    await expect(getComputedStyle(empty).backgroundColor).toBe(role("--hw-surface"));
   },
 };

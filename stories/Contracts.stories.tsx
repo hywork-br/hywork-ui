@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Info, MoreHorizontal } from "lucide-react";
+import { CircleCheck, Info, MoreHorizontal, TriangleAlert } from "lucide-react";
 import { expect, fn, userEvent, waitFor, within } from "storybook/test";
 
 import {
@@ -272,8 +272,42 @@ export const BadgeContract: Story = {
         <Badge tone="warning">Agendada</Badge>
         <Badge tone="danger">Falha no envio</Badge>
       </div>
+      {/* Com ícone: a separação é do selo, não margem que o consumidor põe no
+          glifo — e a altura não pode mudar por causa dele. */}
+      <div className="hw-contract__row">
+        <Badge tone="success" data-testid="badge-icon">
+          <CircleCheck aria-hidden="true" />
+          Publicada
+        </Badge>
+        <Badge tone="danger">
+          <TriangleAlert aria-hidden="true" />
+          Falha no envio
+        </Badge>
+        <Badge tone="success" data-testid="badge-plain">
+          Publicada
+        </Badge>
+      </div>
     </ContractFrame>
   ),
+  /* O ícone não pode empurrar a altura do selo, e o espaço entre glifo e rótulo
+     tem que existir sem margem do consumidor. */
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const withIcon = canvas.getByTestId("badge-icon");
+    const plain = canvas.getByTestId("badge-plain");
+    await expect(withIcon.getBoundingClientRect().height).toBe(
+      plain.getBoundingClientRect().height,
+    );
+    const gap = parseFloat(getComputedStyle(withIcon).columnGap);
+    await expect(gap).toBeGreaterThan(0);
+    const glyph = withIcon.querySelector("svg")!;
+    const label = glyph.nextSibling as Text;
+    const range = document.createRange();
+    range.selectNodeContents(label);
+    await expect(
+      Math.round(range.getBoundingClientRect().left - glyph.getBoundingClientRect().right),
+    ).toBe(Math.round(gap));
+  },
 };
 
 export const AvatarContract: Story = {

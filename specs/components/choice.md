@@ -21,17 +21,19 @@ declarações TypeScript do pacote; esta spec não amplia a API.
 
 ## Variantes e estados
 
-Exercite vazio, preenchido, desabilitado e recuperação quando aplicáveis. Estado controlado deve refletir a fonte de dados do consumidor.
+Exercite vazio, marcado, parcial (`indeterminate`), inválido (`aria-invalid`), desabilitado e recuperação quando aplicáveis; a matriz executável é `ChoiceStateMatrix` em `stories/SelectionControls.stories.tsx`. A marca do checkbox e o ponto do radio são geometria recortada sobre `--hw-primary-fg`, não imagem com cor própria. Estado controlado deve refletir a fonte de dados do consumidor.
 
 ## Tokens consumidos
 
-Papéis `--hw-surface`/`--hw-surface-fg`, `--hw-muted`/`--hw-muted-fg`, `--hw-focus` e tokens de tamanho da superfície; veja `tokens/componentes.css`. Sem cores arbitrárias.
+Papéis `--hw-surface`/`--hw-surface-fg`, `--hw-input-border` (limite do controle), `--hw-primary`/`--hw-primary-fg` (marcado), `--hw-danger-strong` (`aria-invalid`), `--hw-focus` e tokens de tamanho da superfície; veja `tokens/selection.css`. Sem cores arbitrárias e sem `accent-color`: o controle é desenhado pelo DS.
 
 ## Admin, portal e mobile
 
 Montserrat preservada. Admin: alvo mínimo de 32px. Portal e mobile: 44px. Inputs estreitos: texto mínimo de 16px. Tabela pode rolar no contêiner, nunca alargar a página.
 
-O alvo de toque da caixa é o RÓTULO clicável, que ocupa a linha inteira e carrega o mínimo da superfície; a caixa nativa fica com os 16px que ela desenha. Checkbox e radio com aparência nativa ignoram borda, padding e pseudo-elemento — medido em Chromium e Firefox em 15/09/2026 —, então ampliar o alvo do próprio controle exigiria `appearance: none` e desenho à mão, perdendo `accent-color`. O que sustenta a WCAG 2.5.8 ali é a exceção de espaçamento: a margem de 8px mantém 32px entre centros, contra os 24px do círculo da regra. O switch, que já é `appearance: none`, leva o alvo a 24px por pseudo-elemento. Os três números são medidos em `tests/browser/interactions.spec.ts`, em 390 e 1440. Envolver a caixa num rótulo clicável é obrigação do consumidor: sem ele, sobra só a caixa de 16px.
+Checkbox, radio e switch são desenhados pelo DS com `appearance: none`. Com aparência nativa, o limite do controle era decisão do navegador e ninguém media: no pixel, Chromium pintava 4,13:1 sobre a superfície sutil e Firefox 2,90:1, abaixo do piso de 3:1 da WCAG 1.4.11. Agora o limite é `--hw-input-border`, medido pelo gate de token contra `--hw-surface` e `--hw-surface-subtle`, e conferido no navegador por computed style.
+
+O alvo do PRÓPRIO controle vai a 24×24 por pseudo-elemento, sem mexer nos 16px de desenho — a mesma técnica do switch —, e é verificado por `elementsFromPoint` nos dois navegadores. Ele fica em 24 e não em 44 de propósito: medido em 16/09/2026, o rótulo vizinho começa a 16px do centro da caixa, então um alvo de 44px roubaria 6px do clique do controle anterior. O alvo CONFORTÁVEL de 32px no admin e 44px no portal, mobile ou ponteiro grosso continua sendo o rótulo clicável, que ocupa a linha inteira. Os números são medidos em `tests/browser/interactions.spec.ts`, em 390 e 1440. Envolver a caixa num rótulo clicável continua sendo obrigação do consumidor: sem ele, sobra a caixa de 16px com alvo de 24px.
 
 ## Teclado, foco e acessibilidade
 
