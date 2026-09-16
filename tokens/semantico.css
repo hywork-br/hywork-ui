@@ -97,6 +97,18 @@
   --hw-border-strong: var(--hw-gray);
 
   /**
+   * Item ATIVO da navegação (R2 do guia): fundo navy-card, tinta branca e um
+   * filete de acento. O laranja puro entra aqui como INDICADOR de 3px — nunca
+   * como área, nunca como texto —, e é o único laranja do chrome. Selecionar
+   * por cor sozinha é o que a regra proíbe: o filete é o segundo canal.
+   * Medido: 13,28:1 tinta/fundo, 3,56:1 do filete sobre o próprio fundo,
+   * 3,39:1 sobre o chrome claro e 4,06:1 sobre o chrome navy.
+   */
+  --hw-nav-active: var(--hw-navy-card);
+  --hw-nav-active-fg: var(--hw-white);
+  --hw-nav-active-rail: var(--hw-orange);
+
+  /**
    * Foco — 2px com offset. O anel precisa passar de 3:1 contra o fundo
    * adjacente (WCAG 1.4.11); o anel que vem por padrão na maioria dos scaffolds
    * fica abaixo disso, e é por isso que este token existe em vez de herdarmos.

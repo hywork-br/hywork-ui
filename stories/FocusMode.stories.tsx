@@ -33,8 +33,13 @@ function FocusModeExample() {
   const [message, setMessage] = useState("");
   const [notice, setNotice] = useState("");
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const announcedStep = useRef(0);
+  /* Mover o foco a cada passo é do fluxo; ao ABRIR quem decide é o padrão, que
+     leva o foco ao primeiro campo do corpo (R29). */
   useEffect(() => {
-    if (open) headingRef.current?.focus();
+    if (!open || announcedStep.current === step) return;
+    announcedStep.current = step;
+    headingRef.current?.focus();
   }, [step, open]);
   const nextLabels = [
     "Continuar para público",
@@ -53,6 +58,7 @@ function FocusModeExample() {
       <Button
         onClick={() => {
           setStep(0);
+          announcedStep.current = 0;
           setOpen(true);
         }}
       >
@@ -64,6 +70,21 @@ function FocusModeExample() {
         rascunho enquanto esta página estiver aberta.
       </p>
       <FocusMode
+        actions={
+          <Button form="focus-campaign-form" type="submit">
+            {nextLabels[step]}
+          </Button>
+        }
+        back={
+          <Button
+            disabled={step === 0}
+            onClick={() => setStep(step - 1)}
+            type="button"
+            variant="outline"
+          >
+            Voltar
+          </Button>
+        }
         description="Demonstração local · nenhum envio será realizado"
         onExit={() => setOpen(false)}
         open={open}
@@ -71,6 +92,7 @@ function FocusModeExample() {
       >
         <form
           className="hw-flow"
+          id="focus-campaign-form"
           onSubmit={(event) => {
             event.preventDefault();
             if (step < 3) setStep(step + 1);
@@ -96,6 +118,9 @@ function FocusModeExample() {
                   : "upcoming",
             }))}
           />
+          {/* A medida de leitura vale para os campos; o trilho fica com a
+              largura do modo de foco. */}
+          <div className="hw-focus-mode__content">
           <Card>
             <CardHeader>
               <CardTitle ref={headingRef} tabIndex={-1}>
@@ -170,17 +195,7 @@ function FocusModeExample() {
               )}
             </CardContent>
           </Card>
-          <footer className="hw-flow__actions">
-            <Button
-              disabled={step === 0}
-              onClick={() => setStep(step - 1)}
-              type="button"
-              variant="outline"
-            >
-              Voltar
-            </Button>
-            <Button type="submit">{nextLabels[step]}</Button>
-          </footer>
+          </div>
         </form>
       </FocusMode>
     </div>

@@ -6,6 +6,17 @@
  */
 
 :root {
+  /**
+   * MEDIDAS de leitura. A coluna de página é o teto do modo de foco; a de
+   * formulário é a medida confortável de um campo com rótulo. Existem como
+   * token porque o consumidor não deve empilhar um segundo max-width em cima
+   * do padrão — foi assim que o formulário do modo de foco acabou com 672px
+   * dentro de um corpo de 1152px.
+   */
+  --hw-measure-page: 72rem;
+  --hw-measure-form: 48rem;
+  /* Espessura do filete do item ativo da navegação (R2). */
+  --hw-nav-active-rail-width: 3px;
   --hw-shadow-sm: 0 1px 2px color-mix(in srgb, var(--hw-navy) 8%, transparent);
   --hw-shadow-md: 0 12px 32px color-mix(in srgb, var(--hw-navy) 14%, transparent);
   --hw-overlay: color-mix(in srgb, var(--hw-navy) 58%, transparent);
@@ -336,10 +347,15 @@
 .hw-filter-bar { display: grid; gap: var(--hw-space-3); }
 .hw-filter-bar__controls { align-items: center; display: flex; flex-wrap: wrap; gap: var(--hw-space-3); }
 .hw-filter-bar__search { flex: 1 1 18rem; max-width: 28rem; min-width: 12rem; }
+/* A baseline é a identidade inteira do campo quieto: apagá-la deixava busca e
+   filtros a 1:1 contra o chrome do admin, que é o mesmo cinza do preenchimento.
+   O que separa filtro de campo de formulário continua sendo o PREENCHIMENTO —
+   o filtro é transparente sobre o chrome, o campo é preenchido —, nunca a
+   ausência de limite. */
 .hw-filter-bar__search .hw-input,
-.hw-filter-bar__search input { border-color: transparent; width: 100%; }
-.hw-filter-bar__filters { align-items: center; display: flex; flex-wrap: wrap; gap: var(--hw-space-2); margin-left: auto; }
-.hw-filter-bar__filters .hw-select { background: transparent; border-color: transparent; font-weight: 500; min-width: 0; }
+.hw-filter-bar__search input { width: 100%; }
+.hw-filter-bar__filters { align-items: center; display: flex; flex-wrap: wrap; gap: var(--hw-space-2); margin-inline-start: auto; }
+.hw-filter-bar__filters .hw-select { background: transparent; font-weight: 500; min-width: 0; }
 .hw-filter-bar__filters .hw-select[data-state="open"] { background: var(--hw-interactive-hover); color: var(--hw-interactive-hover-fg); }
 .hw-filter-bar__filters > svg { color: var(--hw-text-muted); height: 1rem; width: 1rem; }
 .hw-filter-bar__active { align-items: center; display: flex; flex-wrap: wrap; gap: var(--hw-space-2); }
@@ -430,10 +446,14 @@
 .hw-shell-navigation__group { display: grid; gap: var(--hw-space-1); min-width: 0; }
 .hw-shell-navigation__group-label { color: var(--hw-text-muted); font-size: var(--hw-text-xs); font-weight: 700; margin: 0; padding: 0 var(--hw-space-3); }
 .hw-shell-navigation__items { display: grid; gap: var(--hw-space-1); min-width: 0; }
-.hw-shell-navigation a { align-items: center; border-radius: var(--hw-control-radius); color: var(--hw-text-secondary); display: flex; font-size: var(--hw-label-size); font-weight: 700; gap: var(--hw-space-3); min-height: var(--hw-control-height); min-width: 0; padding: var(--hw-space-1) var(--hw-space-3); text-decoration: none; }
+.hw-shell-navigation a { align-items: center; border-radius: var(--hw-control-radius); color: var(--hw-text-secondary); display: flex; font-size: var(--hw-label-size); font-weight: 600; gap: var(--hw-space-3); min-height: var(--hw-control-height); min-width: 0; padding: var(--hw-space-1) var(--hw-space-3); text-decoration: none; }
 .hw-shell-navigation a span { min-width: 0; overflow-wrap: anywhere; }
 .hw-shell-navigation a:hover { background: var(--hw-interactive-hover); color: var(--hw-interactive-hover-fg); }
-.hw-shell-navigation a[aria-current="page"] { background: var(--hw-primary-soft); color: var(--hw-primary-soft-fg); }
+/* Item ativo (R2): filete de acento, fundo navy-card e peso — três canais, e
+   nenhum deles é só cor. O filete compensa o próprio recuo para o rótulo
+   continuar alinhado com os vizinhos; o laranja aparece aqui e em nenhum outro
+   lugar do chrome. */
+.hw-shell-navigation a[aria-current="page"] { background: var(--hw-nav-active); border-inline-start: var(--hw-nav-active-rail-width) solid var(--hw-nav-active-rail); color: var(--hw-nav-active-fg); font-weight: 700; padding-inline-start: calc(var(--hw-space-3) - var(--hw-nav-active-rail-width)); }
 .hw-shell-navigation svg { flex: 0 0 auto; height: 1rem; width: 1rem; }
 .hw-admin-shell__utility { margin-top: auto; min-width: 0; }
 .hw-admin-shell__utility :where(button, a) { background: transparent; border: 0; border-radius: var(--hw-control-radius); color: inherit; font: inherit; min-height: var(--hw-control-height); overflow-wrap: anywhere; padding: var(--hw-space-2) var(--hw-space-3); text-align: left; width: 100%; }
@@ -455,8 +475,6 @@
 .hw-shell-navigation-panel[data-navigation-tone="inverse"] .hw-admin-shell__workspace span { color: var(--hw-text-inverse-secondary); }
 .hw-admin-shell[data-navigation-tone="inverse"] .hw-shell-navigation a:hover,
 .hw-shell-navigation-panel[data-navigation-tone="inverse"] .hw-shell-navigation a:hover { background: var(--hw-surface); color: var(--hw-surface-fg); }
-.hw-admin-shell[data-navigation-tone="inverse"] .hw-shell-navigation a[aria-current="page"],
-.hw-shell-navigation-panel[data-navigation-tone="inverse"] .hw-shell-navigation a[aria-current="page"] { background: var(--hw-primary); color: var(--hw-primary-fg); }
 .hw-navigation-story__main { display: grid; gap: var(--hw-space-8); padding: var(--hw-space-8); }
 .hw-navigation-story__main > header { align-items: start; display: grid; gap: var(--hw-space-3); max-width: 48rem; }
 .hw-navigation-story__main h1,
@@ -469,31 +487,93 @@
 .hw-navigation-story__account { display: grid; gap: var(--hw-space-2); }
 .hw-navigation-story__account p { font-size: var(--hw-text-xs); margin: 0; overflow-wrap: anywhere; padding: 0 var(--hw-space-3); }
 
-.hw-dialog__content.hw-focus-mode { animation: hw-fade-in var(--hw-duration-base) var(--hw-ease-standard); border: 0; border-radius: 0; gap: 0; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); height: 100dvh; inset: 0; max-height: none; max-width: none; overflow: hidden; padding: 0; transform: none; width: 100%; }
+.hw-dialog__content.hw-focus-mode { animation: hw-fade-in var(--hw-duration-base) var(--hw-ease-standard); border: 0; border-radius: 0; gap: 0; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; height: 100dvh; inset: 0; max-height: none; max-width: none; overflow: hidden; padding: 0; transform: none; width: 100%; }
 .hw-focus-mode__header { align-items: flex-start; border-bottom: 1px solid var(--hw-border); display: flex; gap: var(--hw-space-4); justify-content: space-between; min-width: 0; overflow-wrap: anywhere; padding: var(--hw-space-4) var(--hw-space-6); }
 .hw-focus-mode__header > div { min-width: 0; }
 .hw-focus-mode__header > button { align-items: center; background: transparent; border: 0; border-radius: var(--hw-control-radius); color: var(--hw-text); cursor: pointer; display: flex; flex: 0 0 auto; height: var(--hw-control-height); justify-content: center; width: var(--hw-control-height); }
 .hw-focus-mode__header > button:disabled { cursor: not-allowed; opacity: 0.58; }
 .hw-focus-mode__header svg { height: 1rem; width: 1rem; }
-.hw-focus-mode__body { margin: 0 auto; max-width: 72rem; min-height: 0; min-width: 0; overflow: auto; overflow-wrap: anywhere; padding: var(--hw-space-8); width: 100%; }
+.hw-focus-mode__body { margin: 0 auto; max-width: var(--hw-measure-page); min-height: 0; min-width: 0; overflow: auto; overflow-wrap: anywhere; padding: var(--hw-space-8); width: 100%; }
+/* Formulário tem medida de leitura própria: o consumidor pede a medida ao
+   padrão em vez de empilhar um segundo teto de largura por fora. */
+.hw-focus-mode__body[data-measure="form"] { max-width: var(--hw-measure-form); }
+/* Coluna de leitura DENTRO do corpo, para quando o trilho de progresso divide o
+   espaço com o formulário: a medida vale para os campos, e o trilho continua
+   com a largura do modo de foco — medida de leitura é regra de prosa, não de
+   chrome. */
+.hw-focus-mode__content { margin-inline: auto; max-width: var(--hw-measure-form); min-width: 0; width: 100%; }
+/* A faixa de ações é LINHA do diálogo, não fim do formulário: fica fora do que
+   rola, então "Voltar" e a primária estão visíveis em todos os passos e em
+   qualquer viewport. Voltar à esquerda, primária à direita (R27). */
+.hw-focus-mode__actions { align-items: center; background: var(--hw-surface); border-top: 1px solid var(--hw-border); column-gap: var(--hw-space-4); display: flex; flex-wrap: wrap; justify-content: space-between; padding: var(--hw-space-4) var(--hw-space-6); row-gap: var(--hw-space-2); }
+.hw-focus-mode__actions > * { align-items: center; display: flex; flex-wrap: wrap; gap: var(--hw-space-3); min-width: 0; }
 .hw-upload__items { display: grid; gap: var(--hw-space-4); list-style: none; margin: 0; min-width: 0; padding: 0; }
 .hw-upload__items > li { display: grid; gap: var(--hw-space-2); min-width: 0; overflow-wrap: anywhere; }
 .hw-upload__items > li > span:nth-child(2) { color: var(--hw-text-muted); font-size: var(--hw-label-size); }
 .hw-upload__items .hw-selection-action { justify-self: start; }
 
-.hw-stepper { display: flex; flex-wrap: wrap; gap: var(--hw-space-2) 0; list-style: none; margin: 0; padding: 0; }
+/* O trilho adapta ao CONTÊINER, não ao viewport: o formulário que o hospeda
+   mede a mesma largura em 1440 e em 1024, e era o viewport que decidia o modo
+   compacto — por isso as 5 etapas quebravam em duas linhas em toda tela
+   desktop. Completo, o trilho nunca embrulha a lista: os itens encolhem e o
+   rótulo é que quebra. Compacto, restam os marcadores numerados em uma linha e
+   o nome do passo atual logo abaixo; o rótulo dos outros continua no DOM e no
+   nome acessível de cada botão. */
+.hw-stepper-shell {
+  /* Estado do trilho. O modo completo é o default; a consulta de contêiner
+     abaixo troca estes valores quando os nomes não cabem em uma linha. */
+  --hw-stepper-connector-min: var(--hw-space-8);
+  --hw-stepper-current-display: none;
+  --hw-stepper-label-clip: none;
+  --hw-stepper-label-gap: var(--hw-space-2);
+  --hw-stepper-label-overflow: visible;
+  --hw-stepper-label-position: static;
+  --hw-stepper-label-size: auto;
+  --hw-stepper-marker-size: 1.75rem;
+  --hw-stepper-wrap: nowrap;
+  container: hw-stepper / inline-size;
+  display: grid;
+  gap: var(--hw-space-2);
+  min-width: 0;
+}
+.hw-stepper { display: flex; flex-wrap: var(--hw-stepper-wrap, nowrap); gap: var(--hw-space-2) 0; list-style: none; margin: 0; min-width: 0; padding: 0; }
 .hw-stepper li { align-items: center; display: flex; flex: 1 1 auto; min-width: 0; max-width: 100%; }
-.hw-stepper li:not(:last-child)::after { background: var(--hw-border); content: ""; flex: 1; height: 1px; min-width: var(--hw-space-8); }
+.hw-stepper li:not(:last-child)::after { background: var(--hw-border); content: ""; flex: 1; height: 1px; min-width: var(--hw-stepper-connector-min, var(--hw-space-8)); }
 .hw-stepper li[data-status="complete"]:not(:last-child)::after { background: var(--hw-primary-text); }
-.hw-stepper button { align-items: center; background: transparent; border: 0; color: var(--hw-text-muted); display: flex; font-size: var(--hw-label-size); font-weight: 700; gap: var(--hw-space-2); min-width: 0; padding: var(--hw-space-2); text-align: start; }
-.hw-stepper button > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+.hw-stepper button { align-items: center; background: transparent; border: 0; color: var(--hw-text-muted); display: flex; font-size: var(--hw-label-size); font-weight: 700; gap: var(--hw-stepper-label-gap, var(--hw-space-2)); min-width: 0; padding: var(--hw-space-2); text-align: start; }
+/* break-word, não anywhere: o rótulo quebra no espaço antes de quebrar dentro
+   da palavra, e só parte a palavra quando ela sozinha não cabe. */
+.hw-stepper button > span:last-child { block-size: var(--hw-stepper-label-size, auto); clip-path: var(--hw-stepper-label-clip, none); inline-size: var(--hw-stepper-label-size, auto); min-width: 0; overflow: var(--hw-stepper-label-overflow, visible); overflow-wrap: break-word; position: var(--hw-stepper-label-position, static); }
 .hw-stepper button:not(:disabled) { color: var(--hw-text); cursor: pointer; }
 .hw-stepper li[data-status="complete"] button,
 .hw-stepper li[data-status="current"] button { color: var(--hw-text); }
-.hw-stepper__marker { align-items: center; background: var(--hw-neutral-soft); border: 1px solid var(--hw-border-strong); border-radius: var(--hw-radius-full); display: flex; flex-shrink: 0; height: 1.75rem; justify-content: center; width: 1.75rem; }
+.hw-stepper__marker { align-items: center; background: var(--hw-neutral-soft); border: 1px solid var(--hw-border-strong); border-radius: var(--hw-radius-full); display: flex; flex-shrink: 0; height: var(--hw-stepper-marker-size, 1.75rem); justify-content: center; width: var(--hw-stepper-marker-size, 1.75rem); }
 .hw-stepper li[data-status="complete"] .hw-stepper__marker { background: var(--hw-primary); border-color: var(--hw-primary); color: var(--hw-primary-fg); }
 .hw-stepper li[data-status="current"] .hw-stepper__marker { background: var(--hw-surface-subtle); border: 2px solid var(--hw-primary-text); color: var(--hw-primary-text); }
 .hw-stepper svg { height: 0.875rem; width: 0.875rem; }
+.hw-stepper__current { color: var(--hw-text); display: var(--hw-stepper-current-display, none); font-size: var(--hw-label-size); font-weight: 700; margin: 0; min-width: 0; overflow-wrap: anywhere; }
+
+/* Orçamento de 15em por passo, em em do próprio contêiner: o rótulo cresce com
+   a tipografia da superfície (admin 14px, portal 16px), então a régua cresce
+   junto — 75em dá 1050px no admin e 1200px no portal para cinco passos. Medido:
+   os cinco nomes do wizard de Academy pedem 1021px numa linha no admin, e não
+   os 736px que a fórmula de marcador + conector sugeria. O orçamento fica ACIMA
+   disso de propósito: no modo completo os nomes não são espremidos, e abaixo
+   dele o trilho troca de modo em vez de quebrar a lista. No compacto o embrulho
+   fica como válvula: com os nomes fora da linha, cinco marcadores cabem em
+   192px. */
+@container hw-stepper (max-width: 75em) {
+  .hw-stepper-shell:has(li:nth-child(5)) > * { --hw-stepper-connector-min: var(--hw-space-2); --hw-stepper-current-display: block; --hw-stepper-label-clip: inset(50%); --hw-stepper-label-gap: 0; --hw-stepper-label-overflow: hidden; --hw-stepper-label-position: absolute; --hw-stepper-label-size: 1px; --hw-stepper-marker-size: 1.5rem; --hw-stepper-wrap: wrap; }
+}
+@container hw-stepper (max-width: 60em) {
+  .hw-stepper-shell:has(li:nth-child(4)):not(:has(li:nth-child(5))) > * { --hw-stepper-connector-min: var(--hw-space-2); --hw-stepper-current-display: block; --hw-stepper-label-clip: inset(50%); --hw-stepper-label-gap: 0; --hw-stepper-label-overflow: hidden; --hw-stepper-label-position: absolute; --hw-stepper-label-size: 1px; --hw-stepper-marker-size: 1.5rem; --hw-stepper-wrap: wrap; }
+}
+@container hw-stepper (max-width: 45em) {
+  .hw-stepper-shell:has(li:nth-child(3)):not(:has(li:nth-child(4))) > * { --hw-stepper-connector-min: var(--hw-space-2); --hw-stepper-current-display: block; --hw-stepper-label-clip: inset(50%); --hw-stepper-label-gap: 0; --hw-stepper-label-overflow: hidden; --hw-stepper-label-position: absolute; --hw-stepper-label-size: 1px; --hw-stepper-marker-size: 1.5rem; --hw-stepper-wrap: wrap; }
+}
+@container hw-stepper (max-width: 30em) {
+  .hw-stepper-shell:not(:has(li:nth-child(3))) > * { --hw-stepper-connector-min: var(--hw-space-2); --hw-stepper-current-display: block; --hw-stepper-label-clip: inset(50%); --hw-stepper-label-gap: 0; --hw-stepper-label-overflow: hidden; --hw-stepper-label-position: absolute; --hw-stepper-label-size: 1px; --hw-stepper-marker-size: 1.5rem; --hw-stepper-wrap: wrap; }
+}
 
 .hw-button:focus-visible,
 .hw-input:focus-visible,
@@ -573,7 +653,7 @@
   .hw-filter-bar__filters > svg { display: none; }
   .hw-filter-bar__filters .hw-select { width: 100%; }
   .hw-filter-bar__search { flex-basis: auto; max-width: none; width: 100%; }
-  .hw-filter-bar__filters { margin-left: 0; }
+  .hw-filter-bar__filters { margin-inline-start: 0; }
   .hw-admin-shell { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; }
   .hw-admin-shell__mobile-header { align-items: center; background: var(--hw-chrome); border-bottom: 1px solid var(--hw-border); color: var(--hw-chrome-fg); display: flex; justify-content: space-between; min-width: 0; padding: var(--hw-space-2) var(--hw-space-3); position: sticky; top: 0; z-index: 20; }
   .hw-admin-shell[data-navigation-tone="inverse"] .hw-admin-shell__mobile-header { background: var(--hw-surface-inverse); border-color: var(--hw-surface-inverse); color: var(--hw-surface-inverse-fg); }
@@ -581,9 +661,7 @@
   .hw-navigation-story__destinations { grid-template-columns: 1fr; }
   .hw-focus-mode__header { padding: var(--hw-space-4); }
   .hw-focus-mode__body { padding: var(--hw-space-4); }
-  .hw-stepper button { font-size: var(--hw-text-xs); gap: var(--hw-space-1); padding: var(--hw-space-1); }
-  .hw-stepper li:not(:last-child)::after { min-width: var(--hw-space-2); }
-  .hw-stepper__marker { height: 1.5rem; width: 1.5rem; }
+  .hw-focus-mode__actions { padding: var(--hw-space-3) var(--hw-space-4); }
   .hw-catalog__hero h1 { font-size: var(--hw-text-3xl); }
   .hw-catalog__section { grid-template-columns: 1fr; }
   .hw-flow__grid { grid-template-columns: 1fr; }

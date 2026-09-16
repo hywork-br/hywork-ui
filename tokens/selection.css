@@ -1,3 +1,17 @@
+/**
+ * ALVO de toque da caixa nativa. Medido nos dois navegadores em 15/09: um
+ * checkbox com aparência nativa IGNORA borda, padding e pseudo-elemento — o
+ * Chromium até desenha ::after, o Firefox não, e nenhum dos dois aumenta a
+ * caixa de 16px. Trocar por appearance:none resolveria o alvo desenhando o
+ * controle à mão, e aí perde-se accent-color e o desenho muda: fora do escopo
+ * desta correção.
+ *
+ * O que sustenta a WCAG 2.5.8 aqui, então, é a EXCEÇÃO DE ESPAÇAMENTO: a
+ * margem de 8px mantém 32px entre os centros de duas caixas, mais que os 24px
+ * do círculo da regra. E o alvo confortável de toque é o rótulo clicável
+ * abaixo, que ocupa a linha inteira e respeita o mínimo da superfície (44px
+ * abaixo de 640px). Os dois são medidos em `tests/browser/interactions.spec.ts`.
+ */
 .hw-choice {
   accent-color: var(--hw-primary);
   inline-size: var(--hw-space-4);
@@ -5,6 +19,7 @@
   margin: var(--hw-space-2);
   vertical-align: middle;
   cursor: pointer;
+  position: relative;
 }
 .hw-choice:disabled {
   cursor: not-allowed;
@@ -20,8 +35,20 @@ label:has(> .hw-choice) {
   block-size: calc(var(--hw-space-4) + var(--hw-space-1));
   border: 1px solid var(--hw-input-border);
   border-radius: var(--hw-radius-full);
+  box-sizing: border-box;
   background: var(--hw-input-surface);
   position: relative;
+}
+/* O trilho tem 20px de altura desenhada; o alvo vai a 24px pelo pseudo-elemento
+   — aqui ele vale, porque o switch é appearance:none nos dois navegadores. */
+.hw-switch::after {
+  block-size: var(--hw-space-6);
+  content: "";
+  inline-size: 100%;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  position: absolute;
+  translate: -50% -50%;
 }
 .hw-switch::before {
   content: "";

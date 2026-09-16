@@ -22,6 +22,12 @@ tanto na barra desktop quanto no painel portaled. `workspace` e `utility` são
 slots do consumidor e aparecem uma única vez em cada modo responsivo, evitando
 IDs acessíveis duplicados.
 
+O item atual carrega três canais, e nenhum deles é só cor (R2): filete de acento
+de 3px na borda inicial, fundo `--hw-nav-active` e peso maior que o dos vizinhos.
+O filete compensa o próprio recuo, para o rótulo continuar alinhado. O laranja
+aparece aí e em nenhum outro lugar do chrome; o tom `inverse` usa o mesmo
+tratamento, em vez de pintar o item inteiro com a primária.
+
 Acima de 48rem, a barra lateral tem scroll independente e mantém o item atual com
 `aria-current="page"`. Em 48rem ou menos, Radix Dialog fornece modal, contenção e
 retorno de foco. Escape, backdrop, botão de fechar e navegação comum fecham o
@@ -75,7 +81,11 @@ os editores salvam metadados na sessão de demonstração.
 
 O acabamento usa uma barra aberta, não um formulário dentro de um cartão.
 Busca tem superfície suave; filtros rápidos usam texto/chevron e opções em
-popover. Foco, invalid e semântica permanecem explícitos. Remover um chip tem
+popover. O que separa filtro de campo de formulário é o PREENCHIMENTO — o filtro
+é transparente sobre o chrome, o campo é preenchido —, nunca a ausência de
+limite: a baseline fica em todos os dois e é medida contra a superfície
+realmente pintada em volta (WCAG 1.4.11, piso 3:1). Apagá-la deixava busca e
+filtros a 1:1 contra o chrome do admin, que é o mesmo cinza do preenchimento. Foco, invalid e semântica permanecem explícitos. Remover um chip tem
 alvo próprio de 32px no desktop e 44px no admin estreito ou de toque. “Mais
 filtros” e ações repetidas da coleção usam Button quiet nos pilotos.
 
@@ -116,8 +126,39 @@ consumidor.
 - usa diálogo modal fullscreen para conter e devolver foco;
 - saída sempre nomeada (`Sair de {fluxo}`);
 - Escape chama `onExit`;
+- foco inicial no primeiro tabbable do CORPO, nunca na saída (R29);
+- `back` à esquerda e `actions` à direita, numa faixa fixa fora do que rola (R27);
+- `measure` escolhe a medida de leitura do corpo, para o consumidor não empilhar
+  um segundo teto de largura;
 - o consumidor preserva rota-pai, filtros, scroll e rascunho;
 - confirmação de descarte é responsabilidade do fluxo, não do shell.
+
+`back?: React.ReactNode` e `actions?: React.ReactNode` compõem
+`hw-focus-mode__actions`, a terceira linha do grid do diálogo: ela não pertence
+ao corpo que rola, então "Voltar" e a primária ficam visíveis em todos os passos
+e em qualquer viewport — a medição de 15/09 encontrou a primária abaixo da dobra
+na última etapa nos seis viewports. Sem nenhuma das duas props a faixa não
+existe. O submit continua sendo do formulário do consumidor: o botão da faixa
+aponta para ele por `form="{id}"`, em vez de o formulário embrulhar a faixa.
+
+`titleAs?: "h1" | … | "h6"` (padrão `h2`) escolhe o nível do título da tarefa sem
+mudar o nome acessível do diálogo: um modo de foco toma a tela inteira, e o
+esboço de headings do consumidor em geral quer `h1` ali. O padrão continua `h2`
+para não mexer em quem já compõe por cima.
+
+`measure?: "form" | "page"` (padrão `page`) aplica `--hw-measure-form` (48rem) ou
+`--hw-measure-page` (72rem) ao corpo. O consumidor pede a medida ao padrão; um
+`max-width` próprio por fora foi o que deixou o formulário ocupando 46,7% de uma
+tela que o modo de foco tomou inteira. Quando o corpo também hospeda o trilho de
+progresso, a medida vai na coluna e não no corpo: `hw-focus-mode__content`
+envolve os campos, o trilho fica com a largura do modo de foco. Medida de
+leitura é regra de prosa; aplicá-la ao chrome é o que produzia o trilho
+quebrado.
+
+Quando o fluxo implementa a revisão antes de descartar, ela é `role="alertdialog"`
+com nome e descrição apontados — `role="alert"` anuncia como aviso, não como
+decisão que espera resposta —, e inline: um segundo overlay empilhado é uma das
+seis falhas do padrão.
 
 O opener é capturado em `onOpenAutoFocus`, antes do autofocus do modal. X,
 Escape, dismiss e fechamento controlado devolvem o foco ao opener conectado.
@@ -148,8 +189,15 @@ Etapa futura é desabilitada. Etapa concluída pode ser reaberta via
 `onStepChange`. O texto dos CTAs continua no fluxo: o Stepper não inventa
 “Avançar” nem executa submit.
 
-Todas as etapas permanecem visíveis no espaço disponível. A sequência pode
-ocupar mais de uma linha; rótulos longos quebram sem encolher o marcador.
+Todas as etapas permanecem visíveis no espaço disponível, sempre em UMA linha: o
+trilho troca de modo quando os nomes não cabem, em vez de quebrar. Quem decide é
+o CONTÊINER (`container-type: inline-size` no invólucro), não o viewport — o
+formulário que hospeda o trilho mede o mesmo em 1440 e em 1024, e era o viewport
+que decidia. No modo completo os cinco nomes ficam na linha; no compacto restam
+os marcadores numerados e o nome do passo atual logo abaixo, e o rótulo dos
+demais continua no DOM, no nome acessível de cada botão. O orçamento é de 15em
+por passo, medidos no próprio contêiner: a régua cresce com a tipografia da
+superfície, em vez de fixar pixels que só servem ao admin.
 Não esconder etapas futuras em uma faixa de rolagem horizontal: controles
 desabilitados não podem depender de foco por teclado para serem revelados.
 

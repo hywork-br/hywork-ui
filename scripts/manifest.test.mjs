@@ -17,8 +17,10 @@ test("manifest exposes generated token layers and public exports", async () => {
     manifest.tokenLayers.map((layer) => layer.name),
     ["primitive", "semantic", "component", "surface", "theme"],
   );
-  // Three scoped color roles and two independent color-motion tokens.
-  assert.equal(manifest.tokenCount, 151);
+  /* 151 + 15 da 0.6.1: três papéis de cor do item ativo da navegação, duas
+     medidas de leitura, a espessura do filete e os nove estados do trilho do
+     Stepper, que a consulta de contêiner troca. */
+  assert.equal(manifest.tokenCount, 166);
   assert.deepEqual(manifest.exports, Object.keys(packageJson.exports).sort());
   assert.deepEqual(manifest.generatedFrom, [
     "governance/component-contracts.json",

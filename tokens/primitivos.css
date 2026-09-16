@@ -27,7 +27,12 @@
   --hw-blue-lavender: #8ea1c7;
 
   /* Neutros */
-  --hw-gray: #8c8c8c;
+  /* Cinza de LIMITE. Escurecido de #8c8c8c em 15/09/2026: a baseline do campo
+     quieto media 3,06:1 sobre a superfície sutil — passava o piso de 3:1 da
+     WCAG 1.4.11 com 0,06 de margem, e a superfície admin é o mesmo #f4f4f4 do
+     preenchimento. Este é o cinza mais CLARO que dá 3,3:1 sobre #f4f4f4
+     (3,31:1) e 3,64:1 sobre branco, sem sair da família neutra. */
+  --hw-gray: #868686;
   --hw-white: #ffffff;
 
   /**
@@ -44,7 +49,7 @@
    * Azul aço escurecido, para TEXTO de apoio em base clara. Existe porque a
    * paleta do guideline não tem nenhum tom médio que passe em contraste de
    * texto: o `--hw-blue-steel` (#6492b7) dá 3,31:1 sobre branco, e o cinza
-   * #8c8c8c dá 3,36:1 — os dois reprovam o piso de 4,5:1. O guideline os
+   * #868686 dá 3,64:1 — os dois reprovam o piso de 4,5:1. O guideline os
    * descreve como "apoio e decorativo", nunca como texto; este derivado é a
    * versão utilizável, com o mesmo matiz: 5,38:1 sobre branco e 4,74:1 sobre
    * o fundo azulado sutil.
@@ -69,10 +74,15 @@
      preservar a direção do estado e o contraste com branco. */
   --hw-rust-strong: #9f3714;
   --hw-gray-tint: #f4f4f4;
-  --hw-gray-text: #707070;
+  /* Tinta de APOIO. Escurecida de #707070 em 15/09/2026 por decisão do Vitor:
+     o valor anterior media 4,50:1 exato sobre #f4f4f4 — passava AA com margem
+     0,00, e é sobre esse cinza que o chrome do admin e o placeholder vivem.
+     Este é o cinza mais CLARO que dá 4,6:1 sobre #f4f4f4 (4,64:1) e 5:1 sobre
+     branco (5,10:1). */
+  --hw-gray-text: #6e6e6e;
 
   /* Cinza escurecido para SÓLIDO neutro com texto branco pequeno (4,54:1) —
-     o --hw-gray puro dá 3,36:1 e reprova texto de badge. */
+     o --hw-gray puro dá 3,64:1 e reprova texto de badge. */
   --hw-gray-strong: #767676;
 
   /**

@@ -31,6 +31,8 @@ Papéis `--hw-surface`/`--hw-surface-fg`, `--hw-muted`/`--hw-muted-fg`, `--hw-fo
 
 Montserrat preservada. Admin: alvo mínimo de 32px. Portal e mobile: 44px. Inputs estreitos: texto mínimo de 16px. Tabela pode rolar no contêiner, nunca alargar a página.
 
+O alvo de toque da caixa é o RÓTULO clicável, que ocupa a linha inteira e carrega o mínimo da superfície; a caixa nativa fica com os 16px que ela desenha. Checkbox e radio com aparência nativa ignoram borda, padding e pseudo-elemento — medido em Chromium e Firefox em 15/09/2026 —, então ampliar o alvo do próprio controle exigiria `appearance: none` e desenho à mão, perdendo `accent-color`. O que sustenta a WCAG 2.5.8 ali é a exceção de espaçamento: a margem de 8px mantém 32px entre centros, contra os 24px do círculo da regra. O switch, que já é `appearance: none`, leva o alvo a 24px por pseudo-elemento. Os três números são medidos em `tests/browser/interactions.spec.ts`, em 390 e 1440. Envolver a caixa num rótulo clicável é obrigação do consumidor: sem ele, sobra só a caixa de 16px.
+
 ## Teclado, foco e acessibilidade
 
 Controles nomeados usam teclado nativo; foco laranja permanece visível. Busca navegável usa setas, Enter e Escape, quando aplicável. Estados trazem texto além da cor; movimento reduzido não impede operação.

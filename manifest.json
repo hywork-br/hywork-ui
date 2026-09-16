@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "package": "@hywork/ui",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "generatedFrom": [
     "governance/component-contracts.json",
     "governance/patterns.json",
@@ -27,14 +27,14 @@
       "files": [
         "tokens/semantico.css"
       ],
-      "tokenCount": 77
+      "tokenCount": 80
     },
     {
       "name": "component",
       "files": [
         "tokens/componentes.css"
       ],
-      "tokenCount": 3
+      "tokenCount": 15
     },
     {
       "name": "surface",
@@ -53,7 +53,7 @@
       "tokenCount": 0
     }
   ],
-  "tokenCount": 151,
+  "tokenCount": 166,
   "surfaces": [
     "admin",
     "portal"
