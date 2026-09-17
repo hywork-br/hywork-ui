@@ -11,8 +11,15 @@ npm run build
 npm run audit:dependencies
 ```
 
-O CI roda os dois, e o preset é verificado com `--check`: gerado desatualizado
-reprova.
+O CI roda esses comandos e, no job de browser, os contratos do Storybook em
+Chromium/Firefox, os testes de interação e as comparações visuais no Linux fixado.
+O preset é verificado com `--check`: gerado desatualizado reprova. Para uma mudança
+somente documental, confira links, consistência com a API e `git diff --check`;
+o CI continua aplicando os gates configurados na PR.
+
+O primeiro consumidor de produto é o `hywork-plataform`. Use o
+[handoff](migration/platform-handoff.md) para avaliar contribuições da migração;
+o visual de produção é o baseline de aceite do consumidor.
 
 ## Token novo
 
@@ -30,7 +37,7 @@ reprova.
 ## Mudar valor existente
 
 Diga no corpo da PR **o que muda na tela** e em quais consumidores. Token é API:
-mudar `--hw-primary` repinta três frontends.
+mudar `--hw-primary` afeta todos os consumidores que usam esse papel.
 
 ## Versão
 

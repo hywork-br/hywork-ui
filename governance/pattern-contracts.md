@@ -232,8 +232,10 @@ e persistência são da feature. O contrato completo está na
 
 ## Status antes da migração
 
-Os seis padrões permanecem `draft` em setembro. Testes, stories e revisão visual
-provam o contrato no pacote; promoção a `beta` exige os pilotos reais de outubro.
+Os seis padrões permanecem `draft` na v0.6.2. Testes, stories e revisão visual
+provam o contrato no pacote; promoção a `beta` exige evidência nos pilotos reais
+e revisão do catálogo. O primeiro consumidor é Platform; seguir o
+[handoff](../migration/platform-handoff.md).
 
 ## Coleções, feedback e tema — contratos draft de setembro
 
@@ -304,4 +306,5 @@ demonstra que uma alteração visual controlada falha e que restaurar a fixture 
 
 Movimento continua somente no laboratório. Teclado e reduced motion são imediatos,
 inclusive quando a preferência muda sem reload; controles em saída ficam inertes.
-Nenhum gate autoriza migração, adoção ou promoção antes dos pilotos de outubro.
+Gates do pacote não substituem aceite do piloto no produto. Adoção, promoção de
+status e deploy exigem suas próprias evidências e aprovações no consumidor.

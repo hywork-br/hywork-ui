@@ -21,6 +21,13 @@ nomes canônicos `draft` e `beta`: `candidate → draft` e
 - foco visível e estado que não depende apenas de cor;
 - owner de design e owner frontend registrados.
 
-Os componentes da linha 0.6 entram como `beta`. Os tokens existentes continuam
-`stable`. Os padrões de produto entram como `draft` até a prova em consumidores
-durante a migração de outubro.
+Na v0.6.2, as 12 famílias core são `beta`; os tokens existentes continuam
+`stable`. Há também 14 famílias de componentes `draft`, duas entradas de
+utilities `draft` e seis padrões `draft`. A classificação de cada export vem de
+`component-contracts.json`, `patterns.json` e do manifesto gerado, não de uma
+afirmação genérica sobre todos os componentes da linha 0.6.
+
+O primeiro consumidor de produto será o `hywork-plataform` (Vitor, 17/09/2026).
+Provas no pacote e no Experiments não promovem status automaticamente. Aplicar
+os gates de promoção ao escopo efetivamente integrado e revisar o catálogo em PR.
+Ver [handoff](../migration/platform-handoff.md).

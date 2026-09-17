@@ -3,12 +3,13 @@
 Gerado em 2026-09-01T22:33:51.047Z. A fonte de cada linha é a saída do auditor determinístico
 `scripts/audit-adoption.mjs`, executado no commit indicado. Nenhum número é preenchido à mão.
 
-## Gate de outubro
+## Adoção por consumidor
 
 **0 / 2 consumidores no pacote**
 
-A adoção real não foi executada antes de outubro. Este relatório torna o gate
-verificável sem alterar Platform ou Builder.
+Este snapshot mede imports na data e nas revisões acima; não comprova deploy,
+paridade visual ou o estado atual dos produtos. Platform é o primeiro consumidor;
+o aceite de seu piloto independe da migração posterior do Builder.
 
 | Consumidor | Revisão medida | Arquivos com import do pacote | Arquivos com import local | Status |
 |---|---|---:|---:|---|
@@ -17,6 +18,7 @@ verificável sem alterar Platform ou Builder.
 
 ## Critério de promoção
 
-Só considerar a Fase 3 concluída quando Platform e Builder estiverem na mesma
-tag imutável, cada componente migrado não tiver definição local no escopo
-migrado e houver screenshots comparativas, fluxo funcional e review humano.
+Avaliar cada fluxo com tag imutável, ausência de cópia local no escopo migrado,
+screenshots comparativas, comportamento preservado e aceite técnico e de produto.
+O programa completo inclui Platform e Builder; a conclusão de um consumidor
+não implica a do outro. Ver [handoff do Platform](platform-handoff.md).

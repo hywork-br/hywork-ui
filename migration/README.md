@@ -1,13 +1,20 @@
-# Kit de migração — outubro
+# Kit de adoção — Platform primeiro
 
-Este diretório prepara a adoção sem alterar nenhum produto agora.
+Em 17/09/2026, Vitor definiu `hywork-plataform` como primeiro consumidor pela
+engenharia, preservando o design de produção. Leia primeiro
+[`platform-handoff.md`](platform-handoff.md). Builder entra em uma etapa posterior;
+o handoff não exige migrar os dois produtos juntos.
+
+O planejamento anterior usava outubro como janela. A ordem vigente é Platform
+primeiro, com cronograma e piloto combinados pela engenharia e produto. Os gates
+de comportamento, comparação visual e aprovação continuam obrigatórios.
 
 ## Ordem recomendada
 
 1. congelar commits dos consumidores e regenerar o baseline;
-2. instalar uma tag imutável de `@hywork/ui`;
+2. instalar `@hywork/ui` pela tag imutável `v0.6.2` e versionar o lockfile;
 3. importar `@hywork/ui/tokens/tema.css` uma única vez;
-4. migrar primeiro Button, Field e estados de lista;
+4. começar por Button e Field em uma feature existente, mapeando props e aparência;
 5. validar uma feature piloto por família de fluxo;
 6. só então substituir primitives repetidos em lote;
 7. remover cópias locais apenas depois do build e da captura comparativa.
@@ -35,7 +42,8 @@ Veja também:
 - [`october-checklist.md`](./october-checklist.md)
 - [`import-map.md`](./import-map.md)
 - [`consumer-scorecard.md`](./consumer-scorecard.md)
-- [`adoption-dashboard.md`](./adoption-dashboard.md) — snapshot atual, gerado pelo auditor
+- [`adoption-dashboard.md`](./adoption-dashboard.md) — snapshot histórico de 01/09,
+  gerado pelo auditor; não representa a revisão atual dos consumidores
 
 ## Dashboard de adoção
 
@@ -50,6 +58,8 @@ node scripts/render-adoption-dashboard.mjs \
   --output migration/adoption-dashboard.md
 ```
 
-O relatório marca `Não migrado` quando não há import do pacote. Em setembro,
-isso é o estado esperado: a Fase 3 está preparada, mas a adoção real não foi
-executada antes do gate de outubro.
+O relatório marca `Não migrado` quando não há import do pacote. Refaça a leitura
+no checkout limpo e no commit que será migrado, registrando a revisão. O dashboard
+conjunto mede o programa completo; o primeiro aceite é o piloto do Platform,
+independente do estado posterior do Builder. Nenhuma contagem de imports prova,
+sozinha, paridade visual ou adoção em produção.

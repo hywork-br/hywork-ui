@@ -3,6 +3,11 @@
 **Status:** aprovado para a linha 0.6
 **Data:** 2026-09-01
 
+**Atualização de adoção — 17/09/2026:** Vitor definiu `hywork-plataform` como
+primeiro consumidor, preservando o design de produção. O planejamento de outubro
+abaixo é histórico; ordem e aceite vigentes estão no
+[handoff](../../migration/platform-handoff.md). A autoridade do pacote permanece.
+
 ## Decisão
 
 `@hywork/ui` é a fonte executável dos contratos compartilhados de interface da
@@ -40,5 +45,5 @@ changelog, versão e PR. Tags publicadas são imutáveis.
 
 - componentes comuns deixam de ser copiados entre produtos;
 - exceções locais precisam declarar por que não pertencem ao pacote;
-- adoção será uma etapa explícita em outubro, com inventário antes/depois;
+- adoção será uma etapa explícita por fluxo, começando no Platform, com inventário antes/depois;
 - nenhum número de maturidade é preenchido manualmente quando pode ser medido.

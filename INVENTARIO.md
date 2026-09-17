@@ -24,7 +24,7 @@ Os caminhos absolutos do JSON são proveniência local, não API pública do
 pacote. A medição conta arquivos de import reais e compara o conteúdo da árvore
 Git; arquivo scaffoldado sem uso continua visível como zero.
 
-## Decisão da linha 0.6
+## API publicada na v0.6.2
 
 - 12 famílias entram como `beta`: Button, Field/Input/Label, Textarea, Badge,
   Avatar, Skeleton, Card, Dialog/AlertDialog, DropdownMenu/Popover, Tooltip,
@@ -32,10 +32,17 @@ Git; arquivo scaffoldado sem uso continua visível como zero.
 - ListPage, FilterBar, DataTable, AdminShell, FocusMode e Stepper entram como
   padrões `draft`;
 - componentes específicos de produto continuam locais;
-- candidatos restantes serão avaliados durante a migração de outubro.
+- 14 famílias adicionais e duas entradas de utilities estão publicadas como
+  `draft`; consultar o manifesto para a lista nominal;
+- candidatos restantes serão avaliados durante a adoção, começando no Platform.
 
-A classificação nominal dos 45 compartilhados está em
+A classificação original dos 45 compartilhados está em
 [`governance/component-decisions.json`](./governance/component-decisions.json).
+Esse baseline de setembro contém candidatos que depois viraram APIs `draft`
+(por exemplo, Accordion e Checkbox). O estado atual de publicação e maturidade
+é o de [`manifest.json`](manifest.json) e
+[`governance/component-contracts.json`](governance/component-contracts.json).
+Não interpretar `october-candidate` do baseline como ausência na v0.6.2.
 
 ## Reproduzir
 
@@ -48,4 +55,6 @@ npm run audit:consumers -- \
   --output governance/consumer-baseline.json
 ```
 
-O comando é somente leitura. A migração dos produtos não faz parte desta linha.
+O auditor lê os consumidores e grava o relatório no caminho `--output`; não
+migra produtos. Para consultar sem substituir o baseline histórico, use um
+caminho temporário. Primeiro handoff: [hywork-plataform](migration/platform-handoff.md).

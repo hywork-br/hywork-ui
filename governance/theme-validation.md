@@ -1,7 +1,8 @@
 # Validação de temas de tenant
 
-Status: **rascunho de laboratório**. Este contrato não está integrado aos produtos e não autoriza
-migração antes do gate de adoção de outubro.
+Status: **draft** no pacote v0.6.2. A demonstração de tema escopado não comprova
+integração nos produtos. O primeiro consumidor será o Platform; aplicar o
+[gate por fluxo](../migration/platform-handoff.md).
 
 ## O que existe
 
@@ -41,7 +42,7 @@ padrão validado; rejeição de edição mantém todos os valores do último tem
 primitivos existentes. Chamadores legados desta story têm suas cores explicitamente expandidas;
 a lista de foco fornecida por eles não substitui as verificações obrigatórias do componente.
 
-O escopo tem API pública documentada em draft, mas ainda não foi promovido em artefato aceito. Não há alteração de tema global,
+O escopo está publicado na v0.6.2 com status draft; isso não comprova adoção no produto. Não há alteração de tema global,
 persistência ou dark mode do produto inteiro. CSS externo arbitrário não está coberto pela
 validação. Movimento e densidade permanecem nos componentes/tokens compartilhados, não em
 implementações locais de botões e campos.
@@ -69,5 +70,10 @@ Cada consumidor continua dono de:
 - regras de negócio, mensagens e telemetria;
 - testes de integração, teclado, responsividade e contraste no produto real.
 
-No gate de outubro, cada consumidor deverá comprovar a integração. Até lá, adoção é **0 / 2** e não
-há claim de uso em produção.
+Na adoção pelo Platform, comprovar a integração com um tema real do cliente.
+`tokens/white-label.css` fornece defaults de `--color-*` a partir de `--hw-*`;
+ele não faz o caminho inverso automaticamente. Importar esse arquivo, por si só,
+não faz um Button que consome `--hw-primary` usar a cor do tenant. Avaliar a
+integração explícita, inclusive `ThemeScope` se selecionado pelos responsáveis,
+e testar componentes e portais no fluxo. Não afirmar preservação de marca por
+inspeção dos imports nem promover a API draft sem seu gate.

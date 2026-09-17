@@ -1,5 +1,10 @@
 # Global Quality Implementation Plan
 
+> Historical plan, 2026-09-05. For the current adoption order and engineering
+> acceptance criteria (Platform first, 2026-09-17), see the
+> [Platform handoff](../../../migration/platform-handoff.md). Dates, paths and
+> execution constraints below describe that implementation session.
+
 > For agentic workers: REQUIRED SUB-SKILL: use superpowers:subagent-driven-development.
 
 **Goal:** Finish the six approved design-system capability axes, including functional animation.

@@ -1,5 +1,10 @@
 # Global-quality design system: execution contract
 
+> Historical execution scope, 2026-09-05. The current Platform-first handoff is
+> [documented here](../../../migration/platform-handoff.md), as of 2026-09-17.
+> Its consumer acceptance gates supersede the calendar restriction below;
+> component behavior and maturity still follow their current contracts.
+
 Approved direction: six capability axes, with functional animation. This is an improvement program,
 not a claim of external certification. The objective is to finish the repository/lab deliverable.
 

@@ -66,8 +66,13 @@ de escala, blur ou duração só por aparecerem numa referência. Uma crítica �
   a presença de tokens não demonstra que cada componente respeita essa preferência.
 - **Padrões preservam domínio:** `ListPage`, filtros e tabela compartilham
   anatomia; taxonomia, células, permissões e ações continuam na feature.
-- **Até outubro não migre produto:** os pilotos do Storybook usam fixtures. Uma
-  importação em Platform ou Builder exige o gate de migração aprovado.
+- **Platform primeiro (Vitor, 17/09/2026):** a engenharia começa pelo
+  `hywork-plataform`, preservando visual, fluxo e tema de produção. Siga
+  `migration/platform-handoff.md`; fixe v0.6.2 e prove o antes/depois por fluxo.
+  A ordem atual substitui o bloqueio genérico por mês do planejamento anterior;
+  não constitui autorização para um agente migrar ou publicar produtos sem tarefa
+  atribuída. Builder é uma etapa posterior. Pilotos do Storybook e Experiments
+  usam fixtures e não autorizam redesign ou promoção automática de status.
 
 ## Referência de integração e acabamento
 

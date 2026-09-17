@@ -3,16 +3,37 @@
 Design system executável da Hywork: tokens de marca, componentes React e
 padrões de produto para superfícies admin e portal.
 
+## Entrega à engenharia — 17/09/2026
+
+Versão de partida: **[v0.6.2](https://github.com/hywork-br/hywork-ui/releases/tag/v0.6.2)**,
+commit `1c63b39178ef17e767878bdac1a16e6776ec676e`. O primeiro consumidor será
+**`hywork-plataform`**, conforme decisão do Vitor em 17/09. O objetivo é
+componentizar as telas existentes preservando seu visual, fluxo e tema do cliente.
+
+Comece pelo [handoff do Platform](migration/platform-handoff.md): ele define o
+primeiro PR, os responsáveis e a comparação antes/depois. O pacote está pronto
+para avaliação e adoção gradual pela engenharia; isso não comprova paridade visual
+com produção nem promove componentes `beta` ou `draft` automaticamente.
+
+[Storybook](https://hywork-ui-storybook.vercel.app) é o catálogo do pacote.
+[Experiments](https://hywork-experiments.vercel.app) demonstra propostas de jornadas
+com dados locais; seus novos layouts e fluxos não fazem parte automaticamente da
+adoção. Builder fica para uma etapa posterior.
+
+Este handoff atualiza a documentação da branch principal. Os arquivos embarcados
+na tag v0.6.2 são imutáveis e ainda contêm o planejamento anterior de outubro;
+para a ordem de adoção, siga este guia. Nenhuma versão nova do pacote é criada
+por esta atualização documental.
+
 ## Instalar
 
 Distribuído por tag Git imutável, como `@hywork/eslint-config`:
 
 ```bash
-npm install "github:hywork-br/hywork-ui#<tag-aprovada>"
+npm install "github:hywork-br/hywork-ui#v0.6.2"
 ```
 
-Substitua `<tag-aprovada>` por uma tag que contenha o preparo descrito abaixo.
-React 18.3 ou 19 é peer dependency.
+Fixe a tag e versione o lockfile do consumidor. React 18.3 ou 19 é peer dependency.
 
 A instalação Git executa `prepare` → `build:lib` para gerar `dist/index.js` e
 as declarações TypeScript a partir da revisão selecionada. Scripts de instalação
@@ -31,7 +52,7 @@ contorno é instalar com um userconfig isolado:
 ```bash
 : > /tmp/npmrc-vazio
 npm_config_userconfig=/tmp/npmrc-vazio \
-  npm install "github:hywork-br/hywork-ui#<tag-aprovada>"
+  npm install "github:hywork-br/hywork-ui#v0.6.2"
 ```
 
 Exportar `npm_config_allow_scripts=` vazio não resolve: o sub-install relê o
@@ -49,7 +70,8 @@ Importe o tema uma única vez no CSS global e marque a superfície na raiz:
 <html data-surface="admin">
 ```
 
-Depois, importe a API React:
+Carregue também Montserrat na aplicação: o tema declara a família, mas a aplicação
+é responsável por disponibilizar a fonte. Depois, importe a API React:
 
 ```tsx
 import { Badge, Button, FilterBar, ListPage } from "@hywork/ui";
@@ -74,6 +96,13 @@ Dialog/AlertDialog, DropdownMenu/Popover, Tooltip, Select e Tabs.
 - `AdminShell`: navegação e área de operação;
 - `FocusMode`: fluxo fullscreen com saída nomeada e contenção de foco;
 - `Stepper`: etapas concluídas, atual e futuras.
+
+### Outros exports draft
+
+A v0.6.2 também publica seleção (`Checkbox`, `Radio`, `Switch`, `Combobox`,
+`MultiSelect`), datas, upload, células e controles de coleção, feedback, navegação
+e tema escopado. A lista completa e o status de cada export estão em
+[`manifest.json`](manifest.json); publicação não equivale a promoção para `stable`.
 
 Padrão compartilhado não apaga a feature: filtros, células, ações, dados e
 renderização de Academy, Conteúdos, TV, Assinaturas ou Campanhas continuam no
@@ -115,8 +144,11 @@ Aplicações com tema de tenant importam também:
 @import "@hywork/ui/tokens/white-label.css";
 ```
 
-`--hw-*` pertence ao design system; `--color-*` pertence à aplicação. O pacote
-publica defaults, mas não sobrescreve a marca do cliente.
+`--hw-*` pertence ao design system; `--color-*` pertence à aplicação. O arquivo
+publica defaults no namespace da aplicação; a ordem da cascata deve preservar
+o tema do cliente. Ele não mapeia automaticamente as cores do tenant de volta
+para os componentes que usam `--hw-*`. Conferir a integração e os portais no
+fluxo real; ver [contrato de tema](governance/theme-validation.md).
 
 ## Desenvolvimento
 
@@ -148,7 +180,7 @@ O projeto Vercel é isolado dos produtos e mantém a proteção de acesso da equ
 - decisões e ownership: [`governance/`](./governance/);
 - contratos 10/10: [`specs/components/`](./specs/components/);
 - inventário reproduzível: [`INVENTARIO.md`](./INVENTARIO.md);
-- pacote de adoção para outubro: [`migration/`](./migration/);
+- adoção pelo Platform e gates por fluxo: [`migration/`](./migration/);
 - regras que viajam com o pacote: [`AGENTS.md`](./AGENTS.md).
 
 Esta linha não migra nem publica nenhum produto. Changesets preparam a versão;

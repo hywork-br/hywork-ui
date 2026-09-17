@@ -5,6 +5,18 @@ Formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 Este arquivo existe porque a distribuição é por **tag git**: o consumidor não
 tem `npm outdated` para descobrir o que mudou. Aqui é o único lugar.
 
+## [Unreleased]
+
+### Documentação
+
+- Handoff da engenharia para começar pelo `hywork-plataform` com v0.6.2,
+  preservando visual, fluxo e tema do cliente; checklist e scorecard por fluxo.
+- README, instruções de agentes, inventário e governança alinhados à ordem
+  definida em 17/09. Status `beta`/`draft` preservados e snapshots históricos
+  identificados. O gerador do dashboard também usa o aceite por consumidor.
+- Limites da integração white-label e diferenças de API do Button explicitados.
+  Nenhum componente, token, produto ou tag publicada foi alterado.
+
 ## [0.6.2] — 2026-09-16
 
 Backlog do review de 15/09 no lado do design system, mais o que o consumidor

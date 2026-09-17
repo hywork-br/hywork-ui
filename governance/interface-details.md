@@ -1,7 +1,8 @@
 # Interface details — laboratório draft
 
 Contrato de acabamento de Conteúdos, 2026-09-05. Não representa adoção em produto,
-publicação de pacote ou promoção de status; migração depende do gate de outubro.
+publicação de pacote ou promoção de status; migração depende do
+[gate por fluxo no Platform](../migration/platform-handoff.md).
 
 ## Exemplos executáveis
 
