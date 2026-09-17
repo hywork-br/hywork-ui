@@ -1,92 +1,132 @@
+import * as React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown } from "lucide-react";
-import * as React from "react";
 
 import { cn } from "../lib/cn";
-import { useScopedPortalStyle } from "./theme-scope";
 
-export interface SelectOption {
-  disabled?: boolean;
-  label: string;
-  value: string;
+const Select = SelectPrimitive.Root;
+
+const SelectGroup = SelectPrimitive.Group;
+
+const SelectValue = SelectPrimitive.Value;
+
+interface SelectTriggerProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> {
+  focusColor?: string;
 }
 
-export interface SelectProps {
-  "aria-describedby"?: string;
-  "aria-invalid"?: React.AriaAttributes["aria-invalid"];
-  ariaLabel: string;
-  className?: string;
-  disabled?: boolean;
-  id?: string;
-  name?: string;
-  onValueChange?: (value: string) => void;
-  options: SelectOption[];
-  placeholder?: string;
-  required?: boolean;
-  value?: string;
-}
+const SelectTrigger = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>, SelectTriggerProps>(
+  ({ className, children, focusColor, onClick, onPointerDown, onMouseDown, ...props }, ref) => (
+    <SelectPrimitive.Trigger
+      ref={ref}
+      className={cn(
+        "flex h-10 w-full items-center justify-between rounded-md border border-gray-300 bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50",
+        focusColor && `focus:border-${focusColor} focus:ring-${focusColor}`,
+        className
+      )}
+      onClick={onClick}
+      onPointerDown={onPointerDown}
+      onMouseDown={onMouseDown}
+      {...props}
+    >
+      {children}
+      <SelectPrimitive.Icon asChild>
+        <ChevronDown className="h-4 w-4 opacity-50" />
+      </SelectPrimitive.Icon>
+    </SelectPrimitive.Trigger>
+  )
+);
+SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
-export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
+const SelectContent = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
+>(
   (
     {
-      "aria-describedby": ariaDescribedBy,
-      "aria-invalid": ariaInvalid,
-      ariaLabel,
       className,
-      disabled,
-      id,
-      name,
-      onValueChange,
-      options,
-      placeholder,
-      required,
-      value,
+      children,
+      position = "popper",
+      onClick,
+      onMouseDown,
+      onPointerDown,
+      onPointerDownOutside,
+      ...props
     },
-    ref,
-  ) => {
-    const portalStyle = useScopedPortalStyle();
-    return (
-    <SelectPrimitive.Root
-      disabled={disabled}
-      name={name}
-      onValueChange={onValueChange}
-      required={required}
-      value={value}
-    >
-      <SelectPrimitive.Trigger
-        aria-describedby={ariaDescribedBy}
-        aria-invalid={ariaInvalid}
-        aria-label={ariaLabel}
-        className={cn("hw-select", className)}
-        id={id}
+    ref
+  ) => (
+    <SelectPrimitive.Portal>
+      <SelectPrimitive.Content
         ref={ref}
+        data-editor-overlay="true"
+        className={cn(
+          "relative z-50 min-w-[8rem] max-h-[min(24rem,var(--radix-select-content-available-height,24rem))] overflow-hidden rounded-md border border-gray-300 bg-background text-popover-foreground shadow-md data-[state=open]:animate-in motion-reduce:!animate-none data-[state=closed]:animate-out motion-reduce:!animate-none data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+          position === "popper" &&
+            "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+          className
+        )}
+        position={position}
+        onPointerDownOutside={onPointerDownOutside}
+        onPointerDown={(event) => {
+          event.stopPropagation();
+          onPointerDown?.(event);
+        }}
+        onMouseDown={(event) => {
+          event.stopPropagation();
+          onMouseDown?.(event);
+        }}
+        onClick={(event) => {
+          event.stopPropagation();
+          onClick?.(event);
+        }}
+        {...props}
       >
-        <SelectPrimitive.Value placeholder={placeholder} />
-        <SelectPrimitive.Icon asChild>
-          <ChevronDown aria-hidden="true" />
-        </SelectPrimitive.Icon>
-      </SelectPrimitive.Trigger>
-      <SelectPrimitive.Portal>
-        <SelectPrimitive.Content className="hw-select__content" position="popper" sideOffset={8} style={portalStyle}>
-          <SelectPrimitive.Viewport>
-            {options.map((option) => (
-              <SelectPrimitive.Item
-                className="hw-select__item"
-                disabled={option.disabled}
-                key={option.value}
-                value={option.value}
-              >
-                <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>
-                <SelectPrimitive.ItemIndicator>
-                  <Check aria-hidden="true" />
-                </SelectPrimitive.ItemIndicator>
-              </SelectPrimitive.Item>
-            ))}
-          </SelectPrimitive.Viewport>
-        </SelectPrimitive.Content>
-      </SelectPrimitive.Portal>
-    </SelectPrimitive.Root>
-    );
-  },
+        <SelectPrimitive.Viewport
+          className={cn(
+            "p-1",
+            position === "popper" &&
+              "max-h-[min(22rem,var(--radix-select-content-available-height,22rem))] w-full min-w-[var(--radix-select-trigger-width)] overflow-y-auto overflow-x-hidden"
+          )}
+        >
+          {children}
+        </SelectPrimitive.Viewport>
+      </SelectPrimitive.Content>
+    </SelectPrimitive.Portal>
+  )
 );
-Select.displayName = "Select";
+SelectContent.displayName = SelectPrimitive.Content.displayName;
+
+const SelectLabel = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Label>, React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>>(
+  ({ className, ...props }, ref) => <SelectPrimitive.Label ref={ref} className={cn("py-1.5 pl-8 pr-2 text-sm font-semibold", className)} {...props} />
+);
+SelectLabel.displayName = SelectPrimitive.Label.displayName;
+
+const SelectItem = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Item>, React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>>(
+  ({ className, children, onClick, ...props }, ref) => (
+    <SelectPrimitive.Item
+      ref={ref}
+      className={cn(
+        "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        className
+      )}
+      onClick={onClick}
+      {...props}
+    >
+      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+        <SelectPrimitive.ItemIndicator>
+          <Check className="h-4 w-4" />
+        </SelectPrimitive.ItemIndicator>
+      </span>
+
+      <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+    </SelectPrimitive.Item>
+  )
+);
+SelectItem.displayName = SelectPrimitive.Item.displayName;
+
+const SelectSeparator = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>
+>(({ className, ...props }, ref) => <SelectPrimitive.Separator ref={ref} className={cn("-mx-1 my-1 h-px bg-muted", className)} {...props} />);
+SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
+
+export { Select, SelectGroup, SelectValue, SelectTrigger, SelectContent, SelectLabel, SelectItem, SelectSeparator };

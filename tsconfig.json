@@ -1,18 +1,10 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "declaration": true,
-    "esModuleInterop": true,
-    "jsx": "react-jsx",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "resolveJsonModule": true,
-    "noEmit": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "target": "ES2022",
+    "allowSyntheticDefaultImports": true, "esModuleInterop": true, "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"], "module": "ESNext",
+    "moduleResolution": "Bundler", "resolveJsonModule": true, "noEmit": true,
+    "skipLibCheck": true, "strict": true, "target": "ES2022",
     "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
-  "include": ["src", "stories", ".storybook", "vitest.config.ts", "tsup.config.ts"]
+  "include": ["src", "stories", ".storybook", "provenance/platform/components", "provenance/platform/lib", "tests", "*.config.ts"]
 }

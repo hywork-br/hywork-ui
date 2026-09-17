@@ -5,6 +5,7 @@ fixtures/**/out/
 node_modules/
 storybook-static/
 .storybook/static/design-system.json
+.storybook/static/*.css
 .vercel/
 .env.local
 test-results/

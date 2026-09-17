@@ -1,109 +1,64 @@
-import { Slot, Slottable } from "@radix-ui/react-slot";
-import { LoaderCircle } from "lucide-react";
-import * as React from "react";
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
 
-import { cn } from "../lib/cn";
+import { cn } from "../lib/cn"
 
-/**
- * `danger-outline` é a ação destrutiva em CONTORNO (R13): o botão mais pesado
- * da tela tem que ser o afirmativo, não o que destrói. O `danger` sólido fica
- * para quando destruir É o resultado desejado da tela inteira.
- */
-export type ButtonVariant =
-  | "primary"
-  | "secondary"
-  | "outline"
-  | "quiet"
-  | "danger"
-  | "danger-outline";
-export type ButtonSize = "sm" | "md" | "lg" | "icon";
-
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  asChild?: boolean;
-  loading?: boolean;
-  size?: ButtonSize;
-  variant?: ButtonVariant;
-}
-
-function unavailableCaptureHandlers(handlers: React.DOMAttributes<HTMLElement>) {
-  const block = (event: React.SyntheticEvent<HTMLElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-  };
-  const keyboard = (handler?: React.KeyboardEventHandler<HTMLElement>): React.KeyboardEventHandler<HTMLElement> => (event) => {
-    if (event.key === "Enter" || event.key === " ") block(event);
-    else handler?.(event);
-  };
-  return {
-    onClickCapture: block,
-    onDoubleClickCapture: block,
-    onPointerDownCapture: block,
-    onPointerUpCapture: block,
-    onMouseDownCapture: block,
-    onMouseUpCapture: block,
-    onKeyDownCapture: keyboard(handlers.onKeyDownCapture),
-    onKeyUpCapture: keyboard(handlers.onKeyUpCapture),
-  };
-}
-
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      asChild = false,
-      children,
-      className,
-      disabled,
-      loading = false,
-      onClick,
-      size = "md",
-      type = "button",
-      variant = "primary",
-      ...props
+const buttonVariants = cva(
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors motion-reduce:!transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 dark:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        success:
+          "bg-success text-hw-on-status hover:bg-success/90",
+        warning:
+          "bg-warning text-hw-on-status hover:bg-warning/90",
+        error:
+          "bg-error text-hw-on-status hover:bg-error/90",
+        info:
+          "bg-info text-hw-on-status hover:bg-info/90",
+        outline:
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
+      },
     },
-    ref,
-  ) => {
-    const Component = asChild ? Slot : "button";
-    const isDisabled = disabled || loading;
-    // Slot runs child handlers first. Guard the child itself before Slot merges
-    // callbacks, and guard capture so descendant actions cannot run either.
-    const child = asChild && React.isValidElement<React.HTMLAttributes<HTMLElement>>(children)
-      ? React.cloneElement(children, {
-          ...(isDisabled ? unavailableCaptureHandlers(children.props) : {}),
-          ...(isDisabled ? { "aria-disabled": true } : {}),
-          "aria-busy": loading || (children.props["aria-busy"] ?? props["aria-busy"]),
-          children: <span className="hw-button__label" key="label">{children.props.children}</span>,
-        })
-      : children;
-    const handleClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
-      if (isDisabled) {
-        event.preventDefault();
-        event.stopPropagation();
-        return;
-      }
-      onClick?.(event);
-    };
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+)
 
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
     return (
-      <Component
-        {...props}
-        {...(isDisabled ? unavailableCaptureHandlers(props) : {})}
-        aria-busy={loading || props["aria-busy"]}
-        aria-disabled={isDisabled || undefined}
-        className={cn("hw-button", className)}
-        data-loading={loading || undefined}
-        data-size={size}
-        data-variant={variant}
-        disabled={asChild ? undefined : isDisabled}
-        onClick={handleClick}
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
-        type={asChild ? undefined : type}
-      >
-        {loading ? <LoaderCircle aria-hidden="true" className="hw-button__spinner" /> : null}
-        <Slottable>
-          {asChild ? child : <span className="hw-button__label">{children}</span>}
-        </Slottable>
-      </Component>
-    );
-  },
-);
-Button.displayName = "Button";
+        {...props}
+      />
+    )
+  }
+)
+Button.displayName = "Button"
+
+export { Button, buttonVariants }

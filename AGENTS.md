@@ -1,97 +1,36 @@
-# Regras para agentes — design system da Hywork
+# Contrato do design system
 
-Estas regras viajam **com o pacote**. Qualquer repositório que consome
-`@hywork/ui` consome também este arquivo, porque regra que mora em um repo só
-não protege os outros.
+## Escopo
 
-## A regra que vale mais que todas
+Este repositório atende somente o hywork-plataform. Não implementa produto, backend,
+autenticação, páginas de negócio ou navegação de aplicação.
 
-**Componente, prop ou token que você não conseguiu verificar na fonte não é
-usado.**
+O Platform fornece o comportamento e a referência visual existente; ele não possui
+um design system consolidado que possa ser simplesmente copiado. A biblioteca deve
+padronizar sem reproduzir inconsistências como se fossem decisões de design.
 
-Se o que você precisa não existe, a saída não é inventar em silêncio — é dizer
-que está propondo algo novo e por quê. Propor é legítimo. Inventar calado é
-como um repositório acaba com uma dúzia de versões do mesmo componente.
+## Fontes e precedência
 
-## Onde está a verdade, em ordem
+1. Pedido vigente do Vitor e limites de migração do produto.
+2. `docs/design-guide.md`: critérios visuais selecionados para esta biblioteca.
+3. `docs/platform-handoff.md`: integração, evidências e limitações.
+4. `src/`, `tokens/platform.css`, `tailwind/platform-preset.cjs` e `manifest.json`.
+5. `provenance/platform/`: referência técnica fixada, não aprovação estética.
 
-1. **`tokens/semantico.css`** — papéis aprovados de cor, tipografia, foco e estado sob
-   o prefixo `--hw-`. Verifique o valor atual, não o copie de uma skill.
-2. **`tokens/admin.css` e `tokens/portal.css`** — densidade e tamanho por
-   superfície.
-3. **`tokens/componentes.css`, `src/` e `manifest.json`** — execução e API. O
-   manifesto é gerado; rode `npm run manifest`, nunca edite à mão.
-4. **O inventário de componentes do repositório em que você está.**
+## Ao alterar
 
-O que **não** é fonte de verdade: o arquivo de design (que não é biblioteca
-publicada), o que outro trecho do código faz, e o default de qualquer
-biblioteca que a gente instalou.
+- Preserve APIs e estados, incluindo handlers e foco; registre qualquer ruptura.
+- Não introduza cores literais em componentes. Use tokens semânticos e pares fundo/texto.
+- Montserrat para produto. Não importar receitas de materiais comerciais.
+- Controles principais seguem escala comum; não encolher alvo para parecer minimalista.
+- Mantenha o tema do cliente. Não force uma cor de marca sobre uma variável do consumidor.
+- Componente genérico recebe dados/handlers por props; nunca acessa serviços do produto.
+- Documento antigo e código existente não são mandato para manter um defeito.
+- Mudança visual deliberada exige registro da diferença e captura após a última edição.
 
-Código é referência de implementação, não prova de que uma decisão seja boa. Um defeito observado
-é corrigido no componente/token responsável, com evidência e consumidores identificados. Requisito
-aprovado é vinculante; heurística é contextual; receita externa é experimento. Não promover valores
-de escala, blur ou duração só por aparecerem numa referência. Uma crítica é somente leitura.
+## Verificação
 
-## Proibições
-
-- **Nunca escreva hex.** Nem em `className`, nem em `style`, nem em CSS. Se a cor
-  que você quer não tem token, o token está faltando — peça, não contorne.
-- **Nunca use cor arbitrária do Tailwind** (`bg-[#1e72a1]`). Mesma razão.
-- **Nunca use a cor primária como campo de fundo.** Ela é acento: item ativo,
-  botão de ação, borda de destaque. Fundo colorido é para **um** elemento por
-  tela. Ignorar isso é o que faz a interface parecer "toda colorida" e é o erro
-  mais comum aqui.
-- **Nunca redeclare token em arquivo de feature.** `const PRIMARIA = "..."` numa
-  tela é um token novo nascendo fora do sistema.
-- **Nunca escreva `--hw-*` fora deste repositório.** Esse prefixo é do design
-  system. O namespace `--color-*` é da aplicação, e num produto white-label ele
-  pertence ao tema do cliente — sobrescrever ali apaga a marca dele.
-- **Nunca deixe cor como único canal de informação.** Todo estado carrega ícone
-  ou texto junto — a paleta não tem verde nem vermelho, e daltonismo não é caso
-  raro.
-
-## Ao construir
-
-- **Superfície primeiro:** admin é denso (alvo 32px, corpo 14px), portal é
-  confortável (alvo 44px, corpo 16px). Use os tokens de superfície em vez de
-  escolher número.
-- **Foco visível sempre:** `--hw-focus` com `--hw-focus-width` e
-  `--hw-focus-offset`. O anel que vem por padrão na maioria dos scaffolds não
-  passa em contraste; por isso o token existe.
-- **Par bg/fg:** ao pintar um fundo, use a tinta que vem no par
-  (`--hw-surface` com `--hw-surface-fg`). Combinar fundo de um par com tinta de
-  outro é como se produz texto ilegível.
-- **Movimento contextual:** use os tokens existentes e prove o resultado em runtime. Não mova
-  todo botão no hover nem anime toda lista ao entrar. Reduced motion inclui loaders estáticos;
-  a presença de tokens não demonstra que cada componente respeita essa preferência.
-- **Padrões preservam domínio:** `ListPage`, filtros e tabela compartilham
-  anatomia; taxonomia, células, permissões e ações continuam na feature.
-- **Até outubro não migre produto:** os pilotos do Storybook usam fixtures. Uma
-  importação em Platform ou Builder exige o gate de migração aprovado.
-
-## Referência de integração e acabamento
-
-Leia `governance/pattern-contracts.md` para anatomia e responsabilidades, e a spec do componente
-afetado para o comportamento aprovado. As jornadas executáveis ficam em
-`stories/FeaturePilots.stories.tsx` e `stories/FocusMode.stories.tsx`; os testes correspondentes em
-`src/test/`. Filtros, status e formato da coleção preservam o domínio da feature.
-
-Para uma decisão aberta, compare um eixo principal usando o mesmo conteúdo; não gere variantes
-para bugs ou escolhas já encerradas. O experimento fica no Storybook, fora do pacote distribuído.
-Fotografia de tela comprova composição; teste de interação/gravação comprova continuidade.
-Verifique fonte carregada nos portais, foco de retorno, erro recuperável, largura no loading e
-larguras relevantes antes de afirmar qualidade. Não substitua gates de release por um piloto visual.
-
-## Para o mantenedor humano
-
-### Quiet controls — approved refinement, 2026-09-05
-
-Do not restore blue outlines on every input or nest the filter toolbar in a
-bordered card. Filtering controls and form fields have distinct treatments in
-the shared CSS. Reduced visual weight must preserve error cues during focus,
-named controls, readable contrast and comfortable hit targets. The executable
-Field contract checks invalid fields both in forms and contextual search.
-
-Token novo entra por PR, com o papel que ele cumpre escrito. Se a cor não existe
-no guideline da marca, ela não entra como primitivo — vira derivado, com
-justificativa no comentário.
+`npm run check`, `npm run build`, `npm run test:browser` e `npm run smoke:consumer`.
+O teste de paridade compara componentes com a fonte fixada, não com produção.
+A migração do consumidor exige evidência própria por fluxo e tenant.
+Não declarar cobertura total de produto ou acessibilidade por um catálogo verde.

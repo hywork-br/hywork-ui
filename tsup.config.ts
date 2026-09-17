@@ -10,4 +10,5 @@ export default defineConfig({
   sourcemap: true,
   splitting: true,
   target: "es2022",
+  banner: { js: '"use client";' },
 });

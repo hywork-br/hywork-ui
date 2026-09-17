@@ -1,41 +1,28 @@
-import * as React from "react";
+"use client"
 
-import { cn } from "../lib/cn";
+import * as React from "react"
+import * as ProgressPrimitive from "@radix-ui/react-progress"
 
-export interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** Current progress. Values outside the range are clamped for a stable visual state. */
-  value?: number | null;
-  /** Maximum progress value. Defaults to 100. */
-  max?: number;
-}
+import { cn } from "../lib/cn"
 
-function clampProgress(value: number | null | undefined, max: number) {
-  if (!Number.isFinite(value)) return 0;
-  return Math.min(max, Math.max(0, value as number));
-}
+const Progress = React.forwardRef<
+  React.ElementRef<typeof ProgressPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
+>(({ className, value, ...props }, ref) => (
+  <ProgressPrimitive.Root
+    ref={ref}
+    className={cn(
+      "relative h-2 w-full overflow-hidden rounded-full bg-primary/20",
+      className
+    )}
+    {...props}
+  >
+    <ProgressPrimitive.Indicator
+      className="h-full w-full flex-1 bg-primary transition-all motion-reduce:!transition-none"
+      style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+    />
+  </ProgressPrimitive.Root>
+))
+Progress.displayName = ProgressPrimitive.Root.displayName
 
-export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
-  ({ className, max = 100, value = 0, ...props }, ref) => {
-    const safeMax = Number.isFinite(max) && max > 0 ? max : 100;
-    const safeValue = clampProgress(value, safeMax);
-    const percentage = (safeValue / safeMax) * 100;
-
-    return (
-      <div
-        aria-valuemax={safeMax}
-        aria-valuemin={0}
-        aria-valuenow={safeValue}
-        className={cn("hw-progress", className)}
-        data-max={safeMax}
-        data-state={safeValue >= safeMax ? "complete" : safeValue > 0 ? "loading" : "idle"}
-        data-value={safeValue}
-        role="progressbar"
-        ref={ref}
-        {...props}
-      >
-        <span aria-hidden="true" className="hw-progress__indicator" style={{ transform: `scaleX(${percentage / 100})` }} />
-      </div>
-    );
-  },
-);
-Progress.displayName = "Progress";
+export { Progress }

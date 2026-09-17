@@ -1,0 +1,2 @@
+# Captured upstream bytes are immutable evidence, including their whitespace.
+provenance/platform/** -whitespace
