@@ -1,70 +1,42 @@
+"use client";
+
 import * as React from "react";
+import * as SliderPrimitive from "@radix-ui/react-slider";
 
 import { cn } from "../lib/cn";
 
-export interface SliderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange" | "value"> {
-  value?: number[];
-  defaultValue?: number[];
-  min?: number;
-  max?: number;
-  step?: number;
-  disabled?: boolean;
-  onValueChange?: (value: number[]) => void;
-  onValueCommit?: (value: number[]) => void;
-}
-
-function normalizeValues(values: number[] | undefined, min: number, max: number, step: number) {
-  const source = values?.length ? values : [min];
-  return source.map((value) => Math.min(max, Math.max(min, Number.isFinite(value) ? value : min)))
-    .sort((a, b) => a - b)
-    .map((value) => Math.round((value - min) / step) * step + min);
-}
-
-export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
-  ({ className, defaultValue, disabled = false, max = 100, min = 0, onValueChange, onValueCommit, step = 1, value, ...props }, ref) => {
-    const safeMax = Number.isFinite(max) && max > min ? max : min + 100;
-    const safeStep = Number.isFinite(step) && step > 0 ? step : 1;
-    const isControlled = value !== undefined;
-    const [internalValue, setInternalValue] = React.useState(() => normalizeValues(defaultValue, min, safeMax, safeStep));
-    const values = normalizeValues(isControlled ? value : internalValue, min, safeMax, safeStep);
-    const ariaLabel = typeof props["aria-label"] === "string" ? props["aria-label"] : "Valor";
-    const low = values[0] ?? min;
-    const high = values[values.length - 1] ?? min;
-    const rangeStart = ((low - min) / (safeMax - min)) * 100;
-    const rangeWidth = ((high - low) / (safeMax - min)) * 100;
-
-    const update = (index: number, nextValue: number, commit = false) => {
-      const next = normalizeValues(values.map((entry, entryIndex) => entryIndex === index ? nextValue : entry), min, safeMax, safeStep);
-      if (!isControlled) setInternalValue(next);
-      onValueChange?.(next);
-      if (commit) onValueCommit?.(next);
+const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>>(
+  ({ className, ...props }, ref) => {
+    // Função para prevenir a propagação de eventos
+    const handleStopPropagation = (e: React.MouseEvent | React.TouchEvent) => {
+      e.stopPropagation();
     };
 
     return (
-      <div aria-disabled={disabled || undefined} className={cn("hw-slider", className)} data-disabled={disabled ? "" : undefined} ref={ref} {...props}>
-        <span aria-hidden="true" className="hw-slider__track" />
-        <span aria-hidden="true" className="hw-slider__range" style={{ left: `${rangeStart}%`, width: `${rangeWidth}%` }} />
-        {values.map((current, index) => (
-          <input
-            aria-label={values.length > 1 ? `${ariaLabel} ${index + 1}` : ariaLabel}
-            className="hw-slider__input"
-            disabled={disabled}
-            key={index}
-            max={safeMax}
-            min={min}
-            onChange={(event) => update(index, Number(event.target.value))}
-            onMouseUp={() => onValueCommit?.(values)}
-            onTouchEnd={() => onValueCommit?.(values)}
-            onKeyUp={(event) => {
-              if (["ArrowDown", "ArrowLeft", "ArrowRight", "ArrowUp", "End", "Home", "PageDown", "PageUp"].includes(event.key)) onValueCommit?.(values);
-            }}
-            step={safeStep}
-            type="range"
-            value={current}
+      <SliderPrimitive.Root
+        ref={ref}
+        className={cn("relative flex w-full touch-none select-none items-center", className)}
+        onClick={handleStopPropagation}
+        onPointerDown={handleStopPropagation}
+        onMouseDown={handleStopPropagation}
+        onTouchStart={handleStopPropagation}
+        {...props}
+      >
+        <SliderPrimitive.Track className="relative h-2 w-full grow overflow-hidden rounded-full bg-gray-100">
+          <SliderPrimitive.Range className="absolute h-full bg-primary" />
+        </SliderPrimitive.Track>
+        {(props.value ?? props.defaultValue ?? [0]).map((_, i) => (
+          <SliderPrimitive.Thumb
+            key={i}
+            aria-label={props["aria-label"]}
+            aria-labelledby={props["aria-labelledby"]}
+            className="block h-5 w-5 rounded-full border-2 border-primary bg-white ring-offset-background transition-colors motion-reduce:!transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
           />
         ))}
-      </div>
+      </SliderPrimitive.Root>
     );
-  },
+  }
 );
-Slider.displayName = "Slider";
+Slider.displayName = SliderPrimitive.Root.displayName;
+
+export { Slider };
