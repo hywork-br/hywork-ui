@@ -192,6 +192,16 @@ Substitui **9 implementações** com sete padrões de interação diferentes. A
 anatomia: região de busca (0..n), região de dimensões (0..n), ação de limpar
 (aparece quando há filtro ativo).
 
+**Quatro telas migradas:** Usuários, Desafios, Submissões e Lixeira.
+
+**Duas pendem de decisão, não de trabalho:**
+
+- *Dashboard Conarh* colapsa os filtros num botão "Filtros (2)". Migrar exige
+  fechar a definição de responsividade abaixo.
+- *HyStore* usa painel lateral. A decisão foi barra; converter muda a tela da
+  loja inteira, e painel lateral é padrão de mercado em marketplace. Vale
+  confirmar com a PO se a loja é exceção registrada ou se migra mesmo.
+
 Composição por slots, nunca por props acumuladas:
 
 ```tsx
@@ -265,7 +275,7 @@ ao componente. **A página nunca decide** — se decidir, a divergência volta.
 | Componente | A definir |
 |---|---|
 | `data-list` | abaixo de qual largura a tabela vira lista e quais colunas sobrevivem |
-| `filter-bar` | se colapsa em "Filtros (2)" e a partir de qual largura |
+| `filter-bar` | se colapsa em "Filtros (2)" e a partir de qual largura — **bloqueia** a migração do filtro do dashboard Conarh, que já faz isso hoje |
 | `dialog` | se ocupa a tela inteira em telas estreitas |
 | `tabs` | se rolam na horizontal ou viram seletor quando não cabem |
 | `carousel` | quantos itens por largura e se os controles mudam |
