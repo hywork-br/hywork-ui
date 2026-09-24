@@ -32,17 +32,31 @@ export interface ItemCardProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   onOpen?: () => void;
   /** Nível do heading do título. */
   titleAs?: "h2" | "h3" | "h4";
+  /** Elemento do container. `article` quando o card é um item de listagem. */
+  as?: "div" | "article" | "li";
 }
 
 const ItemCard = React.forwardRef<HTMLDivElement, ItemCardProps>(
   (
-    { title, description, media, status, actions, onOpen, titleAs: Title = "h3", className, children, ...props },
+    {
+      title,
+      description,
+      media,
+      status,
+      actions,
+      onOpen,
+      titleAs: Title = "h3",
+      as: Container = "div",
+      className,
+      children,
+      ...props
+    },
     ref,
   ) => {
     const clicavel = typeof onOpen === "function";
 
     return (
-      <div
+      <Container
         ref={ref}
         className={cn(
           "relative rounded-lg border border-border bg-card p-6 text-card-foreground",
@@ -83,7 +97,7 @@ const ItemCard = React.forwardRef<HTMLDivElement, ItemCardProps>(
         {actions && (
           <div className="relative z-10 mt-4 flex flex-wrap items-center gap-2">{actions}</div>
         )}
-      </div>
+      </Container>
     );
   },
 );

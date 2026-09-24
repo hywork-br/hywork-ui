@@ -46,3 +46,15 @@ describe("ItemCard", () => {
     expect(screen.getByRole("button", { name: "Abrir" })).toBeInTheDocument();
   });
 });
+
+describe("ItemCard — semântica do container", () => {
+  it("renderiza div por padrão", () => {
+    const { container } = render(<ItemCard title="Item" />);
+    expect(container.firstElementChild?.tagName).toBe("DIV");
+  });
+
+  it("vira article quando o card é um item de listagem", () => {
+    const { container } = render(<ItemCard title="Item" as="article" />);
+    expect(container.firstElementChild?.tagName).toBe("ARTICLE");
+  });
+});
