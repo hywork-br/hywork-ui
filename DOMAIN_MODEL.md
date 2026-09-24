@@ -194,13 +194,17 @@ anatomia: região de busca (0..n), região de dimensões (0..n), ação de limpa
 
 **Quatro telas migradas:** Usuários, Desafios, Submissões e Lixeira.
 
-**Duas pendem de decisão, não de trabalho:**
+### Exceções registradas (Rick, 24/09/2026)
 
-- *Dashboard Conarh* colapsa os filtros num botão "Filtros (2)". Migrar exige
-  fechar a definição de responsividade abaixo.
-- *HyStore* usa painel lateral. A decisão foi barra; converter muda a tela da
-  loja inteira, e painel lateral é padrão de mercado em marketplace. Vale
-  confirmar com a PO se a loja é exceção registrada ou se migra mesmo.
+Duas telas **não** usam este padrão, por decisão, e assim devem permanecer:
+
+| Tela | Forma | Por quê |
+|---|---|---|
+| **HyStore** | painel lateral | painel lateral é a forma esperada numa loja; converter para barra reformularia a tela inteira sem ganho |
+| **Dashboard Conarh** | barra com colapso | já colapsa os filtros num botão "Filtros (2)"; fica como está |
+
+Não são pendências. Um agente ou desenvolvedor que encontrar essas telas com
+filtro próprio **não deve migrá-las** — a divergência ali é deliberada.
 
 Composição por slots, nunca por props acumuladas:
 
@@ -275,7 +279,7 @@ ao componente. **A página nunca decide** — se decidir, a divergência volta.
 | Componente | A definir |
 |---|---|
 | `data-list` | abaixo de qual largura a tabela vira lista e quais colunas sobrevivem |
-| `filter-bar` | se colapsa em "Filtros (2)" e a partir de qual largura — **bloqueia** a migração do filtro do dashboard Conarh, que já faz isso hoje |
+| `filter-bar` | se colapsa em "Filtros (2)" e a partir de qual largura |
 | `dialog` | se ocupa a tela inteira em telas estreitas |
 | `tabs` | se rolam na horizontal ou viram seletor quando não cabem |
 | `carousel` | quantos itens por largura e se os controles mudam |
