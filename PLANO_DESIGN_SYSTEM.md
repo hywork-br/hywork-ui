@@ -78,14 +78,14 @@ migrado. Um token muda a cor de todo componente local que usa `bg-primary`.
 **Resolve:** 6 alturas de controle, 7 raios, 9 títulos de página, 3 cores de
 botão primário.
 
-### F2 · Piloto — `FilterBar` 📋
+### F2 · Piloto — `FilterBar` 🚧
 
 Um padrão, uma tela, ciclo completo ponta a ponta.
 
-- [ ] Levantar as 9 implementações numa tabela: essencial × acidental
+- [x] Levantar as 9 implementações: essencial × acidental
 - [ ] Fechar a anatomia com design (1h) — a única reunião indispensável
-- [ ] Escrever a story **antes** do componente
-- [ ] Implementar `platform/filter-bar` com os estados previstos
+- [x] Escrever a story **antes** do componente
+- [x] Implementar `platform/filter-bar` — 6 stories, 11 testes
 - [ ] Migrar `configurations/users` (o caso mais completo: 12 props, 5 campos)
 - [ ] Tag, bump no Platform, preview, merge
 - [ ] Repetir num filtro do Builder — é onde aparece o que só se vê com dois consumidores
@@ -194,3 +194,5 @@ Bloqueiam implementação. Ver [PADROES.md](PADROES.md#decisões-em-aberto).
 | 24/09/2026 | Contrato, documentação e plano alinhados nos repositórios |
 | 24/09/2026 | Estrutura em três camadas, dois catálogos, `develop` criada (v0.8.0-rc.1) |
 | 24/09/2026 | Platform consumindo o pacote: 28 primitivas viraram cascas de re-export |
+| 24/09/2026 | Preset ativado no Platform: 8 chaves duplicadas removidas, equivalência provada |
+| 24/09/2026 | `FilterBar` criado — primeiro padrão autoral do design system |

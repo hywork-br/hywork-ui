@@ -58,7 +58,7 @@ src/
 │   └── …                  demais primitivas
 │
 ├── platform/              Padrões do admin (hywork-plataform)
-│   ├── filter-bar/
+│   ├── filter-bar/        ✅ index.tsx · stories · test
 │   ├── data-list/
 │   ├── item-card/
 │   ├── page-title/

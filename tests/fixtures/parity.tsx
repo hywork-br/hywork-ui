@@ -14,5 +14,8 @@ if (params.get("theme") === "tenant") {
   document.documentElement.style.setProperty("--primary", "270 60% 35%");
   document.documentElement.style.setProperty("--primary-foreground", "0 0% 100%");
 }
-const ui = source ? await import("../../provenance/platform") : await import("../../src");
+// A paridade compara as PRIMITIVAS extraídas contra a referência congelada.
+// Padrões autorais (FilterBar e os próximos) não têm equivalente em
+// provenance/ — eles nascem aqui, e por isso ficam fora desta comparação.
+const ui = source ? await import("../../provenance/platform") : await import("../../src/core");
 createRoot(document.getElementById("root")!).render(<Catalog ui={ui} />);
