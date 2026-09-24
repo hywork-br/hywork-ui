@@ -46,7 +46,7 @@ const ItemCard = React.forwardRef<HTMLDivElement, ItemCardProps>(
       actions,
       onOpen,
       titleAs: Title = "h3",
-      as: Container = "div",
+      as = "div",
       className,
       children,
       ...props
@@ -54,6 +54,9 @@ const ItemCard = React.forwardRef<HTMLDivElement, ItemCardProps>(
     ref,
   ) => {
     const clicavel = typeof onOpen === "function";
+    // O container é escolhido em tempo de uso. Como div, article e li têm
+    // tipos de props e de ref diferentes, a checagem cede num ponto só.
+    const Container = as as React.ElementType;
 
     return (
       <Container
