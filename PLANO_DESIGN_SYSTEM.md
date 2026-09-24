@@ -35,28 +35,37 @@ nenhum. É por isso que migrar primitiva não abre a fila.
 
 ## Fases
 
-### F0 · Contrato e estrutura 🚧
+### F0 · Contrato e estrutura ✅
 
 Reorganizar o repositório nas três camadas e registrar as decisões.
 
 - [x] Registrar os padrões decididos pela PO → [DOMAIN_MODEL.md](DOMAIN_MODEL.md)
 - [x] Escrever o contrato → [AGENTS.md](AGENTS.md)
 - [x] Alinhar a documentação nos consumidores e no workspace
-- [ ] Criar `src/core/`, `src/platform/`, `src/builder/` e distribuir as 28 primitivas
-- [ ] Separar `tokens/core.css`, `platform.css`, `builder.css`
-- [ ] Criar `builder-preset.cjs`
-- [ ] Dois `exports` no `package.json` e duas configurações de Storybook
+- [x] Criar `src/core/`, `src/platform/`, `src/builder/` e distribuir as 28 primitivas
+- [x] Separar `tokens/core.css`, `platform.css`, `builder.css`
+- [x] Criar `builder-preset.cjs`
+- [x] Dois `exports` no `package.json` e duas configurações de Storybook
 
 **Saída:** repositório pronto para receber componente sem decisão de estrutura
 pendente. Nenhum componente novo nesta fase.
 
-### F1 · Tokens nos dois fronts 📋
+### F1 · Tokens — Platform primeiro 🚧
 
-Aplicar os valores decididos e instalar o preset nos dois consumidores.
+**Escopo desta rodada: apenas o `hywork-plataform`.** O `hw-cloud-builder`
+entra depois; o repositório já está preparado para ele (pasta `src/builder/`,
+`tokens/builder.css`, `builder-preset.cjs` e catálogo próprio), mas nenhuma
+migração foi feita lá.
 
 - [ ] Aplicar em `tokens/` os valores de [DOMAIN_MODEL.md](DOMAIN_MODEL.md): título 24/bold,
       card raio 12 e respiro 24, estado vazio respiro 64, rótulo semibold
-- [ ] Instalar preset e tokens no `hywork-plataform`
+- [x] Instalar preset e tokens no `hywork-plataform` (v0.8.0-rc.1)
+- [x] Converter as 28 primitivas do Platform em cascas de re-export
+- [ ] Remover do `tailwind.config.ts` do Platform as chaves duplicadas que
+      hoje vencem o preset — é o passo que muda pixel e pede captura
+
+**Adiado para a rodada do Builder:**
+
 - [ ] Instalar preset e tokens no `hw-cloud-builder`
 - [ ] Alinhar `--primary` e `--radius` do Builder aos do Platform
 - [ ] Corrigir `hw-cloud-builder/lib/theme-utils.ts`: o tema do workspace escreve
@@ -183,3 +192,5 @@ Bloqueiam implementação. Ver [PADROES.md](PADROES.md#decisões-em-aberto).
 | 22/09/2026 | Varredura de divergências nos dois frontends |
 | 23/09/2026 | 18 padrões decididos pela PO |
 | 24/09/2026 | Contrato, documentação e plano alinhados nos repositórios |
+| 24/09/2026 | Estrutura em três camadas, dois catálogos, `develop` criada (v0.8.0-rc.1) |
+| 24/09/2026 | Platform consumindo o pacote: 28 primitivas viraram cascas de re-export |

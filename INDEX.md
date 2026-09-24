@@ -30,12 +30,13 @@ npm (`private: true`); o release por tag gera o tarball como asset do GitHub.
 
 ## Estrutura de Diretórios
 
-> **Estado atual × alvo.** O repositório nasceu com escopo de um consumidor só e
-> os componentes ainda estão planos em `src/components/`. A reorganização em
-> `core/`, `platform/` e `builder/` é a primeira tarefa de estrutura —
-> ver [DOMAIN_MODEL.md](DOMAIN_MODEL.md) e [CLAUDE.md](CLAUDE.md).
-
-### Alvo
+> **A estrutura abaixo já existe.** As 28 primitivas estão em `src/core/`, uma
+> pasta por componente. `src/platform/` e `src/builder/` estão criadas e vazias:
+> recebem os padrões conforme forem construídos —
+> ver [PLANO_DESIGN_SYSTEM.md](PLANO_DESIGN_SYSTEM.md).
+>
+> **O Builder ainda não consome o pacote.** A camada existe e está preparada,
+> mas a migração dele é uma rodada posterior.
 
 ```
 src/
@@ -87,21 +88,6 @@ tailwind/
 └── builder/               config e stories da intranet   → 6007
 ```
 
-### Estado atual
-
-```
-src/
-├── components/            28 primitivas planas (a distribuir em core/ e platform/)
-├── lib/cn.ts
-└── index.ts               entrada única
-
-tokens/platform.css
-tailwind/platform-preset.cjs
-stories/                   catálogo único (a quebrar em story por componente)
-provenance/platform/       snapshot congelado da extração original
-scripts/                   derive-platform.mjs · build-css.mjs · smoke-consumer.mjs
-tests/                     browser (Playwright) e fixtures de paridade
-```
 
 ---
 
