@@ -124,7 +124,8 @@ repouso, foco, erro, carregando, desabilitado e vazio.
 
 - [Contrato do design system](AGENTS.md) — escopo, fronteiras e regras duras
 - [Padrões decididos](DOMAIN_MODEL.md) — o que foi eleito como padrão do produto
-- [Guia de adoção](CROSS_STACK_CONVENTIONS.md) — como os consumidores instalam e migram
+- [Adoção e fluxo de trabalho](CROSS_STACK_CONVENTIONS.md) — instalação, versão e
+  **os seis cenários do dia a dia** (§9): usar, criar, decidir, domínio, alterar, propagar
 - [Índice de estrutura](INDEX.md) — mapa de pastas e componentes
 - [Guia visual](docs/design-guide.md) — critérios de tipografia, cor e espaçamento
 - [Contribuição](CONTRIBUTING.md) — branches, gates e versionamento

@@ -92,11 +92,11 @@ Sombra deixa de ser usada para estrutura — fica reservada a sobreposições.
 |---|---|
 | Decisão | pílula preenchida · raio total · texto 12px peso 600 sobre o preenchimento |
 | Componente | `core/badge` |
-| Status | 🔧 ajustar |
+| Status | ✅ feito — componente passou a autoral |
 
 **Os cinco papéis de estado.** Levantamos os 18 valores de status em uso nos dois
 frontends e agrupamos por papel semântico. O componente expõe o papel, nunca a
-cor — a tela diz `<Badge role="positive">`, não `<Badge className="bg-green-500">`.
+cor — a tela diz `<Badge variant="positive">`, não `<Badge className="bg-green-500">`.
 
 | Papel | Token | Estados que cobre |
 |---|---|---|
@@ -112,6 +112,13 @@ branco sobre âmbar reprova em contraste, e foi uma das correções da extraçã
 
 Estado novo no produto entra em um dos cinco papéis. Se não couber em nenhum,
 é sinal de que não é estado — é categoria, e categoria não usa cor de status.
+
+**O que ficou de fora, deliberadamente.** As variantes `default`, `secondary` e
+`outline` respondem por 107 dos 124 badges do Platform e não são estado — são
+rótulos neutros. Elas mantêm a aparência anterior: aplicar preenchimento de
+estado a um rótulo neutro pintaria de verde coisas que não significam
+"concluído". `success`, `warning`, `destructive` e `info` seguem válidos como
+nomes anteriores dos mesmos papéis.
 
 ### Estado vazio — respiro 64
 
@@ -179,7 +186,7 @@ Botões soltos na linha saem de uso (15 telas).
 |---|---|
 | Decisão | barra horizontal · fundo neutro a 50% · raio 12 · respiro 16 · campos alinhados pela base |
 | Componente | `platform/filter-bar` |
-| Status | 📋 criar — **é o piloto do projeto** |
+| Status | ✅ feito — 6 stories, 11 testes; tela de Usuários migrada |
 
 Substitui **9 implementações** com sete padrões de interação diferentes. A
 anatomia: região de busca (0..n), região de dimensões (0..n), ação de limpar

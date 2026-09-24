@@ -18,4 +18,9 @@ if (params.get("theme") === "tenant") {
 // Padrões autorais (FilterBar e os próximos) não têm equivalente em
 // provenance/ — eles nascem aqui, e por isso ficam fora desta comparação.
 const ui = source ? await import("../../provenance/platform") : await import("../../src/core");
-createRoot(document.getElementById("root")!).render(<Catalog ui={ui} />);
+// Os dois lados divergem em tipo nos componentes autorais — o Badge ganhou
+// variantes que a referência congelada não tem. A comparação aqui é VISUAL:
+// renderiza o mesmo catálogo com as duas implementações e compara pixels.
+createRoot(document.getElementById("root")!).render(
+  <Catalog ui={ui as unknown as Parameters<typeof Catalog>[0]["ui"]} />,
+);

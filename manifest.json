@@ -148,7 +148,7 @@
     {
       "name": "badge",
       "file": "src/core/badge/index.tsx",
-      "status": "source-derived"
+      "status": "authored"
     },
     {
       "name": "breadcrumb",

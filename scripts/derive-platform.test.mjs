@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { componentNames, tokenize, extractComponent } from './derive-platform.mjs';
+import { componentNames, authoredNames, tokenize, extractComponent } from './derive-platform.mjs';
 const read = p => readFileSync(new URL('../'+p, import.meta.url), 'utf8');
 const hash = s => createHash('sha256').update(s).digest('hex');
 const manifest = JSON.parse(read('manifest.json'));
@@ -13,6 +13,8 @@ test('all components preserve the captured implementation and pinned hashes', ()
     const original = read('provenance/platform/components/'+name+'.tsx');
     const expected = manifest.source.files['src/components/ui/'+name+'.tsx'].normalizedSha256;
     assert.equal(hash(original), expected, name+' source drift');
+    // Autoral: a fonte da verdade é a decisão registrada, não a extração.
+    if (authoredNames.includes(name)) continue;
     assert.equal(read('src/core/'+name+'/index.tsx'), extractComponent(name, original), name+' implementation drift');
   }
 });

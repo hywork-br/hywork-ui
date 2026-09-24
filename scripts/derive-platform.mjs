@@ -8,6 +8,19 @@ import ts from 'typescript';
 
 const require = createRequire(import.meta.url);
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+/**
+ * Componentes que deixaram de ser derivados.
+ *
+ * Quando a PO decide um padrão visual para um componente, ele para de ser
+ * espelho da extração e passa a ser autoral: a fonte da verdade vira a
+ * decisão registrada em DOMAIN_MODEL.md, não mais provenance/.
+ *
+ * A derivação não os reescreve e a paridade não os compara — comparar um
+ * componente autoral com a referência congelada só acusaria a decisão como
+ * se fosse regressão.
+ */
+export const authoredNames = ['badge'];
+
 export const componentNames = 'accordion alert-dialog alert avatar badge breadcrumb button card checkbox collapsible dialog dropdown-menu input label popover progress radio-group scroll-area select separator sheet skeleton slider switch table tabs textarea tooltip'.split(' ');
 const hash = (s) => createHash('sha256').update(s).digest('hex');
 const read = (p) => readFileSync(resolve(root, p), 'utf8');
@@ -139,14 +152,16 @@ export function derive() {
     if (!name) throw new Error('Missing semantic table color '+hex);
     config.theme.extend.colors[`hw-table-${name}`]=color(name==='caption'?'#637381':`#${hex}`,`table-${name}`);
   }
-  for (const {name,source} of sources) put(`src/core/${name}/index.tsx`, extractComponent(name, source));
+  for (const {name,source} of sources)
+    if (!authoredNames.includes(name))
+      put(`src/core/${name}/index.tsx`, extractComponent(name, source));
   put('src/core/index.ts', '// Primitivas comuns aos dois consumidores.\n// Regra: entra aqui quando Platform e Builder concordam na anatomia\n// e divergem apenas em token. Ver AGENTS.md \u00a73.\n\n'+componentNames.map(n=>`export * from "./${n}";`).join('\n')+'\n');
   put('provenance/platform/index.ts', componentNames.map(n=>`export * from "./components/${n}";`).join('\n')+'\n');
   // Tokens e preset deixaram de ser gerados: viraram autorais e divididos em
   // core/platform/builder. Regenerá-los aqui desfaria a separação em camadas.
   // put('tokens/platform.css', '/* Generated from the pinned Pla…  (desativado)
   // put('tailwind/platform-preset.cjs', '// Generated from Platf…  (desativado)
-  put('manifest.json',json({schemaVersion:3,package:'@hywork/ui',version:JSON.parse(read('package.json')).version,source:provenance,components:componentNames.map(name=>({name,file:`src/core/${name}/index.tsx`,status:'source-derived'})),tokenCount:Object.keys(tokens).length}));
+  put('manifest.json',json({schemaVersion:3,package:'@hywork/ui',version:JSON.parse(read('package.json')).version,source:provenance,components:componentNames.map(name=>({name,file:`src/core/${name}/index.tsx`,status:authoredNames.includes(name)?'authored':'source-derived'})),tokenCount:Object.keys(tokens).length}));
   return {tokens:Object.keys(tokens).length,components:componentNames.length};
 }
 
