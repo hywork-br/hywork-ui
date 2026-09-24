@@ -113,12 +113,18 @@ branco sobre âmbar reprova em contraste, e foi uma das correções da extraçã
 Estado novo no produto entra em um dos cinco papéis. Se não couber em nenhum,
 é sinal de que não é estado — é categoria, e categoria não usa cor de status.
 
-**O que ficou de fora, deliberadamente.** As variantes `default`, `secondary` e
-`outline` respondem por 107 dos 124 badges do Platform e não são estado — são
-rótulos neutros. Elas mantêm a aparência anterior: aplicar preenchimento de
-estado a um rótulo neutro pintaria de verde coisas que não significam
-"concluído". `success`, `warning`, `destructive` e `info` seguem válidos como
-nomes anteriores dos mesmos papéis.
+**Sem ponto interno.** A cor já é o indicador; o ponto que existia antes
+duplicava a informação e, como só algumas variantes o tinham, produzia dois
+desenhos de badge lado a lado na mesma tabela.
+
+**Vale para todas as variantes.** Numa primeira versão preservei `default`,
+`secondary` e `outline` como estavam, para não mexer em 107 dos 124 badges.
+O resultado na tela de Usuários foi "Ativo" preenchido ao lado de "Inativo"
+sem cor e com ponto — a inconsistência que a decisão existia para encerrar.
+Só `outline` continua vazado, porque é o que o nome descreve.
+
+`success`, `warning`, `destructive` e `info` seguem válidos como nomes
+anteriores dos mesmos papéis.
 
 ### Estado vazio — respiro 64
 
