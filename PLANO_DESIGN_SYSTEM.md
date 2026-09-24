@@ -160,20 +160,58 @@ lado, renderização do outro.
 
 Números de 22/09/2026, reproduzíveis por varredura de código.
 
-| Indicador | Base | Meta |
-|---|---|---|---|
-| Implementações de filtro | 9 | 1 |
+| Indicador | Base | Hoje | Meta |
+|---|---|---|---|---|
+| Implementações de filtro | 9 | **7** | 1 |
 | Implementações de card de item | 21 | 1 + variantes |
-| Telas listando sem o `Table` | 44 | 0 |
-| Arquivos com abas à mão | 33 | 0 |
-| Implementações de carrossel | 12 | 1 |
-| Combinações de título de página | 9 | 1 |
-| Cores de botão primário | 3 | 1 (token) |
-| Adesão do Builder a `Table` e `Tabs` | 0% | 70% |
-| Definições de cor primária no produto | 2 | 1 |
-| Elementos duplicados entre repositórios | 47 | 0 |
+| Telas listando sem o `Table` | 44 | 44 | 0 |
+| Arquivos com abas à mão | 33 | 33 | 0 |
+| Implementações de carrossel | 12 | 12 | 1 |
+| Combinações de título de página | 9 | 9 | 1 |
+| Cores de botão primário | 3 | 3 | 1 (token) |
+| Adesão do Builder a `Table` e `Tabs` | 0% | 0% | 70% |
+| Definições de cor primária no produto | 2 | **1** | 1 |
+| Elementos duplicados entre repositórios | 47 | 47 | 0 |
 
 ---
+
+## O que o design system já entrega
+
+| | |
+|---|---|
+| Primitivas em `core/` | 28 |
+| Padrões em `platform/` | 6 — FilterBar, DataList, ItemCard, EmptyState, PageTitle, ListPagination |
+| Stories | 6, cobrindo os estados de cada padrão |
+| Testes | 44 |
+| Decisões da PO implementadas | 9 de 18 |
+| Componentes autorais | badge, tabs, label, skeleton |
+
+**Telas migradas no Platform:** Usuários (filtro e paginação), Desafios (filtro),
+modal de troca de telefone (paginação), Fórum e Integrações (estado vazio).
+Dois componentes locais foram apagados: `users-filters.tsx` e
+`smart-pagination.tsx`.
+
+## O que falta, e por que não foi feito agora
+
+A fundação está pronta e os padrões existem — o que resta é **migração de tela**,
+que é repetição do ciclo já provado, uma tela por PR:
+
+| Frente | Volume | Observação |
+|---|---|---|
+| Filtros restantes | 6 telas | duas são painel lateral, anatomia diferente |
+| Cards | 21 implementações | cada uma pede revisão do conteúdo |
+| Listagens | 44 telas | a maior; muitas com colunas e ações próprias |
+| Estados vazios | 8 | mecânico |
+| Títulos de página | 9 | vários não são cabeçalho simples — o do Perfil é um campo editável sobre banner |
+| Abas | 33 arquivos | — |
+| Carrossel | 12 | — |
+
+Não migrei em massa por decisão: cada tela precisa de conferência visual com
+dados reais, e um `sed` sobre 44 arquivos de JSX troca um problema conhecido por
+um desconhecido.
+
+**Padrões ainda a criar:** `row-actions`, `upload-area`, `search-input` e
+`form-message`.
 
 ## Decisões em aberto
 
