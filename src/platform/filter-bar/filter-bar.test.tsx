@@ -135,3 +135,24 @@ describe("FilterBar.Field", () => {
     expect(screen.getByRole("button", { name: /limpar/i })).toBeInTheDocument();
   });
 });
+
+describe("FilterBar — espaçamento", () => {
+  it("reserva respiro abaixo por padrão, para não colar na listagem", () => {
+    const { container } = render(
+      <FilterBar onClear={() => undefined}>
+        <FilterBar.Search value="" onChange={() => undefined} />
+      </FilterBar>,
+    );
+    expect(container.firstElementChild).toHaveClass("mb-6");
+  });
+
+  it("deixa o layout sobrescrever quando ele já cuida do espaçamento", () => {
+    const { container } = render(
+      <FilterBar onClear={() => undefined} className="mb-0">
+        <FilterBar.Search value="" onChange={() => undefined} />
+      </FilterBar>,
+    );
+    expect(container.firstElementChild).toHaveClass("mb-0");
+    expect(container.firstElementChild).not.toHaveClass("mb-6");
+  });
+});

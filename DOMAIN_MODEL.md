@@ -271,6 +271,24 @@ Vale para a busca. **Não muda o `Input` geral**, que mantém o raio 4.
 
 ---
 
+## Espaçamento entre os padrões
+
+Os padrões que emolduram uma listagem carregam o próprio respiro, para não
+depender de a tela lembrar:
+
+| Padrão | Respiro | Por quê |
+|---|---|---|
+| `FilterBar` | `mb-6` (24px) | precede a listagem |
+| `ListPagination` | `mt-6` (24px) | sucede a listagem |
+| `PageTitle` | `mb-6` (24px) | precede o conteúdo |
+
+Sobrescrevível por `className` quando o layout já cuida do espaçamento —
+`<FilterBar className="mb-0">`.
+
+**Por que no componente e não na tela:** a barra de filtros sem respiro cola na
+tabela, e foi exatamente o que aconteceu na primeira tela migrada. Espaçamento
+que depende de cada tela lembrar é espaçamento que diverge.
+
 ## Definições de responsividade
 
 Não são escolha entre opções existentes: são regras a definir uma vez e aplicar

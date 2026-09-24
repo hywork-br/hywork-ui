@@ -76,7 +76,10 @@ const FilterBarRoot = React.forwardRef<HTMLDivElement, FilterBarProps>(
           role="search"
           aria-label={props["aria-label"] ?? "Filtros da listagem"}
           className={cn(
-            "flex flex-wrap items-end gap-3 rounded-lg bg-muted/50 p-4",
+            // `mb-6` faz parte do padrão: a barra sempre precede uma
+            // listagem, e sem respiro ela cola no conteúdo. Sobrescrevível
+            // por className quando o layout já cuida do espaçamento.
+            "mb-6 flex flex-wrap items-end gap-3 rounded-lg bg-muted/50 p-4",
             className,
           )}
           {...props}

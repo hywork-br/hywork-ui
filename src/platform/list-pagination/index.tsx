@@ -51,7 +51,9 @@ const ListPagination = React.forwardRef<HTMLDivElement, ListPaginationProps>(
     return (
       <div
         ref={ref}
-        className={cn("flex items-center justify-between gap-4", className)}
+        // `mt-6` faz parte do padrão: a paginação sempre sucede uma
+        // listagem. Espelha o `mb-6` do FilterBar, que a precede.
+        className={cn("mt-6 flex items-center justify-between gap-4", className)}
         {...props}
       >
         <p className="text-sm text-muted-foreground" aria-live="polite">
