@@ -206,7 +206,7 @@ function FilterBarChips({ label, value, onChange, options, className }: FilterBa
               aria-pressed={selecionado}
               disabled={loading}
               onClick={() => onChange(o.value)}
-              className="h-8 rounded-full px-3 text-xs"
+              className="h-10 rounded-full px-4 text-sm"
             >
               {o.label}
             </Button>
