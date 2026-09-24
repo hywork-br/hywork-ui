@@ -193,7 +193,7 @@
     {
       "name": "label",
       "file": "src/core/label/index.tsx",
-      "status": "source-derived"
+      "status": "authored"
     },
     {
       "name": "popover",
@@ -233,7 +233,7 @@
     {
       "name": "skeleton",
       "file": "src/core/skeleton/index.tsx",
-      "status": "source-derived"
+      "status": "authored"
     },
     {
       "name": "slider",
@@ -253,7 +253,7 @@
     {
       "name": "tabs",
       "file": "src/core/tabs/index.tsx",
-      "status": "source-derived"
+      "status": "authored"
     },
     {
       "name": "textarea",

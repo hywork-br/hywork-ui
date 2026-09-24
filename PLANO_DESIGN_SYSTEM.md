@@ -102,18 +102,18 @@ mecânica inteira validada — empacotamento, Tailwind, `use client`, versão, r
 **Por que importa:** é o que responde "como se faz um filtro neste produto" — a
 pergunta que hoje cada tela respondeu sozinha.
 
-### F4 · Demais padrões 📋
+### F4 · Demais padrões 🚧
 
 Na ordem de impacto medido:
 
-| Ordem | Padrão | Substitui |
-|---|---|---|
-| 1 | `data-list` | 44 telas |
-| 2 | `item-card` | 21 implementações |
-| 3 | `empty-state` | 8 variações |
-| 4 | `page-title` | 9 combinações |
-| 5 | `row-actions` | 15 telas com botões soltos |
-| 6 | `upload-area` | 9 implementações |
+| Ordem | Padrão | Substitui | |
+|---|---|---|---|
+| 1 | `data-list` | 44 telas | ✅ |
+| 2 | `item-card` | 21 implementações | ✅ |
+| 3 | `empty-state` | 8 variações | ✅ |
+| 4 | `page-title` | 9 combinações | ✅ |
+| 5 | `row-actions` | 15 telas com botões soltos | 📋 |
+| 6 | `upload-area` | 9 implementações | 📋 |
 
 Ajustes nas primitivas existentes: `tabs` (sublinhado), `badge` (preenchido),
 `breadcrumb` (seta), `skeleton` (pulso), `pagination` (intervalo e setas),
@@ -161,7 +161,7 @@ lado, renderização do outro.
 Números de 22/09/2026, reproduzíveis por varredura de código.
 
 | Indicador | Base | Meta |
-|---|---|---|
+|---|---|---|---|
 | Implementações de filtro | 9 | 1 |
 | Implementações de card de item | 21 | 1 + variantes |
 | Telas listando sem o `Table` | 44 | 0 |
@@ -196,3 +196,5 @@ Bloqueiam implementação. Ver [PADROES.md](PADROES.md#decisões-em-aberto).
 | 24/09/2026 | Platform consumindo o pacote: 28 primitivas viraram cascas de re-export |
 | 24/09/2026 | Preset ativado no Platform: 8 chaves duplicadas removidas, equivalência provada |
 | 24/09/2026 | `FilterBar` criado — primeiro padrão autoral do design system |
+| 24/09/2026 | Badge, Tabs, Label e Skeleton conforme a decisão da PO; saem da derivação |
+| 24/09/2026 | DataList, ItemCard, EmptyState, PageTitle e ListPagination criados |

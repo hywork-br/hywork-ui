@@ -19,7 +19,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
  * componente autoral com a referência congelada só acusaria a decisão como
  * se fosse regressão.
  */
-export const authoredNames = ['badge'];
+export const authoredNames = ['badge', 'tabs', 'label', 'skeleton'];
 
 export const componentNames = 'accordion alert-dialog alert avatar badge breadcrumb button card checkbox collapsible dialog dropdown-menu input label popover progress radio-group scroll-area select separator sheet skeleton slider switch table tabs textarea tooltip'.split(' ');
 const hash = (s) => createHash('sha256').update(s).digest('hex');

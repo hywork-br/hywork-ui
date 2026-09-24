@@ -20,7 +20,7 @@ Status: `✅ existe` · `🔧 ajustar` · `📋 criar`
 | Decisão | 24px · peso 700 · cor de texto principal |
 | Token | `--hw-text-2xl` · `--hw-weight-bold` · `--hw-color-foreground` |
 | Componente | `platform/page-title` |
-| Status | 📋 criar |
+| Status | ✅ feito |
 
 Substitui as **9 combinações** em uso, que iam de 20px/semibold a 30px/black e
 incluíam uma tela com família tipográfica própria (`font-ltwave`).
@@ -31,7 +31,7 @@ incluíam uma tela com família tipográfica própria (`font-ltwave`).
 |---|---|
 | Decisão | altura 48 · borda inferior 1px · indicador de 2px na cor primária no item ativo · fundo transparente |
 | Componente | `core/tabs` |
-| Status | 🔧 ajustar — hoje o `TabsList` entrega pílula preenchida |
+| Status | ✅ feito — sublinhado, altura 48, indicador de 2px |
 
 O formato de pílula sai. 33 dos 59 arquivos que hoje montam abas à mão migram
 para este componente.
@@ -57,7 +57,7 @@ Ordem no rodapé: ação secundária (Cancelar) à esquerda da principal.
 |---|---|
 | Decisão | separador `›` · último item em peso 600 e cor de texto principal · demais em cor esmaecida |
 | Componente | `core/breadcrumb` |
-| Status | 🔧 ajustar — hoje usa barra `/`, e **nenhum arquivo do Platform o importa** |
+| Status | ✅ já conforme — o componente sempre usou seta; o que falta é adoção, já que **nenhum arquivo do Platform o importa** |
 
 ---
 
@@ -69,7 +69,7 @@ Ordem no rodapé: ação secundária (Cancelar) à esquerda da principal.
 |---|---|
 | Decisão | tabela do design system, com cabeçalho em 11px maiúsculo e linhas divididas por borda |
 | Componente | `core/table`, composto em `platform/data-list` |
-| Status | ✅ existe · 📋 `data-list` a criar |
+| Status | ✅ feito — colunas declaradas, carregamento e vazio embutidos |
 
 **A maior migração do projeto: 44 telas.** 17 usam `<table>` cru e 27 montam a
 listagem com `div` e grid.
@@ -81,7 +81,7 @@ listagem com `div` e grid.
 | Decisão | raio 12px · respiro interno 24px · borda 1px · **sem sombra** |
 | Token | `--hw-radius-lg` · `--hw-space-6` · `--hw-color-border` |
 | Componente | `platform/item-card` |
-| Status | 📋 criar |
+| Status | ✅ feito |
 
 Substitui **21 implementações**, com raios de 8 a 24px e respiros de 12 a 24px.
 Sombra deixa de ser usada para estrutura — fica reservada a sobreposições.
@@ -126,7 +126,7 @@ nomes anteriores dos mesmos papéis.
 |---|---|
 | Decisão | centralizado · respiro vertical 64px · texto 14px em cor esmaecida |
 | Componente | `platform/empty-state` |
-| Status | 📋 criar |
+| Status | ✅ feito |
 
 Substitui 8 variações, com respiros de 16 a 64px e quatro tons de cinza.
 
@@ -135,8 +135,8 @@ Substitui 8 variações, com respiros de 16 a 64px e quatro tons de cinza.
 | | |
 |---|---|
 | Decisão | "1–20 de 143" à esquerda, setas anterior/próxima à direita |
-| Componente | `core/pagination` |
-| Status | 🔧 **reescrever** |
+| Componente | `platform/list-pagination` |
+| Status | ✅ feito — o `core/pagination` numerado segue disponível como primitiva |
 
 A forma eleita é a `smart-pagination`, que hoje existe **fora** do design
 system, na tela de Usuários. O `Pagination` atual (numerado) é substituído por
@@ -158,7 +158,7 @@ As outras 11 implementações escritas à mão migram para este componente.
 |---|---|
 | Decisão | blocos que imitam o formato do conteúdo, com pulso |
 | Componente | `core/skeleton` |
-| Status | 🔧 **reescrever** |
+| Status | ✅ feito — pulso em cinza neutro |
 
 A forma eleita é a versão escrita à mão (`bg-gray-200 rounded animate-pulse`),
 não o `Skeleton` atual. O componente do design system é ajustado para entregar
@@ -219,7 +219,7 @@ primário nunca carrega cor literal — assim o tema do cliente funciona.
 |---|---|
 | Decisão | 14px · peso 600 · cor de texto principal |
 | Componente | `core/label` |
-| Status | 🔧 ajustar |
+| Status | ✅ feito |
 
 Substitui 7 combinações, incluindo um hex fixo (`#111928`) e uma versão em
 caixa alta.

@@ -58,13 +58,14 @@ src/
 │   └── …                  demais primitivas
 │
 ├── platform/              Padrões do admin (hywork-plataform)
-│   ├── filter-bar/        ✅ index.tsx · stories · test
-│   ├── data-list/
-│   ├── item-card/
-│   ├── page-title/
-│   ├── empty-state/
-│   ├── row-actions/
-│   └── upload-area/
+│   ├── filter-bar/        ✅  substitui 9 implementações
+│   ├── data-list/         ✅  substitui 44 telas
+│   ├── item-card/         ✅  substitui 21 implementações
+│   ├── list-pagination/   ✅  substitui 3
+│   ├── empty-state/       ✅  substitui 8 variações
+│   ├── page-title/        ✅  substitui 9 combinações
+│   ├── row-actions/       📋
+│   └── upload-area/       📋
 │
 ├── builder/               Padrões da intranet (hw-cloud-builder)
 │
