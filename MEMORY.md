@@ -100,6 +100,32 @@ formato errado.
 
 ---
 
+## 2026-09 · Duas cópias do Radix quebram o contexto
+
+Primeira regressão real da adoção, pega no preview: a tela de Espaços quebrou
+com `AvatarFallback must be used within Avatar`.
+
+A causa não era a tela. Os pacotes Radix estavam em `dependencies` com versão
+fixa, então o npm instalava uma cópia dentro do pacote:
+
+```
+node_modules/@radix-ui/react-avatar                 1.2.6   (consumidor)
+node_modules/@hywork/ui/node_modules/@radix-ui/...  1.1.3   (biblioteca)
+```
+
+O `Avatar` da biblioteca criava o contexto numa instância e o `AvatarFallback`
+que a tela importava direto do Radix lia de outra. Contextos diferentes.
+
+**Correção:** os 20 pacotes Radix viraram `peerDependencies`, para a biblioteca
+usar a cópia do consumidor. Ficam em `devDependencies` para o build próprio.
+
+**Aprendizado:** toda biblioteca de componentes que compartilha contexto React
+— Radix, e o próprio React — precisa que essas dependências sejam peer. O
+sintoma aparece como "X must be used within Y" e não tem nada a ver com o JSX
+da tela.
+
+Vale para qualquer par Root/filho: Dialog, Select, Popover, Tooltip, Tabs.
+
 ## Armadilhas de integração
 
 | Armadilha | Sintoma | Correção |
