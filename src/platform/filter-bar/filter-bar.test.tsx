@@ -110,3 +110,28 @@ describe("FilterBar", () => {
     silencio.mockRestore();
   });
 });
+
+describe("FilterBar.Field", () => {
+  it("acomoda um controle que não é busca nem seleção", () => {
+    render(
+      <FilterBar onClear={() => undefined}>
+        <FilterBar.Field label="De" active={false}>
+          <input type="date" aria-label="De" />
+        </FilterBar.Field>
+      </FilterBar>,
+    );
+    expect(screen.getByLabelText("De")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /limpar/i })).not.toBeInTheDocument();
+  });
+
+  it("oferece limpar quando o campo se declara ativo", () => {
+    render(
+      <FilterBar onClear={() => undefined}>
+        <FilterBar.Field label="De" active>
+          <input type="date" aria-label="De" />
+        </FilterBar.Field>
+      </FilterBar>,
+    );
+    expect(screen.getByRole("button", { name: /limpar/i })).toBeInTheDocument();
+  });
+});

@@ -182,3 +182,37 @@ export const Carregando: Story = {
     );
   },
 };
+
+/**
+ * Slot genérico, para o que não é busca nem seleção. A tela da Lixeira filtra
+ * por intervalo de datas — o campo informa se está ativo, porque só ele sabe
+ * o que é "vazio" no seu caso.
+ */
+export const ComCampoProprio: Story = {
+  render: function Render() {
+    const [de, setDe] = React.useState("");
+    const [ate, setAte] = React.useState("");
+    return (
+      <FilterBar onClear={() => { setDe(""); setAte(""); }}>
+        <FilterBar.Field label="De" active={de !== ""}>
+          <input
+            type="date"
+            value={de}
+            onChange={(e) => setDe(e.target.value)}
+            aria-label="Data inicial"
+            className="flex h-10 w-full rounded-sm border border-slate-300/80 bg-white px-3 text-sm"
+          />
+        </FilterBar.Field>
+        <FilterBar.Field label="Até" active={ate !== ""}>
+          <input
+            type="date"
+            value={ate}
+            onChange={(e) => setAte(e.target.value)}
+            aria-label="Data final"
+            className="flex h-10 w-full rounded-sm border border-slate-300/80 bg-white px-3 text-sm"
+          />
+        </FilterBar.Field>
+      </FilterBar>
+    );
+  },
+};

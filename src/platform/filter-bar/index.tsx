@@ -215,8 +215,40 @@ function FilterBarChips({ label, value, onChange, options, className }: FilterBa
 }
 FilterBarChips.displayName = "FilterBar.Chips";
 
+
+export interface FilterBarFieldProps {
+  label: string;
+  /** Se este campo está filtrando algo — a barra usa para decidir o "Limpar". */
+  active: boolean;
+  children: React.ReactNode;
+  className?: string;
+}
+
+/**
+ * Slot genérico, para um controle que não é busca nem seleção — data, faixa
+ * numérica, seletor de pessoas. O campo informa se está ativo, porque só ele
+ * sabe o que é "vazio" no seu caso.
+ */
+function FilterBarField({ label, active, children, className }: FilterBarFieldProps) {
+  const loading = useRegistroDeAtividade(active, "Field");
+  const id = React.useId();
+
+  return (
+    <div className={cn("min-w-[160px]", className)}>
+      <Label htmlFor={id} className="mb-1.5 block text-xs text-muted-foreground">
+        {label}
+      </Label>
+      <div id={id} aria-disabled={loading || undefined}>
+        {children}
+      </div>
+    </div>
+  );
+}
+FilterBarField.displayName = "FilterBar.Field";
+
 export const FilterBar = Object.assign(FilterBarRoot, {
   Search: FilterBarSearch,
   Select: FilterBarSelect,
   Chips: FilterBarChips,
+  Field: FilterBarField,
 });
