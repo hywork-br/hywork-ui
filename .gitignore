@@ -3,6 +3,7 @@ dist/
 fixtures/**/.next/
 fixtures/**/out/
 node_modules/
+node_modules      # symlink das worktrees (ver CONTRIBUTING.md)
 storybook-static/
 .storybook/static/design-system.json
 .storybook/static/*.css

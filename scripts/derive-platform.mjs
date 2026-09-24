@@ -15,7 +15,7 @@ const put = (p, s) => { const path = resolve(root, p); mkdirSync(dirname(path), 
 const json = (x) => JSON.stringify(x, null, 2) + '\n';
 
 export function normalizeImports(source) {
-  return source.replaceAll('@/lib/utils', '../lib/cn').replaceAll('@/components/ui/button', './button');
+  return source.replaceAll('@/lib/utils', '../../lib/cn').replaceAll('@/components/ui/button', '../button');
 }
 
 export function tokenize(source) {
@@ -33,7 +33,13 @@ const tableColors = {
 };
 
 export function extractComponent(name, source) {
-  let result = tokenize(source);
+  // A referência congelada em provenance/ guarda os componentes como estavam
+  // em src/components/<nome>.tsx. Eles passaram a viver em
+  // src/core/<nome>/index.tsx — um nível mais fundo — então os imports
+  // relativos são reprofundados aqui, sem tocar no snapshot.
+  let result = tokenize(source)
+    .replaceAll('from "../lib/cn"', 'from "../../lib/cn"')
+    .replaceAll('from "./button"', 'from "../button"');
   // Respect motion preference on package elements, never through a global reset.
   result = result.replace(/\b(animate-[\w-]+)(?=[\s"])/g, '$1 motion-reduce:!animate-none')
     .replace(/\b(transition(?:-[\w-]+)?)(?=[\s"])/g, '$1 motion-reduce:!transition-none');
@@ -133,12 +139,14 @@ export function derive() {
     if (!name) throw new Error('Missing semantic table color '+hex);
     config.theme.extend.colors[`hw-table-${name}`]=color(name==='caption'?'#637381':`#${hex}`,`table-${name}`);
   }
-  for (const {name,source} of sources) put(`src/components/${name}.tsx`, extractComponent(name, source));
-  put('src/index.ts', componentNames.map(n=>`export * from "./components/${n}";`).join('\n')+'\n');
+  for (const {name,source} of sources) put(`src/core/${name}/index.tsx`, extractComponent(name, source));
+  put('src/core/index.ts', '// Primitivas comuns aos dois consumidores.\n// Regra: entra aqui quando Platform e Builder concordam na anatomia\n// e divergem apenas em token. Ver AGENTS.md \u00a73.\n\n'+componentNames.map(n=>`export * from "./${n}";`).join('\n')+'\n');
   put('provenance/platform/index.ts', componentNames.map(n=>`export * from "./components/${n}";`).join('\n')+'\n');
-  put('tokens/platform.css', '/* Generated from the pinned Platform source. Application theme variables take precedence. */\n:root {\n'+Object.entries(tokens).map(([k,v])=>`  ${k}: ${v};`).join('\n')+'\n}\n.dark {\n'+Object.entries(dark).map(([k,v])=>`  ${k}: ${v};`).join('\n')+'\n}\n');
-  put('tailwind/platform-preset.cjs', '// Generated from Platform configuration. Do not edit by hand.\nconst config = '+JSON.stringify(config,null,2)+';\nconfig.plugins = [require("tailwindcss-animate")];\ndelete config.content;\nmodule.exports = config;\n');
-  put('manifest.json',json({schemaVersion:3,package:'@hywork/ui',version:JSON.parse(read('package.json')).version,source:provenance,components:componentNames.map(name=>({name,file:`src/components/${name}.tsx`,status:'source-derived'})),tokenCount:Object.keys(tokens).length}));
+  // Tokens e preset deixaram de ser gerados: viraram autorais e divididos em
+  // core/platform/builder. Regenerá-los aqui desfaria a separação em camadas.
+  // put('tokens/platform.css', '/* Generated from the pinned Pla…  (desativado)
+  // put('tailwind/platform-preset.cjs', '// Generated from Platf…  (desativado)
+  put('manifest.json',json({schemaVersion:3,package:'@hywork/ui',version:JSON.parse(read('package.json')).version,source:provenance,components:componentNames.map(name=>({name,file:`src/core/${name}/index.tsx`,status:'source-derived'})),tokenCount:Object.keys(tokens).length}));
   return {tokens:Object.keys(tokens).length,components:componentNames.length};
 }
 

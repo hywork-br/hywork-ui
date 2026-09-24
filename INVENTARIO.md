@@ -1,5 +1,11 @@
 # Inventário
 
+> ## ⚠️ DESATUALIZADO — ver [INDEX.md](INDEX.md)
+>
+> Este inventário reflete a extração inicial de 28 famílias com escopo de um
+> consumidor só. A estrutura atual e a lista de componentes estão em
+> [INDEX.md](INDEX.md); os padrões decididos, em [DOMAIN_MODEL.md](DOMAIN_MODEL.md).
+
 Fonte: [manifest.json](manifest.json), derivado da revisão do Platform registrada nele.
 
 | Grupo | Famílias |

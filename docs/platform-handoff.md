@@ -1,5 +1,14 @@
 # Handoff para engenharia — Platform
 
+> ## ⚠️ SUPERSEDIDO — ver [CROSS_STACK_CONVENTIONS.md](CROSS_STACK_CONVENTIONS.md)
+>
+> Este documento descreve a entrega inicial (v0.7.0), quando o escopo era apenas
+> o `hywork-plataform`. Desde 23/09/2026 o repositório atende **dois**
+> consumidores e a estrutura mudou para `core` / `platform` / `builder`.
+>
+> **Use [CROSS_STACK_CONVENTIONS.md](CROSS_STACK_CONVENTIONS.md)** para instalação, migração e ciclo de versão.
+> Mantido como registro da extração original.
+
 ## O que está disponível
 
 28 famílias genéricas, tokens e preset Tailwind 3. Fonte técnica: Platform

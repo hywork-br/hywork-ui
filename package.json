@@ -1,7 +1,7 @@
 {
   "name": "@hywork/ui",
-  "version": "0.7.0",
-  "description": "Componentes e tokens derivados do hywork-plataform",
+  "version": "0.8.0",
+  "description": "Design system do HyCloud — componentes, tokens e padrões dos dois frontends",
   "private": true,
   "type": "module",
   "license": "UNLICENSED",
@@ -13,19 +13,30 @@
     "dist",
     "tokens",
     "tailwind",
-    "manifest.json",
     "AGENTS.md",
     "README.md",
     "CHANGELOG.md",
-    "docs"
+    "DOMAIN_MODEL.md",
+    "CROSS_STACK_CONVENTIONS.md"
   ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./platform": {
+      "types": "./dist/platform.d.ts",
+      "import": "./dist/platform.js"
+    },
+    "./builder": {
+      "types": "./dist/builder.d.ts",
+      "import": "./dist/builder.js"
+    },
+    "./tokens/core.css": "./tokens/core.css",
     "./tokens/platform.css": "./tokens/platform.css",
+    "./tokens/builder.css": "./tokens/builder.css",
     "./tailwind/platform-preset.cjs": "./tailwind/platform-preset.cjs",
+    "./tailwind/builder-preset.cjs": "./tailwind/builder-preset.cjs",
     "./manifest.json": "./manifest.json"
   },
   "sideEffects": [
@@ -33,13 +44,15 @@
     "tokens/*.css"
   ],
   "scripts": {
+    "dev:platform": "npm run build:css && storybook dev -c .storybook/platform -p 6006 --no-open",
+    "dev:builder": "npm run build:css && storybook dev -c .storybook/builder -p 6007 --no-open",
     "derive": "node scripts/derive-platform.mjs",
     "check": "node --test scripts/*.test.mjs && npm run typecheck && npm run build:lib && vitest run",
     "typecheck": "tsc --noEmit",
     "build:lib": "tsup",
     "build:css": "node scripts/build-css.mjs",
-    "build": "npm run build:lib && npm run build:css && storybook build --quiet",
-    "storybook": "npm run build:css && storybook dev -p 6006 --no-open",
+    "build:storybook": "storybook build -c .storybook/platform -o storybook-static/platform --quiet && storybook build -c .storybook/builder -o storybook-static/builder --quiet",
+    "build": "npm run build:lib && npm run build:css && npm run build:storybook",
     "test": "vitest run",
     "test:browser": "playwright test",
     "smoke:consumer": "node scripts/smoke-consumer.mjs",

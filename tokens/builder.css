@@ -1,0 +1,75 @@
+/* Cores e superfícies do hw-cloud-builder (intranet do colaborador).
+   Importar DEPOIS de core.css.
+
+   Partem dos mesmos valores do Platform. Até 22/09/2026 o Builder usava o
+   preto padrão do shadcn como cor primária, nunca customizado, o que
+   deixava os dois frontends com cores de marca diferentes.
+
+   O tema por workspace sobrescreve --primary em tempo de execução. */
+:root {
+  --hw-color-background: 217 0% 100%;
+  --hw-color-foreground: 217 0% 10%;
+  --hw-color-card-default: 217 0% 100%;
+  --hw-color-card-foreground: 217 0% 15%;
+  --hw-color-popover-default: 217 0% 100%;
+  --hw-color-popover-foreground: 217 95% 10%;
+  --hw-color-primary-50: 200 57% 95%;
+  --hw-color-primary-100: 200 57% 85%;
+  --hw-color-primary-200: 200 57% 75%;
+  --hw-color-primary-300: 200 57% 65%;
+  --hw-color-primary-400: 200 57% 45%;
+  --hw-color-primary-500: 200 57% 18%;
+  --hw-color-primary-600: 200 57% 15%;
+  --hw-color-primary-700: 200 57% 12%;
+  --hw-color-primary-800: 200 57% 10%;
+  --hw-color-primary-900: 200 57% 8%;
+  --hw-color-primary-default: 200 57% 18%;
+  --hw-color-primary-foreground: 0 0% 100%;
+  --hw-color-secondary-default: 217 10% 90%;
+  --hw-color-secondary-foreground: 0 0% 0%;
+  --hw-color-success-50: 142 76% 95%;
+  --hw-color-success-100: 142 76% 85%;
+  --hw-color-success-500: 142 76% 36%;
+  --hw-color-success-600: 142 76% 30%;
+  --hw-color-success-700: 142 76% 24%;
+  --hw-color-success-default: 142 76% 36%;
+  --hw-color-success-foreground: 0 0% 100%;
+  --hw-color-warning-50: 38 92% 95%;
+  --hw-color-warning-100: 38 92% 85%;
+  --hw-color-warning-500: 38 92% 50%;
+  --hw-color-warning-600: 38 92% 45%;
+  --hw-color-warning-700: 38 92% 40%;
+  --hw-color-warning-default: 38 92% 50%;
+  --hw-color-warning-foreground: 0 0% 100%;
+  --hw-color-error-50: 0 84% 95%;
+  --hw-color-error-100: 0 84% 85%;
+  --hw-color-error-500: 0 84% 60%;
+  --hw-color-error-600: 0 84% 50%;
+  --hw-color-error-700: 0 84% 40%;
+  --hw-color-error-default: 0 84% 60%;
+  --hw-color-error-foreground: 0 0% 100%;
+  --hw-color-info-50: 199 89% 95%;
+  --hw-color-info-100: 199 89% 85%;
+  --hw-color-info-500: 199 89% 48%;
+  --hw-color-info-600: 199 89% 40%;
+  --hw-color-info-700: 199 89% 35%;
+  --hw-color-info-default: 199 89% 48%;
+  --hw-color-info-foreground: 0 0% 100%;
+  --hw-color-muted-default: 179 10% 95%;
+  --hw-color-muted-foreground: 217 0% 40%;
+  --hw-color-accent-default: 179 10% 90%;
+  --hw-color-accent-foreground: 217 0% 15%;
+  --hw-color-destructive-default: 0 50% 50%;
+  --hw-color-destructive-foreground: 217 0% 100%;
+  --hw-color-border: 217 20% 82%;
+  --hw-color-input: 217 20% 50%;
+  --hw-color-ring: 217 87.2% 21.4%;
+  --hw-color-chart-1: 200 57% 18%;
+  --hw-color-chart-2: 142 76% 36%;
+  --hw-color-chart-3: 38 92% 50%;
+  --hw-color-chart-4: 0 84% 60%;
+  --hw-color-chart-5: 199 89% 48%;
+  --hw-color-admin-bg: 239 240 241;
+  --hw-color-admin-surface: 255 255 255;
+  --hw-color-admin-sidebar: 30 58 95;
+}

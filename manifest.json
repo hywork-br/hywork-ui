@@ -1,7 +1,7 @@
 {
   "schemaVersion": 3,
   "package": "@hywork/ui",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "source": {
     "repository": "hywork-br/hywork-plataform",
     "commit": "85a66bafd8020697f694366e1937c6379d8663fc",
@@ -127,142 +127,142 @@
   "components": [
     {
       "name": "accordion",
-      "file": "src/components/accordion.tsx",
+      "file": "src/core/accordion/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "alert-dialog",
-      "file": "src/components/alert-dialog.tsx",
+      "file": "src/core/alert-dialog/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "alert",
-      "file": "src/components/alert.tsx",
+      "file": "src/core/alert/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "avatar",
-      "file": "src/components/avatar.tsx",
+      "file": "src/core/avatar/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "badge",
-      "file": "src/components/badge.tsx",
+      "file": "src/core/badge/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "breadcrumb",
-      "file": "src/components/breadcrumb.tsx",
+      "file": "src/core/breadcrumb/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "button",
-      "file": "src/components/button.tsx",
+      "file": "src/core/button/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "card",
-      "file": "src/components/card.tsx",
+      "file": "src/core/card/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "checkbox",
-      "file": "src/components/checkbox.tsx",
+      "file": "src/core/checkbox/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "collapsible",
-      "file": "src/components/collapsible.tsx",
+      "file": "src/core/collapsible/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "dialog",
-      "file": "src/components/dialog.tsx",
+      "file": "src/core/dialog/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "dropdown-menu",
-      "file": "src/components/dropdown-menu.tsx",
+      "file": "src/core/dropdown-menu/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "input",
-      "file": "src/components/input.tsx",
+      "file": "src/core/input/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "label",
-      "file": "src/components/label.tsx",
+      "file": "src/core/label/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "popover",
-      "file": "src/components/popover.tsx",
+      "file": "src/core/popover/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "progress",
-      "file": "src/components/progress.tsx",
+      "file": "src/core/progress/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "radio-group",
-      "file": "src/components/radio-group.tsx",
+      "file": "src/core/radio-group/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "scroll-area",
-      "file": "src/components/scroll-area.tsx",
+      "file": "src/core/scroll-area/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "select",
-      "file": "src/components/select.tsx",
+      "file": "src/core/select/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "separator",
-      "file": "src/components/separator.tsx",
+      "file": "src/core/separator/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "sheet",
-      "file": "src/components/sheet.tsx",
+      "file": "src/core/sheet/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "skeleton",
-      "file": "src/components/skeleton.tsx",
+      "file": "src/core/skeleton/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "slider",
-      "file": "src/components/slider.tsx",
+      "file": "src/core/slider/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "switch",
-      "file": "src/components/switch.tsx",
+      "file": "src/core/switch/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "table",
-      "file": "src/components/table.tsx",
+      "file": "src/core/table/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "tabs",
-      "file": "src/components/tabs.tsx",
+      "file": "src/core/tabs/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "textarea",
-      "file": "src/components/textarea.tsx",
+      "file": "src/core/textarea/index.tsx",
       "status": "source-derived"
     },
     {
       "name": "tooltip",
-      "file": "src/components/tooltip.tsx",
+      "file": "src/core/tooltip/index.tsx",
       "status": "source-derived"
     }
   ],
