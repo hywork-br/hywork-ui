@@ -8,9 +8,10 @@ const base = { perPage: 20, total: 143, onPageChange: () => undefined };
 
 describe("ListPagination", () => {
   it("mostra o intervalo da página atual", () => {
-    render(<ListPagination {...base} page={2} />);
+    render(<ListPagination {...base} page={2} itemLabel="colaboradores" />);
     expect(screen.getByText("21–40")).toBeInTheDocument();
-    expect(screen.getByText("143")).toBeInTheDocument();
+    // O total fica solto no parágrafo, então a asserção é sobre a frase inteira.
+    expect(screen.getByText(/de 143 colaboradores/)).toBeInTheDocument();
   });
 
   it("limita o intervalo ao total na última página", () => {

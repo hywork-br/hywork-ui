@@ -57,10 +57,12 @@ const ListPagination = React.forwardRef<HTMLDivElement, ListPaginationProps>(
         {...props}
       >
         <p className="text-sm text-muted-foreground" aria-live="polite">
-          <span className="font-medium text-foreground tabular-nums">
+          {/* Sem `tabular-nums`: a variante de largura fixa redesenha os dígitos
+              da Montserrat e destoa do resto da interface. */}
+          <span className="font-medium text-foreground">
             {primeiro}–{ultimo}
           </span>{" "}
-          de <span className="tabular-nums">{total}</span> {itemLabel}
+          de {total} {itemLabel}
         </p>
 
         {totalPaginas > 1 && (
