@@ -218,6 +218,11 @@ pioraria a tela. Quem encontrar uma delas **não deve migrá-la**.
 | **Filtro de dashboard** | Analytics de Engajamento, Dashboard Conarh | alimenta gráficos e indicadores, não uma listagem; vive no cabeçalho, junto ao título, e não acima de uma tabela |
 | **Busca dentro de diálogo** | inserir colaboradores, adicionar registro | é campo de um formulário modal, não filtro de tela; o padrão próprio ainda não foi decidido |
 | **Busca de navegação** | hierarquia, páginas recentes, marketplace | leva a um destino em vez de estreitar um conjunto |
+| **Listagem sem dimensão na API** | TV Corporativa | a tela mostra três estados e `GET /tv` só separa o booleano `is_active`: um filtro "Inativas" devolveria os rascunhos junto. Filtrar no cliente parece funcionar até a listagem paginar |
+
+A última linha é a pergunta a fazer antes de implementar um filtro numa tela que
+não tem: **a API filtra pela mesma dimensão que a tela mostra?** Se não filtra,
+o filtro não entra — e a razão vai escrita no serviço, não só aqui.
 
 ### Exceções de tela registradas (Rick, 24/09/2026)
 
