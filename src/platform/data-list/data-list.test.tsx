@@ -53,4 +53,20 @@ describe("DataList", () => {
     render(<DataList {...base} items={ITENS} aria-label="Colaboradores" />);
     expect(screen.getByRole("table", { name: "Colaboradores" })).toBeInTheDocument();
   });
+  it("abre a linha pelo teclado quando há onRowClick", async () => {
+    const onRowClick = vi.fn();
+    render(<DataList {...base} items={ITENS} onRowClick={onRowClick} />);
+    await userEvent.tab();
+    expect(screen.getAllByRole("row")[1]).toHaveFocus();
+    await userEvent.keyboard("{Enter}");
+    expect(onRowClick).toHaveBeenCalledWith(ITENS[0]);
+    await userEvent.tab();
+    await userEvent.keyboard(" ");
+    expect(onRowClick).toHaveBeenLastCalledWith(ITENS[1]);
+  });
+
+  it("não põe a linha na ordem do Tab sem onRowClick", () => {
+    render(<DataList {...base} items={ITENS} />);
+    expect(screen.getAllByRole("row")[1]).not.toHaveAttribute("tabindex");
+  });
 });

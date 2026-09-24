@@ -43,7 +43,7 @@ para este componente.
 | Decisão | largura máxima ampla · altura máxima 90% da viewport · rolagem interna |
 | Rodapé | **botões com o tamanho padrão** (altura 40, largura pelo conteúdo), alinhados à direita, espaçamento de 8px entre eles |
 | Componente | `core/dialog` |
-| Status | 🔧 ajustar |
+| Status | ✅ feito — componente passou a autoral (24/09): rodapé em linha à direita em qualquer largura, respiro de 24px entre cabeçalho, corpo e rodapé, botão de fechar com alvo de 40px |
 
 **O rodapé nunca tem botão de largura total.** Por mais largo que seja o
 diálogo, a ação principal mantém a mesma altura e o mesmo respiro horizontal de

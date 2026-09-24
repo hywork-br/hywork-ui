@@ -71,7 +71,7 @@ const ListPagination = React.forwardRef<HTMLDivElement, ListPaginationProps>(
               type="button"
               variant="outline"
               size="icon"
-              className="h-8 w-8"
+              className="h-10 w-10"
               disabled={disabled || !temAnterior}
               aria-label="Página anterior"
               onClick={() => onPageChange(paginaAtual - 1)}
@@ -82,7 +82,7 @@ const ListPagination = React.forwardRef<HTMLDivElement, ListPaginationProps>(
               type="button"
               variant="outline"
               size="icon"
-              className="h-8 w-8"
+              className="h-10 w-10"
               disabled={disabled || !temProxima}
               aria-label="Próxima página"
               onClick={() => onPageChange(paginaAtual + 1)}

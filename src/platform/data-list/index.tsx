@@ -100,7 +100,20 @@ function DataList<T>({
               <TableRow
                 key={getKey(item)}
                 onClick={onRowClick ? () => onRowClick(item) : undefined}
-                className={onRowClick ? "cursor-pointer" : undefined}
+                // Linha clicável também abre pelo teclado: Tab chega nela, Enter ou espaço abre.
+                tabIndex={onRowClick ? 0 : undefined}
+                onKeyDown={
+                  onRowClick
+                    ? (e) => {
+                        if (e.target !== e.currentTarget) return;
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          onRowClick(item);
+                        }
+                      }
+                    : undefined
+                }
+                className={onRowClick ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring" : undefined}
               >
                 {columns.map((c) => (
                   <TableCell

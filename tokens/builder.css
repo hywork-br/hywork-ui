@@ -71,5 +71,7 @@
   --hw-color-chart-5: 199 89% 48%;
   --hw-color-admin-bg: 239 240 241;
   --hw-color-admin-surface: 255 255 255;
-  --hw-color-admin-sidebar: 30 58 95;
+  /* A sidebar do hywork-plataform é a mesma cor do fundo (components/ui/sidebar.tsx:73);
+     o navy 30 58 95 vinha do tailwind.config e nenhuma tela usava. */
+  --hw-color-admin-sidebar: 239 240 241;
 }
