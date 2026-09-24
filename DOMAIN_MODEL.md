@@ -192,25 +192,39 @@ Botões soltos na linha saem de uso (15 telas).
 |---|---|
 | Decisão | barra horizontal · fundo neutro a 50% · raio 12 · respiro 16 · campos alinhados pela base |
 | Componente | `platform/filter-bar` |
-| Status | ✅ feito — 6 stories, 11 testes; tela de Usuários migrada |
+| Status | ✅ feito — 7 stories, 15 testes; 12 implementações migradas |
 
-Substitui **9 implementações** com sete padrões de interação diferentes. A
-anatomia: região de busca (0..n), região de dimensões (0..n), ação de limpar
+A anatomia: região de busca (0..n), região de dimensões (0..n), ação de limpar
 (aparece quando há filtro ativo).
 
-**Quatro telas migradas:** Usuários, Desafios, Submissões e Lixeira.
+**Onde este padrão se aplica:** filtro que estreita uma **listagem** — tabela,
+grade de cards ou lista — exibido acima dela. É esse o caso que o produto tinha
+espalhado em nove formas diferentes.
 
-### Exceções registradas (Rick, 24/09/2026)
+**Doze implementações migradas:** Usuários, Administração, Lixeira, Campanhas,
+Desafios, Submissões, Fontes de Dados, Fonte de Dados (registros), Documentos,
+Modelos de página, Reconhecimentos e Logs do Senior (RH/HCM).
 
-Duas telas **não** usam este padrão, por decisão, e assim devem permanecer:
+Para conferir a lista a qualquer momento, sem depender deste texto:
+`grep -rln "<FilterBar" src` no `hywork-plataform`.
+
+### Três casos que este padrão não cobre
+
+Não são pendências nem dívida: são anatomias diferentes, e forçá-las na barra
+pioraria a tela. Quem encontrar uma delas **não deve migrá-la**.
+
+| Caso | Exemplo | Por quê |
+|---|---|---|
+| **Filtro de dashboard** | Analytics de Engajamento, Dashboard Conarh | alimenta gráficos e indicadores, não uma listagem; vive no cabeçalho, junto ao título, e não acima de uma tabela |
+| **Busca dentro de diálogo** | inserir colaboradores, adicionar registro | é campo de um formulário modal, não filtro de tela; o padrão próprio ainda não foi decidido |
+| **Busca de navegação** | hierarquia, páginas recentes, marketplace | leva a um destino em vez de estreitar um conjunto |
+
+### Exceções de tela registradas (Rick, 24/09/2026)
 
 | Tela | Forma | Por quê |
 |---|---|---|
 | **HyStore** | painel lateral | painel lateral é a forma esperada numa loja; converter para barra reformularia a tela inteira sem ganho |
 | **Dashboard Conarh** | barra com colapso | já colapsa os filtros num botão "Filtros (2)"; fica como está |
-
-Não são pendências. Um agente ou desenvolvedor que encontrar essas telas com
-filtro próprio **não deve migrá-las** — a divergência ali é deliberada.
 
 Composição por slots, nunca por props acumuladas:
 
