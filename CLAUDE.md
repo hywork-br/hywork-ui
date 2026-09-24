@@ -84,14 +84,17 @@ sobre uma variável do consumidor.
 
 ### Storybook
 
-Dois catálogos publicados do mesmo repositório:
+Dois catálogos, gerados por `npm run build:storybook`:
 
 ```
 .storybook/platform/   → storybook-static/platform
 .storybook/builder/    → storybook-static/builder
 ```
 
-Cada time consulta o seu. **Componente sem story não é design system** — é mais
+Este repositório é uma **biblioteca**, não uma aplicação web — não há deploy
+contínuo. Para consultar o catálogo, rode `npm run dev:platform` localmente.
+Publicar numa URL fixa é uma decisão para quando as stories por componente
+existirem (fase F3 do plano). **Componente sem story não é design system** — é mais
 um arquivo. Toda primitiva e todo padrão têm story com os estados previstos:
 repouso, foco, erro, carregando, desabilitado e vazio.
 
