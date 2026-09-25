@@ -53,8 +53,8 @@ src/
 │   ├── skeleton/
 │   ├── carousel/
 │   ├── label/
-│   ├── search-input/
-│   ├── form-message/
+│   ├── search-input/      ✅  raio total, decisão da PO
+│   ├── form-message/      ✅  token --hw-error-text
 │   └── …                  demais primitivas
 │
 ├── platform/              Padrões do admin (hywork-plataform)
@@ -65,8 +65,8 @@ src/
 │   ├── empty-state/       ✅  substitui 8 variações
 │   ├── error-state/       ✅  substitui 6 linhas de erro escritas à mão
 │   ├── page-title/        ✅  substitui 9 combinações
-│   ├── row-actions/       📋
-│   └── upload-area/       📋
+│   ├── row-actions/       ✅  substitui botões soltos em 15 telas
+│   └── upload-area/       ✅
 │
 ├── builder/               Padrões da intranet (hw-cloud-builder)
 │

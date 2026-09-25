@@ -64,8 +64,28 @@ const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
 );
 DialogHeader.displayName = "DialogHeader";
 
+/**
+ * Rodapé do diálogo.
+ *
+ * Decisão da PO (23/09/2026): **o rodapé nunca tem botão de largura total**.
+ * Por mais largo que seja o diálogo, a ação principal mantém a altura e o
+ * respiro de qualquer outro botão do produto — o diálogo cresce, o botão não.
+ *
+ * Em coluna o `align-items` padrão é `stretch`, e era isso que esticava os
+ * botões de ponta a ponta nas telas estreitas. `items-end` devolve a largura ao
+ * conteúdo e alinha à direita, do mesmo lado em que ficam na horizontal.
+ *
+ * Ordem: ação secundária à esquerda da principal. `flex-col-reverse` mantém
+ * essa ordem na marcação e põe a principal em cima quando empilha.
+ */
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)} {...props} />
+  <div
+    className={cn(
+      "flex flex-col-reverse items-end gap-2 sm:flex-row sm:items-center sm:justify-end",
+      className,
+    )}
+    {...props}
+  />
 );
 DialogFooter.displayName = "DialogFooter";
 

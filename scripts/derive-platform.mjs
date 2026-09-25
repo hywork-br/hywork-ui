@@ -18,8 +18,11 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
  * A derivação não os reescreve e a paridade não os compara — comparar um
  * componente autoral com a referência congelada só acusaria a decisão como
  * se fosse regressão.
+ *
+ * `dialog` entrou pelo rodapé: a PO decidiu que ele nunca tem botão de largura
+ * total, e o derivado esticava os botões de ponta a ponta ao empilhar.
  */
-export const authoredNames = ['badge', 'tabs', 'label', 'skeleton'];
+export const authoredNames = ['badge', 'tabs', 'label', 'skeleton', 'dialog'];
 
 export const componentNames = 'accordion alert-dialog alert avatar badge breadcrumb button card checkbox collapsible dialog dropdown-menu input label popover progress radio-group scroll-area select separator sheet skeleton slider switch table tabs textarea tooltip'.split(' ');
 const hash = (s) => createHash('sha256').update(s).digest('hex');

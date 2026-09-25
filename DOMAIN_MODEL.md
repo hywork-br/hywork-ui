@@ -43,7 +43,13 @@ para este componente.
 | Decisão | largura máxima ampla · altura máxima 90% da viewport · rolagem interna |
 | Rodapé | **botões com o tamanho padrão** (altura 40, largura pelo conteúdo), alinhados à direita, espaçamento de 8px entre eles |
 | Componente | `core/dialog` |
-| Status | 🔧 ajustar |
+| Status | ✅ feito — o rodapé esticava os botões ao empilhar |
+
+O que estava errado era o `align-items` padrão do flex em coluna: `stretch`.
+Numa tela estreita os botões iam de ponta a ponta, e era esse o "enorme". O
+rodapé passou a `items-end`, que devolve a largura ao conteúdo, e o `dialog`
+saiu da derivação — a partir de uma decisão de produto, o original do consumidor
+deixa de ser a referência.
 
 **O rodapé nunca tem botão de largura total.** Por mais largo que seja o
 diálogo, a ação principal mantém a mesma altura e o mesmo respiro horizontal de
@@ -178,7 +184,7 @@ O pulso respeita `prefers-reduced-motion`.
 |---|---|
 | Decisão | gatilho de 32px com reticências · menu suspenso |
 | Componente | `core/dropdown-menu`, composto em `platform/row-actions` |
-| Status | ✅ existe · 📋 `row-actions` a criar |
+| Status | ✅ feito — 4 stories, 4 testes |
 
 Botões soltos na linha saem de uso (15 telas).
 
@@ -312,9 +318,9 @@ caixa alta.
 | | |
 |---|---|
 | Decisão | 14px · vermelho de erro · sem espaçamento adicional acima |
-| Token | `--hw-color-error-text` (valor eleito: `red-500`) |
+| Token | `--hw-error-text` (valor eleito: `red-500`) |
 | Componente | `core/form-message` |
-| Status | 📋 criar |
+| Status | ✅ feito — 3 stories, 4 testes |
 
 A escolha visual foi o `text-red-500` literal. No design system esse valor vira
 **token**, para que o componente não carregue cor literal — a aparência é a
@@ -343,7 +349,7 @@ mais sem ganho. Solto (num seletor, num diálogo) ele aparece.
 |---|---|
 | Decisão | borda tracejada de 2px · raio 16 · ícone à esquerda e texto à direita |
 | Componente | `platform/upload-area` |
-| Status | 📋 criar |
+| Status | ✅ feito — 4 stories, 4 testes |
 
 ---
 

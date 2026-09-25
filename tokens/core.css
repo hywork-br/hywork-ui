@@ -30,6 +30,11 @@
   --hw-status-warning: 133 77 14;
   --hw-status-danger: 185 28 28;
   --hw-status-info: 29 78 216;
+
+  /* Texto de erro de formulário. É mais claro que --hw-status-danger de
+     propósito: a PO elegeu o red-500 para a mensagem colada ao campo, enquanto
+     o danger (red-700) carrega preenchimento de badge, onde o texto é branco. */
+  --hw-error-text: 239 68 68;
   --hw-space-0: 0px;
   --hw-space-1: 0.25rem;
   --hw-space-2: 0.5rem;

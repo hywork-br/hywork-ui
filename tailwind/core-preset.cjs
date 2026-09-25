@@ -172,6 +172,7 @@ const config = {
         "hw-status-warning": "rgb(var(--hw-status-warning) / <alpha-value>)",
         "hw-status-danger": "rgb(var(--hw-status-danger) / <alpha-value>)",
         "hw-status-info": "rgb(var(--hw-status-info) / <alpha-value>)",
+        "hw-error-text": "rgb(var(--hw-error-text) / <alpha-value>)",
         "red": {
           "50": "rgb(var(--hw-palette-red-50) / <alpha-value>)",
           "100": "rgb(var(--hw-palette-red-100) / <alpha-value>)",
