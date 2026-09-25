@@ -24,6 +24,12 @@ import {
  * Convenção de "filtro ativo": para `Search`, texto não vazio. Para `Select` e
  * `Chips`, valor diferente da PRIMEIRA opção — ela é sempre a neutra ("Todos").
  * A ação de limpar só aparece quando há algo para desfazer.
+ *
+ * **Dentro da barra, todo controle tem a forma da busca**: raio total e altura
+ * 40. A decisão da PO sobre o campo de busca foi sobre o campo isolado; aplicá-la
+ * só nele deixava a barra com três raios diferentes lado a lado — pílula na
+ * busca, raio 6 no select, raio 6 no "Limpar" — e duas alturas. A barra é uma
+ * superfície só e precisa ler como uma.
  */
 
 type Registro = (id: string, ativo: boolean) => void;
@@ -91,7 +97,7 @@ const FilterBarRoot = React.forwardRef<HTMLDivElement, FilterBarProps>(
               variant="ghost"
               onClick={onClear}
               disabled={loading}
-              className="ml-auto gap-1.5"
+              className="ml-auto h-10 gap-1.5 rounded-full"
             >
               <X className="h-4 w-4" aria-hidden="true" />
               Limpar
@@ -159,7 +165,7 @@ function FilterBarSelect({ label, value, onChange, options, className }: FilterB
         {label}
       </Label>
       <Select value={value} onValueChange={onChange} disabled={loading}>
-        <SelectTrigger id={id}>
+        <SelectTrigger id={id} className="h-10 rounded-full">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -197,12 +203,11 @@ function FilterBarChips({ label, value, onChange, options, className }: FilterBa
             <Button
               key={o.value}
               type="button"
-              size="sm"
               variant={selecionado ? "default" : "outline"}
               aria-pressed={selecionado}
               disabled={loading}
               onClick={() => onChange(o.value)}
-              className="h-8 rounded-full px-3 text-xs"
+              className="h-10 rounded-full px-4 text-sm"
             >
               {o.label}
             </Button>
@@ -237,7 +242,14 @@ function FilterBarField({ label, active, children, className }: FilterBarFieldPr
       <Label htmlFor={id} className="mb-1.5 block text-xs text-muted-foreground">
         {label}
       </Label>
-      <div id={id} aria-disabled={loading || undefined}>
+      {/* O controle vem da tela, mas a forma é da barra: sem isto um campo de
+          data ou um seletor próprio entraria com o raio do `Input` geral e
+          quebraria a linha. */}
+      <div
+        id={id}
+        aria-disabled={loading || undefined}
+        className="[&_button]:h-10 [&_button]:rounded-full [&_input]:h-10 [&_input]:rounded-full"
+      >
         {children}
       </div>
     </div>

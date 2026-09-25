@@ -94,6 +94,12 @@ function DataList<T>({
   const falhou = !loading && Boolean(error);
   const vazio = !loading && !falhou && items.length === 0;
 
+  // Sem nada a listar, a tabela inteira sai — cabeçalho incluído. Uma fileira
+  // de títulos sobre o vazio é moldura sem quadro: anuncia colunas que não
+  // existem e empurra a única frase que importa para baixo dela.
+  if (falhou) return <div className={cn("w-full", className)} {...props}>{error}</div>;
+  if (vazio) return <div className={cn("w-full", className)} {...props}>{empty}</div>;
+
   return (
     <div className={cn("w-full", className)} {...props}>
       <Table
@@ -127,7 +133,6 @@ function DataList<T>({
             ))}
 
           {!loading &&
-            !falhou &&
             items.map((item) => (
               <TableRow
                 key={getKey(item)}
@@ -146,9 +151,6 @@ function DataList<T>({
             ))}
         </TableBody>
       </Table>
-
-      {falhou && error}
-      {vazio && empty}
     </div>
   );
 }

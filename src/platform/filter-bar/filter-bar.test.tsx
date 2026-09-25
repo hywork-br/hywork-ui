@@ -155,4 +155,35 @@ describe("FilterBar — espaçamento", () => {
     expect(container.firstElementChild).toHaveClass("mb-0");
     expect(container.firstElementChild).not.toHaveClass("mb-6");
   });
+
+  it("dá a mesma forma a todos os controles da barra", () => {
+    render(
+      <FilterBar onClear={() => undefined}>
+        <FilterBar.Search value="ana" onChange={() => undefined} placeholder="Buscar" />
+        <FilterBar.Select
+          label="Status"
+          value="all"
+          onChange={() => undefined}
+          options={[{ value: "all", label: "Todos" }]}
+        />
+      </FilterBar>,
+    );
+    // Busca, seleção e a ação de limpar compartilham raio e altura: a barra é
+    // uma superfície só.
+    expect(screen.getByRole("searchbox")).toHaveClass("rounded-full", "h-10");
+    expect(screen.getByRole("combobox")).toHaveClass("rounded-full", "h-10");
+    expect(screen.getByRole("button", { name: /limpar/i })).toHaveClass("rounded-full", "h-10");
+  });
+
+  it("empresta a forma da barra ao controle que a tela traz", () => {
+    render(
+      <FilterBar onClear={() => undefined}>
+        <FilterBar.Field label="De" active={false}>
+          <input type="date" aria-label="Data inicial" />
+        </FilterBar.Field>
+      </FilterBar>,
+    );
+    const campo = screen.getByLabelText("Data inicial");
+    expect(campo.parentElement).toHaveClass("[&_input]:rounded-full");
+  });
 });

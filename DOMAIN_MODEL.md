@@ -132,11 +132,12 @@ Só `outline` continua vazado, porque é o que o nome descreve.
 `success`, `warning`, `destructive` e `info` seguem válidos como nomes
 anteriores dos mesmos papéis.
 
-### Estado vazio — respiro 64
+### Estado vazio — respiro 64, e sem moldura
 
 | | |
 |---|---|
 | Decisão | centralizado · respiro vertical 64px · texto 14px em cor esmaecida |
+| Regra | **sem itens, a tabela inteira sai** — cabeçalho incluído |
 | Componente | `platform/empty-state` |
 | Status | ✅ feito |
 
@@ -351,6 +352,13 @@ comum de raio 4, ou seja, o padrão mais visível do produto não seguia a decis
 Dentro da barra o botão de limpar do campo fica desligado — quem desfaz é o
 "Limpar" da barra. Dois botões para a mesma ação, lado a lado, é uma escolha a
 mais sem ganho. Solto (num seletor, num diálogo) ele aparece.
+
+**Consequência na barra de filtros (Rick, 25/09/2026):** a decisão foi sobre o
+campo isolado, e aplicá-la só nele deixou a barra com três raios lado a lado —
+pílula na busca, raio 6 no select, raio 6 no "Limpar" — e duas alturas. Dentro
+da `FilterBar` **todo controle tem a forma da busca**: raio total, altura 40.
+Vale também para o que a tela passa pelo `Field`, que herda a forma do
+container. A barra é uma superfície só e precisa ler como uma.
 
 ### Área de upload — borda 2px, horizontal
 

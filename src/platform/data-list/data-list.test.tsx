@@ -31,6 +31,18 @@ describe("DataList", () => {
     expect(screen.getAllByRole("row")).toHaveLength(4); // cabeçalho + 3
   });
 
+  it("não monta a tabela quando não há o que listar", () => {
+    render(<DataList {...base} items={[]} empty={<p>Nenhum item</p>} />);
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
+    expect(screen.queryByRole("columnheader")).not.toBeInTheDocument();
+    expect(screen.getByText("Nenhum item")).toBeInTheDocument();
+  });
+
+  it("também não monta a tabela quando a carga falhou", () => {
+    render(<DataList {...base} items={[]} error={<p>Falhou</p>} />);
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
+  });
+
   it("mostra o estado vazio quando não há itens", () => {
     render(<DataList {...base} items={[]} empty={<p>Nenhum resultado</p>} />);
     expect(screen.getByText("Nenhum resultado")).toBeInTheDocument();
