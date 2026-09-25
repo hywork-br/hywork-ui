@@ -55,7 +55,7 @@ src/
 │   ├── label/
 │   ├── search-input/      ✅  raio total, decisão da PO
 │   ├── form-message/      ✅  token --hw-error-text
-│   └── …                  demais primitivas
+│   └── …                  demais primitivas — todas com story
 │
 ├── platform/              Padrões do admin (hywork-plataform)
 │   ├── filter-bar/        ✅  substitui 9 implementações

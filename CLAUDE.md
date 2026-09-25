@@ -93,10 +93,13 @@ Dois catálogos, gerados por `npm run build:storybook`:
 
 Este repositório é uma **biblioteca**, não uma aplicação web — não há deploy
 contínuo. Para consultar o catálogo, rode `npm run dev:platform` localmente.
-Publicar numa URL fixa é uma decisão para quando as stories por componente
-existirem (fase F3 do plano). **Componente sem story não é design system** — é mais
-um arquivo. Toda primitiva e todo padrão têm story com os estados previstos:
-repouso, foco, erro, carregando, desabilitado e vazio.
+**Componente sem story não é design system** — é mais um arquivo. Hoje as 30
+primitivas e os 9 padrões têm story, com os estados previstos: repouso, erro,
+carregando, desabilitado e vazio, além das combinações que o componente resolve.
+
+A publicação numa URL fixa fica para quando a migração do Platform terminar
+(decisão do Rick, 25/09/2026) — o catálogo está pronto e roda com
+`npm run dev:platform`.
 
 ## Convenções
 
