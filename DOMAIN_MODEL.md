@@ -322,6 +322,31 @@ variante: as seis — `default`, `info`, `success`, `warning`, `error`,
 `action` é o que faltava de verdade: seis caixas carregavam botão ("Baixar
 erros", "Tentar novamente") e não havia onde pô-lo.
 
+### Cor de categoria — fica como está (Rick, 25/09/2026)
+
+Nem toda cor no produto é papel de status. Há mapas que dão uma cor fixa a cada
+**categoria**, só para distinguir uma da outra:
+
+```tsx
+const TYPE_COLORS = {
+  department: "bg-blue-500/10 text-blue-700 ring-blue-500/20",
+  team:       "bg-emerald-500/10 text-emerald-700 ring-emerald-500/20",
+  unit:       "bg-violet-500/10 text-violet-700 ring-violet-500/20",
+};
+```
+
+Azul não quer dizer "ok" nem roxo "atenção" — é a mesma função das cores de um
+gráfico. São 64 casos em 18 arquivos (tipos de nó da estrutura, tipos de
+documento, tipos de app na HyStore, tipos de conteúdo no Academy), mais 18
+ladrilhos de ícone com fundo claro.
+
+**Decisão: ficam como estão.** As cores já foram escolhidas e cumprem o que
+precisam. Tokenizar exigiria uma paleta de categorias que o design system não
+tem e que ninguém pediu.
+
+**Não confundir com status.** Se a cor diz se algo está certo, errado, pendente
+ou desligado, ela é papel semântico e usa `Badge` ou `--hw-status-*`.
+
 ### Botão de ação principal — token do design system
 
 | | |
