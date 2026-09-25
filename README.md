@@ -1,53 +1,66 @@
 # Hywork UI
 
-Design system para o **hywork-plataform**. O produto existente é a referência de
-fluxos e comportamento; seu código não é, por si só, um design system.
-Esta biblioteca organiza primitivas reutilizáveis, tokens e critérios de acabamento.
+Design system do produto **HyCloud**: primitivas de interface, padrões de tarefa,
+tokens e dois catálogos Storybook.
+
+Consumido por **`hywork-plataform`** (admin) e **`hw-cloud-builder`** (intranet
+do colaborador). Nenhum dos dois cria componente genérico próprio.
 
 ## Estado
 
-Versão em preparação: **0.7.0**. São 28 famílias extraídas da revisão
-`85a66bafd8020697f694366e1937c6379d8663fc` do Platform, consultada em 17/09/2026.
-Procedência e hashes: [manifest.json](manifest.json).
-Isso não prova a revisão implantada em produção nem significa que o produto já foi migrado.
+Reestruturação em andamento. O repositório nasceu como extração do
+`hywork-plataform` (28 primitivas, revisão `85a66ba`) e está sendo reorganizado
+em três camadas para atender os dois consumidores.
 
-O lote cobre controles, apresentação de dados e sobreposições genéricas. Regras de
-negócio, páginas, navegação de aplicação, autenticação e requisições ficam no Platform.
+| Frente | Situação |
+|---|---|
+| 28 primitivas extraídas | ✅ existem, em `src/components/` |
+| Padrões decididos pela PO | ✅ registrados em [DOMAIN_MODEL.md](DOMAIN_MODEL.md) |
+| Estrutura `core` / `platform` / `builder` | 🚧 primeira tarefa |
+| Padrões novos (filtro, listagem, card…) | 📋 a criar |
+| Storybook por componente | 📋 hoje há um catálogo único |
+
+Acompanhamento em [PLANO_DESIGN_SYSTEM.md](PLANO_DESIGN_SYSTEM.md).
 
 ## Para engenharia
 
-1. Leia o [guia visual](docs/design-guide.md) e o [handoff](docs/platform-handoff.md).
-2. Instale um artefato desta revisão, nunca uma branch flutuante.
-3. Use os componentes exportados em [src/index.ts](src/index.ts), o CSS de tokens e o preset Tailwind 3.
-4. Migre um fluxo de cada vez, mantendo props, tema do cliente e comportamento.
-5. Compare a tela real antes/depois; o catálogo não substitui essa validação.
-
-```tsx
-import { Button, Input, Label } from "@hywork/ui";
-import "@hywork/ui/tokens/platform.css";
-
-export function NameField() {
-  return <div>
-    <Label htmlFor="name">Nome</Label>
-    <Input id="name" />
-    <Button type="submit">Salvar</Button>
-  </div>;
-}
+```ts
+import { FilterBar, Button } from "@hywork/ui/platform";  // no Platform
+import { FilterBar, Button } from "@hywork/ui/builder";   // no Builder
 ```
+
+```ts
+// tailwind.config.ts do consumidor
+presets: [require("@hywork/ui/tailwind/platform-preset.cjs")],
+content: [..., "./node_modules/@hywork/ui/dist/**/*.js"],  // obrigatório
+```
+
+Instalação, migração e ciclo de versão: **[CROSS_STACK_CONVENTIONS.md](CROSS_STACK_CONVENTIONS.md)**.
+
+## Antes de escrever código
+
+| Leia | Para |
+|---|---|
+| [DOMAIN_MODEL.md](DOMAIN_MODEL.md) | saber qual padrão visual já foi decidido |
+| [AGENTS.md](AGENTS.md) | saber o que entra e o que não entra aqui |
+| [INDEX.md](INDEX.md) | saber se o componente já existe |
+| [CLAUDE.md](CLAUDE.md) | comandos, arquitetura e convenções |
 
 ## Desenvolvimento
 
 ```sh
-npm ci
-npm run check
-npm run build
-npm run test:browser
-npm run smoke:consumer
-npm run storybook
+rtk npm ci
+rtk npm run dev:platform     # Storybook do admin      → 6006
+rtk npm run dev:builder      # Storybook da intranet   → 6007
+rtk npm run check            # integridade + tipos + bundle + testes
+rtk npm run build
+rtk npm run test:browser
+rtk npm run smoke:consumer
 ```
 
-`npm run derive` regenera componentes, tokens, preset e manifesto a partir da
-referência fixada em `provenance/platform/`. Alterações deliberadas de design precisam
-ser explícitas, testadas e documentadas; nunca recapture a origem para esconder uma diferença.
+## Fronteira, em uma linha
 
-[Inventário](INVENTARIO.md) · [Contribuição](CONTRIBUTING.md) · [Mudanças](CHANGELOG.md)
+> Se o componente sabe o que é um tenant, um workspace ou um colaborador, ele
+> pertence ao consumidor. Se não sabe, pertence a este repositório.
+
+[Contribuição](CONTRIBUTING.md) · [Mudanças](CHANGELOG.md) · [Guia visual](docs/design-guide.md)

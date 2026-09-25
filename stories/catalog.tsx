@@ -1,5 +1,5 @@
 import * as React from "react";
-import type * as API from "../src";
+import type * as API from "../src/core";
 
 // Component documentation. Content is shared by source/package parity renders.
 export function Catalog({ ui }: { ui: typeof API }) {

@@ -3,6 +3,11 @@ dist/
 fixtures/**/.next/
 fixtures/**/out/
 node_modules/
+# O symlink das worktrees (ver CONTRIBUTING.md). Precisa da linha sem barra:
+# `node_modules/` casa só com diretório, e o symlink não é um.
+# O comentário vai ACIMA — `#` só inicia comentário no começo da linha, e
+# inline ele virava parte do padrão, que então não casava com nada.
+node_modules
 storybook-static/
 .storybook/static/design-system.json
 .storybook/static/*.css
