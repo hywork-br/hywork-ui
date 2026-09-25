@@ -186,7 +186,16 @@ O pulso respeita `prefers-reduced-motion`.
 | Componente | `core/dropdown-menu`, composto em `platform/row-actions` |
 | Status | ✅ feito — 4 stories, 4 testes |
 
-Botões soltos na linha saem de uso (15 telas).
+Botões soltos na linha saem de uso.
+
+**A exceção é a ação que dá razão à listagem.** Na fila de moderação do fórum,
+aprovar e rejeitar são o motivo de a tela existir; escondê-las num menu
+acrescenta um clique ao único trabalho que se faz ali. O mesmo vale para um
+único botão rotulado, como o "Editar" da tela de addons.
+
+A regra prática: **duas ou mais ações acessórias viram menu; a ação principal
+da linha continua botão.** O que a decisão elimina é a fileira de ícones sem
+rótulo, cada um de um tamanho, que não diz o que faz até o cursor parar em cima.
 
 ---
 
