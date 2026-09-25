@@ -9,7 +9,11 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
+      // Decisão da PO (23/09/2026): raio 12, borda de 1px e **sem sombra** — a
+      // sombra fica reservada a sobreposições, não a estrutura. O derivado vinha
+      // com raio 8 e `shadow-sm`, e era por isso que 19 telas sobrescreviam o
+      // raio e 12 anulavam a sombra na própria chamada.
+      "rounded-xl border bg-card text-card-foreground",
       className
     )}
     {...props}

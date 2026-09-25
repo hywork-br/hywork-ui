@@ -85,6 +85,7 @@ listagem com `div` e grid.
 | | |
 |---|---|
 | Decisão | raio 12px · respiro interno 24px · borda 1px · **sem sombra** |
+| Base | `core/card` — a moldura vale para todo cartão, não só o de listagem |
 | Token | `--hw-radius-lg` · `--hw-space-6` · `--hw-color-border` |
 | Componente | `platform/item-card` |
 | Status | ✅ feito |
