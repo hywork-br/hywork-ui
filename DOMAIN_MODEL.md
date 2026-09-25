@@ -240,6 +240,34 @@ Composição por slots, nunca por props acumuladas:
 </FilterBar>
 ```
 
+### Falha ao carregar uma listagem — estado próprio, ao lado do vazio
+
+| | |
+|---|---|
+| Decisão | mesma caixa central do estado vazio, título no papel `danger`, detalhe em texto esmaecido, ação opcional |
+| Componente | `platform/error-state`, e `DataList` recebe por `error` |
+| Status | ✅ feito — 4 stories, 4 testes |
+
+Vazio e erro ocupam o mesmo lugar na tela e dizem coisas diferentes: vazio é um
+resultado, erro é uma promessa quebrada. Seis listagens escreviam a própria
+linha de erro — de `text-red-500` solto num `colSpan` a um cartão de borda
+vermelha — e duas chegaram a usar o estado vazio para isso, o que apaga a falha
+no cinza do texto esmaecido.
+
+No `DataList` o erro tem precedência sobre o vazio e sobre as linhas: se a carga
+falhou, o que está em tela é velho e não deve ser apresentado como atual.
+
+### Altura da linha — esqueleto e dado medem o mesmo
+
+`DataList` aceita `rowHeight` e aplica a **mesma** classe na linha de esqueleto e
+na de dados. É o que impede a listagem de pular quando os dados chegam (critério
+P-14). Sem ela a altura vem do conteúdo, e o esqueleto quase sempre sai mais
+baixo que a linha real.
+
+Pela mesma razão `minWidth` existe: seis listagens declaravam largura mínima por
+conta, cada uma com um valor, para rolar na horizontal em vez de espremer as
+colunas.
+
 ### Botão de ação principal — token do design system
 
 | | |

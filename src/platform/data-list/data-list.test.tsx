@@ -49,6 +49,42 @@ describe("DataList", () => {
     expect(onRowClick).toHaveBeenCalledWith(ITENS[1]);
   });
 
+  it("mostra o erro no lugar do estado vazio, e não os dois", () => {
+    render(
+      <DataList
+        {...base}
+        items={[]}
+        error={<p>Falha ao carregar</p>}
+        empty={<p>Nenhum resultado</p>}
+      />,
+    );
+    expect(screen.getByText("Falha ao carregar")).toBeInTheDocument();
+    expect(screen.queryByText("Nenhum resultado")).not.toBeInTheDocument();
+  });
+
+  it("não mostra o erro enquanto ainda está carregando", () => {
+    render(<DataList {...base} items={[]} loading error={<p>Falha ao carregar</p>} />);
+    expect(screen.queryByText("Falha ao carregar")).not.toBeInTheDocument();
+  });
+
+  it("esconde as linhas quando a carga falhou", () => {
+    render(<DataList {...base} items={ITENS} error={<p>Falha</p>} />);
+    expect(screen.queryByText("Ana")).not.toBeInTheDocument();
+  });
+
+  it("dá a mesma altura ao esqueleto e à linha de dados", () => {
+    const { container: carregando } = render(
+      <DataList {...base} items={[]} loading loadingRows={1} rowHeight="h-[76px]" />,
+    );
+    const { container: carregado } = render(
+      <DataList {...base} items={[ITENS[0]]} rowHeight="h-[76px]" />,
+    );
+    const linhaEsqueleto = carregando.querySelector("tbody tr");
+    const linhaDados = carregado.querySelector("tbody tr");
+    expect(linhaEsqueleto).toHaveClass("h-[76px]");
+    expect(linhaDados).toHaveClass("h-[76px]");
+  });
+
   it("aplica a largura mínima na tabela, não no container", () => {
     render(<DataList {...base} items={ITENS} aria-label="Largas" minWidth="860px" />);
     expect(screen.getByRole("table", { name: "Largas" })).toHaveStyle({ minWidth: "860px" });

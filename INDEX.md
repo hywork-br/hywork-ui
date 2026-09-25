@@ -63,6 +63,7 @@ src/
 │   ├── item-card/         ✅  substitui 21 implementações
 │   ├── list-pagination/   ✅  substitui 3
 │   ├── empty-state/       ✅  substitui 8 variações
+│   ├── error-state/       ✅  substitui 6 linhas de erro escritas à mão
 │   ├── page-title/        ✅  substitui 9 combinações
 │   ├── row-actions/       📋
 │   └── upload-area/       📋

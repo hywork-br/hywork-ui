@@ -5,6 +5,7 @@
 export * from "./filter-bar";
 export * from "./list-pagination";
 export * from "./empty-state";
+export * from "./error-state";
 export * from "./page-title";
 export * from "./item-card";
 export * from "./data-list";

@@ -47,6 +47,20 @@ export interface DataListProps<T> extends Omit<React.HTMLAttributes<HTMLDivEleme
   loadingRows?: number;
   /** O que mostrar quando não há itens — normalmente um EmptyState. */
   empty?: React.ReactNode;
+  /**
+   * O que mostrar quando a carga falhou — normalmente um ErrorState. Tem
+   * precedência sobre `empty`: sem dados por erro não é o mesmo que sem dados
+   * por resultado, e as duas frases não podem sair pela mesma boca.
+   */
+  error?: React.ReactNode;
+  /**
+   * Altura fixa da linha, como classe (`"h-[76px]"`).
+   *
+   * Vale para o esqueleto e para a linha de dados ao mesmo tempo, que é o
+   * ponto: é o que impede a listagem de pular quando os dados chegam. Sem ela,
+   * a altura vem do conteúdo e o esqueleto quase sempre sai mais baixo.
+   */
+  rowHeight?: string;
   /** Torna a linha inteira clicável. */
   onRowClick?: (item: T) => void;
   /**
@@ -70,12 +84,15 @@ function DataList<T>({
   loading = false,
   loadingRows = 5,
   empty,
+  error,
   onRowClick,
   minWidth,
+  rowHeight,
   className,
   ...props
 }: DataListProps<T>) {
-  const vazio = !loading && items.length === 0;
+  const falhou = !loading && Boolean(error);
+  const vazio = !loading && !falhou && items.length === 0;
 
   return (
     <div className={cn("w-full", className)} {...props}>
@@ -100,7 +117,7 @@ function DataList<T>({
         <TableBody>
           {loading &&
             Array.from({ length: loadingRows }).map((_, linha) => (
-              <TableRow key={`esqueleto-${linha}`}>
+              <TableRow key={`esqueleto-${linha}`} className={rowHeight}>
                 {columns.map((c) => (
                   <TableCell key={c.key}>
                     <Skeleton className="h-4 w-full max-w-[160px]" />
@@ -110,11 +127,12 @@ function DataList<T>({
             ))}
 
           {!loading &&
+            !falhou &&
             items.map((item) => (
               <TableRow
                 key={getKey(item)}
                 onClick={onRowClick ? () => onRowClick(item) : undefined}
-                className={onRowClick ? "cursor-pointer" : undefined}
+                className={cn(rowHeight, onRowClick && "cursor-pointer")}
               >
                 {columns.map((c) => (
                   <TableCell
@@ -129,6 +147,7 @@ function DataList<T>({
         </TableBody>
       </Table>
 
+      {falhou && error}
       {vazio && empty}
     </div>
   );
