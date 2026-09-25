@@ -97,9 +97,10 @@ contínuo. Para consultar o catálogo, rode `npm run dev:platform` localmente.
 primitivas e os 9 padrões têm story, com os estados previstos: repouso, erro,
 carregando, desabilitado e vazio, além das combinações que o componente resolve.
 
-A publicação numa URL fixa fica para quando a migração do Platform terminar
-(decisão do Rick, 25/09/2026) — o catálogo está pronto e roda com
-`npm run dev:platform`.
+**Este catálogo não é hospedado, e isso é decisão, não pendência** (Rick,
+24/09/2026, reafirmado em 25/09). O repositório é uma biblioteca de componentes
+e tokens, não uma aplicação web: consulta-se rodando `npm run dev:platform`
+localmente. Não propor Vercel nem URL fixa.
 
 ## Convenções
 

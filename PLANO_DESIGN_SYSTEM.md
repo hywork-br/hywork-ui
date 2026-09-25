@@ -93,11 +93,12 @@ Um padrão, uma tela, ciclo completo ponta a ponta.
 **Saída:** uma tela em produção nos dois fronts usando o mesmo padrão, e a
 mecânica inteira validada — empacotamento, Tailwind, `use client`, versão, revisão.
 
-### F3 · Storybook por componente 📋
+### F3 · Storybook por componente ✅
 
 - [ ] Quebrar o catálogo único em uma story por primitiva
 - [ ] Uma story por padrão, com os estados previstos
-- [ ] Publicar os dois catálogos na Vercel, em links fixos
+- [x] ~~Publicar os dois catálogos na Vercel~~ — **não se hospeda**: é
+      biblioteca, não aplicação. Decisão do Rick, reafirmada em 25/09/2026.
 
 **Por que importa:** é o que responde "como se faz um filtro neste produto" — a
 pergunta que hoje cada tela respondeu sozinha.
