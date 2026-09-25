@@ -15,6 +15,7 @@ export * from "./collapsible";
 export * from "./dialog";
 export * from "./dropdown-menu";
 export * from "./input";
+export * from "./search-input";
 export * from "./label";
 export * from "./popover";
 export * from "./progress";

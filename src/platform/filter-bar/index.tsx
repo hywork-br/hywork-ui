@@ -1,11 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { Search, X } from "lucide-react";
+import { X } from "lucide-react";
 
 import { cn } from "../../lib/cn";
 import { Button } from "../../core/button";
-import { Input } from "../../core/input";
+import { SearchInput } from "../../core/search-input";
 import { Label } from "../../core/label";
 import {
   Select,
@@ -117,22 +117,18 @@ const FilterBarSearch = React.forwardRef<HTMLInputElement, FilterBarSearchProps>
   ({ value, onChange, placeholder = "Buscar", className, ...props }, ref) => {
     const loading = useRegistroDeAtividade(value.trim() !== "", "Search");
     return (
-      <div className={cn("relative min-w-[180px] flex-1", className)}>
-        <Search
-          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-          aria-hidden="true"
-        />
-        <Input
-          ref={ref}
-          type="search"
-          value={value}
-          disabled={loading}
-          placeholder={placeholder}
-          aria-label={props["aria-label"] ?? placeholder}
-          onChange={(e) => onChange(e.target.value)}
-          className="pl-9"
-        />
-      </div>
+      <SearchInput
+        ref={ref}
+        value={value}
+        onChange={onChange}
+        disabled={loading}
+        placeholder={placeholder}
+        aria-label={props["aria-label"] ?? placeholder}
+        // Dentro da barra quem desfaz é o "Limpar" dela: dois botões para a
+        // mesma ação, um ao lado do outro, é uma escolha a mais sem ganho.
+        clearable={false}
+        className={cn("min-w-[180px] flex-1", className)}
+      />
     );
   },
 );

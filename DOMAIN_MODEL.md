@@ -57,7 +57,7 @@ Ordem no rodapé: ação secundária (Cancelar) à esquerda da principal.
 |---|---|
 | Decisão | separador `›` · último item em peso 600 e cor de texto principal · demais em cor esmaecida |
 | Componente | `core/breadcrumb` |
-| Status | ✅ já conforme — o componente sempre usou seta; o que falta é adoção, já que **nenhum arquivo do Platform o importa** |
+| Status | ✅ feito — 13 usos no Platform |
 
 ---
 
@@ -154,7 +154,7 @@ ela — não o contrário.
 |---|---|
 | Decisão | setas circulares nas laterais · sem indicadores de posição |
 | Componente | `core/carousel` (embla) |
-| Status | ✅ existe, com **1 uso** |
+| Status | ✅ feito — 11 usos, nenhum carrossel à mão |
 
 As outras 11 implementações escritas à mão migram para este componente.
 
@@ -192,7 +192,7 @@ Botões soltos na linha saem de uso (15 telas).
 |---|---|
 | Decisão | barra horizontal · fundo neutro a 50% · raio 12 · respiro 16 · campos alinhados pela base |
 | Componente | `platform/filter-bar` |
-| Status | ✅ feito — 7 stories, 15 testes; 12 implementações migradas |
+| Status | ✅ feito — 7 stories, 15 testes; 20 implementações migradas |
 
 A anatomia: região de busca (0..n), região de dimensões (0..n), ação de limpar
 (aparece quando há filtro ativo).
@@ -326,9 +326,16 @@ eleita, a implementação é tokenizada.
 |---|---|
 | Decisão | altura 40 · raio total · ícone de lupa à esquerda |
 | Componente | `core/search-input` |
-| Status | 📋 criar |
+| Status | ✅ feito — 4 stories, 5 testes |
 
 Vale para a busca. **Não muda o `Input` geral**, que mantém o raio 4.
+
+A `FilterBar.Search` passou a usá-lo: até então a barra desenhava um `Input`
+comum de raio 4, ou seja, o padrão mais visível do produto não seguia a decisão.
+
+Dentro da barra o botão de limpar do campo fica desligado — quem desfaz é o
+"Limpar" da barra. Dois botões para a mesma ação, lado a lado, é uma escolha a
+mais sem ganho. Solto (num seletor, num diálogo) ele aparece.
 
 ### Área de upload — borda 2px, horizontal
 
