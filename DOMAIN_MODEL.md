@@ -240,6 +240,22 @@ Composição por slots, nunca por props acumuladas:
 </FilterBar>
 ```
 
+### Paginação — duas formas, um componente
+
+A decisão da PO (intervalo à esquerda, setas à direita) pressupõe que o servidor
+saiba o total. Duas listagens do produto não sabem: Notícias só responde se
+existe próxima página, e Modelos de página só devolve o número de páginas.
+
+`ListPagination` aceita as duas formas:
+
+| Forma | O servidor sabe | A esquerda mostra |
+|---|---|---|
+| Contada | `total` e `perPage` | `1–20 de 137 colaboradores` |
+| Sequencial | só se há mais (`hasNext`) | `Página 3` |
+
+Derivar um total a partir do número de páginas **não** vale: `totalPages *
+perPage` erra na última página, e a listagem passa a mentir a contagem.
+
 ### Falha ao carregar uma listagem — estado próprio, ao lado do vazio
 
 | | |

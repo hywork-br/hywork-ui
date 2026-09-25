@@ -21,32 +21,58 @@ import { Button } from "../../core/button";
 export interface ListPaginationProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Página atual, começando em 1. */
   page: number;
-  /** Itens por página. */
-  perPage: number;
-  /** Total de itens no servidor, não apenas os carregados. */
-  total: number;
   onPageChange: (page: number) => void;
+  /**
+   * Itens por página e total no servidor.
+   *
+   * Com os dois, a esquerda mostra o intervalo ("1–20 de 137 colaboradores").
+   * Sem eles, a listagem é **sequencial**: o servidor só sabe dizer se existe
+   * uma próxima página, e a esquerda mostra "Página 3". É o caso de Notícias e
+   * de Modelos de página, onde nenhuma contagem chega do servidor — e inventar
+   * um total a partir do número de páginas erra sempre na última.
+   */
+  perPage?: number;
+  total?: number;
+  /** Só para a forma sequencial: se existe página seguinte. */
+  hasNext?: boolean;
   /** Nome do que está sendo listado, para o texto e o rótulo acessível. */
   itemLabel?: string;
   disabled?: boolean;
+  /** Texto de "Página {n}" na forma sequencial. */
+  pageLabel?: (page: number) => React.ReactNode;
 }
 
 const ListPagination = React.forwardRef<HTMLDivElement, ListPaginationProps>(
   (
-    { page, perPage, total, onPageChange, itemLabel = "itens", disabled = false, className, ...props },
+    {
+      page,
+      perPage,
+      total,
+      hasNext,
+      onPageChange,
+      itemLabel = "itens",
+      pageLabel,
+      disabled = false,
+      className,
+      ...props
+    },
     ref,
   ) => {
-    const totalPaginas = Math.max(1, Math.ceil(total / perPage));
-    const paginaAtual = Math.min(Math.max(1, page), totalPaginas);
+    const contada = typeof total === "number" && typeof perPage === "number";
 
-    const primeiro = total === 0 ? 0 : (paginaAtual - 1) * perPage + 1;
-    const ultimo = Math.min(paginaAtual * perPage, total);
+    const totalPaginas = contada ? Math.max(1, Math.ceil(total! / perPage!)) : undefined;
+    const paginaAtual = Math.min(Math.max(1, page), totalPaginas ?? Number.POSITIVE_INFINITY);
 
     const temAnterior = paginaAtual > 1;
-    const temProxima = paginaAtual < totalPaginas;
+    const temProxima = contada ? paginaAtual < totalPaginas! : Boolean(hasNext);
 
-    // Uma página só de resultados não precisa de controles.
-    if (total === 0) return null;
+    // Nada listado, nada a paginar.
+    if (contada && total === 0) return null;
+    // Na forma sequencial, uma página só também dispensa controles.
+    if (!contada && !temAnterior && !temProxima) return null;
+
+    const primeiro = contada ? (total === 0 ? 0 : (paginaAtual - 1) * perPage! + 1) : 0;
+    const ultimo = contada ? Math.min(paginaAtual * perPage!, total!) : 0;
 
     return (
       <div
@@ -59,13 +85,23 @@ const ListPagination = React.forwardRef<HTMLDivElement, ListPaginationProps>(
         <p className="text-sm text-muted-foreground" aria-live="polite">
           {/* Sem `tabular-nums`: a variante de largura fixa redesenha os dígitos
               da Montserrat e destoa do resto da interface. */}
-          <span className="font-medium text-foreground">
-            {primeiro}–{ultimo}
-          </span>{" "}
-          de {total} {itemLabel}
+          {contada ? (
+            <>
+              <span className="font-medium text-foreground">
+                {primeiro}–{ultimo}
+              </span>{" "}
+              de {total} {itemLabel}
+            </>
+          ) : (
+            (pageLabel?.(paginaAtual) ?? (
+              <>
+                Página <span className="font-medium text-foreground">{paginaAtual}</span>
+              </>
+            ))
+          )}
         </p>
 
-        {totalPaginas > 1 && (
+        {(!contada || totalPaginas! > 1) && (
           <div className="flex items-center gap-1">
             <Button
               type="button"

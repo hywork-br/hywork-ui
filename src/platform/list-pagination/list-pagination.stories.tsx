@@ -32,3 +32,11 @@ export const SemResultados: Story = { args: { total: 0 } };
 
 /** Durante o carregamento, os controles ficam inativos. */
 export const Carregando: Story = { args: { page: 3, disabled: true, itemLabel: "colaboradores" } };
+
+/**
+ * Listagem sequencial: o servidor só diz se existe próxima página. A esquerda
+ * mostra a página atual, porque não há total honesto a mostrar.
+ */
+export const Sequencial: Story = {
+  args: { page: 3, hasNext: true, total: undefined, perPage: undefined },
+};

@@ -54,4 +54,26 @@ describe("ListPagination", () => {
     render(<ListPagination {...base} page={99} />);
     expect(screen.getByText("141–143")).toBeInTheDocument();
   });
+
+  it("mostra a página atual quando o servidor não manda contagem", () => {
+    render(<ListPagination page={3} hasNext onPageChange={() => undefined} />);
+    expect(screen.getByText("3")).toBeInTheDocument();
+    expect(screen.queryByText(/de \d+/)).not.toBeInTheDocument();
+  });
+
+  it("na forma sequencial, a próxima obedece a hasNext", () => {
+    const { rerender } = render(
+      <ListPagination page={2} hasNext onPageChange={() => undefined} />,
+    );
+    expect(screen.getByRole("button", { name: "Próxima página" })).toBeEnabled();
+    rerender(<ListPagination page={2} hasNext={false} onPageChange={() => undefined} />);
+    expect(screen.getByRole("button", { name: "Próxima página" })).toBeDisabled();
+  });
+
+  it("some quando a listagem sequencial cabe numa página só", () => {
+    const { container } = render(
+      <ListPagination page={1} hasNext={false} onPageChange={() => undefined} />,
+    );
+    expect(container).toBeEmptyDOMElement();
+  });
 });
