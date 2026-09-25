@@ -300,6 +300,27 @@ Pela mesma razão `minWidth` existe: seis listagens declaravam largura mínima p
 conta, cada uma com um valor, para rolar na horizontal em vez de espremer as
 colunas.
 
+### Aviso na tela — a forma que o componente já tinha
+
+| | |
+|---|---|
+| Decisão | raio 6 · respiro 16/12 · texto 14 · ícone fixo no canto, texto recuado |
+| Ação | opcional, **à direita** do texto, na mesma linha |
+| Componente | `core/alert` |
+| Status | ✅ feito — 5 stories, 4 testes |
+| Decidido por | Rick, 25/09/2026 |
+
+Esta família **não estava no artefato que a PO validou** — meu levantamento das
+telas não a cobriu, e por isso as 18 decisões não a incluíam.
+
+O produto tinha 52 caixas desenhadas à mão em três raios (6, 8 e 12) e cinco
+espaçamentos, contra 29 telas usando o componente. E não foi por falta de
+variante: as seis — `default`, `info`, `success`, `warning`, `error`,
+`destructive` — já existiam e suas cores já resolviam no preset. **Foi adoção.**
+
+`action` é o que faltava de verdade: seis caixas carregavam botão ("Baixar
+erros", "Tentar novamente") e não havia onde pô-lo.
+
 ### Botão de ação principal — token do design system
 
 | | |

@@ -21,8 +21,11 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
  *
  * `dialog` entrou pelo rodapé: a PO decidiu que ele nunca tem botão de largura
  * total, e o derivado esticava os botões de ponta a ponta ao empilhar.
+ *
+ * `alert` entrou pela ação: o Rick decidiu que o aviso pode carregar um botão,
+ * à direita do texto, e o derivado não tinha onde pô-lo.
  */
-export const authoredNames = ['badge', 'tabs', 'label', 'skeleton', 'dialog'];
+export const authoredNames = ['badge', 'tabs', 'label', 'skeleton', 'dialog', 'alert'];
 
 export const componentNames = 'accordion alert-dialog alert avatar badge breadcrumb button card checkbox collapsible dialog dropdown-menu input label popover progress radio-group scroll-area select separator sheet skeleton slider switch table tabs textarea tooltip'.split(' ');
 const hash = (s) => createHash('sha256').update(s).digest('hex');
