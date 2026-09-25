@@ -49,6 +49,16 @@ export interface DataListProps<T> extends Omit<React.HTMLAttributes<HTMLDivEleme
   empty?: React.ReactNode;
   /** Torna a linha inteira clicável. */
   onRowClick?: (item: T) => void;
+  /**
+   * Largura mínima da tabela, para listagens largas demais para a tela. Abaixo
+   * dela a tabela rola na horizontal dentro do próprio container, em vez de
+   * espremer as colunas ou fazer a página inteira rolar.
+   *
+   * Seis listagens do produto declaravam isso por conta, cada uma com um valor
+   * próprio (760, 860, 900, 920, 980), alcançando o `wrapperClassName` do
+   * primitivo. Passou a ser uma porta só.
+   */
+  minWidth?: string;
   /** Rótulo acessível da tabela. */
   "aria-label"?: string;
 }
@@ -61,6 +71,7 @@ function DataList<T>({
   loadingRows = 5,
   empty,
   onRowClick,
+  minWidth,
   className,
   ...props
 }: DataListProps<T>) {
@@ -68,7 +79,10 @@ function DataList<T>({
 
   return (
     <div className={cn("w-full", className)} {...props}>
-      <Table aria-label={props["aria-label"]}>
+      <Table
+        aria-label={props["aria-label"]}
+        style={minWidth ? { minWidth } : undefined}
+      >
         <TableHeader>
           <TableRow>
             {columns.map((c) => (

@@ -68,3 +68,18 @@ export const Vazio: Story = {
 
 /** Linha inteira clicável, para abrir o detalhe do item. */
 export const LinhaClicavel: Story = { args: { onRowClick: () => undefined } };
+
+/**
+ * Listagem larga: abaixo da largura mínima a tabela rola dentro do próprio
+ * container, e não espreme as colunas nem faz a página rolar na horizontal.
+ */
+export const Larga: Story = {
+  args: { "aria-label": "Campanhas", minWidth: "860px" },
+  decorators: [
+    (Story) => (
+      <div style={{ maxWidth: 420 }}>
+        <Story />
+      </div>
+    ),
+  ],
+};

@@ -49,6 +49,16 @@ describe("DataList", () => {
     expect(onRowClick).toHaveBeenCalledWith(ITENS[1]);
   });
 
+  it("aplica a largura mínima na tabela, não no container", () => {
+    render(<DataList {...base} items={ITENS} aria-label="Largas" minWidth="860px" />);
+    expect(screen.getByRole("table", { name: "Largas" })).toHaveStyle({ minWidth: "860px" });
+  });
+
+  it("não declara largura mínima quando a listagem não pede", () => {
+    render(<DataList {...base} items={ITENS} aria-label="Estreita" />);
+    expect(screen.getByRole("table", { name: "Estreita" }).style.minWidth).toBe("");
+  });
+
   it("dá rótulo acessível à tabela", () => {
     render(<DataList {...base} items={ITENS} aria-label="Colaboradores" />);
     expect(screen.getByRole("table", { name: "Colaboradores" })).toBeInTheDocument();
