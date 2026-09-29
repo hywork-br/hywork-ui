@@ -29,7 +29,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
  * trazia raio 8 com `shadow-sm` — o que punha a decisão contra a base em 236
  * usos.
  */
-export const authoredNames = ['badge', 'tabs', 'label', 'skeleton', 'dialog', 'alert', 'card'];
+export const authoredNames = ['badge', 'tabs', 'label', 'skeleton', 'dialog', 'alert', 'card', 'breadcrumb', 'button', 'select', 'table'];
 
 export const componentNames = 'accordion alert-dialog alert avatar badge breadcrumb button card checkbox collapsible dialog dropdown-menu input label popover progress radio-group scroll-area select separator sheet skeleton slider switch table tabs textarea tooltip'.split(' ');
 const hash = (s) => createHash('sha256').update(s).digest('hex');

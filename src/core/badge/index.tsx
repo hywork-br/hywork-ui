@@ -26,14 +26,14 @@ const badgeVariants = cva(
     variants: {
       variant: {
         // papéis de estado
-        positive: "bg-hw-status-success text-white",
+        positive: "bg-hw-status-success-fill text-white",
         attention: "bg-hw-status-warning text-white",
         negative: "bg-hw-status-danger text-white",
         informative: "bg-hw-status-info text-white",
         neutral: "bg-muted text-muted-foreground",
 
         // nomes anteriores dos mesmos papéis
-        success: "bg-hw-status-success text-white",
+        success: "bg-hw-status-success-fill text-white",
         warning: "bg-hw-status-warning text-white",
         destructive: "bg-hw-status-danger text-white",
         info: "bg-hw-status-info text-white",

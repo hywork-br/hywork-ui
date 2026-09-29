@@ -33,13 +33,13 @@ const EmptyState = React.forwardRef<HTMLDivElement, EmptyStateProps>(
       {...props}
     >
       {icon && (
-        <div className="mb-4 text-muted-foreground [&>svg]:h-8 [&>svg]:w-8" aria-hidden="true">
+        <div className="mb-4 text-hw-subtle [&>svg]:h-8 [&>svg]:w-8" aria-hidden="true">
           {icon}
         </div>
       )}
-      <p className="text-sm text-muted-foreground">{title}</p>
+      <p className="text-sm text-hw-subtle">{title}</p>
       {description && (
-        <p className="mt-1 max-w-sm text-sm text-muted-foreground/80">{description}</p>
+        <p className="mt-1 max-w-sm text-sm text-hw-subtle">{description}</p>
       )}
       {action && <div className="mt-6">{action}</div>}
     </div>

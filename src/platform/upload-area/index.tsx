@@ -80,7 +80,7 @@ const UploadArea = React.forwardRef<HTMLDivElement, UploadAreaProps>(
           escolher(event.dataTransfer.files);
         }}
         className={cn(
-          "flex items-center gap-4 rounded-2xl border-2 border-dashed border-border p-4 text-left transition-colors",
+          "flex items-center gap-4 rounded-xl border-2 border-dashed border-border px-8 py-4 text-left transition-colors",
           !disabled && "cursor-pointer hover:border-primary/50 hover:bg-muted/40",
           arrastando && "border-primary bg-primary/5",
           disabled && "cursor-not-allowed opacity-60",

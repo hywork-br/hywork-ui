@@ -51,7 +51,7 @@ describe("DialogContent", () => {
       </Dialog>,
     );
     const conteudo = container.ownerDocument.querySelector('[role="dialog"]');
-    expect(conteudo).toHaveClass("max-h-[90lvh]");
+    expect(conteudo).toHaveClass("max-h-[90vh]", "max-w-4xl");
     expect(conteudo).toHaveClass("overflow-y-auto");
   });
 });

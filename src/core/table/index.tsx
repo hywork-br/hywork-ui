@@ -9,7 +9,7 @@ export type TableProps = React.HTMLAttributes<HTMLTableElement> & {
 };
 
 const Table = React.forwardRef<HTMLTableElement, TableProps>(({ className, wrapperClassName, ...props }, ref) => (
-  <div className={cn("relative w-full min-w-0 max-w-full overflow-auto", wrapperClassName)}>
+  <div className={cn("relative w-full min-w-0 max-w-full overflow-x-auto", wrapperClassName)}>
     <table ref={ref} className={cn("w-full caption-bottom text-sm border border-hw-table-border rounded-lg overflow-hidden", className)} {...props} />
   </div>
 ));
@@ -42,7 +42,7 @@ TableRow.displayName = "TableRow";
 const TableHead = React.forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<HTMLTableCellElement>>(({ className, ...props }, ref) => (
   <th
     ref={ref}
-    className={cn("h-12 px-6 text-left align-middle text-xs font-medium uppercase tracking-wider text-hw-table-heading dark:text-zinc-400", className)}
+    className={cn("h-12 whitespace-nowrap px-6 text-left align-middle text-xs font-medium uppercase tracking-wider text-hw-table-heading dark:text-zinc-400", className)}
     {...props}
   />
 ));

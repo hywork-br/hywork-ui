@@ -110,42 +110,6 @@ export const ComFiltroAtivo: Story = {
   },
 };
 
-/**
- * Variante de apresentação prevista: a mesma dimensão em chips, em vez de
- * seletor. É a forma que a tela de Desafios usava — legítima, e agora dentro
- * do padrão em vez de reinventada.
- */
-export const ComChips: Story = {
-  render: function Render() {
-    const [status, setStatus] = React.useState("all");
-    const [campanha, setCampanha] = React.useState("all");
-    return (
-      <FilterBar onClear={() => { setStatus("all"); setCampanha("all"); }}>
-        <FilterBar.Chips
-          label="Status"
-          value={status}
-          onChange={setStatus}
-          options={[
-            { value: "all", label: "Todos" },
-            { value: "scheduled", label: "Agendados" },
-            { value: "running", label: "Em curso" },
-            { value: "finished", label: "Finalizados" },
-          ]}
-        />
-        <FilterBar.Select
-          label="Campanha"
-          value={campanha}
-          onChange={setCampanha}
-          options={[
-            { value: "all", label: "Todas" },
-            { value: "onboarding", label: "Integração 2026" },
-          ]}
-        />
-      </FilterBar>
-    );
-  },
-};
-
 /** Só dimensões, sem busca — a barra não exige um campo de texto. */
 export const SemBusca: Story = {
   render: function Render() {

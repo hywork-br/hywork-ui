@@ -31,7 +31,7 @@ const PageTitle = React.forwardRef<HTMLDivElement, PageTitleProps>(
       {...props}
     >
       <div className="min-w-0">
-        <Heading className="text-2xl font-bold tracking-tight text-foreground">{title}</Heading>
+        <Heading className="text-2xl font-bold tracking-tight text-hw-heading">{title}</Heading>
         {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
       </div>
       {actions && <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div>}

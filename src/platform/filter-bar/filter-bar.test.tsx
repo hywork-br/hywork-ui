@@ -85,21 +85,24 @@ describe("FilterBar", () => {
     expect(screen.getByRole("combobox", { name: /status/i })).toBeInTheDocument();
   });
 
-  it("marca o chip selecionado com aria-pressed", async () => {
-    const user = userEvent.setup();
-    function ComChips() {
-      const [v, setV] = React.useState("all");
-      return (
-        <FilterBar onClear={() => setV("all")}>
-          <FilterBar.Chips label="Status" value={v} onChange={setV} options={OPCOES} />
-        </FilterBar>
-      );
-    }
-    render(<ComChips />);
-    const ativos = screen.getByRole("button", { name: "Ativos" });
-    expect(ativos).toHaveAttribute("aria-pressed", "false");
-    await user.click(ativos);
-    expect(screen.getByRole("button", { name: "Ativos" })).toHaveAttribute("aria-pressed", "true");
+  it("mostra o nome da dimensão dentro do campo enquanto nada está filtrado", () => {
+    render(<Exemplo status="all" />);
+    expect(screen.getByRole("combobox", { name: "Status" })).toHaveTextContent("Status");
+  });
+
+  it("mostra o valor escolhido quando há filtro", () => {
+    render(<Exemplo status="active" />);
+    expect(screen.getByRole("combobox", { name: "Status" })).toHaveTextContent("Ativos");
+  });
+
+  it("desenha Chips como seleção — chips não são o padrão eleito", () => {
+    render(
+      <FilterBar onClear={() => undefined}>
+        <FilterBar.Chips label="Status" value="all" onChange={() => undefined} options={OPCOES} />
+      </FilterBar>,
+    );
+    expect(screen.getByRole("combobox", { name: "Status" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Ativos" })).not.toBeInTheDocument();
   });
 
   it("recusa uso fora do container", () => {
@@ -156,7 +159,7 @@ describe("FilterBar — espaçamento", () => {
     expect(container.firstElementChild).not.toHaveClass("mb-6");
   });
 
-  it("dá a mesma forma a todos os controles da barra", () => {
+  it("segue a Opção A: seleção com forma de campo, busca arredondada", () => {
     render(
       <FilterBar onClear={() => undefined}>
         <FilterBar.Search value="ana" onChange={() => undefined} placeholder="Buscar" />
@@ -168,11 +171,9 @@ describe("FilterBar — espaçamento", () => {
         />
       </FilterBar>,
     );
-    // Busca, seleção e a ação de limpar compartilham raio e altura: a barra é
-    // uma superfície só.
+    expect(screen.getByRole("search")).toHaveClass("bg-muted/50", "rounded-lg", "p-4", "gap-3", "items-end");
     expect(screen.getByRole("searchbox")).toHaveClass("rounded-full", "h-10");
-    expect(screen.getByRole("combobox")).toHaveClass("rounded-full", "h-10");
-    expect(screen.getByRole("button", { name: /limpar/i })).toHaveClass("rounded-full", "h-10");
+    expect(screen.getByRole("combobox")).toHaveClass("rounded-sm", "h-10");
   });
 
   it("empresta a forma da barra ao controle que a tela traz", () => {
@@ -184,6 +185,6 @@ describe("FilterBar — espaçamento", () => {
       </FilterBar>,
     );
     const campo = screen.getByLabelText("Data inicial");
-    expect(campo.parentElement).toHaveClass("[&_input]:rounded-full");
+    expect(campo.parentElement).toHaveClass("[&_input]:h-10");
   });
 });
