@@ -47,7 +47,9 @@ const DialogContent = React.forwardRef<
       )}
       {...props}
     >
-      <div className={cn("flex flex-1 min-w-0 min-h-0 flex-col break-words overflow-wrap-anywhere", contentClassName)}>
+      {/* O `gap-4` do conteúdo só alcança este invólucro; sem o mesmo gap aqui,
+          cabeçalho, corpo e rodapé do diálogo ficavam colados. */}
+      <div className={cn("flex flex-1 min-w-0 min-h-0 flex-col gap-4 break-words overflow-wrap-anywhere", contentClassName)}>
         {children}
       </div>
       <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity motion-reduce:!transition-none hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">

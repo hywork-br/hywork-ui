@@ -54,4 +54,16 @@ describe("DialogContent", () => {
     expect(conteudo).toHaveClass("max-h-[90vh]", "max-w-4xl");
     expect(conteudo).toHaveClass("overflow-y-auto");
   });
+
+  it("separa cabeçalho, corpo e rodapé — o invólucro interno também tem gap", () => {
+    const { container } = render(
+      <Dialog open>
+        <DialogContent>
+          <DialogTitle>Com seções</DialogTitle>
+        </DialogContent>
+      </Dialog>,
+    );
+    const titulo = container.ownerDocument.querySelector('[role="dialog"] h2');
+    expect(titulo?.parentElement).toHaveClass("gap-4");
+  });
 });

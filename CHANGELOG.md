@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.1
+
+- **Diálogo:** o invólucro interno do `DialogContent` ganhou `gap-4`. O gap do
+  conteúdo só alcançava esse invólucro, e cabeçalho, corpo e rodapé ficavam
+  colados em todo diálogo de formulário.
+
 ## 0.9.0 — escolhas da PO aplicadas ao pé da letra
 
 Referência: artefato Catálogo de Divergências. Ver `DOMAIN_MODEL.md`, "Fonte da
