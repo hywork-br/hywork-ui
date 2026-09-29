@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.10.0 — genéricos que ainda moravam no Platform
+
+- **Novos em `core`:** `Toast`/`Toaster`/`toast`/`useToast`, `Form` (camada do
+  react-hook-form), `Command` (cmdk) e `Spinner` (sem framer-motion; é para
+  ação em andamento — conteúdo carregando segue sendo `Skeleton`).
+- **Novos em `platform`:** `MultiSelect`, `FontAwesomeIconSelect` e
+  `RichTextEditor` (tiptap).
+- **`FormMessage` é um só:** dentro de um `FormItem` mostra o erro do campo no
+  react-hook-form; solto, mostra o texto recebido. O rótulo com erro usa o token
+  de erro, e o asterisco de obrigatório também.
+- Peers novos: `@radix-ui/react-toast`, `react-hook-form`, e — opcionais —
+  `cmdk`, `@tiptap/*`, `embla-carousel-react`.
+
 ## 0.9.1
 
 - **Diálogo:** o invólucro interno do `DialogContent` ganhou `gap-4`. O gap do
