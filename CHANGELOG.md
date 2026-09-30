@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.10.1
+
+- **`Badge` não quebra linha:** em coluna estreita o texto passava para duas
+  linhas e a pílula virava um "ovo" (tabela de usuários, "Convite não enviado").
+- **`Table` com barra horizontal sempre visível:** no macOS a barra é
+  sobreposta e só aparecia durante a rolagem; a tabela larga parecia cortada.
+
 ## 0.10.0 — genéricos que ainda moravam no Platform
 
 - **Novos em `core`:** `Toast`/`Toaster`/`toast`/`useToast`, `Form` (camada do

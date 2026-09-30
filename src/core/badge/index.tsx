@@ -17,11 +17,14 @@ import { cn } from "../../lib/cn";
  *   informative  informativos, sem juízo de valor
  *   neutral    draft · inactive · archived
  *
+ * O texto nunca quebra: em coluna estreita a pílula vira um "ovo" de duas
+ * linhas. A tabela rola na horizontal em vez de espremer o badge.
+ *
  * `success`, `warning`, `destructive` e `info` seguem válidos como nomes
  * anteriores dos mesmos papéis.
  */
 const badgeVariants = cva(
-  "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-semibold",
+  "inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[12px] font-semibold",
   {
     variants: {
       variant: {
