@@ -28,7 +28,8 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        // papéis de estado
+        // papéis de estado — `text-white` é a escolha literal da PO (Opção D,
+        // "bg-emerald-500 … text-white"). Estado não segue a marca do workspace.
         positive: "bg-hw-status-success-fill text-white",
         attention: "bg-hw-status-warning text-white",
         negative: "bg-hw-status-danger text-white",

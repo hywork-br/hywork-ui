@@ -163,7 +163,8 @@ const CarouselItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLD
 );
 CarouselItem.displayName = "CarouselItem";
 
-// Seta da Opção A: círculo de 28px, fundo branco, borda do tema.
+// Seta da Opção A: círculo de 28px, fundo branco, borda do tema. `bg-white` é
+// a escolha literal da PO ("brancas"), não o --background: fica literal.
 const seta =
   "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border bg-white text-sm text-muted-foreground transition-colors motion-reduce:!transition-none hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-40";
 

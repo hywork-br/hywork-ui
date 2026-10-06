@@ -55,6 +55,56 @@ const tableColors = {
   '637381': 'heading', '1f272f': 'foreground', '8899a8': 'caption',
 };
 
+/**
+ * Papéis de cor que a derivação aplica (Rick, 06/10/2026 — o design system é
+ * a única autoridade de cor). Cada troca falha se o trecho sumir da captura:
+ * uma troca que não acontece em silêncio é cor literal de volta no pacote.
+ *
+ * - a marca como linha ou texto sobre o fundo (borda do checkbox e do rádio,
+ *   trilho ligado do switch, barra do progresso e do slider, anel de foco do
+ *   campo) usa --primary-ink, que escurece a marca clara até 4.5:1;
+ * - campo, trilho e véu usam os tokens com o valor exato que a captura trazia.
+ */
+const colorRoles = {
+  checkbox: [['border border-primary shadow', 'border border-primary-ink shadow']],
+  'radio-group': [
+    ['border border-primary text-primary', 'border border-primary-ink text-primary-ink'],
+    ['fill-primary', 'fill-primary-ink'],
+  ],
+  switch: [['data-[state=checked]:bg-primary', 'data-[state=checked]:bg-primary-ink']],
+  progress: [
+    ['bg-primary/20', 'bg-primary-ink/20'],
+    ['flex-1 bg-primary', 'flex-1 bg-primary-ink'],
+  ],
+  slider: [
+    ['bg-gray-100', 'bg-hw-control-track'],
+    ['absolute h-full bg-primary', 'absolute h-full bg-primary-ink'],
+    ['border-2 border-primary bg-white', 'border-2 border-primary-ink bg-hw-field'],
+  ],
+  input: [
+    ['border-slate-300/80 bg-white', 'border-hw-field-border/80 bg-hw-field'],
+    ['placeholder:text-gray-400', 'placeholder:text-hw-field-placeholder'],
+    ['focus-visible:ring-primary', 'focus-visible:ring-primary-ink'],
+  ],
+  textarea: [
+    ['border-slate-300/80 bg-white', 'border-hw-field-border/80 bg-hw-field'],
+    ['placeholder:text-gray-400', 'placeholder:text-hw-field-placeholder'],
+    ['focus-visible:border-primary', 'focus-visible:border-primary-ink'],
+    ['focus-visible:ring-primary', 'focus-visible:ring-primary-ink'],
+  ],
+  'alert-dialog': [['bg-black/80', 'bg-hw-overlay/80']],
+  sheet: [['bg-black/80', 'bg-hw-overlay/80']],
+};
+
+export function applyColorRoles(name, source) {
+  let result = source;
+  for (const [from, to] of colorRoles[name] ?? []) {
+    if (!result.includes(from)) throw new Error(`${name}: color role source not found: ${from}`);
+    result = result.replaceAll(from, to);
+  }
+  return result;
+}
+
 export function extractComponent(name, source) {
   // A referência congelada em provenance/ guarda os componentes como estavam
   // em src/components/<nome>.tsx. Eles passaram a viver em
@@ -78,6 +128,7 @@ export function extractComponent(name, source) {
   if (name === 'scroll-area') result = result.replace(
     '<ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit]">',
     '<ScrollAreaPrimitive.Viewport tabIndex={0} className="h-full w-full rounded-[inherit] focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring">');
+  result = applyColorRoles(name, result);
   if (name === 'card') result = result.replace('<h3', '<h2');
   if (name === 'alert') result = result.replace('<h5', '<h2');
   if (name === 'slider') {
