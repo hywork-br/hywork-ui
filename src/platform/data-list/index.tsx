@@ -73,6 +73,11 @@ export interface DataListProps<T> extends Omit<React.HTMLAttributes<HTMLDivEleme
    * primitivo. Passou a ser uma porta só.
    */
   minWidth?: string;
+  /**
+   * Linhas pares em cinza claro. Ligado por padrão, como no `Table` (Rick,
+   * 06/10/2026). Desligue só onde a linha já tem fundo próprio por estado.
+   */
+  striped?: boolean;
   /** Rótulo acessível da tabela. */
   "aria-label"?: string;
 }
@@ -88,6 +93,7 @@ function DataList<T>({
   onRowClick,
   minWidth,
   rowHeight,
+  striped = true,
   className,
   ...props
 }: DataListProps<T>) {
@@ -109,7 +115,7 @@ function DataList<T>({
     // cresce até a largura da tabela e a rolagem do `Table` nunca aparece —
     // quem corta é o layout da página.
     <div className={cn("w-full min-w-0 max-w-full", className)} {...props}>
-      <Table aria-label={props["aria-label"]} style={{ minWidth: larguraMinima }}>
+      <Table aria-label={props["aria-label"]} striped={striped} style={{ minWidth: larguraMinima }}>
         <TableHeader>
           <TableRow>
             {columns.map((c) => (
