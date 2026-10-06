@@ -36,6 +36,10 @@
       "types": "./dist/theme.d.ts",
       "import": "./dist/theme.js"
     },
+    "./consumer-check": {
+      "types": "./dist/consumer-check.d.ts",
+      "import": "./dist/consumer-check.js"
+    },
     "./tokens/core.css": "./tokens/core.css",
     "./tokens/platform.css": "./tokens/platform.css",
     "./tokens/builder.css": "./tokens/builder.css",

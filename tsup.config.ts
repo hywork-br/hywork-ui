@@ -18,9 +18,10 @@ export default defineConfig([
   },
   {
     // Funções puras, SEM "use client": a cor de marca precisa rodar num Server
-    // Component (`<html style={brandThemeVars(hex)}>`).
+    // Component (`<html style={brandThemeVars(hex)}>`), e a trava de tokens
+    // roda em Node, no teste do consumidor.
     dts: true,
-    entry: ["src/theme.ts"],
+    entry: ["src/theme.ts", "src/consumer-check.ts"],
     format: ["esm"],
     minify: false,
     sourcemap: true,
