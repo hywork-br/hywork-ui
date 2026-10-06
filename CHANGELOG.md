@@ -26,8 +26,11 @@ componentes renderizam.
   só resolvido pelo Tailwind 4. Fica como exceção com motivo e revisão até
   31/12/2026 — vencida a data, o gate volta a falhar.
 
-Continua aberto: o contraste do selo de sucesso escolhido pela PO (ver 0.10.1),
-que mantém o `accessible catalogue` vermelho até a decisão dela.
+Continua aberto no `test:browser`:
+
+- o contraste do selo de sucesso escolhido pela PO (ver 0.10.1), que mantém o
+  `accessible catalogue` vermelho até a decisão dela;
+- a paridade de pixels, vermelha desde 25/09 (ver 0.10.1).
 
 ## 0.10.1
 
@@ -49,8 +52,10 @@ que mantém o `accessible catalogue` vermelho até a decisão dela.
   search-input, spinner, toast) e os tiraria do barrel do core. Não rode o
   `derive` antes de atualizá-lo.
 
-A paridade de pixels (`source/package parity`) falha igual na v0.8.0 quando
-roda no macOS; no Linux do CI é o gate que vale.
+A paridade de pixels (`source/package parity`, 12 casos) está vermelha no CI
+desde 25/09, já na v0.8.0 — no macOS e no Linux. As decisões visuais aplicadas
+desde então divergem da captura de procedência e ainda não foram registradas
+como diferenças deliberadas.
 
 ## 0.10.0 — genéricos que ainda moravam no Platform
 
