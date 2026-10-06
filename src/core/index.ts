@@ -3,14 +3,14 @@
 // e divergem apenas em token. Ver AGENTS.md §3.
 
 export * from "./accordion";
-export * from "./alert-dialog";
 export * from "./alert";
+export * from "./alert-dialog";
 export * from "./avatar";
 export * from "./badge";
 export * from "./breadcrumb";
 export * from "./button";
-export * from "./carousel";
 export * from "./card";
+export * from "./carousel";
 export * from "./checkbox";
 export * from "./collapsible";
 export * from "./command";
@@ -19,12 +19,12 @@ export * from "./dropdown-menu";
 export * from "./form";
 export * from "./form-message";
 export * from "./input";
-export * from "./search-input";
 export * from "./label";
 export * from "./popover";
 export * from "./progress";
 export * from "./radio-group";
 export * from "./scroll-area";
+export * from "./search-input";
 export * from "./select";
 export * from "./separator";
 export * from "./sheet";

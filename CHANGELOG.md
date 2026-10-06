@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.10.2 — gates verdes de novo
+
+Resolve as pendências técnicas com que a 0.10.1 saiu. Nada muda no que os
+componentes renderizam.
+
+- **Peers declaradas como o pacote as usa:** `cmdk`, `embla-carousel-react` e
+  sete pacotes `@tiptap/*` estavam como opcionais, mas as entradas do pacote os
+  importam de forma estática — um consumidor sem eles quebrava no primeiro
+  `import`. Passam a obrigatórios (o npm os instala junto). O
+  `@tiptap/extension-highlight` segue opcional: vai embutido no `dist`.
+- **Tiptap limitado à 2.x** (`>=2.0.0 <3`): a faixa aberta deixava o npm instalar
+  o 3.x, que não exporta mais o `BubbleMenu` do editor de texto rico.
+- **`smoke:consumer` volta a passar:** procurava a cor primária no preset do
+  Platform, que desde a divisão em camadas a herda do preset do core. Falhava
+  desde antes da 0.8.0.
+- **`derive` conhece as primitivas nativas** (`nativeNames`): carousel, command,
+  form, form-message, search-input, spinner e toast ficam no barrel, e o
+  manifesto lista as nativas e passa a refletir o `authoredNames` atual (sete
+  componentes estavam marcados como derivados). Dois testes novos travam essa
+  defasagem.
+- **`audit:gate` no lugar do `npm audit --audit-level=high`** no CI e no release.
+  O `npm audit fix` resolveu undici, source-map-js, fast-glob e brace-expansion;
+  sobra o `braces` (GHSA-vfj7-8cjw-p6xm), sem versão corrigida em nenhum 3.x e
+  só resolvido pelo Tailwind 4. Fica como exceção com motivo e revisão até
+  31/12/2026 — vencida a data, o gate volta a falhar.
+
+Continua aberto: o contraste do selo de sucesso escolhido pela PO (ver 0.10.1),
+que mantém o `accessible catalogue` vermelho até a decisão dela.
+
 ## 0.10.1
 
 - **`Badge` não quebra linha:** em coluna estreita o texto passava para duas

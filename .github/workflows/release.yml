@@ -20,7 +20,7 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run build
-      - run: npm audit --audit-level=high
+      - run: npm run audit:gate
       - run: mkdir -p release
       - run: npm pack --pack-destination release
       - name: Publish immutable release asset
