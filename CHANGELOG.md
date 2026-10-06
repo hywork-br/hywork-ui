@@ -10,6 +10,11 @@
   ela foi aberta. O que muda para quem usava a 0.11.0: o selo `positive`/`success`
   passa a texto escuro (`--hw-on-status`, 7:1) em vez de branco (2,5:1), e as
   peers `cmdk`, `embla-carousel-react` e `@tiptap/*` (2.x) ficam obrigatórias.
+- **`test:browser` verde na linha 0.11** (24/24; a 0.11.0 saiu com 12 falhas de
+  paridade). Os componentes estavam certos: a referência congelada é que ainda
+  montava o contrato antigo. Agora ela expressa as decisões de 06/10 — anel sem
+  cor é `--ring` (o `ring-0` do polegar do `Switch` diferia no Firefox) e, no
+  tema `tenant`, o anel recebe a marca (o X do `Sheet` diferia no Chromium).
 
 ## 0.11.0 — o design system vence: tokens, marca do workspace e listras
 

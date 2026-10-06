@@ -17,6 +17,10 @@ if (params.get("theme") === "tenant") {
   const root = document.documentElement.style;
   root.setProperty(source ? "--primary" : "--hw-brand-primary", "270 60% 35%");
   root.setProperty(source ? "--primary-foreground" : "--hw-brand-primary-foreground", "0 0% 100%");
+  // A mesma decisão leva a marca ao anel de foco. Na referência o anel era
+  // uma variável à parte; aqui ele recebe a marca como o pacote a deriva (a
+  // tinta, que para este roxo escuro é a própria marca).
+  if (source) root.setProperty("--ring", "270 60% 35%");
 }
 // A paridade compara as PRIMITIVAS extraídas contra a referência congelada.
 // Padrões autorais (FilterBar e os próximos) não têm equivalente em

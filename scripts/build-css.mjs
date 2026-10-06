@@ -48,7 +48,13 @@ await build(
 //    provenance/, o teste compara a extração com a referência congelada.
 //    Sai de cena quando a última primitiva derivada virar autoral.
 const raw = JSON.parse(readFileSync('provenance/platform/tailwind.json', 'utf8'));
-await build('source', { ...raw, plugins: [require('tailwindcss-animate')] }, '', original);
+// The frozen components keep their classes; the contract around them follows
+// the decisions of 06/10/2026 (DOMAIN_MODEL "Cor e token"). One of them reaches
+// the reference's config: a ring with no colour (`ring-2`, and the `ring-0`
+// that Firefox still rasterizes on a rounded edge) is `--ring`, not Tailwind's
+// default blue. Without this, every Switch thumb differed in Firefox.
+const decided = { theme: { ...raw.theme, extend: { ...raw.theme.extend, ringColor: { DEFAULT: 'hsl(var(--ring) / 0.5)' } } } };
+await build('source', { ...raw, ...decided, plugins: [require('tailwindcss-animate')] }, '', original);
 await build(
   'package',
   require('../tailwind/platform-preset.cjs'),
