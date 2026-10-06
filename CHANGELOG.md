@@ -42,12 +42,75 @@ Decisões do Rick de 06/10/2026, em `DOMAIN_MODEL.md` ("Cor e token").
 - Nova entrada `@hywork/ui/consumer-check` — `assertNoTokenOverrides`,
   `findTokenOverrides`.
 
+## 0.10.3 — `test:browser` verde
+
+- **Selo de sucesso com contraste:** o verde da PO (emerald-500) fica, e o texto
+  do `Badge` `positive`/`success` passa de branco (2,5:1) para `--hw-on-status`
+  (7:1), como nos botões de status. Exceção registrada no DOMAIN_MODEL. Os selos
+  `attention`, `negative` e `info` seguem com texto branco (6,5:1 ou mais).
+- **Paridade só das primitivas derivadas:** a comparação exata de pixels passa a
+  usar uma página só com as primitivas `source-derived` do manifesto, em repouso
+  e com cada sobreposição aberta, uma aba por lado e os dois com movimento. Antes,
+  a página inteira misturava as autorais, e qualquer decisão da PO (rótulo
+  semibold, abas de largura igual) deslocava o resto — vermelho no CI desde 25/09.
+  O teste de mutação agora prova também uma troca sutil de cor de borda.
+
+## 0.10.2 — gates verdes de novo
+
+Resolve as pendências técnicas com que a 0.10.1 saiu. Nada muda no que os
+componentes renderizam.
+
+- **Peers declaradas como o pacote as usa:** `cmdk`, `embla-carousel-react` e
+  sete pacotes `@tiptap/*` estavam como opcionais, mas as entradas do pacote os
+  importam de forma estática — um consumidor sem eles quebrava no primeiro
+  `import`. Passam a obrigatórios (o npm os instala junto). O
+  `@tiptap/extension-highlight` segue opcional: vai embutido no `dist`.
+- **Tiptap limitado à 2.x** (`>=2.0.0 <3`): a faixa aberta deixava o npm instalar
+  o 3.x, que não exporta mais o `BubbleMenu` do editor de texto rico.
+- **`smoke:consumer` volta a passar:** procurava a cor primária no preset do
+  Platform, que desde a divisão em camadas a herda do preset do core. Falhava
+  desde antes da 0.8.0.
+- **`derive` conhece as primitivas nativas** (`nativeNames`): carousel, command,
+  form, form-message, search-input, spinner e toast ficam no barrel, e o
+  manifesto lista as nativas e passa a refletir o `authoredNames` atual (sete
+  componentes estavam marcados como derivados). Dois testes novos travam essa
+  defasagem.
+- **`audit:gate` no lugar do `npm audit --audit-level=high`** no CI e no release.
+  O `npm audit fix` resolveu undici, source-map-js, fast-glob e brace-expansion;
+  sobra o `braces` (GHSA-vfj7-8cjw-p6xm), sem versão corrigida em nenhum 3.x e
+  só resolvido pelo Tailwind 4. Fica como exceção com motivo e revisão até
+  31/12/2026 — vencida a data, o gate volta a falhar.
+
+Continua aberto no `test:browser`:
+
+- o contraste do selo de sucesso escolhido pela PO (ver 0.10.1), que mantém o
+  `accessible catalogue` vermelho até a decisão dela;
+- a paridade de pixels, vermelha desde 25/09 (ver 0.10.1).
+
 ## 0.10.1
 
 - **`Badge` não quebra linha:** em coluna estreita o texto passava para duas
   linhas e a pílula virava um "ovo" (tabela de usuários, "Convite não enviado").
 - **`Table` com barra horizontal sempre visível:** no macOS a barra é
   sobreposta e só aparecia durante a rolagem; a tabela larga parecia cortada.
+- **`manifest.json` na mesma versão do pacote** (estava em 0.10.0 e derrubava o
+  `npm run check`).
+
+**Publicada com duas pendências conhecidas (06/10, aval do Rick):**
+
+- **Contraste do selo de sucesso:** a escolha literal da PO
+  (`--hw-status-success-fill` = emerald-500 com texto branco) dá ~2,5:1, abaixo
+  dos 4,5:1 da WCAG. O teste `accessible catalogue` (light e tenant) fica
+  vermelho até a PO decidir entre escurecer o verde ou o texto.
+- **`npm run derive` desatualizado:** o script ainda não conhece os sete
+  componentes trazidos na 0.10.0 (carousel, command, form, form-message,
+  search-input, spinner, toast) e os tiraria do barrel do core. Não rode o
+  `derive` antes de atualizá-lo.
+
+A paridade de pixels (`source/package parity`, 12 casos) está vermelha no CI
+desde 25/09, já na v0.8.0 — no macOS e no Linux. As decisões visuais aplicadas
+desde então divergem da captura de procedência e ainda não foram registradas
+como diferenças deliberadas.
 
 ## 0.10.0 — genéricos que ainda moravam no Platform
 

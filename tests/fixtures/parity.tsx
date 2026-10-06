@@ -2,6 +2,7 @@ import * as React from "react";
 import { createRoot } from "react-dom/client";
 import "@fontsource-variable/montserrat";
 import { Catalog } from "../../stories/catalog";
+import { DerivedCatalog } from "./derived-catalog";
 const params = new URLSearchParams(location.search);
 const source = params.get("implementation") === "source";
 const css = document.createElement("link");
@@ -24,6 +25,9 @@ const ui = source ? await import("../../provenance/platform") : await import("..
 // Os dois lados divergem em tipo nos componentes autorais — o Badge ganhou
 // variantes que a referência congelada não tem. A comparação aqui é VISUAL:
 // renderiza o mesmo catálogo com as duas implementações e compara pixels.
+// `view=derived`: only the source-derived primitives, for the pixel parity.
+// The whole catalog stays for the interaction and accessibility tests.
+const View = params.get("view") === "derived" ? DerivedCatalog : Catalog;
 createRoot(document.getElementById("root")!).render(
-  <Catalog ui={ui as unknown as Parameters<typeof Catalog>[0]["ui"]} />,
+  <View ui={ui as unknown as Parameters<typeof Catalog>[0]["ui"]} />,
 );

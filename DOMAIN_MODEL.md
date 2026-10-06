@@ -45,6 +45,13 @@ Cor literal não entra em componente: os valores acima viram tokens
 (`--hw-text-heading`, `--hw-text-label`, `--hw-text-subtle`,
 `--hw-status-success-fill`) **com o valor exato da escolha**.
 
+**Exceção registrada no indicador de status (06/10/2026, Rick):** o verde da
+escolha fica, mas o texto do selo `positive`/`success` usa `--hw-on-status`
+(quase preto) em vez de branco. Branco sobre emerald-500 dá 2,5:1 e reprova a
+WCAG AA (4,5:1); o texto escuro dá 7:1. É a mesma correção que os botões de
+status já tinham. Os selos `attention`, `negative` e `info` têm fundo escuro e
+seguem com texto branco (6,5:1 ou mais).
+
 ---
 
 ## Cor e token — o design system vence (Rick, 06/10/2026)

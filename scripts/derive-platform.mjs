@@ -32,6 +32,16 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export const authoredNames = ['badge', 'tabs', 'label', 'skeleton', 'dialog', 'alert', 'card', 'breadcrumb', 'button', 'select', 'table'];
 
 export const componentNames = 'accordion alert-dialog alert avatar badge breadcrumb button card checkbox collapsible dialog dropdown-menu input label popover progress radio-group scroll-area select separator sheet skeleton slider switch table tabs textarea tooltip'.split(' ');
+
+/**
+ * Primitivas escritas direto aqui, sem captura do Platform (0.10.0): não têm
+ * `provenance/`, então o derive não as gera nem as confere — só as mantém no
+ * barrel do core. Sem esta lista, rodar o derive tirava as sete do barrel.
+ */
+export const nativeNames = ['carousel', 'command', 'form', 'form-message', 'search-input', 'spinner', 'toast'];
+
+/** Tudo o que o barrel do core exporta, em ordem alfabética. */
+export const coreNames = [...componentNames, ...nativeNames].sort((a, b) => a.localeCompare(b));
 const hash = (s) => createHash('sha256').update(s).digest('hex');
 const read = (p) => readFileSync(resolve(root, p), 'utf8');
 const put = (p, s) => { const path = resolve(root, p); mkdirSync(dirname(path), { recursive: true }); writeFileSync(path, s); };
@@ -216,13 +226,13 @@ export function derive() {
   for (const {name,source} of sources)
     if (!authoredNames.includes(name))
       put(`src/core/${name}/index.tsx`, extractComponent(name, source));
-  put('src/core/index.ts', '// Primitivas comuns aos dois consumidores.\n// Regra: entra aqui quando Platform e Builder concordam na anatomia\n// e divergem apenas em token. Ver AGENTS.md \u00a73.\n\n'+componentNames.map(n=>`export * from "./${n}";`).join('\n')+'\n');
+  put('src/core/index.ts', '// Primitivas comuns aos dois consumidores.\n// Regra: entra aqui quando Platform e Builder concordam na anatomia\n// e divergem apenas em token. Ver AGENTS.md \u00a73.\n\n'+coreNames.map(n=>`export * from "./${n}";`).join('\n')+'\n');
   put('provenance/platform/index.ts', componentNames.map(n=>`export * from "./components/${n}";`).join('\n')+'\n');
   // Tokens e preset deixaram de ser gerados: viraram autorais e divididos em
   // core/platform/builder. Regenerá-los aqui desfaria a separação em camadas.
   // put('tokens/platform.css', '/* Generated from the pinned Pla…  (desativado)
   // put('tailwind/platform-preset.cjs', '// Generated from Platf…  (desativado)
-  put('manifest.json',json({schemaVersion:3,package:'@hywork/ui',version:JSON.parse(read('package.json')).version,source:provenance,components:componentNames.map(name=>({name,file:`src/core/${name}/index.tsx`,status:authoredNames.includes(name)?'authored':'source-derived'})),tokenCount:Object.keys(tokens).length}));
+  put('manifest.json',json({schemaVersion:3,package:'@hywork/ui',version:JSON.parse(read('package.json')).version,source:provenance,components:componentNames.map(name=>({name,file:`src/core/${name}/index.tsx`,status:authoredNames.includes(name)?'authored':'source-derived'})),native:nativeNames.map(name=>({name,file:`src/core/${name}/index.tsx`})),tokenCount:Object.keys(tokens).length}));
   return {tokens:Object.keys(tokens).length,components:componentNames.length};
 }
 

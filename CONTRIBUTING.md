@@ -62,6 +62,8 @@ do fluxo de derivação.
 - `npm run build` — biblioteca, CSS e os dois catálogos
 - `npm run test:browser` — paridade e interações em Chromium e Firefox
 - `npm run smoke:consumer` — instalação do tarball, exports e preset
+- `npm run audit:gate` — nenhum aviso alto ou crítico do `npm audit` fora das
+  exceções de `scripts/audit-gate.mjs`, cada uma com motivo e data de revisão
 - `git diff --check` — higiene do diff
 
 Uma verificação nova deve reprovar uma mutação representativa. Não subir

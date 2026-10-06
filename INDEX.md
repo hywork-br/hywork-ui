@@ -140,6 +140,7 @@ vazio — quando aplicáveis ao componente.
 | `npm run build` | biblioteca + CSS + os dois Storybooks |
 | `npm run test:browser` | Playwright em Chromium e Firefox |
 | `npm run smoke:consumer` | instala o tarball num consumidor limpo e valida exports |
+| `npm run audit:gate` | `npm audit` alto/crítico, com exceções datadas em `scripts/audit-gate.mjs` |
 | `npm run derive` | regenera a partir de `provenance/` (extração original) |
 
 ---

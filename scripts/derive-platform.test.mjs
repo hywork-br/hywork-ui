@@ -2,7 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { componentNames, authoredNames, tokenize, extractComponent } from './derive-platform.mjs';
+import { componentNames, authoredNames, nativeNames, coreNames, tokenize, extractComponent } from './derive-platform.mjs';
+import { existsSync } from 'node:fs';
 const read = p => readFileSync(new URL('../'+p, import.meta.url), 'utf8');
 const hash = s => createHash('sha256').update(s).digest('hex');
 const manifest = JSON.parse(read('manifest.json'));
@@ -66,4 +67,19 @@ test('every token reference resolves in both consumers, and the design system wi
 
   const todos = read('tokens/core.css') + read('tokens/platform.css');
   assert.equal([...todos.matchAll(/  --hw-/g)].length >= manifest.tokenCount, true);
+});
+
+test('the core barrel exports the derived and the native primitives, and only them', () => {
+  const exported = [...read('src/core/index.ts').matchAll(/export \* from "\.\/([^"]+)";/g)].map(m => m[1]);
+  assert.deepEqual(exported, coreNames);
+  for (const name of nativeNames) {
+    assert.ok(existsSync(new URL(`../src/core/${name}/index.tsx`, import.meta.url)), name + ' has no component');
+    assert.ok(!existsSync(new URL(`../provenance/platform/components/${name}.tsx`, import.meta.url)), name + ' has a capture: move it to componentNames');
+  }
+  assert.deepEqual(manifest.native.map(c => c.name), nativeNames);
+});
+
+test('manifest status follows authoredNames — run `npm run derive` after changing the list', () => {
+  for (const c of manifest.components)
+    assert.equal(c.status, authoredNames.includes(c.name) ? 'authored' : 'source-derived', c.name);
 });

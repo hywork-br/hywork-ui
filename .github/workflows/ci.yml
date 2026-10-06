@@ -16,7 +16,7 @@ jobs:
       - run: npm run check
       - run: npm run smoke:consumer
       - run: npm run build
-      - run: npm audit --audit-level=high
+      - run: npm run audit:gate
   browser:
     runs-on: ubuntu-24.04
     steps:
