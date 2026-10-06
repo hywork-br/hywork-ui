@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import axe from "axe-core";
+import { readFileSync, writeFileSync } from "node:fs";
 async function open(page:Page, implementation:string, theme:string) {
   await page.goto("/tests/fixtures/parity.html?implementation="+implementation+"&theme="+theme);
   await expect(page.getByRole("heading",{name:"Componentes do Platform"})).toBeVisible();
@@ -9,32 +10,80 @@ async function open(page:Page, implementation:string, theme:string) {
 async function capture(page:Page) {
   return page.screenshot({fullPage:true, animations:"disabled"});
 }
-// Only intentional, documented contrast refinements may differ in the parity image.
-// Their geometry is still compared; accessibility tests verify their actual colors.
-function contrastRegions(page:Page) {
-  return ["Sucesso","Atenção","Erro","Informação"].map(name=>page.getByRole("button",{name,exact:true}))
-    .concat([page.getByText("Concluído",{exact:true}),page.locator("caption")]);
+// Parity is a promise of the source-derived primitives only. An authored one
+// (status "authored" in manifest.json) diverges on purpose — a PO decision in
+// DOMAIN_MODEL.md — and its own stories and tests cover it. The parity page
+// (`view=derived`, tests/fixtures/derived-catalog.tsx) shows only the derived
+// ones, so source and package share the layout and the pixels must be equal.
+const manifest=JSON.parse(readFileSync("manifest.json","utf8")) as {components:{name:string;status:string}[]};
+const derived=manifest.components.filter(c=>c.status==="source-derived").map(c=>c.name);
+// Overlays exist only while open: how to open each one.
+const overlays:Record<string,(page:Page)=>Promise<void>>={
+  "alert-dialog":page=>page.getByRole("button",{name:"Confirmar exclusão",exact:true}).click(),
+  "dropdown-menu":page=>page.getByRole("button",{name:"Ações do documento",exact:true}).click(),
+  popover:page=>page.getByRole("button",{name:"Mais informações",exact:true}).click(),
+  sheet:page=>page.getByRole("button",{name:"Abrir painel",exact:true}).click(),
+  tooltip:page=>page.getByRole("button",{name:"Ajuda",exact:true}).hover(),
+};
+async function openDerived(page:Page, implementation:string, theme:string) {
+  await page.goto("/tests/fixtures/parity.html?view=derived&implementation="+implementation+"&theme="+theme);
+  await expect(page.getByRole("heading",{name:"Primitivas derivadas"})).toBeVisible();
+  await page.evaluate(async()=>{ await document.fonts.ready; });
 }
+// The page at rest, then once per overlay while it is open.
+async function captureDerived(page:Page) {
+  const shots:[string,Buffer][]=[];
+  const shown=new Set<string>();
+  const note=async()=>{ for (const name of derived) if (await page.locator(`[data-parity="${name}"]`).count()>0) shown.add(name); };
+  await note();
+  shots.push(["at rest",await capture(page)]);
+  for (const [name,openOverlay] of Object.entries(overlays)) {
+    await openOverlay(page);
+    await expect(page.locator(`[data-parity="${name}"]`)).toBeVisible();
+    // An overlay slides in: capture it settled, not halfway (where the text
+    // still sits on a fractional pixel and rasterizes differently each time).
+    await page.evaluate(()=>Promise.all(document.getAnimations().map(animation=>animation.finished)));
+    await note();
+    shots.push([name+" open",await capture(page)]);
+    await page.keyboard.press("Escape");
+    await expect(page.locator(`[data-parity="${name}"]`)).toHaveCount(0);
+  }
+  return {shots,shown};
+}
+test("the parity page shows every source-derived primitive, and the overlays list only them",async({page})=>{
+  for (const name of Object.keys(overlays)) expect(derived,name).toContain(name);
+  await openDerived(page,"package","light");
+  const {shown}=await captureDerived(page);
+  expect([...shown].sort()).toEqual([...derived].sort());
+});
 for (const width of [1440,390]) for (const theme of ["light","dark","tenant"]) {
-  test("source/package parity "+width+" "+theme, async({page}, info) => {
+  test("source/package parity "+width+" "+theme, async({browser}, info) => {
     const errors:string[]=[];
-    page.on("pageerror",e=>errors.push(e.message));
-    await page.setViewportSize({width,height:1000});
-    const screenshots:Buffer[]=[];
-    const geometry:unknown[]=[];
+    const captured:[string,Buffer][][]=[];
     for (const implementation of ["source","package"]) {
-      await open(page,implementation,theme);
+      // A page of its own per side: the pointer and focus the first side left
+      // behind (the tooltip is hovered last) must not touch the second one.
+      // With motion: the derivation adds `motion-reduce:!animate-none` to every
+      // animated class (derive-platform.mjs), so under "reduce" only the source
+      // slides in and the two sides rasterize the same text by different paths.
+      // The reduced-motion behaviour is checked by the accessibility test.
+      const page=await browser.newPage({viewport:{width,height:1000},reducedMotion:"no-preference"});
+      page.on("pageerror",e=>errors.push(e.message));
+      await openDerived(page,implementation,theme);
       expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
-      const screenshot=await page.screenshot({fullPage:true,animations:"disabled",path:info.outputPath(implementation+".png")});
-      geometry.push(await Promise.all(contrastRegions(page).map(async region=>({
-        bounds:await region.boundingBox(),
-        style:await region.evaluate(el=>{const s=getComputedStyle(el);return {radius:s.borderRadius,font:s.font,padding:s.padding};}),
-      }))));
-      screenshots.push(await page.screenshot({fullPage:true,animations:"disabled",mask:contrastRegions(page)}));
-      await info.attach(implementation,{body:screenshot,contentType:"image/png"});
+      const {shots}=await captureDerived(page);
+      for (const [state,shot] of shots) await info.attach(`${implementation} · ${state}`,{body:shot,contentType:"image/png"});
+      captured.push(shots);
+      await page.close();
     }
-    expect(Buffer.compare(screenshots[0],screenshots[1]),"source and package pixels differ").toBe(0);
-    expect(geometry[0]).toEqual(geometry[1]);
+    const [source,pkg]=captured;
+    for (const [i,[state,shot]] of source.entries()) {
+      if (Buffer.compare(shot,pkg[i][1])!==0) {
+        writeFileSync(info.outputPath(`${state.replaceAll(" ","-")}-source.png`),shot);
+        writeFileSync(info.outputPath(`${state.replaceAll(" ","-")}-package.png`),pkg[i][1]);
+      }
+      expect(Buffer.compare(shot,pkg[i][1]),`${state}: source and package pixels differ`).toBe(0);
+    }
     expect(errors).toEqual([]);
   });
 }
@@ -69,14 +118,17 @@ for (const implementation of ["source","package"]) {
     await expect(page.getByText("Versão 1",{exact:true})).toBeVisible();
   });
 }
-test("comparison rejects a deliberate geometry mutation",async({page})=>{
-  await open(page,"package","light");
-  const button=page.getByRole("button",{name:"Salvar",exact:true});
+test("comparison rejects a deliberate mutation of a derived primitive",async({page})=>{
+  await openDerived(page,"package","light");
+  const input=page.locator('[data-parity="input"]').first();
   const before=await capture(page);
-  await button.evaluate(el=>(el as HTMLElement).style.height="60px");
+  await input.evaluate(el=>(el as HTMLElement).style.borderRadius="0");
   expect(Buffer.compare(before,await capture(page))).not.toBe(0);
-  await button.evaluate(el=>(el as HTMLElement).style.removeProperty("height"));
+  await input.evaluate(el=>(el as HTMLElement).style.removeProperty("border-radius"));
   expect(Buffer.compare(before,await capture(page))).toBe(0);
+  // A subtle border colour shift must fail too, not only a change of shape.
+  await input.evaluate(el=>(el as HTMLElement).style.borderColor="rgb(203 213 225)");
+  expect(Buffer.compare(before,await capture(page))).not.toBe(0);
 });
 
 for (const theme of ["light","tenant"]) test("accessible catalogue "+theme,async({page},info)=>{

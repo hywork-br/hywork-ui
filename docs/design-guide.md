@@ -56,9 +56,13 @@ Viewport de trabalho: 1440px; reflow verificado em 390px. Evidência do contexto
 `provenance/platform/components/table.tsx:12` define tabela com rolagem horizontal.
 Essas larguras de teste não são uma afirmação sobre a resolução de todos os usuários.
 
-O teste fonte × pacote protege a extração. A comparação de pixels exclui somente
-as seis regiões de contraste deliberadamente corrigidas no catálogo (quatro botões,
-badge de sucesso e caption); sua geometria continua comparada e suas cores passam
-por auditoria separada. Todas as capturas sem máscara ficam como evidência.
+O teste fonte × pacote protege a extração, e só dela: compara pixel a pixel, sem
+tolerância, uma página que mostra apenas as primitivas ainda derivadas (status
+`source-derived` no `manifest.json`, página `tests/fixtures/derived-catalog.tsx`),
+em repouso e com cada sobreposição aberta. As primitivas autorais divergem por
+decisão da PO e ficam fora — na página inteira, uma aba mais alta deslocava todos os
+pixels abaixo dela e reprovava primitivas que não mudaram. Os dois lados rodam com
+movimento ligado, porque a derivação acrescenta `motion-reduce` às animações e
+só a fonte animaria. Todas as capturas ficam como evidência.
 Movimento reduzido, headings, scroll por teclado e Slider têm verificações próprias.
 A tela integrada ainda precisa de revisão com dados e tema reais.

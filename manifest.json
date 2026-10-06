@@ -1,7 +1,7 @@
 {
   "schemaVersion": 3,
   "package": "@hywork/ui",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "source": {
     "repository": "hywork-br/hywork-plataform",
     "commit": "85a66bafd8020697f694366e1937c6379d8663fc",

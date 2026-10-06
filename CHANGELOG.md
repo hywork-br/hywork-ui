@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.10.3 — `test:browser` verde
+
+- **Selo de sucesso com contraste:** o verde da PO (emerald-500) fica, e o texto
+  do `Badge` `positive`/`success` passa de branco (2,5:1) para `--hw-on-status`
+  (7:1), como nos botões de status. Exceção registrada no DOMAIN_MODEL. Os selos
+  `attention`, `negative` e `info` seguem com texto branco (6,5:1 ou mais).
+- **Paridade só das primitivas derivadas:** a comparação exata de pixels passa a
+  usar uma página só com as primitivas `source-derived` do manifesto, em repouso
+  e com cada sobreposição aberta, uma aba por lado e os dois com movimento. Antes,
+  a página inteira misturava as autorais, e qualquer decisão da PO (rótulo
+  semibold, abas de largura igual) deslocava o resto — vermelho no CI desde 25/09.
+  O teste de mutação agora prova também uma troca sutil de cor de borda.
+
 ## 0.10.2 — gates verdes de novo
 
 Resolve as pendências técnicas com que a 0.10.1 saiu. Nada muda no que os

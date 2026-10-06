@@ -29,14 +29,17 @@ const badgeVariants = cva(
     variants: {
       variant: {
         // papéis de estado
-        positive: "bg-hw-status-success-fill text-white",
+        // Verde da PO (emerald-500) com o texto escuro de status: branco dava
+        // 2,5:1, abaixo dos 4,5:1 da WCAG; o texto escuro dá 7:1. Os outros três
+        // fundos são escuros e seguem com texto branco (6,5:1 ou mais).
+        positive: "bg-hw-status-success-fill text-hw-on-status",
         attention: "bg-hw-status-warning text-white",
         negative: "bg-hw-status-danger text-white",
         informative: "bg-hw-status-info text-white",
         neutral: "bg-muted text-muted-foreground",
 
         // nomes anteriores dos mesmos papéis
-        success: "bg-hw-status-success-fill text-white",
+        success: "bg-hw-status-success-fill text-hw-on-status",
         warning: "bg-hw-status-warning text-white",
         destructive: "bg-hw-status-danger text-white",
         info: "bg-hw-status-info text-white",
