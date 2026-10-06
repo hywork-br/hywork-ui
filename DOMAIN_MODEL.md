@@ -47,6 +47,50 @@ Cor literal não entra em componente: os valores acima viram tokens
 
 ---
 
+## Cor e token — o design system vence (Rick, 06/10/2026)
+
+Os usuários seguiam relatando que o produto está "tudo muito branco". Na
+mesma conversa apareceu a causa de fundo: o contrato dizia que as variáveis da
+aplicação venciam as do design system, e o admin mantinha a própria cópia de
+`--primary`, `--background` e companhia. Nas palavras do Rick: *"Não tem essa
+de 'o plataform vence do DS', isso não tem que acontecer. Se criamos o
+hywork-ui pra centralizar tudo isso, ele tem que vencer em todos os pontos. O
+design system precisa ser aplicado de forma correta, coerente e eficiente,
+sem falhas."*
+
+Três decisões do Rick, de 06/10/2026:
+
+| # | Decisão | Como está no design system |
+|---|---|---|
+| 1 | **O design system vence.** O consumidor não redefine cor nem token: nada de chave em `theme.extend.colors`, nada de `:root` com variável que sombreia as do design system. | `tokens/core.css` declara todas as variáveis da aplicação; o preset as lê sem fallback; `@hywork/ui/consumer-check` reprova a sobrescrita no CI do consumidor |
+| 2 | **Botão principal, aba ativa, anel de foco e link usam a cor do workspace.** Sem cor, ou cor inválida, vale o primário do design system (`200 57% 18%`). O texto sobre a marca mantém contraste AA (4.5:1) sozinho. | gancho `--hw-brand-primary`, escrito por `brandThemeVars(hex)`; `<BrandTheme>` e `useBrandTheme()` |
+| 3 | **Tabelas e listagens são listradas por padrão.** | `Table striped` e `DataList striped`, ligados por padrão |
+
+**O que segue a marca e o que não segue.** A marca é a única cor que o
+consumidor informa. Seguem: botão `default` (preenchimento, cursor e clique),
+`link`, aba ativa, anel de foco, checkbox, rádio, switch, progresso, slider,
+spinner, badge `default`. **Não seguem**: os papéis de estado (sucesso,
+atenção, erro, informação), o destrutivo e as escolhas literais da PO que não
+eram "primária" — título slate-900, rótulo slate-800, estado vazio gray-400,
+badge positivo emerald-500, esqueleto gray-200, seta branca do carrossel.
+
+**A marca sobre o fundo branco.** Uma marca clara (amarelo, verde-limão) passa
+no preenchimento — o texto do botão vira escuro — mas não serve como texto ou
+linha sobre o branco: a aba ativa e o link ficariam ilegíveis. Por isso há a
+tinta da marca (`--primary-ink`): é a própria marca quando ela já tem 4.5:1
+sobre o branco, e a marca escurecida, mesma matiz, quando não tem. Aba, link,
+anel de foco, borda do checkbox e trilho do switch usam a tinta; preenchimentos
+com texto em cima usam a marca. Para o default e para marcas escuras, as duas
+são a mesma cor.
+
+**Listras, cursor e seleção.** Três degraus de cinza, cada um vencendo o
+anterior: listra gray-50 (`--hw-table-stripe`), cursor gray-100
+(`--hw-table-hover`) e linha selecionada gray-200 (`--hw-table-selected`). O
+cursor era gray-50 e sumiria nas linhas listradas; a seleção era gray-100 e
+empataria com o cursor novo — por isso os dois subiram um degrau.
+
+---
+
 ## Estrutura de tela
 
 ### Título de página — 24px, bold
@@ -66,6 +110,7 @@ incluíam uma tela com família tipográfica própria (`font-ltwave`).
 | | |
 |---|---|
 | Decisão | altura 48 · a lista ocupa a linha e divide a largura em partes iguais · borda inferior 1px · item ativo com texto na cor primária, peso 600 e indicador de 2px na primária · inativos em cor esmaecida, peso normal · fundo transparente |
+| Primária | a marca do workspace, na tinta legível sobre o fundo (`--primary-ink`) — ver "Cor e token" |
 | Componente | `core/tabs` |
 | Status | ✅ feito (29/09) — até então as abas tinham o tamanho do texto e o ativo em cor de texto, fora da escolha |
 
@@ -110,8 +155,9 @@ Ordem no rodapé: ação secundária (Cancelar) à esquerda da principal.
 | | |
 |---|---|
 | Decisão | tabela do design system, com cabeçalho em 11px maiúsculo e linhas divididas por borda |
+| Listras | linhas pares em gray-50, por padrão; cursor gray-100; selecionada gray-200 (Rick, 06/10/2026) |
 | Componente | `core/table`, composto em `platform/data-list` |
-| Status | ✅ feito — colunas declaradas, carregamento e vazio embutidos |
+| Status | ✅ feito — colunas declaradas, carregamento e vazio embutidos; listras desde a 0.11.0 |
 
 **A maior migração do projeto: 44 telas.** 17 usam `<table>` cru e 27 montam a
 listagem com `div` e grid.
@@ -389,12 +435,13 @@ ou desligado, ela é papel semântico e usa `Badge` ou `--hw-status-*`.
 | | |
 |---|---|
 | Decisão | cor primária vinda do token · raio 6 · altura 40 |
-| Token | `--primary` com fallback `--hw-color-primary-default` |
+| Token | `--primary`, derivado da marca do workspace (`--hw-brand-primary`) e, sem ela, de `--hw-color-primary-default`; cursor e clique em `--primary-hover`/`--primary-active` |
 | Componente | `core/button` |
-| Status | ✅ existe |
+| Status | ✅ existe — segue a marca desde a 0.11.0 |
 
 **Elimina os três hex fixos em uso** (`#143748`, `#9333ea`, `#072c66`). Botão
-primário nunca carrega cor literal — assim o tema do cliente funciona.
+primário nunca carrega cor literal — a cor do workspace chega pelo gancho de
+marca, e só por ele (Rick, 06/10/2026).
 
 ### Rótulo de campo — semibold
 
@@ -505,3 +552,4 @@ página e passa a ter regra escrita.
 | Data | O que mudou |
 |---|---|
 | 23/09/2026 | 18 padrões decididos pela PO a partir do catálogo comparativo |
+| 06/10/2026 | Rick: o design system vence em cor e token; a marca do workspace é a única entrada de cor; tabelas listradas por padrão |

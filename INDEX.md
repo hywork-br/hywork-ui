@@ -55,6 +55,8 @@ src/
 │   ├── label/
 │   ├── search-input/      ✅  raio total, decisão da PO
 │   ├── form-message/      ✅  token --hw-error-text
+│   ├── brand-theme/       ✅  <BrandTheme> e useBrandTheme — cor do workspace
+│   ├── table/             ✅  listrada por padrão (striped)
 │   └── …                  demais primitivas — todas com story
 │
 ├── platform/              Padrões do admin (hywork-plataform)
@@ -73,11 +75,17 @@ src/
 ├── lib/
 │   └── cn.ts              merge de classes (clsx + tailwind-merge)
 │
+├── theme/
+│   └── brand.ts           brandThemeVars(hex) — puro, sem React
+│
 ├── platform.ts            entrada pública → core + platform
-└── builder.ts             entrada pública → core + builder
+├── builder.ts             entrada pública → core + builder
+├── theme.ts               entrada pura (sem "use client") → brandThemeVars
+└── consumer-check.ts      entrada pura → trava contra sobrescrita de token
 
 tokens/
-├── core.css               escala, espaçamento, raio  (comum)
+├── core.css               escala, espaçamento, raio e o contrato das
+│                          variáveis da aplicação (--primary, --background…)
 ├── platform.css           cores e tipografia do admin
 └── builder.css            cores e tipografia da intranet
 
@@ -99,7 +107,9 @@ tailwind/
 |---|---|
 | `src/platform.ts` | API pública para o `hywork-plataform` |
 | `src/builder.ts` | API pública para o `hw-cloud-builder` |
-| `tokens/core.css` | tokens comuns — obrigatório nos dois consumidores |
+| `src/theme.ts` | `@hywork/ui/theme` — `brandThemeVars`, sem "use client" (Server Component, Node) |
+| `src/consumer-check.ts` | `@hywork/ui/consumer-check` — `assertNoTokenOverrides`, para o teste do consumidor |
+| `tokens/core.css` | tokens comuns e as variáveis da aplicação — obrigatório nos dois consumidores, que não declaram cor própria |
 | `tailwind/<produto>-preset.cjs` | preset Tailwind por consumidor |
 | `.storybook/<produto>/` | configuração de cada catálogo |
 

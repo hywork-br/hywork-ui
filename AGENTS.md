@@ -58,7 +58,10 @@ Documento antigo e código existente **não** são mandato para manter um defeit
   no CHANGELOG com a versão em que ocorre.
 - **Nenhuma cor literal em componente.** Token semântico e pares fundo/texto.
 - Montserrat para produto. Não importar receitas de bibliotecas de terceiros.
-- Mantenha o tema do cliente: variáveis da aplicação vencem os defaults `--hw-*`.
+- O design system vence (Rick, 06/10/2026): ele declara todas as variáveis da
+  aplicação e o preset as lê sem fallback. A cor do workspace entra só pelo
+  gancho `--hw-brand-primary` (`brandThemeVars`); estado e destrutivo não seguem
+  a marca. Texto sobre a marca e a marca sobre o fundo mantêm contraste AA.
 - Alvo de toque e escala de controle seguem o guia; não encolher alvo para
   parecer minimalista.
 - Responsividade pertence ao componente. Uma página nunca decide como o
@@ -95,4 +98,9 @@ com captura antes e depois nos mesmos dados, largura e tema.
 - Alterar snapshot de procedência para fazer teste passar.
 - Publicar tag sem os gates da mesma revisão aprovados.
 - Apontar consumidor para branch flutuante em vez de versão fixa.
+- Consumidor declarar `--primary`, `--background` ou qualquer `--hw-*` no
+  próprio CSS, ou chave em `theme.extend.colors` — `@hywork/ui/consumer-check`
+  reprova. Cor que falta é token a criar aqui.
+- Componente aceitar cor por prop (`focusColor`, `color="blue"`) para a tela
+  escolher — a cor é do design system ou da marca do workspace.
 - Declarar cobertura total de produto ou de acessibilidade a partir do catálogo.

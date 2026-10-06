@@ -69,7 +69,8 @@ que é um tenant — e por isso nunca entra aqui.
 
 ```
 tokens/
-├── core.css       escala, espaçamento, raio          (comum aos dois)
+├── core.css       escala, espaçamento, raio e o contrato
+│                  das variáveis da aplicação         (comum aos dois)
 ├── platform.css   cores e tipografia do admin
 └── builder.css    cores e tipografia da intranet
 
@@ -78,9 +79,17 @@ tailwind/
 └── builder-preset.cjs
 ```
 
-Variáveis da aplicação (`--primary`, `--background`) **prevalecem** sobre os
-defaults `--hw-*`. O tema do cliente sempre vence: nunca force uma cor de marca
-sobre uma variável do consumidor.
+**O design system vence** (Rick, 06/10/2026). `tokens/core.css` declara todas
+as variáveis da aplicação (`--primary`, `--background`, `--border`…) e o preset
+as lê sem fallback. O consumidor não declara cor nem variável própria — a trava
+é `@hywork/ui/consumer-check`, chamada num teste dele.
+
+A única cor que o consumidor informa é a **marca do workspace**, pelo gancho
+`--hw-brand-primary`, calculado por `brandThemeVars(hex)` (`@hywork/ui/theme`).
+Dela derivam `--primary`, `--primary-foreground` (contraste AA), hover, active,
+`--primary-ink` (a marca legível sobre o branco) e `--ring`. Estado e
+destrutivo não seguem a marca. Contrato completo em
+[CROSS_STACK_CONVENTIONS.md](CROSS_STACK_CONVENTIONS.md) §3.
 
 ### Storybook
 

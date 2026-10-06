@@ -55,6 +55,139 @@ content: [
 
 No Builder, trocar `platform` por `builder` nas duas linhas.
 
+### O contrato de cor: o design system vence
+
+Decisão do Rick (06/10/2026). O consumidor **importa** os dois CSS, **usa** o
+preset e **não define cor nem variável própria**. Até a 0.10 era o inverso — o
+admin declarava `--primary`, `--background`… no próprio `:root` e o preset
+deixava a variável da aplicação vencer. Isso acabou.
+
+| O consumidor faz | O consumidor não faz |
+|---|---|
+| `@import` de `tokens/core.css` + `tokens/platform.css` | declarar `--primary`, `--background`, `--border`, `--radius`, `--chart-*`, `--admin-*` ou qualquer `--hw-*` no seu CSS, em qualquer seletor |
+| `presets: [platform-preset]` | criar chave em `theme.colors` ou `theme.extend.colors` — nem para sombrear, nem cor nova |
+| escrever a cor do workspace pelo gancho de marca | redefinir `borderRadius`, `spacing`, `fontSize`, `fontWeight`, `fontFamily.sans` do preset |
+
+Cor que o design system não tem é **pedido de token aqui**, não chave local.
+
+As variáveis que o design system declara, e de onde vêm (`tokens/core.css`,
+`tokens/platform.css`):
+
+| Variável | Token de origem | Valor (claro) |
+|---|---|---|
+| `--background` | `--hw-color-background` | `217 0% 100%` |
+| `--foreground` | `--hw-color-foreground` | `217 0% 10%` |
+| `--card` / `--card-foreground` | `--hw-color-card-default` / `-foreground` | `217 0% 100%` / `217 0% 15%` |
+| `--popover` / `--popover-foreground` | `--hw-color-popover-default` / `-foreground` | `217 0% 100%` / `217 95% 10%` |
+| `--primary` | `--hw-brand-primary`, senão `--hw-color-primary-default` | `200 57% 18%` |
+| `--primary-foreground` | `--hw-brand-primary-foreground`, senão `--hw-color-primary-foreground` | `0 0% 100%` |
+| `--primary-hover` | `--hw-brand-primary-hover`, senão `--hw-color-primary-600` | `200 57% 15%` |
+| `--primary-active` | `--hw-brand-primary-active`, senão `--hw-color-primary-700` | `200 57% 12%` |
+| `--primary-ink` | `--hw-brand-primary-ink`, senão a marca, senão `--hw-color-primary-default` | `200 57% 18%` |
+| `--secondary` / `-foreground` | `--hw-color-secondary-default` / `-foreground` | `217 10% 90%` / `0 0% 0%` |
+| `--muted` / `-foreground` | `--hw-color-muted-default` / `-foreground` | `179 10% 95%` / `217 0% 40%` |
+| `--accent` / `-foreground` | `--hw-color-accent-default` / `-foreground` | `179 10% 90%` / `217 0% 15%` |
+| `--destructive` / `-foreground` | `--hw-color-destructive-default` / `-foreground` | `0 50% 50%` / `217 0% 100%` |
+| `--success` / `-foreground` | `--hw-color-success-default` / `-foreground` | `142 76% 36%` / `0 0% 100%` |
+| `--warning` / `-foreground` | `--hw-color-warning-default` / `-foreground` | `38 92% 50%` / `0 0% 100%` |
+| `--error` / `-foreground` | `--hw-color-error-default` / `-foreground` | `0 84% 60%` / `0 0% 100%` |
+| `--info` / `-foreground` | `--hw-color-info-default` / `-foreground` | `199 89% 48%` / `0 0% 100%` |
+| `--border` | `--hw-color-border` | `217 20% 82%` |
+| `--input` | `--hw-color-input` | `217 20% 50%` |
+| `--ring` | tinta da marca, senão a marca, senão `--hw-color-ring` | `217 87.2% 21.4%` |
+| `--radius` | — | `0.5rem` |
+| `--chart-1`…`--chart-5` | `--hw-color-chart-1`…`5` | `200 57% 18%` · `142 76% 36%` · `38 92% 50%` · `0 84% 60%` · `199 89% 48%` |
+| `--admin-bg` / `-surface` / `-sidebar` (RGB) | `--hw-color-admin-*` | `239 240 241` · `255 255 255` · `30 58 95` |
+
+São os mesmos valores que o admin declarava até 06/10 — remover o `:root`
+dele não muda pixel nenhum sem marca (há um teste aqui provando isso). No
+`.dark` valem os `--hw-color-*` do modo escuro de `platform.css`.
+
+O preset declara todas as chaves que o consumidor usa, com `<alpha-value>`:
+`background`, `foreground`, `card`, `popover`, `primary` (com `50`…`900`,
+`foreground`, `hover`, `active`, `ink`), `secondary`, `muted`, `accent`,
+`destructive`, `success`, `warning`, `error`, `info`, `border`, `input`,
+`ring`, `chart`, `admin.*`, as paletas tokenizadas (`slate`, `gray`, `zinc`,
+`red`, `emerald`, `yellow`, `blue`) e as `hw-*` de papel.
+
+### Cor do workspace — o único gancho
+
+A marca do workspace é a **única** cor que o consumidor informa. Ela entra por
+`--hw-brand-primary` (canais HSL) e companhia, calculados por `brandThemeVars`:
+
+```tsx
+// app/[locale]/(plataform)/layout.tsx — Server Component, sem piscar
+import { brandThemeVars } from "@hywork/ui/theme";      // entrada sem "use client"
+
+<html style={brandThemeVars(workspace?.color_primary_hex)}>
+```
+
+```tsx
+// troca de workspace sem recarregar — Client Component
+import { useBrandTheme } from "@hywork/ui/platform";
+useBrandTheme(workspaceAtual?.color_primary_hex);
+```
+
+```tsx
+// só um trecho (prévia, cartão do workspace)
+import { BrandTheme } from "@hywork/ui/platform";
+<BrandTheme color="#434cad">…</BrandTheme>
+```
+
+`brandThemeVars(hex)` aceita `#rgb` ou `#rrggbb`; qualquer outra coisa devolve
+`{}` e vale o primário do design system. Devolve cinco variáveis:
+
+| Gancho | O que é |
+|---|---|
+| `--hw-brand-primary` | a marca, em canais HSL |
+| `--hw-brand-primary-foreground` | texto sobre a marca: branco se passa 4.5:1; senão slate-900; senão preto |
+| `--hw-brand-primary-hover` / `-active` | preenchimento no cursor e pressionado, afastando-se do texto (contraste nunca cai abaixo de 4.5:1) |
+| `--hw-brand-primary-ink` | a marca como texto/linha sobre o branco: a própria marca se já tem 4.5:1, escurecida até ter |
+
+Escreva no `<html>`: é o único lugar que alcança também os portais (Dialog,
+Select, DropdownMenu, Toast), que o Radix monta fora da árvore da página.
+`<BrandTheme>` é para trecho, não para a aplicação.
+
+Estado (sucesso, atenção, erro, informação) e destrutivo **não** seguem a
+marca. O modo escuro continua referência técnica: a tinta é calculada contra o
+fundo branco.
+
+### A trava — `@hywork/ui/consumer-check`
+
+Para a regra não depender de revisão, o consumidor a cobra num teste:
+
+```ts
+// src/design-system.test.ts
+import { readFileSync } from "node:fs";
+import loadConfig from "tailwindcss/loadConfig";
+import { assertNoTokenOverrides } from "@hywork/ui/consumer-check";
+
+test("o design system é a única fonte de cor e token", () => {
+  assertNoTokenOverrides({
+    tailwindConfig: loadConfig("tailwind.config.ts"),        // o config como escrito, não resolvido
+    css: { "globals.css": readFileSync("src/app/styles/globals.css", "utf8") },
+  });
+});
+```
+
+`loadConfig` (do próprio Tailwind 3) carrega o `tailwind.config.ts` como foi
+escrito, sem resolver o preset — é o que a trava precisa. O teste só lê arquivos;
+se o padrão do projeto for jsdom, `// @vitest-environment node` no topo basta.
+
+O que ela reprova:
+
+- **Tailwind:** toda chave em `theme.colors`/`theme.extend.colors`; chaves de
+  `borderRadius`, `spacing`, `fontSize`, `fontWeight`, `fontFamily` e
+  `ringColor` que o preset já define. Presets são ignorados.
+- **CSS:** declaração, em qualquer seletor (inclusive dentro de `@layer`), de
+  variável do contrato acima ou de qualquer `--hw-*` — exceto o gancho
+  `--hw-brand-*`. Variáveis próprias de feature (`--tv-accent`,
+  `--sidebar-width`) passam.
+
+`assertNoTokenOverrides` lança com a lista (`--primary  (globals.css:16
+:root)`); `findTokenOverrides` devolve a mesma lista como dados, se o teste
+quiser formatar.
+
 ### Três armadilhas conhecidas
 
 **① O CSS não vem pronto.** O pacote entrega JavaScript contendo strings de
@@ -64,8 +197,9 @@ componente renderiza, funciona e aparece sem formatação nenhuma.
 
 **② Chaves duplicadas vencem o preset.** Se o consumidor redefine `colors`,
 `spacing` ou `borderRadius` em `theme.extend`, essas definições vencem o preset
-e ele fica inerte. Remover as duplicatas é o que faz o preset valer — e é
-mudança visual de verdade, que pede validação por captura.
+e ele fica inerte. O mesmo vale para `--primary` & cia. declarados no CSS do
+consumidor depois do `@import`. Desde 06/10/2026 isso é proibido, não só
+desaconselhado — a trava acima reprova.
 
 **③ Tudo vira client component.** O bundle carrega `"use client"` no topo,
 necessário para o App Router aceitar componentes com estado vindos de um pacote.
@@ -370,6 +504,9 @@ trabalho quase sempre é no `hywork-ui`, e não na tela.
 - ✋ criar um arquivo `*-filters.tsx` dentro de `_components/` de uma tela
 - ✋ escrever `className="rounded-lg border bg-white p-4"` para montar um card
 - ✋ usar cor literal (`bg-[#143748]`, `text-red-500`) em vez de token
+- ✋ declarar `--primary`, `--background` ou qualquer `--hw-*` no `globals.css`,
+  ou criar chave em `theme.extend.colors` — a cor do workspace entra por
+  `brandThemeVars`, e cor que falta se pede aqui
 - ✋ copiar um componente do design system para alterar
 - ✋ adicionar a nona prop opcional num componente — a anatomia está errada
 - ✋ editar um arquivo em `src/components/ui/` que é casca de re-export

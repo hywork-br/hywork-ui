@@ -1,5 +1,47 @@
 # Changelog
 
+## 0.11.0 — o design system vence: tokens, marca do workspace e listras
+
+Decisões do Rick de 06/10/2026, em `DOMAIN_MODEL.md` ("Cor e token").
+
+- **O design system declara todas as variáveis da aplicação.**
+  `tokens/core.css` passa a declarar `--background`, `--foreground`,
+  `--card`, `--popover`, `--primary`, `--secondary`, `--muted`, `--accent`,
+  `--destructive`, `--success`, `--warning`, `--error`, `--info` (com os
+  `-foreground`), `--border`, `--input`, `--ring`, `--radius` e
+  `--chart-1..5`; `platform.css`, `--admin-bg/-surface/-sidebar`. Mesmos
+  valores que o admin declarava. O preset as lê **sem** o fallback
+  `var(--primary, var(--hw-…))`.
+- **Ruptura para o consumidor:** ele não declara mais essas variáveis nem
+  chaves em `theme.extend.colors`. Um `:root { --primary: … }` deixado no
+  `globals.css` continua vencendo pela ordem do CSS e anula a marca do
+  workspace — remova-o. A trava `@hywork/ui/consumer-check` reprova.
+- **Cor de marca do workspace:** gancho `--hw-brand-primary` (+
+  `-foreground`, `-hover`, `-active`, `-ink`), calculado por
+  `brandThemeVars(hex)` — em `@hywork/ui/theme` (sem "use client") e nas
+  entradas `platform`/`builder`. Texto sobre a marca com contraste AA
+  garantido; `--primary-ink` é a marca legível sobre o branco. Novos
+  `<BrandTheme color>` e `useBrandTheme(hex)`.
+- **Componentes seguem a marca:** Button `default` (cursor e clique agora
+  em `--primary-hover`/`--primary-active`, que escurecem; antes `/90`, que
+  clareava) e `link`; aba ativa; anel de foco (o `ring-2` sem cor também);
+  checkbox, rádio, switch, progresso, slider, spinner, upload ao arrastar.
+  Estado e destrutivo não seguem a marca.
+- **Tabela listrada por padrão:** `Table striped` e `DataList striped`
+  (padrão `true`). Cursor passa de gray-50 a gray-100
+  (`--hw-table-hover`) e linha selecionada de gray-100 a gray-200
+  (`--hw-table-selected`), para os três estados não se confundirem.
+- **Cor literal → token:** campos (`hw-field*`), trilho do slider, véu de
+  diálogo/folha/alerta (`hw-overlay`), toast destrutivo, RichTextEditor e
+  MultiSelect. Diferenças visíveis pequenas: borda do gatilho do
+  IconSelect (gray-300 → slate-300), borda da lista do Select (gray-300 →
+  `border`), texto das pílulas do MultiSelect (gray-700 → foreground),
+  botão "OK" do editor (azul → marca).
+- **`Select` `focusColor` ignorado** (marcado `@deprecated`, continua no
+  tipo): a tela não escolhe a cor do foco.
+- Nova entrada `@hywork/ui/consumer-check` — `assertNoTokenOverrides`,
+  `findTokenOverrides`.
+
 ## 0.10.1
 
 - **`Badge` não quebra linha:** em coluna estreita o texto passava para duas
