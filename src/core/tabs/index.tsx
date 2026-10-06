@@ -14,9 +14,10 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      // Decisão da PO (23/09/2026): abas sublinhadas. A pílula preenchida saiu —
-    // 33 dos 59 arquivos montavam a navegação à mão justamente por isso.
-    "inline-flex h-12 items-center justify-start gap-6 border-b border-border bg-transparent p-0 text-muted-foreground",
+      // Decisão da PO (Catálogo de Divergências, Abas · Opção B — sublinhado):
+      // `grid h-12 rounded-none border-b bg-transparent p-0`. As abas dividem a
+      // largura em partes iguais; a lista ocupa a linha inteira.
+      "grid h-12 w-full auto-cols-fr grid-flow-col items-stretch rounded-none border-b border-border bg-transparent p-0 text-muted-foreground",
       className
     )}
     {...props}
@@ -31,7 +32,9 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "relative inline-flex h-12 items-center justify-center whitespace-nowrap border-b-2 border-transparent -mb-px px-1 text-sm font-medium ring-offset-background transition-colors motion-reduce:!transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-primary data-[state=active]:font-semibold data-[state=active]:text-foreground",
+      // Inativa em cor esmaecida e peso normal; ativa na cor primária, peso 600,
+      // com indicador de 2px na primária.
+      "relative -mb-px inline-flex h-12 items-center justify-center whitespace-nowrap rounded-none border-b-2 border-transparent bg-transparent px-3 text-sm font-normal text-muted-foreground ring-offset-background transition-colors motion-reduce:!transition-none hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-primary data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:shadow-none",
       className
     )}
     {...props}

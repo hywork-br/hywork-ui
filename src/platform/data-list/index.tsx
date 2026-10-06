@@ -100,12 +100,16 @@ function DataList<T>({
   if (falhou) return <div className={cn("w-full", className)} {...props}>{error}</div>;
   if (vazio) return <div className={cn("w-full", className)} {...props}>{empty}</div>;
 
+  // Abaixo desta largura a tabela rola na horizontal em vez de espremer as
+  // colunas — espremida, o conteúdo das células é cortado em telas menores.
+  const larguraMinima = minWidth ?? `${Math.max(columns.length, 2) * 160}px`;
+
   return (
-    <div className={cn("w-full", className)} {...props}>
-      <Table
-        aria-label={props["aria-label"]}
-        style={minWidth ? { minWidth } : undefined}
-      >
+    // `min-w-0 max-w-full`: dentro de um layout flex, sem isto o contêiner
+    // cresce até a largura da tabela e a rolagem do `Table` nunca aparece —
+    // quem corta é o layout da página.
+    <div className={cn("w-full min-w-0 max-w-full", className)} {...props}>
+      <Table aria-label={props["aria-label"]} style={{ minWidth: larguraMinima }}>
         <TableHeader>
           <TableRow>
             {columns.map((c) => (

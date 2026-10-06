@@ -9,6 +9,42 @@ decisão registrada da PO — não é escolha de quem implementa.
 
 Status: `✅ existe` · `🔧 ajustar` · `📋 criar`
 
+### Fonte da verdade — o artefato, não esta página
+
+As escolhas da PO estão no artefato **Catálogo de Divergências**
+(claude.ai/artifact/R3pRZxJgiZTsixNC9Jzr1U). Cada opção lá traz as classes
+exatas que a amostra reproduz. **Quando esta página e o artefato divergem, vale
+o artefato.** Em 29/09/2026 a PO apontou que título, rótulo, estado vazio, abas
+e filtros não estavam como ela escolheu: tínhamos traduzido slate-900, slate-800
+e gray-400 para os tokens neutros do tema, trocado as abas de largura igual por
+abas do tamanho do texto e redesenhado os selects da barra de filtros. Tudo foi
+corrigido para o valor literal da escolha.
+
+| Elemento | Opção eleita | Classes da amostra | Componente |
+|---|---|---|---|
+| Filtro de listagem | A — barra com fundo suave | `flex flex-wrap gap-3 p-4 bg-muted/50 rounded-lg items-end`; campos altura 40, raio 4 | `platform/filter-bar` |
+| Título de página | B — 24px · bold · slate-900 | `text-2xl font-bold text-slate-900` | `platform/page-title` |
+| Card de item | A — raio 12 · respiro 24 | `Card · rounded-lg p-6` | `core/card`, `platform/item-card` |
+| Botão de ação principal | A — token do design system | `bg-primary`, raio 6, altura 40 | `core/button` |
+| Indicador de status | D — preenchido por cor de estado | `rounded-full bg-emerald-500 px-2.5 py-1 text-white` | `core/badge` |
+| Estado vazio | C — respiro 64 · cinza claro | `text-center text-sm text-gray-400 py-16` | `platform/empty-state` |
+| Listagem de dados | A — Table do design system | `<Table>` | `core/table`, `platform/data-list` |
+| Abas | B — sublinhado | `grid h-12 rounded-none border-b bg-transparent p-0`; abas de largura igual; ativa na primária, peso 600 | `core/tabs` |
+| Modal | D — largo com rolagem | `max-w-4xl max-h-[90vh] overflow-y-auto` | `core/dialog` |
+| Carregamento | B — pulso escrito à mão | `bg-gray-200 rounded animate-pulse` | `core/skeleton` |
+| Paginação | B — intervalo e setas | "1–20 de 143" + ‹ › | `platform/list-pagination` |
+| Trilha de navegação | B — separador em seta | `flex items-center gap-2 text-sm`, separador `›` | `core/breadcrumb` |
+| Ações de linha | A — menu suspenso | `<DropdownMenu>` com gatilho de 32px | `platform/row-actions` |
+| Rótulo de campo | B — semibold · slate-800 | `text-sm font-semibold text-slate-800` | `core/label` |
+| Mensagem de erro | B — red-500 · colado no campo | `text-sm text-red-500` | `core/form-message` |
+| Campo de busca | B — arredondado | `rounded-full px-4` | `core/search-input` |
+| Área de upload | C — borda 2px · horizontal | `border-2 border-dashed rounded-xl flex items-center gap-4`, respiro 16/32 | `platform/upload-area` |
+| Carrossel | A — setas nas laterais | setas circulares de 28px, brancas, com borda, na linha do trilho | `core/carousel` |
+
+Cor literal não entra em componente: os valores acima viram tokens
+(`--hw-text-heading`, `--hw-text-label`, `--hw-text-subtle`,
+`--hw-status-success-fill`) **com o valor exato da escolha**.
+
 ---
 
 ## Estrutura de tela
@@ -17,8 +53,8 @@ Status: `✅ existe` · `🔧 ajustar` · `📋 criar`
 
 | | |
 |---|---|
-| Decisão | 24px · peso 700 · cor de texto principal |
-| Token | `--hw-text-2xl` · `--hw-weight-bold` · `--hw-color-foreground` |
+| Decisão | 24px · peso 700 · slate-900 |
+| Token | `--hw-text-2xl` · `--hw-weight-bold` · `--hw-text-heading` (slate-900) |
 | Componente | `platform/page-title` |
 | Status | ✅ feito |
 
@@ -29,9 +65,9 @@ incluíam uma tela com família tipográfica própria (`font-ltwave`).
 
 | | |
 |---|---|
-| Decisão | altura 48 · borda inferior 1px · indicador de 2px na cor primária no item ativo · fundo transparente |
+| Decisão | altura 48 · a lista ocupa a linha e divide a largura em partes iguais · borda inferior 1px · item ativo com texto na cor primária, peso 600 e indicador de 2px na primária · inativos em cor esmaecida, peso normal · fundo transparente |
 | Componente | `core/tabs` |
-| Status | ✅ feito — sublinhado, altura 48, indicador de 2px |
+| Status | ✅ feito (29/09) — até então as abas tinham o tamanho do texto e o ativo em cor de texto, fora da escolha |
 
 O formato de pílula sai. 33 dos 59 arquivos que hoje montam abas à mão migram
 para este componente.
@@ -40,7 +76,7 @@ para este componente.
 
 | | |
 |---|---|
-| Decisão | largura máxima ampla · altura máxima 90% da viewport · rolagem interna |
+| Decisão | largura máxima `max-w-4xl` · altura máxima 90% da viewport · rolagem interna |
 | Rodapé | **botões com o tamanho padrão** (altura 40, largura pelo conteúdo), alinhados à direita, espaçamento de 8px entre eles |
 | Componente | `core/dialog` |
 | Status | ✅ feito — o rodapé esticava os botões ao empilhar |
@@ -107,7 +143,7 @@ cor — a tela diz `<Badge variant="positive">`, não `<Badge className="bg-gree
 
 | Papel | Token | Estados que cobre |
 |---|---|---|
-| `positive` | `--hw-status-success` | active · published · completed · approved · finished · success |
+| `positive` | `--hw-status-success-fill` (emerald-500, o "Ativo" da amostra) | active · published · completed · approved · finished · success |
 | `attention` | `--hw-status-warning` | pending · running · scheduled · expired |
 | `negative` | `--hw-status-danger` | error · failed · rejected · cancelled |
 | `info` | `--hw-status-info` | estados informativos sem juízo de valor |
@@ -137,7 +173,7 @@ anteriores dos mesmos papéis.
 
 | | |
 |---|---|
-| Decisão | centralizado · respiro vertical 64px · texto 14px em cor esmaecida |
+| Decisão | centralizado · respiro vertical 64px · texto 14px em gray-400 (`--hw-text-subtle`) |
 | Regra | **sem itens, a tabela inteira sai** — cabeçalho incluído |
 | Componente | `platform/empty-state` |
 | Status | ✅ feito |
@@ -161,8 +197,9 @@ ela — não o contrário.
 | | |
 |---|---|
 | Decisão | setas circulares nas laterais · sem indicadores de posição |
+| Decisão (forma) | círculo de 28px, fundo branco, borda do tema, na linha do trilho — não solto fora dele |
 | Componente | `core/carousel` (embla) |
-| Status | ✅ feito — 11 usos, nenhum carrossel à mão |
+| Status | ✅ feito (29/09) — o componente estava registrado como feito, mas só existia dentro do `hywork-plataform` |
 
 As outras 11 implementações escritas à mão migram para este componente.
 
@@ -172,7 +209,7 @@ As outras 11 implementações escritas à mão migram para este componente.
 |---|---|
 | Decisão | blocos que imitam o formato do conteúdo, com pulso |
 | Componente | `core/skeleton` |
-| Status | ✅ feito — pulso em cinza neutro |
+| Status | ✅ feito — pulso em gray-200, como a amostra |
 
 A forma eleita é a versão escrita à mão (`bg-gray-200 rounded animate-pulse`),
 não o `Skeleton` atual. O componente do design system é ajustado para entregar
@@ -207,7 +244,7 @@ rótulo, cada um de um tamanho, que não diz o que faz até o cursor parar em ci
 
 | | |
 |---|---|
-| Decisão | barra horizontal · fundo neutro a 50% · raio 12 · respiro 16 · campos alinhados pela base |
+| Decisão | barra horizontal · fundo neutro a 50% · raio 12 · respiro 16 · campos alinhados pela base · seleções com forma de campo (altura 40, raio 4) e o nome da dimensão dentro do campo · busca arredondada (decisão do campo de busca) |
 | Componente | `platform/filter-bar` |
 | Status | ✅ feito — 7 stories, 15 testes; 20 implementações migradas |
 
@@ -363,7 +400,7 @@ primário nunca carrega cor literal — assim o tema do cliente funciona.
 
 | | |
 |---|---|
-| Decisão | 14px · peso 600 · cor de texto principal |
+| Decisão | 14px · peso 600 · slate-800 (`--hw-text-label`) |
 | Componente | `core/label` |
 | Status | ✅ feito |
 
@@ -400,12 +437,11 @@ Dentro da barra o botão de limpar do campo fica desligado — quem desfaz é o
 "Limpar" da barra. Dois botões para a mesma ação, lado a lado, é uma escolha a
 mais sem ganho. Solto (num seletor, num diálogo) ele aparece.
 
-**Consequência na barra de filtros (Rick, 25/09/2026):** a decisão foi sobre o
-campo isolado, e aplicá-la só nele deixou a barra com três raios lado a lado —
-pílula na busca, raio 6 no select, raio 6 no "Limpar" — e duas alturas. Dentro
-da `FilterBar` **todo controle tem a forma da busca**: raio total, altura 40.
-Vale também para o que a tela passa pelo `Field`, que herda a forma do
-container. A barra é uma superfície só e precisa ler como uma.
+**Dentro da barra de filtros:** a busca é arredondada — a própria decisão do
+campo de busca diz que vale "isolado e dentro de filtros". As seleções seguem a
+amostra da Opção A do filtro: forma de campo, raio 4, com o nome da dimensão
+dentro. Chips são a Opção B do filtro, que não foi eleita: `FilterBar.Chips`
+continua na API só para não quebrar quem o usa, e desenha um select.
 
 ### Área de upload — borda 2px, horizontal
 

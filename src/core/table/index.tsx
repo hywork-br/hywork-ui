@@ -8,8 +8,15 @@ export type TableProps = React.HTMLAttributes<HTMLTableElement> & {
   wrapperClassName?: string;
 };
 
+/**
+ * Barra horizontal sempre visível. No macOS a barra padrão é sobreposta e só
+ * aparece durante a rolagem: a tabela larga parecia cortada, sem scroll.
+ */
+const SCROLLBAR =
+  "[&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border";
+
 const Table = React.forwardRef<HTMLTableElement, TableProps>(({ className, wrapperClassName, ...props }, ref) => (
-  <div className={cn("relative w-full min-w-0 max-w-full overflow-auto", wrapperClassName)}>
+  <div className={cn("relative w-full min-w-0 max-w-full overflow-x-auto", SCROLLBAR, wrapperClassName)}>
     <table ref={ref} className={cn("w-full caption-bottom text-sm border border-hw-table-border rounded-lg overflow-hidden", className)} {...props} />
   </div>
 ));
@@ -42,7 +49,7 @@ TableRow.displayName = "TableRow";
 const TableHead = React.forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<HTMLTableCellElement>>(({ className, ...props }, ref) => (
   <th
     ref={ref}
-    className={cn("h-12 px-6 text-left align-middle text-xs font-medium uppercase tracking-wider text-hw-table-heading dark:text-zinc-400", className)}
+    className={cn("h-12 whitespace-nowrap px-6 text-left align-middle text-xs font-medium uppercase tracking-wider text-hw-table-heading dark:text-zinc-400", className)}
     {...props}
   />
 ));

@@ -102,9 +102,14 @@ describe("DataList", () => {
     expect(screen.getByRole("table", { name: "Largas" })).toHaveStyle({ minWidth: "860px" });
   });
 
-  it("não declara largura mínima quando a listagem não pede", () => {
+  it("rola na horizontal em vez de espremer: largura mínima pelo número de colunas", () => {
     render(<DataList {...base} items={ITENS} aria-label="Estreita" />);
-    expect(screen.getByRole("table", { name: "Estreita" }).style.minWidth).toBe("");
+    const tabela = screen.getByRole("table", { name: "Estreita" });
+    expect(tabela.style.minWidth).toBe(`${Math.max(base.columns.length, 2) * 160}px`);
+    expect(tabela.parentElement).toHaveClass("overflow-x-auto");
+    // O contêiner precisa poder encolher dentro de flex, senão a rolagem nunca
+    // aparece e o layout da página corta a tabela.
+    expect(tabela.parentElement?.parentElement).toHaveClass("min-w-0", "max-w-full");
   });
 
   it("dá rótulo acessível à tabela", () => {

@@ -16,14 +16,24 @@ import { cn } from "../../lib/cn";
  * Não renderiza nada sem mensagem: a tela pode passar `children` direto do
  * validador sem envolver num condicional.
  */
+/**
+ * Contexto que o `FormItem` do `core/form` fornece: o id da mensagem e o erro
+ * do campo no react-hook-form. Fica aqui, e não em `core/form`, para que a
+ * mensagem funcione solta sem depender do react-hook-form.
+ */
+export const FormMessageContext = React.createContext<{ id?: string; error?: string } | null>(null);
+
 export interface FormMessageProps extends React.HTMLAttributes<HTMLParagraphElement> {
   /** Quando ausente ou vazio, nada é renderizado. */
   children?: React.ReactNode;
 }
 
 const FormMessage = React.forwardRef<HTMLParagraphElement, FormMessageProps>(
-  ({ className, children, ...props }, ref) => {
-    if (children === undefined || children === null || children === "") return null;
+  ({ className, children, id, ...props }, ref) => {
+    // Dentro de um campo do formulário, o erro do campo vence o texto passado.
+    const campo = React.useContext(FormMessageContext);
+    const conteudo = campo?.error ?? children;
+    if (conteudo === undefined || conteudo === null || conteudo === "") return null;
 
     return (
       <p
@@ -31,10 +41,11 @@ const FormMessage = React.forwardRef<HTMLParagraphElement, FormMessageProps>(
         // `role="alert"` faz o leitor de tela anunciar o erro ao aparecer, sem
         // que o foco precise voltar ao campo.
         role="alert"
+        id={id ?? campo?.id}
         className={cn("text-sm text-hw-error-text", className)}
         {...props}
       >
-        {children}
+        {conteudo}
       </p>
     );
   },
