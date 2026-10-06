@@ -1,6 +1,10 @@
 /* Cores e superfícies do hywork-plataform (admin).
-   Importar DEPOIS de core.css.
-   Variáveis da aplicação (--primary, --background) vencem estes defaults. */
+   Importar junto de core.css, que declara as variáveis da aplicação
+   (--primary, --background, --border…) a partir destes valores.
+
+   O design system vence (Rick, 06/10/2026): o admin não declara nenhuma
+   destas variáveis nem as do contrato em core.css. A cor do workspace entra
+   por --hw-brand-primary — ver brandThemeVars(). */
 :root {
   --hw-color-background: 217 0% 100%;
   --hw-color-foreground: 217 0% 10%;
@@ -67,6 +71,12 @@
   --hw-color-admin-bg: 239 240 241;
   --hw-color-admin-surface: 255 255 255;
   --hw-color-admin-sidebar: 30 58 95;
+
+  /* Superfícies do painel, no contrato da aplicação (`bg-admin-bg`…).
+     Canais RGB, como os tokens de origem. */
+  --admin-bg: var(--hw-color-admin-bg);
+  --admin-surface: var(--hw-color-admin-surface);
+  --admin-sidebar: var(--hw-color-admin-sidebar);
 }
 
 /* Modo escuro: referência técnica, não liberado para adoção */

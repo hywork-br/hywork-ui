@@ -1,6 +1,10 @@
 // Preset do hw-cloud-builder (intranet do colaborador).
 // Usar junto de tokens/core.css + tokens/builder.css.
 //
+// O design system é a única autoridade de cor (Rick, 06/10/2026): a
+// intranet não redefine cores no theme.extend nem declara --primary no CSS.
+// A cor do workspace entra por --hw-brand-primary (brandThemeVars).
+//
 // No tailwind.config.ts do consumidor:
 //   presets: [require("@hywork/ui/tailwind/builder-preset.cjs")],
 //   content: [..., "./node_modules/@hywork/ui/dist/**/*.js"]

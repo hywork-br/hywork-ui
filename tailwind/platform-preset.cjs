@@ -5,8 +5,10 @@
 //   presets: [require("@hywork/ui/tailwind/platform-preset.cjs")],
 //   content: [..., "./node_modules/@hywork/ui/dist/**/*.js"]
 //
-// Não redefinir colors/spacing/borderRadius em theme.extend:
-// duplicata vence o preset e o torna inerte.
+// O design system é a única autoridade de cor (Rick, 06/10/2026):
+// não redefinir colors/spacing/borderRadius em theme.extend nem declarar
+// --primary, --background… no CSS global. A trava é
+// @hywork/ui/consumer-check, chamada num teste do consumidor.
 const core = require("./core-preset.cjs");
 
 module.exports = {
@@ -16,9 +18,9 @@ module.exports = {
       colors: {
         // superfícies próprias do painel administrativo
         admin: {
-          bg: "rgb(var(--hw-color-admin-bg) / <alpha-value>)",
-          surface: "rgb(var(--hw-color-admin-surface) / <alpha-value>)",
-          sidebar: "rgb(var(--hw-color-admin-sidebar) / <alpha-value>)",
+          bg: "rgb(var(--admin-bg) / <alpha-value>)",
+          surface: "rgb(var(--admin-surface) / <alpha-value>)",
+          sidebar: "rgb(var(--admin-sidebar) / <alpha-value>)",
         },
       },
     },

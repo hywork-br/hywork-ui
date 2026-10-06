@@ -11,8 +11,11 @@ document.head.append(css);
 document.documentElement.style.setProperty("--font-montserrat", '"Montserrat Variable", sans-serif');
 if (params.get("theme") === "dark") document.documentElement.classList.add("dark");
 if (params.get("theme") === "tenant") {
-  document.documentElement.style.setProperty("--primary", "270 60% 35%");
-  document.documentElement.style.setProperty("--primary-foreground", "0 0% 100%");
+  // A referência congelada recebia a marca sobrescrevendo --primary. Desde
+  // 06/10/2026 o pacote só aceita o gancho de marca: --primary é dele.
+  const root = document.documentElement.style;
+  root.setProperty(source ? "--primary" : "--hw-brand-primary", "270 60% 35%");
+  root.setProperty(source ? "--primary-foreground" : "--hw-brand-primary-foreground", "0 0% 100%");
 }
 // A paridade compara as PRIMITIVAS extraídas contra a referência congelada.
 // Padrões autorais (FilterBar e os próximos) não têm equivalente em
