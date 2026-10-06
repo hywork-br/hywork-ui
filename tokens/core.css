@@ -35,6 +35,19 @@
      propósito: a PO elegeu o red-500 para a mensagem colada ao campo, enquanto
      o danger (red-700) carrega preenchimento de badge, onde o texto é branco. */
   --hw-error-text: 239 68 68;
+
+  /* Cores de texto eleitas pela PO no Catálogo de Divergências. São valores
+     exatos da escolha, não aproximações pelo tema:
+     título de página (Opção B) = slate-900, rótulo de campo (Opção B) =
+     slate-800, texto do estado vazio (Opção C) = gray-400. */
+  --hw-text-heading: 15 23 42;
+  --hw-text-label: 30 41 59;
+  --hw-text-subtle: 156 163 175;
+
+  /* Indicador de status (Opção D — preenchido por cor de estado): o "Ativo"
+     eleito é emerald-500 com texto branco. Só o preenchimento do badge usa
+     este valor; --hw-status-success segue como tinta de texto em alertas. */
+  --hw-status-success-fill: 16 185 129;
   --hw-space-0: 0px;
   --hw-space-1: 0.25rem;
   --hw-space-2: 0.5rem;

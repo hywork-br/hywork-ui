@@ -13,7 +13,7 @@ const Card = React.forwardRef<
       // sombra fica reservada a sobreposições, não a estrutura. O derivado vinha
       // com raio 8 e `shadow-sm`, e era por isso que 19 telas sobrescreviam o
       // raio e 12 anulavam a sombra na própria chamada.
-      "rounded-xl border bg-card text-card-foreground",
+      "rounded-lg border bg-card text-card-foreground",
       className
     )}
     {...props}

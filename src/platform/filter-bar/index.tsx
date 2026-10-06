@@ -25,11 +25,12 @@ import {
  * `Chips`, valor diferente da PRIMEIRA opção — ela é sempre a neutra ("Todos").
  * A ação de limpar só aparece quando há algo para desfazer.
  *
- * **Dentro da barra, todo controle tem a forma da busca**: raio total e altura
- * 40. A decisão da PO sobre o campo de busca foi sobre o campo isolado; aplicá-la
- * só nele deixava a barra com três raios diferentes lado a lado — pílula na
- * busca, raio 6 no select, raio 6 no "Limpar" — e duas alturas. A barra é uma
- * superfície só e precisa ler como uma.
+ * **Forma dos controles** — Catálogo de Divergências, Filtro · Opção A (barra
+ * com fundo suave: `flex flex-wrap gap-3 p-4 bg-muted/50 rounded-lg items-end`):
+ * seleções têm a forma do campo do produto — altura 40, raio 4, borda
+ * `slate-300/80` — e trazem o nome da dimensão dentro do campo enquanto nada
+ * está filtrado. A busca segue a decisão própria (Campo de busca · Opção B,
+ * arredondado), que vale também dentro de filtros.
  */
 
 type Registro = (id: string, ativo: boolean) => void;
@@ -97,7 +98,7 @@ const FilterBarRoot = React.forwardRef<HTMLDivElement, FilterBarProps>(
               variant="ghost"
               onClick={onClear}
               disabled={loading}
-              className="ml-auto h-10 gap-1.5 rounded-full"
+              className="ml-auto h-10 gap-1.5 rounded-sm"
             >
               <X className="h-4 w-4" aria-hidden="true" />
               Limpar
@@ -157,16 +158,15 @@ export interface FilterBarSelectProps {
 function FilterBarSelect({ label, value, onChange, options, className }: FilterBarSelectProps) {
   const neutro = options[0]?.value;
   const loading = useRegistroDeAtividade(value !== neutro, "Select");
-  const id = React.useId();
+  const selecionada = options.find((o) => o.value === value);
 
   return (
     <div className={cn("min-w-[160px]", className)}>
-      <Label htmlFor={id} className="mb-1.5 block text-xs text-muted-foreground">
-        {label}
-      </Label>
       <Select value={value} onValueChange={onChange} disabled={loading}>
-        <SelectTrigger id={id} className="h-10 rounded-full">
-          <SelectValue />
+        <SelectTrigger aria-label={label} className="h-10">
+          {/* Sem filtro, o campo mostra o nome da dimensão ("Status"), como
+              na Opção A; com filtro, o valor escolhido. */}
+          <SelectValue>{value === neutro ? label : selecionada?.label}</SelectValue>
         </SelectTrigger>
         <SelectContent>
           {options.map((o) => (
@@ -186,36 +186,12 @@ export interface FilterBarChipsProps extends Omit<FilterBarSelectProps, "classNa
 }
 
 /**
- * Mesma função do Select, apresentação em chips. Cabe quando as opções são
- * poucas e vale mostrar todas de uma vez.
+ * @deprecated Chips são a Opção B do filtro, que a PO não elegeu. Mantido só
+ * para não quebrar quem já o usa: renderiza exatamente o `FilterBar.Select`.
+ * Use `FilterBar.Select`.
  */
-function FilterBarChips({ label, value, onChange, options, className }: FilterBarChipsProps) {
-  const neutro = options[0]?.value;
-  const loading = useRegistroDeAtividade(value !== neutro, "Chips");
-
-  return (
-    <div className={className}>
-      <span className="mb-1.5 block text-xs text-muted-foreground">{label}</span>
-      <div role="group" aria-label={label} className="flex flex-wrap items-center gap-2">
-        {options.map((o) => {
-          const selecionado = o.value === value;
-          return (
-            <Button
-              key={o.value}
-              type="button"
-              variant={selecionado ? "default" : "outline"}
-              aria-pressed={selecionado}
-              disabled={loading}
-              onClick={() => onChange(o.value)}
-              className="h-10 rounded-full px-4 text-sm"
-            >
-              {o.label}
-            </Button>
-          );
-        })}
-      </div>
-    </div>
-  );
+function FilterBarChips(props: FilterBarChipsProps) {
+  return <FilterBarSelect {...props} />;
 }
 FilterBarChips.displayName = "FilterBar.Chips";
 
@@ -242,13 +218,12 @@ function FilterBarField({ label, active, children, className }: FilterBarFieldPr
       <Label htmlFor={id} className="mb-1.5 block text-xs text-muted-foreground">
         {label}
       </Label>
-      {/* O controle vem da tela, mas a forma é da barra: sem isto um campo de
-          data ou um seletor próprio entraria com o raio do `Input` geral e
-          quebraria a linha. */}
+      {/* O controle vem da tela, mas a altura é da barra: sem isto um campo de
+          data ou um seletor próprio entraria desalinhado da linha. */}
       <div
         id={id}
         aria-disabled={loading || undefined}
-        className="[&_button]:h-10 [&_button]:rounded-full [&_input]:h-10 [&_input]:rounded-full"
+        className="[&_button]:h-10 [&_button]:rounded-sm [&_input]:h-10 [&_input]:rounded-sm"
       >
         {children}
       </div>

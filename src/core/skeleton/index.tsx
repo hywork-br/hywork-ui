@@ -9,7 +9,7 @@ function Skeleton({
       // Decisão da PO (23/09/2026): pulso em cinza neutro. O `bg-primary/10`
       // anterior tingia o esqueleto com a cor de marca do tenant, o que
       // variava a percepção de carregamento entre clientes.
-      className={cn("animate-pulse motion-reduce:!animate-none rounded bg-muted", className)}
+      className={cn("animate-pulse motion-reduce:!animate-none rounded bg-gray-200", className)}
       {...props}
     />
   )
