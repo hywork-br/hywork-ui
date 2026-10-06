@@ -6,6 +6,22 @@
   linhas e a pílula virava um "ovo" (tabela de usuários, "Convite não enviado").
 - **`Table` com barra horizontal sempre visível:** no macOS a barra é
   sobreposta e só aparecia durante a rolagem; a tabela larga parecia cortada.
+- **`manifest.json` na mesma versão do pacote** (estava em 0.10.0 e derrubava o
+  `npm run check`).
+
+**Publicada com duas pendências conhecidas (06/10, aval do Rick):**
+
+- **Contraste do selo de sucesso:** a escolha literal da PO
+  (`--hw-status-success-fill` = emerald-500 com texto branco) dá ~2,5:1, abaixo
+  dos 4,5:1 da WCAG. O teste `accessible catalogue` (light e tenant) fica
+  vermelho até a PO decidir entre escurecer o verde ou o texto.
+- **`npm run derive` desatualizado:** o script ainda não conhece os sete
+  componentes trazidos na 0.10.0 (carousel, command, form, form-message,
+  search-input, spinner, toast) e os tiraria do barrel do core. Não rode o
+  `derive` antes de atualizá-lo.
+
+A paridade de pixels (`source/package parity`) falha igual na v0.8.0 quando
+roda no macOS; no Linux do CI é o gate que vale.
 
 ## 0.10.0 — genéricos que ainda moravam no Platform
 
