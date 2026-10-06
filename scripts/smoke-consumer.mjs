@@ -22,7 +22,10 @@ execFileSync(process.execPath,['--input-type=module','-e',`
   const require=createRequire(import.meta.url);
   const preset=require('@hywork/ui/tailwind/platform-preset.cjs');
   if (![Button,Input,Table,Dialog,Select].every(Boolean)) throw Error('Missing export');
-  if (!preset.theme.extend.colors.primary.DEFAULT.includes('--hw-')) throw Error('Missing token fallback');
+  // Since the core/platform/builder split the Platform preset inherits the
+  // palette from the core preset (its \`presets\`): look along the chain.
+  const primary=[preset,...(preset.presets??[])].map(p=>p.theme?.extend?.colors?.primary?.DEFAULT).find(Boolean);
+  if (!primary?.includes('--hw-')) throw Error('Missing token fallback');
 `],{cwd:dir,stdio:'inherit'});
 const installed=join(dir,'node_modules/@hywork/ui');
 assert.ok(existsSync(join(installed,'dist/index.d.ts')));
