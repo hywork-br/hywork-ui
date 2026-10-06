@@ -32,6 +32,10 @@
       "types": "./dist/builder.d.ts",
       "import": "./dist/builder.js"
     },
+    "./theme": {
+      "types": "./dist/theme.d.ts",
+      "import": "./dist/theme.js"
+    },
     "./tokens/core.css": "./tokens/core.css",
     "./tokens/platform.css": "./tokens/platform.css",
     "./tokens/builder.css": "./tokens/builder.css",
@@ -49,7 +53,7 @@
     "derive": "node scripts/derive-platform.mjs",
     "check": "node --test scripts/*.test.mjs && npm run typecheck && npm run build:lib && vitest run",
     "typecheck": "tsc --noEmit",
-    "build:lib": "tsup",
+    "build:lib": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && tsup",
     "build:css": "node scripts/build-css.mjs",
     "build:storybook": "storybook build -c .storybook/platform -o storybook-static/platform --quiet && storybook build -c .storybook/builder -o storybook-static/builder --quiet",
     "build": "npm run build:lib && npm run build:css && npm run build:storybook",
