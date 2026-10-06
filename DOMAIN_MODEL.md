@@ -222,6 +222,24 @@ Só `outline` continua vazado, porque é o que o nome descreve.
 `success`, `warning`, `destructive` e `info` seguem válidos como nomes
 anteriores dos mesmos papéis.
 
+**Tom suave — para duas colunas de estado na mesma linha** (HCK-136, pedido da
+PO em 05/10/2026, proposta de 06/10/2026 aguardando validação). Na tela de
+Usuários, "Ativo" (a conta) e "Acesso configurado" (o convite) eram o mesmo
+verde lado a lado, e a PO perguntou se a paleta tinha outra variação para
+diferenciá-los. Não tinha: `positive` é um verde só. O `Badge` ganhou
+`tone="subtle"`:
+
+| Tom | Preenchimento | Texto | Contraste |
+|---|---|---|---|
+| `solid` (padrão) | a cor do papel (`--hw-status-success-fill` no verde) | `--hw-on-status` no verde, branco nos outros | 6,5:1 a 7:1 |
+| `subtle` | a cor do papel a 15% | a tinta do papel (`--hw-status-success` = emerald-700 no verde) | 4,8:1 a 5,5:1 |
+
+A regra: **o estado principal da linha fica no tom cheio; uma segunda coluna de
+estado vai inteira no suave** — inclusive os outros papéis dela, para a coluna
+não misturar os dois tons. Continua sendo o mesmo papel: o tom não cria um
+sexto estado, e não serve para categoria. `neutral`, `outline` e os genéricos
+não têm tom.
+
 ### Estado vazio — respiro 64, e sem moldura
 
 | | |
@@ -560,3 +578,4 @@ página e passa a ter regra escrita.
 |---|---|
 | 23/09/2026 | 18 padrões decididos pela PO a partir do catálogo comparativo |
 | 06/10/2026 | Rick: o design system vence em cor e token; a marca do workspace é a única entrada de cor; tabelas listradas por padrão |
+| 06/10/2026 | HCK-136: `Badge` com tom suave para a segunda coluna de estado da linha (pedido da PO de 05/10; aguardando validação) |

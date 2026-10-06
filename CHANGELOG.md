@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.11.1 — tom suave no selo de estado, e a 0.10.3 dentro da 0.11
+
+- **`Badge` `tone="subtle"`** (HCK-136): o mesmo papel num preenchimento claro —
+  a cor do papel a 15% — com o texto na tinta do papel (4,8:1 a 5,5:1). Para
+  separar duas colunas de estado na mesma linha; o tom cheio continua o padrão.
+  Regra em `DOMAIN_MODEL.md` ("Indicador de status").
+- **A linha 0.11 traz a 0.10.2 e a 0.10.3**, que saíram da `develop` depois que
+  ela foi aberta. O que muda para quem usava a 0.11.0: o selo `positive`/`success`
+  passa a texto escuro (`--hw-on-status`, 7:1) em vez de branco (2,5:1), e as
+  peers `cmdk`, `embla-carousel-react` e `@tiptap/*` (2.x) ficam obrigatórias.
+
 ## 0.11.0 — o design system vence: tokens, marca do workspace e listras
 
 Decisões do Rick de 06/10/2026, em `DOMAIN_MODEL.md` ("Cor e token").
