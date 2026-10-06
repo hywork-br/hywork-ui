@@ -1,6 +1,6 @@
 {
   "name": "@hywork/ui",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "description": "Design system do HyCloud — componentes, tokens e padrões dos dois frontends",
   "private": true,
   "type": "module",
