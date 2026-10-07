@@ -30,8 +30,8 @@ import {
  * o fundo passou a #edf1f5 a 40% na validação de 07/10/2026, `bg-hw-filter-surface`):
  * seleções têm a forma do campo do produto — altura 40, raio 4, borda
  * `slate-300/80` — e trazem o nome da dimensão dentro do campo enquanto nada
- * está filtrado. A busca segue a decisão própria (Campo de busca · Opção B,
- * arredondado), que vale também dentro de filtros.
+ * está filtrado. A busca tem o mesmo raio 4 dos selects e botões da barra
+ * (Rick, 07/10/2026 — até então era arredondada).
  */
 
 type Registro = (id: string, ativo: boolean) => void;

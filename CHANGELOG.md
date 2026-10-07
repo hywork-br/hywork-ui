@@ -30,6 +30,10 @@ A 0.12.0 junta as duas e traz os ajustes da validação da PO de 07/10/2026.
   classes não aceitam `/NN`. Cursor (gray-100) e seleção (gray-200) não mudam.
 - **Paridade de pixels:** a referência congelada recebe a borda decidida, como
   já recebia a marca; `test:browser` segue 24/24.
+- **Campo de busca com raio 4** (Rick, 07/10/2026). O `SearchInput` deixa o
+  `rounded-full` e passa a `rounded-sm`, o mesmo raio dos campos, selects,
+  gatilhos e botões da `FilterBar`. A pílula destoava de tudo ao lado dela no
+  filtro.
 
 
 ### Tom suave no selo de estado, e a 0.10.3 dentro da linha do DS 2.0

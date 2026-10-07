@@ -9,9 +9,10 @@ import { Input } from "../input";
 /**
  * Campo de busca.
  *
- * Decisão da PO (23/09/2026): altura 40, **raio total** e lupa à esquerda. Vale
- * só para busca — o `Input` geral mantém o raio 4, e é essa diferença que faz o
- * campo de busca ser reconhecido como busca antes de se ler o placeholder.
+ * Altura 40, lupa à esquerda e **raio 4**, o mesmo dos selects, gatilhos e
+ * botões da barra de filtros (Rick, 07/10/2026). Até então o raio era total
+ * (decisão da PO de 23/09), e a busca destoava de tudo ao lado dela no filtro.
+ * Quem marca o campo como busca é a lupa.
  *
  * O botão de limpar aparece quando há texto. Ele não substitui o "Limpar" da
  * `FilterBar`, que devolve a barra inteira ao estado neutro: aqui só o campo.
@@ -57,7 +58,7 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
           aria-label={props["aria-label"] ?? placeholder}
           onChange={(event) => onChange(event.target.value)}
           className={cn(
-            "h-10 rounded-full pl-10",
+            "h-10 rounded-sm pl-10",
             mostrarLimpar ? "pr-10" : "pr-4",
             // O `search` nativo desenha o próprio X no WebKit, que sairia ao
             // lado do nosso.

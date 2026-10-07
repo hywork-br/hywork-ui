@@ -37,7 +37,7 @@ corrigido para o valor literal da escolha.
 | Ações de linha | A — menu suspenso | `<DropdownMenu>` com gatilho de 32px | `platform/row-actions` |
 | Rótulo de campo | B — semibold · slate-800 | `text-sm font-semibold text-slate-800` | `core/label` |
 | Mensagem de erro | B — red-500 · colado no campo | `text-sm text-red-500` | `core/form-message` |
-| Campo de busca | B — arredondado | `rounded-full px-4` | `core/search-input` |
+| Campo de busca | B — arredondado → raio 4 desde 07/10/2026 (Rick) | `rounded-full px-4` → `rounded-sm` | `core/search-input` |
 | Área de upload | C — borda 2px · horizontal | `border-2 border-dashed rounded-xl flex items-center gap-4`, respiro 16/32 | `platform/upload-area` |
 | Carrossel | A — setas nas laterais | setas circulares de 28px, brancas, com borda, na linha do trilho | `core/carousel` |
 
@@ -337,7 +337,7 @@ rótulo, cada um de um tamanho, que não diz o que faz até o cursor parar em ci
 
 | | |
 |---|---|
-| Decisão | barra horizontal · fundo `#edf1f5` a 40% (PO, 07/10/2026; era neutro a 50%) · raio 12 · respiro 16 · campos alinhados pela base · seleções com forma de campo (altura 40, raio 4) e o nome da dimensão dentro do campo · busca arredondada (decisão do campo de busca) |
+| Decisão | barra horizontal · fundo `#edf1f5` a 40% (PO, 07/10/2026; era neutro a 50%) · raio 12 · respiro 16 · campos alinhados pela base · seleções com forma de campo (altura 40, raio 4) e o nome da dimensão dentro do campo · busca no mesmo raio 4 (Rick, 07/10/2026; era arredondada) |
 | Componente | `platform/filter-bar` |
 | Status | ✅ feito — 7 stories, 15 testes; 20 implementações migradas |
 
@@ -514,15 +514,19 @@ A escolha visual foi o `text-red-500` literal. No design system esse valor vira
 **token**, para que o componente não carregue cor literal — a aparência é a
 eleita, a implementação é tokenizada.
 
-### Campo de busca — arredondado
+### Campo de busca — raio 4, como os demais campos
 
 | | |
 |---|---|
-| Decisão | altura 40 · raio total · ícone de lupa à esquerda |
+| Decisão | altura 40 · **raio 4** · ícone de lupa à esquerda |
 | Componente | `core/search-input` |
 | Status | ✅ feito — 4 stories, 5 testes |
 
-Vale para a busca. **Não muda o `Input` geral**, que mantém o raio 4.
+**Mudou em 07/10/2026 (Rick).** A escolha da PO de 23/09 era raio total, só
+para a busca. Na barra de filtros, a pílula ficava ao lado de selects, gatilhos
+e botões de raio 4 e destoava de tudo. Agora todo controle do filtro tem o
+mesmo raio: campo de texto, busca, select, gatilho de dropdown e botão. Quem
+marca o campo como busca é a lupa, não o formato.
 
 A `FilterBar.Search` passou a usá-lo: até então a barra desenhava um `Input`
 comum de raio 4, ou seja, o padrão mais visível do produto não seguia a decisão.
@@ -531,10 +535,9 @@ Dentro da barra o botão de limpar do campo fica desligado — quem desfaz é o
 "Limpar" da barra. Dois botões para a mesma ação, lado a lado, é uma escolha a
 mais sem ganho. Solto (num seletor, num diálogo) ele aparece.
 
-**Dentro da barra de filtros:** a busca é arredondada — a própria decisão do
-campo de busca diz que vale "isolado e dentro de filtros". As seleções seguem a
-amostra da Opção A do filtro: forma de campo, raio 4, com o nome da dimensão
-dentro. Chips são a Opção B do filtro, que não foi eleita: `FilterBar.Chips`
+**Dentro da barra de filtros:** busca e seleções têm a mesma forma de campo,
+raio 4. As seleções seguem a amostra da Opção A do filtro, com o nome da
+dimensão dentro. Chips são a Opção B do filtro, que não foi eleita: `FilterBar.Chips`
 continua na API só para não quebrar quem o usa, e desenha um select.
 
 ### Área de upload — borda 2px, horizontal
@@ -623,4 +626,5 @@ página e passa a ter regra escrita.
 | 06/10/2026 | Rick: o design system vence em cor e token; a marca do workspace é a única entrada de cor; tabelas listradas por padrão |
 | 06/10/2026 | HCK-136: `Badge` com tom suave para a segunda coluna de estado da linha (pedido da PO de 05/10; aguardando validação) |
 | 07/10/2026 | `Stepper`, `DatePicker` e `StatCard` entram como proposta para o DHO, aguardando o aval visual da PO |
+| 07/10/2026 | Rick: o campo de busca deixa o raio total e passa ao raio 4 dos campos, selects e botões do filtro |
 | 07/10/2026 | Validação do DS 2.0 pela PO: texto sobre a marca pelo contraste perceptual (APCA); `#edf1f5` no cabeçalho e menu do admin e na borda; `#edf1f5` a 40% no filtro e no cabeçalho/listra da tabela |

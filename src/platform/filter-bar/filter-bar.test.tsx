@@ -159,7 +159,7 @@ describe("FilterBar — espaçamento", () => {
     expect(container.firstElementChild).not.toHaveClass("mb-6");
   });
 
-  it("segue a Opção A: seleção com forma de campo, busca arredondada", () => {
+  it("segue a Opção A: seleção com forma de campo, e busca com o mesmo raio 4", () => {
     render(
       <FilterBar onClear={() => undefined}>
         <FilterBar.Search value="ana" onChange={() => undefined} placeholder="Buscar" />
@@ -172,7 +172,8 @@ describe("FilterBar — espaçamento", () => {
       </FilterBar>,
     );
     expect(screen.getByRole("search")).toHaveClass("bg-hw-filter-surface", "rounded-lg", "p-4", "gap-3", "items-end");
-    expect(screen.getByRole("searchbox")).toHaveClass("rounded-full", "h-10");
+    expect(screen.getByRole("searchbox")).toHaveClass("rounded-sm", "h-10");
+    expect(screen.getByRole("searchbox")).not.toHaveClass("rounded-full");
     expect(screen.getByRole("combobox")).toHaveClass("rounded-sm", "h-10");
   });
 

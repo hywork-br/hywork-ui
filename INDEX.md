@@ -54,7 +54,7 @@ src/
 │   ├── skeleton/
 │   ├── carousel/
 │   ├── label/
-│   ├── search-input/      ✅  raio total, decisão da PO
+│   ├── search-input/      ✅  raio 4, o mesmo dos campos e botões do filtro
 │   ├── form-message/      ✅  token --hw-error-text
 │   ├── brand-theme/       ✅  <BrandTheme> e useBrandTheme — cor do workspace
 │   ├── date-picker/       📋  data única, calendário próprio — aguarda aval da PO
