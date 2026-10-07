@@ -83,3 +83,19 @@ export const Larga: Story = {
     ),
   ],
 };
+
+const MUITAS: Pessoa[] = [
+  ...PESSOAS,
+  { id: "4", nome: "Diego Martins", email: "diego@hywork.com.br", estado: "ativo" },
+  { id: "5", nome: "Elisa Prado", email: "elisa@hywork.com.br", estado: "ativo" },
+  { id: "6", nome: "Fábio Nunes", email: "fabio@hywork.com.br", estado: "convidado" },
+];
+
+/**
+ * Listras por padrão (Rick, 06/10/2026): linhas pares em gray-50, cursor em
+ * gray-100 — visível também sobre a linha listrada. Passe o cursor nas linhas.
+ */
+export const Listras: Story = { args: { items: MUITAS, "aria-label": "Colaboradores" } };
+
+/** `striped={false}`: só onde a linha já tem fundo próprio por estado. */
+export const SemListras: Story = { args: { items: MUITAS, striped: false, "aria-label": "Colaboradores" } };

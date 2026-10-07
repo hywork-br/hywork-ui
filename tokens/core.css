@@ -1,6 +1,14 @@
 /* Tokens comuns aos dois consumidores: escala, tipografia, espaçamento,
-   raio, paletas neutras e papéis de status.
-   Cor de marca NÃO vive aqui — ver platform.css e builder.css. */
+   raio, paletas neutras, papéis de status e o CONTRATO das variáveis da
+   aplicação (fim deste arquivo).
+
+   O design system é a única autoridade de cor (Rick, 06/10/2026). O
+   consumidor importa core.css + platform.css (ou builder.css) e não declara
+   nenhuma variável de cor própria. A única entrada é a cor de marca do
+   workspace — --hw-brand-primary e afins, escritas por brandThemeVars().
+
+   Os valores de cada produto (--hw-color-*) vivem em platform.css e
+   builder.css. */
 :root {
   --hw-font-body: "Montserrat", Arial, sans-serif;
   --hw-text-xs: 0.75rem;
@@ -172,10 +180,121 @@
   --hw-palette-zinc-800: 39 39 42;
   --hw-palette-zinc-900: 24 24 27;
   --hw-palette-zinc-950: 9 9 11;
+  /* Raio base da aplicação (`rounded-base`). É o mesmo 0.5rem que o admin
+     declarava no próprio :root até 06/10/2026. */
+  --radius: 0.5rem;
+
+  /* Listagem. Cabeçalho e rodapé em --hw-table-surface (gray-50).
+     As linhas do corpo seguem três degraus de cinza, do mais leve ao mais
+     marcado — cada estado mais forte que o anterior, para que nenhum some
+     sobre outro (Rick, 06/10/2026):
+       listra      gray-50   linhas pares, por padrão
+       cursor      gray-100  visível também sobre a linha listrada
+       selecionada gray-200  vence listra e cursor
+     Até 06/10 a seleção era gray-100 e o cursor gray-50: com a listra em
+     gray-50, o cursor sumia nas linhas pares e a seleção ficaria igual ao
+     cursor novo. */
   --hw-table-border: 229 231 235;
   --hw-table-surface: 249 250 251;
-  --hw-table-selected: 243 244 246;
+  --hw-table-stripe: 249 250 251;
+  --hw-table-hover: 243 244 246;
+  --hw-table-selected: 229 231 235;
   --hw-table-heading: 99 115 129;
   --hw-table-foreground: 31 39 47;
   --hw-table-caption: 99 115 129;
+
+  /* Campos de formulário (Input, Textarea, Select). Valores exatos que os
+     componentes traziam como cor literal: fundo branco, borda slate-300 a
+     80% e texto de exemplo em gray-400. */
+  --hw-field-surface: 255 255 255;
+  --hw-field-border: 203 213 225;
+  --hw-field-placeholder: 156 163 175;
+
+  /* Trilho de controle contínuo (Slider) — gray-100, o valor literal anterior. */
+  --hw-control-track: 243 244 246;
+
+  /* Véu atrás de diálogo, folha e alerta modal — preto, usado a 80%. */
+  --hw-overlay: 0 0 0;
+}
+
+/* Tabela no modo escuro: referência técnica, como o resto do .dark. São os
+   mesmos zinc que o componente trazia em classes `dark:`; a borda externa,
+   que ficava clara no escuro, passa ao zinc-800 das divisórias. */
+.dark {
+  --hw-table-border: 39 39 42;
+  --hw-table-surface: 24 24 27;
+  --hw-table-stripe: 39 39 42;
+  --hw-table-hover: 63 63 70;
+  --hw-table-selected: 82 82 91;
+  --hw-table-heading: 161 161 170;
+  --hw-table-foreground: 212 212 216;
+  --hw-table-caption: 161 161 170;
+}
+
+/* ===== Variáveis da aplicação — o contrato =====
+
+   São as variáveis que os componentes e as classes do Tailwind do
+   consumidor leem (`bg-background`, `text-primary`, `border-border`…).
+   O design system as declara TODAS; o consumidor não declara nenhuma.
+
+   Cor de marca do workspace. A única entrada que o consumidor escreve:
+     --hw-brand-primary             canais HSL da marca ("235 44% 47%")
+     --hw-brand-primary-foreground  texto sobre a marca, com contraste AA
+     --hw-brand-primary-hover       preenchimento no cursor
+     --hw-brand-primary-active      preenchimento pressionado
+     --hw-brand-primary-ink         a marca como texto/linha sobre o fundo
+                                    branco, escurecida até 4.5:1 se preciso
+   brandThemeVars(hex) calcula as cinco. Sem elas, vale o primário do design
+   system (200 57% 18%).
+
+   O seletor repete o bloco em .dark e [data-hw-brand]: uma variável que
+   depende de outra é resolvida no elemento onde é declarada. Sem repetir, a
+   marca escrita num elemento abaixo do :root não chegaria ao --primary. */
+:root,
+.dark,
+[data-hw-brand] {
+  --background: var(--hw-color-background);
+  --foreground: var(--hw-color-foreground);
+  --card: var(--hw-color-card-default);
+  --card-foreground: var(--hw-color-card-foreground);
+  --popover: var(--hw-color-popover-default);
+  --popover-foreground: var(--hw-color-popover-foreground);
+
+  --primary: var(--hw-brand-primary, var(--hw-color-primary-default));
+  --primary-foreground: var(--hw-brand-primary-foreground, var(--hw-color-primary-foreground));
+  --primary-hover: var(--hw-brand-primary-hover, var(--hw-brand-primary, var(--hw-color-primary-600)));
+  --primary-active: var(--hw-brand-primary-active, var(--hw-brand-primary, var(--hw-color-primary-700)));
+  --primary-ink: var(--hw-brand-primary-ink, var(--hw-brand-primary, var(--hw-color-primary-default)));
+
+  --secondary: var(--hw-color-secondary-default);
+  --secondary-foreground: var(--hw-color-secondary-foreground);
+  --muted: var(--hw-color-muted-default);
+  --muted-foreground: var(--hw-color-muted-foreground);
+  --accent: var(--hw-color-accent-default);
+  --accent-foreground: var(--hw-color-accent-foreground);
+
+  /* Estado e destrutivo NÃO seguem a marca: vermelho é vermelho em todo
+     workspace. */
+  --destructive: var(--hw-color-destructive-default);
+  --destructive-foreground: var(--hw-color-destructive-foreground);
+  --success: var(--hw-color-success-default);
+  --success-foreground: var(--hw-color-success-foreground);
+  --warning: var(--hw-color-warning-default);
+  --warning-foreground: var(--hw-color-warning-foreground);
+  --error: var(--hw-color-error-default);
+  --error-foreground: var(--hw-color-error-foreground);
+  --info: var(--hw-color-info-default);
+  --info-foreground: var(--hw-color-info-foreground);
+
+  --border: var(--hw-color-border);
+  --input: var(--hw-color-input);
+  /* O anel de foco segue a marca, na versão legível sobre o fundo. Sem
+     marca, mantém o valor de antes (217 87.2% 21.4%). */
+  --ring: var(--hw-brand-primary-ink, var(--hw-brand-primary, var(--hw-color-ring)));
+
+  --chart-1: var(--hw-color-chart-1);
+  --chart-2: var(--hw-color-chart-2);
+  --chart-3: var(--hw-color-chart-3);
+  --chart-4: var(--hw-color-chart-4);
+  --chart-5: var(--hw-color-chart-5);
 }

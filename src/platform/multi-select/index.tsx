@@ -82,14 +82,14 @@ export function MultiSelect({
                     <Badge
                       key={val}
                       variant="secondary"
-                      className="px-1 text-gray-700 text-xs whitespace-nowrap"
+                      className="px-1 text-foreground text-xs whitespace-nowrap"
                     >
                       {option.label}
                     </Badge>
                   ) : null;
                 })}
                 {value.length > 50 && (
-                  <Badge variant="secondary" className="px-1 text-gray-700 text-xs whitespace-nowrap">
+                  <Badge variant="secondary" className="px-1 text-foreground text-xs whitespace-nowrap">
                     +{value.length - 50}
                   </Badge>
                 )}

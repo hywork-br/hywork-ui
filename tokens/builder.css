@@ -1,11 +1,15 @@
 /* Cores e superfícies do hw-cloud-builder (intranet do colaborador).
-   Importar DEPOIS de core.css.
+   Importar junto de core.css, que declara as variáveis da aplicação
+   (--primary, --background, --border…) a partir destes valores.
 
    Partem dos mesmos valores do Platform. Até 22/09/2026 o Builder usava o
    preto padrão do shadcn como cor primária, nunca customizado, o que
    deixava os dois frontends com cores de marca diferentes.
 
-   O tema por workspace sobrescreve --primary em tempo de execução. */
+   O design system vence (Rick, 06/10/2026): a intranet não declara
+   --primary nem nenhuma outra variável do contrato. A cor do workspace entra
+   por --hw-brand-primary, escrita por brandThemeVars() — e não mais por
+   --color-primary, que o Tailwind nunca leu. */
 :root {
   --hw-color-background: 217 0% 100%;
   --hw-color-foreground: 217 0% 10%;

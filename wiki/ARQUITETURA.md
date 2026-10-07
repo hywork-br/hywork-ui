@@ -78,12 +78,24 @@ O produto é multi-tenant e cada workspace pode ter cor de marca própria. Por i
 nenhum componente carrega cor literal:
 
 ```
---primary (aplicação, por tenant)  ──vence──►  --hw-color-primary-default (biblioteca)
+cor do workspace (#hex)
+   │  brandThemeVars(hex)                       @hywork/ui/theme
+   ▼
+--hw-brand-primary (+ -foreground, -hover, -active, -ink)    ← única entrada
+   │  tokens/core.css
+   ▼
+--primary · --primary-foreground · --primary-hover · --primary-active
+--primary-ink · --ring                ← sem marca: --hw-color-primary-default
+   │  preset
+   ▼
+bg-primary · text-primary-ink · ring-ring …
 ```
 
-O preset usa duplo fallback, de modo que a variável do consumidor sempre
-prevalece. Um componente com `bg-[#143748]` quebra esse contrato — é a razão da
-proibição de cor literal.
+Até 06/10/2026 era o inverso: o preset usava duplo fallback e a variável do
+consumidor vencia. O Rick decidiu que o design system vence em todos os
+pontos — o consumidor não declara cor nem variável, e
+`@hywork/ui/consumer-check` reprova quem declarar. Um componente com
+`bg-[#143748]` quebra esse contrato — é a razão da proibição de cor literal.
 
 ## O que este repositório deliberadamente não faz
 

@@ -63,9 +63,11 @@ O pacote entrega **JavaScript com strings de classe**, não CSS. Quem gera o CSS
 content: [..., "./node_modules/@hywork/ui/dist/**/*.js"]   // sem isto: sem estilo
 ```
 
-Os presets definem as cores com duplo fallback —
-`hsl(var(--primary, var(--hw-color-primary-default)))` — de modo que a variável
-da aplicação vence o default da biblioteca. É o que preserva o tema do cliente.
+O design system é a única autoridade de cor (Rick, 06/10/2026): `tokens/core.css`
+declara as variáveis da aplicação e os presets as leem sem fallback —
+`hsl(var(--primary) / <alpha-value>)`. A cor do workspace entra pelo gancho
+`--hw-brand-primary` (`brandThemeVars`, em `@hywork/ui/theme`, sem
+"use client"). A trava do consumidor é `@hywork/ui/consumer-check`.
 
 ## CI
 
