@@ -30,9 +30,10 @@ npm (`private: true`); o release por tag gera o tarball como asset do GitHub.
 
 ## Estrutura de Diretórios
 
-> **A estrutura abaixo já existe.** As 28 primitivas estão em `src/core/`, uma
-> pasta por componente. `src/platform/` e `src/builder/` estão criadas e vazias:
-> recebem os padrões conforme forem construídos —
+> **A estrutura abaixo já existe.** As primitivas estão em `src/core/`, uma
+> pasta por componente: as 28 derivadas do Platform e as nativas listadas em
+> `nativeNames` (`scripts/derive-platform.mjs`). Os padrões do admin estão em
+> `src/platform/`; `src/builder/` está criada e vazia —
 > ver [PLANO_DESIGN_SYSTEM.md](PLANO_DESIGN_SYSTEM.md).
 >
 > **O Builder ainda não consome o pacote.** A camada existe e está preparada,
@@ -55,6 +56,7 @@ src/
 │   ├── label/
 │   ├── search-input/      ✅  raio total, decisão da PO
 │   ├── form-message/      ✅  token --hw-error-text
+│   ├── date-picker/       📋  data única, calendário próprio — aguarda aval da PO
 │   └── …                  demais primitivas — todas com story
 │
 ├── platform/              Padrões do admin (hywork-plataform)
@@ -66,7 +68,10 @@ src/
 │   ├── error-state/       ✅  substitui 6 linhas de erro escritas à mão
 │   ├── page-title/        ✅  substitui 9 combinações
 │   ├── row-actions/       ✅  substitui botões soltos em 15 telas
-│   └── upload-area/       ✅
+│   ├── upload-area/       ✅
+│   ├── stepper/           📋  trilha de passos de wizard — aguarda aval da PO
+│   ├── stat-card/         📋  cartão de indicador — aguarda aval da PO
+│   └── …                  multi-select, icon-select, rich-text-editor
 │
 ├── builder/               Padrões da intranet (hw-cloud-builder)
 │

@@ -460,6 +460,27 @@ continua na API só para não quebrar quem o usa, e desenha um select.
 
 ---
 
+## Componentes novos aguardando o aval da PO
+
+Nasceram para o módulo DHO (decisão D-16 da Fase 0: componente genérico que o
+DHO precisa entra aqui, com o protótipo da PO como referência de **estrutura** e
+o aval visual dela depois). O visual abaixo é proposta, não escolha: até o aval,
+estes componentes não são precedente para outra tela. Quando a PO decidir, a
+linha vira uma seção como as de cima, com a data.
+
+| Componente | Camada | Estrutura (do protótipo) | Proposta visual | Status |
+|---|---|---|---|---|
+| `Stepper` | `platform/stepper` | wizard de ciclo: 5 segmentos no topo, preenchidos até o passo atual; lista lateral com número em círculo, ✓ nos anteriores e o atual destacado | segmento de 6px na primária (trilha em `primary/20`, como o `Progress`); linha de 40px, círculo de 28px, atual com fundo `primary/10`, rótulo semibold e círculo preenchido; bloqueado com cadeado e borda tracejada | 📋 aguardando aval (07/10/2026) — 6 stories, 13 testes |
+| `DatePicker` | `core/date-picker` | campos "Início" e "Encerramento" do wizard (o protótipo tem só texto dd/mm/aaaa) | campo do `Input` com o botão de calendário à direita; calendário em popover, semana de domingo a sábado, dia de 40px, escolhido na primária, hoje sublinhado | 📋 aguardando aval (07/10/2026) — 6 stories, 30 testes |
+| `StatCard` | `platform/stat-card` | 4 indicadores no topo da lista de ciclos e dos resultados: ícone, rótulo, valor, nota; chip de variação; um card "em destaque" | moldura do `Card` (raio 12, respiro 24); valor de 24px bold em `--hw-text-heading`; variação nos pares fundo/texto do `Alert` (sucesso, erro, neutro); atenção com fundo e borda de aviso | 📋 aguardando aval (07/10/2026) — 11 stories, 8 testes |
+
+`DatePicker` entra em `core` porque os dois consumidores têm campo de data (34
+arquivos do Platform e 8 do Builder com `type="date"`, levantados em 07/10). `Stepper` e `StatCard` ficam em `platform`: hoje só o admin tem
+assistente de passos e painel de indicadores. Subir para `core` depois não quebra
+quem importa de `@hywork/ui/platform`.
+
+---
+
 ## Espaçamento entre os padrões
 
 Os padrões que emolduram uma listagem carregam o próprio respiro, para não
@@ -512,3 +533,4 @@ página e passa a ter regra escrita.
 | Data | O que mudou |
 |---|---|
 | 23/09/2026 | 18 padrões decididos pela PO a partir do catálogo comparativo |
+| 07/10/2026 | `Stepper`, `DatePicker` e `StatCard` entram como proposta para o DHO, aguardando o aval visual da PO |

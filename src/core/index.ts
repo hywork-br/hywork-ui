@@ -14,6 +14,7 @@ export * from "./carousel";
 export * from "./checkbox";
 export * from "./collapsible";
 export * from "./command";
+export * from "./date-picker";
 export * from "./dialog";
 export * from "./dropdown-menu";
 export * from "./form";
