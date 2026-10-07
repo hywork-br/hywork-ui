@@ -14,3 +14,4 @@ export * from "./data-list";
 export * from "./multi-select";
 export * from "./icon-select";
 export * from "./rich-text-editor";
+export * from "./stepper";
