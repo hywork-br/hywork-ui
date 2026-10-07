@@ -46,7 +46,7 @@ Um padrão recebe slots, não quinze props opcionais:
 
 | Regra | Por quê |
 |---|---|
-| Nenhuma cor literal em componente | quebra o tema do cliente; use token semântico |
+| Nenhuma cor literal em componente | quebra a marca do workspace e a autoridade do design system; use token semântico |
 | Nenhum acesso a serviço, contexto de auth ou API | componente genérico recebe tudo por props |
 | Responsividade dentro do componente | se a página decidir, a divergência volta |
 | `cn()` para compor classes | `tailwind-merge` resolve conflito de utilitário |

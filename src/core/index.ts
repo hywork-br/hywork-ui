@@ -7,6 +7,7 @@ export * from "./alert";
 export * from "./alert-dialog";
 export * from "./avatar";
 export * from "./badge";
+export * from "./brand-theme";
 export * from "./breadcrumb";
 export * from "./button";
 export * from "./card";

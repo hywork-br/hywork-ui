@@ -1,6 +1,10 @@
 /* Cores e superfícies do hywork-plataform (admin).
-   Importar DEPOIS de core.css.
-   Variáveis da aplicação (--primary, --background) vencem estes defaults. */
+   Importar junto de core.css, que declara as variáveis da aplicação
+   (--primary, --background, --border…) a partir destes valores.
+
+   O design system vence (Rick, 06/10/2026): o admin não declara nenhuma
+   destas variáveis nem as do contrato em core.css. A cor do workspace entra
+   por --hw-brand-primary — ver brandThemeVars(). */
 :root {
   --hw-color-background: 217 0% 100%;
   --hw-color-foreground: 217 0% 10%;
@@ -56,7 +60,8 @@
   --hw-color-accent-foreground: 217 0% 15%;
   --hw-color-destructive-default: 0 50% 50%;
   --hw-color-destructive-foreground: 217 0% 100%;
-  --hw-color-border: 217 20% 82%;
+  /* #edf1f5 — decisão da PO na validação do DS 2.0 (07/10/2026). Era 217 20% 82%. */
+  --hw-color-border: 210 28.6% 94.5%;
   --hw-color-input: 217 20% 50%;
   --hw-color-ring: 217 87.2% 21.4%;
   --hw-color-chart-1: 200 57% 18%;
@@ -64,9 +69,21 @@
   --hw-color-chart-3: 38 92% 50%;
   --hw-color-chart-4: 0 84% 60%;
   --hw-color-chart-5: 199 89% 48%;
-  --hw-color-admin-bg: 239 240 241;
+  /* Cabeçalho e menu lateral do admin: #edf1f5 (PO, 07/10/2026; era #EFF0F1,
+     "está tudo muito cinza"). */
+  --hw-color-admin-bg: 237 241 245;
   --hw-color-admin-surface: 255 255 255;
   --hw-color-admin-sidebar: 30 58 95;
+
+  /* Superfícies do painel, no contrato da aplicação (`bg-admin-bg`…).
+     Canais RGB, como os tokens de origem. */
+  --admin-bg: var(--hw-color-admin-bg);
+  --admin-surface: var(--hw-color-admin-surface);
+  --admin-sidebar: var(--hw-color-admin-sidebar);
+
+  /* Fundo da barra de filtros (FilterBar): #edf1f566 — #edf1f5 a 40%, decisão
+     da PO de 07/10/2026 (era bg-muted/50). O canal alfa vem no próprio token. */
+  --hw-filter-surface: 237 241 245 / 0.4;
 }
 
 /* Modo escuro: referência técnica, não liberado para adoção */
@@ -91,4 +108,6 @@
   --hw-color-border: 217 20% 50%;
   --hw-color-input: 217 20% 50%;
   --hw-color-ring: 217 87.2% 21.4%;
+  /* muted do modo escuro (179 10% 25%) a 50%, como era bg-muted/50 */
+  --hw-filter-surface: 57 70 70 / 0.5;
 }

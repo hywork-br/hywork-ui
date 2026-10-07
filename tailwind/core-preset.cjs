@@ -1,8 +1,13 @@
 // Preset base — valores comuns aos dois consumidores do design system.
 // Tipografia, escala, espaçamento, raio, paletas e papéis de status.
-// Cor de marca vem dos tokens CSS de cada produto, com duplo fallback:
-//   hsl(var(--primary, var(--hw-color-primary-default)))
-// — a variável da aplicação sempre vence o default da biblioteca.
+//
+// O design system é a única autoridade de cor (Rick, 06/10/2026). Cada cor
+// lê a variável que tokens/core.css declara — sem fallback "a aplicação
+// vence":
+//   hsl(var(--primary) / <alpha-value>)
+// O consumidor não redefine estas chaves em theme.extend.colors nem declara
+// as variáveis no próprio CSS. A cor do workspace entra por
+// --hw-brand-primary (ver brandThemeVars), de que --primary deriva.
 const config = {
   "darkMode": [
     "class"
@@ -81,15 +86,15 @@ const config = {
         "extrabold": "var(--hw-weight-extrabold)"
       },
       "colors": {
-        "background": "hsl(var(--background, var(--hw-color-background)) / <alpha-value>)",
-        "foreground": "hsl(var(--foreground, var(--hw-color-foreground)) / <alpha-value>)",
+        "background": "hsl(var(--background) / <alpha-value>)",
+        "foreground": "hsl(var(--foreground) / <alpha-value>)",
         "card": {
-          "DEFAULT": "hsl(var(--card, var(--hw-color-card-default)) / <alpha-value>)",
-          "foreground": "hsl(var(--card-foreground, var(--hw-color-card-foreground)) / <alpha-value>)"
+          "DEFAULT": "hsl(var(--card) / <alpha-value>)",
+          "foreground": "hsl(var(--card-foreground) / <alpha-value>)"
         },
         "popover": {
-          "DEFAULT": "hsl(var(--popover, var(--hw-color-popover-default)) / <alpha-value>)",
-          "foreground": "hsl(var(--popover-foreground, var(--hw-color-popover-foreground)) / <alpha-value>)"
+          "DEFAULT": "hsl(var(--popover) / <alpha-value>)",
+          "foreground": "hsl(var(--popover-foreground) / <alpha-value>)"
         },
         "primary": {
           "50": "hsl(var(--hw-color-primary-50) / <alpha-value>)",
@@ -97,17 +102,20 @@ const config = {
           "200": "hsl(var(--hw-color-primary-200) / <alpha-value>)",
           "300": "hsl(var(--hw-color-primary-300) / <alpha-value>)",
           "400": "hsl(var(--hw-color-primary-400) / <alpha-value>)",
-          "500": "hsl(var(--primary, var(--hw-color-primary-500)) / <alpha-value>)",
+          "500": "hsl(var(--primary) / <alpha-value>)",
           "600": "hsl(var(--hw-color-primary-600) / <alpha-value>)",
           "700": "hsl(var(--hw-color-primary-700) / <alpha-value>)",
           "800": "hsl(var(--hw-color-primary-800) / <alpha-value>)",
           "900": "hsl(var(--hw-color-primary-900) / <alpha-value>)",
-          "DEFAULT": "hsl(var(--primary, var(--hw-color-primary-default)) / <alpha-value>)",
-          "foreground": "hsl(var(--primary-foreground, var(--hw-color-primary-foreground)) / <alpha-value>)"
+          "DEFAULT": "hsl(var(--primary) / <alpha-value>)",
+          "foreground": "hsl(var(--primary-foreground) / <alpha-value>)",
+          "hover": "hsl(var(--primary-hover) / <alpha-value>)",
+          "active": "hsl(var(--primary-active) / <alpha-value>)",
+          "ink": "hsl(var(--primary-ink) / <alpha-value>)"
         },
         "secondary": {
-          "DEFAULT": "hsl(var(--secondary, var(--hw-color-secondary-default)) / <alpha-value>)",
-          "foreground": "hsl(var(--secondary-foreground, var(--hw-color-secondary-foreground)) / <alpha-value>)"
+          "DEFAULT": "hsl(var(--secondary) / <alpha-value>)",
+          "foreground": "hsl(var(--secondary-foreground) / <alpha-value>)"
         },
         "success": {
           "50": "hsl(var(--hw-color-success-50) / <alpha-value>)",
@@ -115,8 +123,8 @@ const config = {
           "500": "hsl(var(--hw-color-success-500) / <alpha-value>)",
           "600": "hsl(var(--hw-color-success-600) / <alpha-value>)",
           "700": "hsl(var(--hw-color-success-700) / <alpha-value>)",
-          "DEFAULT": "hsl(var(--hw-color-success-default) / <alpha-value>)",
-          "foreground": "hsl(var(--hw-color-success-foreground) / <alpha-value>)"
+          "DEFAULT": "hsl(var(--success) / <alpha-value>)",
+          "foreground": "hsl(var(--success-foreground) / <alpha-value>)"
         },
         "warning": {
           "50": "hsl(var(--hw-color-warning-50) / <alpha-value>)",
@@ -124,8 +132,8 @@ const config = {
           "500": "hsl(var(--hw-color-warning-500) / <alpha-value>)",
           "600": "hsl(var(--hw-color-warning-600) / <alpha-value>)",
           "700": "hsl(var(--hw-color-warning-700) / <alpha-value>)",
-          "DEFAULT": "hsl(var(--hw-color-warning-default) / <alpha-value>)",
-          "foreground": "hsl(var(--hw-color-warning-foreground) / <alpha-value>)"
+          "DEFAULT": "hsl(var(--warning) / <alpha-value>)",
+          "foreground": "hsl(var(--warning-foreground) / <alpha-value>)"
         },
         "error": {
           "50": "hsl(var(--hw-color-error-50) / <alpha-value>)",
@@ -133,8 +141,8 @@ const config = {
           "500": "hsl(var(--hw-color-error-500) / <alpha-value>)",
           "600": "hsl(var(--hw-color-error-600) / <alpha-value>)",
           "700": "hsl(var(--hw-color-error-700) / <alpha-value>)",
-          "DEFAULT": "hsl(var(--hw-color-error-default) / <alpha-value>)",
-          "foreground": "hsl(var(--hw-color-error-foreground) / <alpha-value>)"
+          "DEFAULT": "hsl(var(--error) / <alpha-value>)",
+          "foreground": "hsl(var(--error-foreground) / <alpha-value>)"
         },
         "info": {
           "50": "hsl(var(--hw-color-info-50) / <alpha-value>)",
@@ -142,30 +150,30 @@ const config = {
           "500": "hsl(var(--hw-color-info-500) / <alpha-value>)",
           "600": "hsl(var(--hw-color-info-600) / <alpha-value>)",
           "700": "hsl(var(--hw-color-info-700) / <alpha-value>)",
-          "DEFAULT": "hsl(var(--hw-color-info-default) / <alpha-value>)",
-          "foreground": "hsl(var(--hw-color-info-foreground) / <alpha-value>)"
+          "DEFAULT": "hsl(var(--info) / <alpha-value>)",
+          "foreground": "hsl(var(--info-foreground) / <alpha-value>)"
         },
         "muted": {
-          "DEFAULT": "hsl(var(--muted, var(--hw-color-muted-default)) / <alpha-value>)",
-          "foreground": "hsl(var(--muted-foreground, var(--hw-color-muted-foreground)) / <alpha-value>)"
+          "DEFAULT": "hsl(var(--muted) / <alpha-value>)",
+          "foreground": "hsl(var(--muted-foreground) / <alpha-value>)"
         },
         "accent": {
-          "DEFAULT": "hsl(var(--accent, var(--hw-color-accent-default)) / <alpha-value>)",
-          "foreground": "hsl(var(--accent-foreground, var(--hw-color-accent-foreground)) / <alpha-value>)"
+          "DEFAULT": "hsl(var(--accent) / <alpha-value>)",
+          "foreground": "hsl(var(--accent-foreground) / <alpha-value>)"
         },
         "destructive": {
-          "DEFAULT": "hsl(var(--destructive, var(--hw-color-destructive-default)) / <alpha-value>)",
-          "foreground": "hsl(var(--destructive-foreground, var(--hw-color-destructive-foreground)) / <alpha-value>)"
+          "DEFAULT": "hsl(var(--destructive) / <alpha-value>)",
+          "foreground": "hsl(var(--destructive-foreground) / <alpha-value>)"
         },
-        "border": "hsl(var(--border, var(--hw-color-border)) / <alpha-value>)",
-        "input": "hsl(var(--input, var(--hw-color-input)) / <alpha-value>)",
-        "ring": "hsl(var(--ring, var(--hw-color-ring)) / <alpha-value>)",
+        "border": "hsl(var(--border) / <alpha-value>)",
+        "input": "hsl(var(--input) / <alpha-value>)",
+        "ring": "hsl(var(--ring) / <alpha-value>)",
         "chart": {
-          "1": "hsl(var(--chart-1, var(--hw-color-chart-1)) / <alpha-value>)",
-          "2": "hsl(var(--chart-2, var(--hw-color-chart-2)) / <alpha-value>)",
-          "3": "hsl(var(--chart-3, var(--hw-color-chart-3)) / <alpha-value>)",
-          "4": "hsl(var(--chart-4, var(--hw-color-chart-4)) / <alpha-value>)",
-          "5": "hsl(var(--chart-5, var(--hw-color-chart-5)) / <alpha-value>)"
+          "1": "hsl(var(--chart-1) / <alpha-value>)",
+          "2": "hsl(var(--chart-2) / <alpha-value>)",
+          "3": "hsl(var(--chart-3) / <alpha-value>)",
+          "4": "hsl(var(--chart-4) / <alpha-value>)",
+          "5": "hsl(var(--chart-5) / <alpha-value>)"
         },
         "hw-on-status": "rgb(var(--hw-on-status) / <alpha-value>)",
         "hw-status-success": "rgb(var(--hw-status-success) / <alpha-value>)",
@@ -271,11 +279,19 @@ const config = {
         "white": "#fff",
         "black": "#000",
         "hw-table-border": "rgb(var(--hw-table-border) / <alpha-value>)",
-        "hw-table-surface": "rgb(var(--hw-table-surface) / <alpha-value>)",
+        // surface e stripe trazem o alfa no token (#edf1f5 a 40%, PO 07/10/2026)
+        "hw-table-surface": "rgb(var(--hw-table-surface))",
+        "hw-table-stripe": "rgb(var(--hw-table-stripe))",
+        "hw-table-hover": "rgb(var(--hw-table-hover) / <alpha-value>)",
         "hw-table-selected": "rgb(var(--hw-table-selected) / <alpha-value>)",
         "hw-table-heading": "rgb(var(--hw-table-heading) / <alpha-value>)",
         "hw-table-foreground": "rgb(var(--hw-table-foreground) / <alpha-value>)",
-        "hw-table-caption": "rgb(var(--hw-table-caption) / <alpha-value>)"
+        "hw-table-caption": "rgb(var(--hw-table-caption) / <alpha-value>)",
+        "hw-field": "rgb(var(--hw-field-surface) / <alpha-value>)",
+        "hw-field-border": "rgb(var(--hw-field-border) / <alpha-value>)",
+        "hw-field-placeholder": "rgb(var(--hw-field-placeholder) / <alpha-value>)",
+        "hw-control-track": "rgb(var(--hw-control-track) / <alpha-value>)",
+        "hw-overlay": "rgb(var(--hw-overlay) / <alpha-value>)"
       },
       "spacing": {
         "0": "var(--hw-space-0)",
@@ -364,8 +380,10 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out"
       },
+      // Anel sem cor explícita (`ring-2`) também segue a marca. Alfa fixo:
+      // o Tailwind 3 não resolve <alpha-value> no anel padrão.
       "ringColor": {
-        "DEFAULT": "rgb(var(--hw-palette-blue-500) / 0.5)"
+        "DEFAULT": "hsl(var(--ring) / 0.5)"
       }
     }
   },

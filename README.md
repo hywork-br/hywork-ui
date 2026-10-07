@@ -35,6 +35,15 @@ presets: [require("@hywork/ui/tailwind/platform-preset.cjs")],
 content: [..., "./node_modules/@hywork/ui/dist/**/*.js"],  // obrigatório
 ```
 
+```css
+/* globals.css — e nenhuma variável de cor própria */
+@import "@hywork/ui/tokens/core.css";
+@import "@hywork/ui/tokens/platform.css";
+```
+
+A cor do workspace entra por `brandThemeVars(hex)` (`@hywork/ui/theme`); a trava
+que impede o consumidor de redefinir cor é `@hywork/ui/consumer-check`.
+
 Instalação, migração e ciclo de versão: **[CROSS_STACK_CONVENTIONS.md](CROSS_STACK_CONVENTIONS.md)**.
 
 ## Antes de escrever código

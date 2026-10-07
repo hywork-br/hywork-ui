@@ -46,11 +46,13 @@ module.exports = {
 Importar `@hywork/ui/tokens/platform.css` no CSS global.
 Manter o CSS base/input do produto e a carga da Montserrat existente.
 O pacote não injeta reset nem baixa fonte. O preset usa `--font-montserrat`.
-Variáveis da aplicação como `--primary` e `--primary-foreground` prevalecem sobre
-os defaults `--hw-*`; não as sobrescrever numa feature.
+Desde a 0.11.0 o design system declara `--primary`, `--primary-foreground` e as
+demais variáveis da aplicação; o consumidor não as declara — nem no `:root`, nem
+numa feature. A cor do workspace entra por `brandThemeVars(hex)`.
 
-Se o consumidor redefine as mesmas chaves em `theme.extend`, essas definições podem
-vencer o preset. Remover duplicações somente após verificar o CSS resultante e o tenant.
+Chave do consumidor em `theme.extend.colors`, ou que sombreie raio, espaçamento e
+tipografia do preset, é proibida: `@hywork/ui/consumer-check` reprova. Ver
+CROSS_STACK_CONVENTIONS.md §3.
 O tarball distribui JS, declarações, tokens, preset e docs; não o catálogo nem a referência.
 
 ## Migrar

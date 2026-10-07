@@ -11,16 +11,20 @@ const SelectGroup = SelectPrimitive.Group;
 const SelectValue = SelectPrimitive.Value;
 
 interface SelectTriggerProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> {
+  /**
+   * @deprecated Ignorado desde a 0.11.0. O foco segue a marca do workspace
+   * (--primary-ink), como em todo campo — a tela não escolhe a cor do foco
+   * (Rick, 06/10/2026). Mantido no tipo para não quebrar quem o passa.
+   */
   focusColor?: string;
 }
 
 const SelectTrigger = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>, SelectTriggerProps>(
-  ({ className, children, focusColor, onClick, onPointerDown, onMouseDown, ...props }, ref) => (
+  ({ className, children, focusColor: _focusColor, onClick, onPointerDown, onMouseDown, ...props }, ref) => (
     <SelectPrimitive.Trigger
       ref={ref}
       className={cn(
-        "flex h-10 w-full items-center justify-between rounded-sm border border-slate-300/80 bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50",
-        focusColor && `focus:border-${focusColor} focus:ring-${focusColor}`,
+        "flex h-10 w-full items-center justify-between rounded-sm border border-hw-field-border/80 bg-hw-field px-3 py-2 text-sm ring-offset-background placeholder:text-hw-field-placeholder focus:outline-none focus:border-primary-ink focus:ring-1 focus:ring-primary-ink disabled:cursor-not-allowed disabled:opacity-50",
         className
       )}
       onClick={onClick}
@@ -59,7 +63,7 @@ const SelectContent = React.forwardRef<
         ref={ref}
         data-editor-overlay="true"
         className={cn(
-          "relative z-50 min-w-[8rem] max-h-[min(24rem,var(--radix-select-content-available-height,24rem))] overflow-hidden rounded-md border border-gray-300 bg-background text-popover-foreground shadow-md data-[state=open]:animate-in motion-reduce:!animate-none data-[state=closed]:animate-out motion-reduce:!animate-none data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+          "relative z-50 min-w-[8rem] max-h-[min(24rem,var(--radix-select-content-available-height,24rem))] overflow-hidden rounded-md border border-border bg-background text-popover-foreground shadow-md data-[state=open]:animate-in motion-reduce:!animate-none data-[state=closed]:animate-out motion-reduce:!animate-none data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
           position === "popper" &&
             "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
           className

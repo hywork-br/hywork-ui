@@ -53,6 +53,15 @@ describe("DataList", () => {
     expect(screen.queryByText("Nenhum resultado")).not.toBeInTheDocument();
   });
 
+  it("lista as linhas por padrão e repassa striped ao Table", () => {
+    const { rerender } = render(<DataList {...base} items={ITENS} />);
+    expect(screen.getByRole("table")).toHaveAttribute("data-striped");
+    expect(screen.getByText("Bruno").closest("tr")).toHaveClass("even:bg-hw-table-stripe");
+    rerender(<DataList {...base} items={ITENS} striped={false} />);
+    expect(screen.getByRole("table")).not.toHaveAttribute("data-striped");
+    expect(screen.getByText("Bruno").closest("tr")).not.toHaveClass("even:bg-hw-table-stripe");
+  });
+
   it("chama onRowClick com o item da linha", async () => {
     const user = userEvent.setup();
     const onRowClick = vi.fn();

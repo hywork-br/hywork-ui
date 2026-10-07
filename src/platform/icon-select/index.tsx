@@ -113,7 +113,7 @@ export function FontAwesomeIconSelect({
           id={id}
           type="button"
           className={cn(
-            "flex h-10 w-full items-center justify-between gap-2 rounded-md border border-gray-300 bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-gray-400 hover:bg-muted/50 focus:outline-none focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50",
+            "flex h-10 w-full items-center justify-between gap-2 rounded-md border border-hw-field-border bg-hw-field px-3 py-2 text-sm ring-offset-background placeholder:text-hw-field-placeholder hover:bg-muted/50 focus:outline-none focus:ring-1 focus:ring-primary-ink disabled:cursor-not-allowed disabled:opacity-50",
             triggerClassName ?? className
           )}
         >
@@ -162,7 +162,7 @@ export function FontAwesomeIconSelect({
                   }}
                   className={cn(
                     "flex h-10 w-10 shrink-0 items-center justify-center rounded-md transition-colors hover:bg-muted",
-                    value === opt.value && "bg-muted ring-1 ring-primary"
+                    value === opt.value && "bg-muted ring-1 ring-primary-ink"
                   )}
                   title={typeof opt.label === "string" ? opt.label : opt.value}
                 >

@@ -33,8 +33,11 @@ const TabsTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       // Inativa em cor esmaecida e peso normal; ativa na cor primária, peso 600,
-      // com indicador de 2px na primária.
-      "relative -mb-px inline-flex h-12 items-center justify-center whitespace-nowrap rounded-none border-b-2 border-transparent bg-transparent px-3 text-sm font-normal text-muted-foreground ring-offset-background transition-colors motion-reduce:!transition-none hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-primary data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:shadow-none",
+      // com indicador de 2px na primária. "Primária" é a marca do workspace na
+      // versão legível sobre o fundo (--primary-ink): igual à marca quando ela
+      // já tem 4.5:1 sobre o branco, escurecida quando não tem — uma marca
+      // amarela não pode virar uma aba ilegível.
+      "relative -mb-px inline-flex h-12 items-center justify-center whitespace-nowrap rounded-none border-b-2 border-transparent bg-transparent px-3 text-sm font-normal text-muted-foreground ring-offset-background transition-colors motion-reduce:!transition-none hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-primary-ink data-[state=active]:font-semibold data-[state=active]:text-primary-ink data-[state=active]:shadow-none",
       className
     )}
     {...props}

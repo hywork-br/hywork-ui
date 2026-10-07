@@ -4,12 +4,18 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "../../lib/cn"
 
+// Cor de marca (Rick, 06/10/2026): `default` é a marca do workspace como
+// preenchimento, com texto de contraste AA calculado; cursor e clique usam
+// --primary-hover/--primary-active, derivados da marca. `link` usa a marca
+// como texto sobre o fundo (--primary-ink, que escurece a marca clara até
+// 4.5:1). `outline`, `secondary` e `ghost` são neutros; destrutivo e estados
+// têm cor própria e não seguem a marca.
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded text-sm font-medium ring-offset-background transition-colors motion-reduce:!transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 dark:bg-primary/90",
+        default: "bg-primary text-primary-foreground hover:bg-primary-hover active:bg-primary-active dark:bg-primary/90",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         success:
@@ -25,7 +31,7 @@ const buttonVariants = cva(
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        link: "text-primary-ink underline-offset-4 hover:underline",
       },
       size: {
         default: "h-10 px-4 py-2",

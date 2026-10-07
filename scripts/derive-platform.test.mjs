@@ -46,18 +46,23 @@ test('each consumer entry composes core plus its own patterns', () => {
     assert.ok(entry.includes('export * from "./'+produto+'/index";'), produto+' entry must re-export its patterns');
   }
 });
-test('every token reference resolves in both consumers and app theme wins', () => {
+test('every token reference resolves in both consumers, and the design system wins', () => {
   const core = read('tailwind/core-preset.cjs');
-  // o preset base define a cor com duplo fallback: a variável da aplicação
-  // vence o default da biblioteca — é o que preserva o tema do cliente
-  assert.ok(core.includes('var(--primary, var(--hw-color-primary-default))'));
-  assert.ok(core.includes('rgb(var(--hw-palette-blue-500) / 0.5)'));
+  // Rick, 06/10/2026: o design system é a única autoridade de cor. O preset lê
+  // a variável que tokens/core.css declara, sem o fallback "a aplicação vence"
+  // — var(--primary, var(--hw-…)) — que deixava o consumidor sobrescrever.
+  assert.ok(core.includes('"DEFAULT": "hsl(var(--primary) / <alpha-value>)"'));
+  assert.equal(/var\(--(?!font-montserrat)[\w-]+,/.test(core), false, 'preset still has an app-wins fallback');
+  assert.ok(core.includes('hsl(var(--ring) / 0.5)'));
 
   for (const produto of ['platform', 'builder']) {
     const css = read('tokens/core.css') + read('tokens/'+produto+'.css');
     const preset = core + read('tailwind/'+produto+'-preset.cjs');
-    for (const [,name] of preset.matchAll(/var\((--hw-[\w-]+)\)/g))
+    for (const [,name] of preset.matchAll(/var\((--[\w-]+)\)/g)) {
+      // gancho da fonte (next/font) e variáveis que o Radix escreve em runtime
+      if (name === '--font-montserrat' || name.startsWith('--radix-')) continue;
       assert.ok(css.includes(name+':'), name+' unresolved for '+produto);
+    }
   }
 
   const todos = read('tokens/core.css') + read('tokens/platform.css');

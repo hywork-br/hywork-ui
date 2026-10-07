@@ -1,5 +1,99 @@
 # Changelog
 
+## 0.12.0 — design system 2.0: o DS vence, marca do workspace e ajustes da PO
+
+A linha `feat/ds-autoridade-tokens` (validada pela PO na branch
+`docs/design-system-hywork-ui` do Platform) chamava a si mesma de 0.11.0 e
+0.11.1, mas nunca ganhou tag; a `v0.11.0` publicada é a do wizard do DHO.
+A 0.12.0 junta as duas e traz os ajustes da validação da PO de 07/10/2026.
+
+### Ajustes da validação da PO (07/10/2026)
+
+- **Texto sobre a cor do workspace pelo contraste perceptual (APCA).**
+  `brandThemeVars` escolhe entre branco e slate-900 o de maior contraste APCA
+  (0.0.98G, o modelo do rascunho da WCAG 3). A PO reprovou o texto escuro sobre
+  um workspace laranja: a WCAG 2 escolhia escuro em laranja, vermelho e azul
+  médio porque o branco fica entre 2,8:1 e 3,7:1. Agora esses tons dão branco;
+  amarelo, lima, âmbar e branco seguem escuros. O preto puro saiu do cálculo.
+  Cursor e clique escurecem a marca e nunca levam o texto abaixo de Lc 50.
+  Quando escurecer apagaria o texto, eles clareiam, e se faltar espaço para
+  dois degraus os dois dividem o que há. A tinta (`--primary-ink`) continua em
+  4.5:1 sobre o branco. Novo export: `apcaContrast` e `MIN_TEXT_LC` em
+  `@hywork/ui/theme`.
+- **`#edf1f5` no cabeçalho e no menu do admin** (`--hw-color-admin-bg`, era
+  `#EFF0F1`) e **na borda** (`--hw-color-border`, era `217 20% 82%`). No modo
+  escuro a borda não muda.
+- **`#edf1f5` a 40%** no fundo da `FilterBar` (novo `--hw-filter-surface`,
+  classe `bg-hw-filter-surface`, no lugar de `bg-muted/50`) e no cabeçalho,
+  rodapé e listra da `Table`/`DataList` (`--hw-table-surface` e
+  `--hw-table-stripe`, eram gray-50). O alfa vem no token, então essas três
+  classes não aceitam `/NN`. Cursor (gray-100) e seleção (gray-200) não mudam.
+- **Paridade de pixels:** a referência congelada recebe a borda decidida, como
+  já recebia a marca; `test:browser` segue 24/24.
+- **Campo de busca com raio 4** (Rick, 07/10/2026). O `SearchInput` deixa o
+  `rounded-full` e passa a `rounded-sm`, o mesmo raio dos campos, selects,
+  gatilhos e botões da `FilterBar`. A pílula destoava de tudo ao lado dela no
+  filtro.
+
+
+### Tom suave no selo de estado, e a 0.10.3 dentro da linha do DS 2.0
+
+- **`Badge` `tone="subtle"`** (HCK-136): o mesmo papel num preenchimento claro —
+  a cor do papel a 15% — com o texto na tinta do papel (4,8:1 a 5,5:1). Para
+  separar duas colunas de estado na mesma linha; o tom cheio continua o padrão.
+  Regra em `DOMAIN_MODEL.md` ("Indicador de status").
+- **A linha 0.11 traz a 0.10.2 e a 0.10.3**, que saíram da `develop` depois que
+  ela foi aberta. O que muda para quem usava a branch: o selo `positive`/`success`
+  passa a texto escuro (`--hw-on-status`, 7:1) em vez de branco (2,5:1), e as
+  peers `cmdk`, `embla-carousel-react` e `@tiptap/*` (2.x) ficam obrigatórias.
+- **`test:browser` verde na linha 0.11** (24/24; a branch tinha 12 falhas de
+  paridade). Os componentes estavam certos: a referência congelada é que ainda
+  montava o contrato antigo. Agora ela expressa as decisões de 06/10 — anel sem
+  cor é `--ring` (o `ring-0` do polegar do `Switch` diferia no Firefox) e, no
+  tema `tenant`, o anel recebe a marca (o X do `Sheet` diferia no Chromium).
+
+### O design system vence: tokens, marca do workspace e listras
+
+Decisões do Rick de 06/10/2026, em `DOMAIN_MODEL.md` ("Cor e token").
+
+- **O design system declara todas as variáveis da aplicação.**
+  `tokens/core.css` passa a declarar `--background`, `--foreground`,
+  `--card`, `--popover`, `--primary`, `--secondary`, `--muted`, `--accent`,
+  `--destructive`, `--success`, `--warning`, `--error`, `--info` (com os
+  `-foreground`), `--border`, `--input`, `--ring`, `--radius` e
+  `--chart-1..5`; `platform.css`, `--admin-bg/-surface/-sidebar`. Mesmos
+  valores que o admin declarava. O preset as lê **sem** o fallback
+  `var(--primary, var(--hw-…))`.
+- **Ruptura para o consumidor:** ele não declara mais essas variáveis nem
+  chaves em `theme.extend.colors`. Um `:root { --primary: … }` deixado no
+  `globals.css` continua vencendo pela ordem do CSS e anula a marca do
+  workspace — remova-o. A trava `@hywork/ui/consumer-check` reprova.
+- **Cor de marca do workspace:** gancho `--hw-brand-primary` (+
+  `-foreground`, `-hover`, `-active`, `-ink`), calculado por
+  `brandThemeVars(hex)` — em `@hywork/ui/theme` (sem "use client") e nas
+  entradas `platform`/`builder`. Texto sobre a marca com contraste AA
+  garantido; `--primary-ink` é a marca legível sobre o branco. Novos
+  `<BrandTheme color>` e `useBrandTheme(hex)`.
+- **Componentes seguem a marca:** Button `default` (cursor e clique agora
+  em `--primary-hover`/`--primary-active`, que escurecem; antes `/90`, que
+  clareava) e `link`; aba ativa; anel de foco (o `ring-2` sem cor também);
+  checkbox, rádio, switch, progresso, slider, spinner, upload ao arrastar.
+  Estado e destrutivo não seguem a marca.
+- **Tabela listrada por padrão:** `Table striped` e `DataList striped`
+  (padrão `true`). Cursor passa de gray-50 a gray-100
+  (`--hw-table-hover`) e linha selecionada de gray-100 a gray-200
+  (`--hw-table-selected`), para os três estados não se confundirem.
+- **Cor literal → token:** campos (`hw-field*`), trilho do slider, véu de
+  diálogo/folha/alerta (`hw-overlay`), toast destrutivo, RichTextEditor e
+  MultiSelect. Diferenças visíveis pequenas: borda do gatilho do
+  IconSelect (gray-300 → slate-300), borda da lista do Select (gray-300 →
+  `border`), texto das pílulas do MultiSelect (gray-700 → foreground),
+  botão "OK" do editor (azul → marca).
+- **`Select` `focusColor` ignorado** (marcado `@deprecated`, continua no
+  tipo): a tela não escolhe a cor do foco.
+- Nova entrada `@hywork/ui/consumer-check` — `assertNoTokenOverrides`,
+  `findTokenOverrides`.
+
 ## 0.11.0 — componentes do wizard de ciclo (DHO)
 
 Três componentes genéricos que a tela "Criar ciclo de avaliação" do DHO precisa
