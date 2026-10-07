@@ -11,6 +11,11 @@ css.href = `/.storybook/static/${source ? "source" : "package"}.css`;
 document.head.append(css);
 document.documentElement.style.setProperty("--font-montserrat", '"Montserrat Variable", sans-serif');
 if (params.get("theme") === "dark") document.documentElement.classList.add("dark");
+// A referência congelada traz a borda de 06/10 (217 20% 82%); a PO a trocou por
+// #edf1f5 na validação de 07/10/2026. A comparação é de componente, não de
+// valor de token: a referência recebe a borda decidida, como recebe a marca.
+// No escuro a borda não mudou.
+if (source && params.get("theme") !== "dark") document.documentElement.style.setProperty("--border", "210 28.6% 94.5%");
 if (params.get("theme") === "tenant") {
   // A referência congelada recebia a marca sobrescrevendo --primary. Desde
   // 06/10/2026 o pacote só aceita o gancho de marca: --primary é dele.

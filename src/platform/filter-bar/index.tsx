@@ -26,7 +26,8 @@ import {
  * A ação de limpar só aparece quando há algo para desfazer.
  *
  * **Forma dos controles** — Catálogo de Divergências, Filtro · Opção A (barra
- * com fundo suave: `flex flex-wrap gap-3 p-4 bg-muted/50 rounded-lg items-end`):
+ * com fundo suave: `flex flex-wrap gap-3 p-4 bg-muted/50 rounded-lg items-end`;
+ * o fundo passou a #edf1f5 a 40% na validação de 07/10/2026, `bg-hw-filter-surface`):
  * seleções têm a forma do campo do produto — altura 40, raio 4, borda
  * `slate-300/80` — e trazem o nome da dimensão dentro do campo enquanto nada
  * está filtrado. A busca segue a decisão própria (Campo de busca · Opção B,
@@ -86,7 +87,7 @@ const FilterBarRoot = React.forwardRef<HTMLDivElement, FilterBarProps>(
             // `mb-6` faz parte do padrão: a barra sempre precede uma
             // listagem, e sem respiro ela cola no conteúdo. Sobrescrevível
             // por className quando o layout já cuida do espaçamento.
-            "mb-6 flex flex-wrap items-end gap-3 rounded-lg bg-muted/50 p-4",
+            "mb-6 flex flex-wrap items-end gap-3 rounded-lg bg-hw-filter-surface p-4",
             className,
           )}
           {...props}

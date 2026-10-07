@@ -7,7 +7,30 @@ A linha `feat/ds-autoridade-tokens` (validada pela PO na branch
 0.11.1, mas nunca ganhou tag; a `v0.11.0` publicada é a do wizard do DHO.
 A 0.12.0 junta as duas e traz os ajustes da validação da PO de 07/10/2026.
 
-<!-- PO-07-10 -->
+### Ajustes da validação da PO (07/10/2026)
+
+- **Texto sobre a cor do workspace pelo contraste perceptual (APCA).**
+  `brandThemeVars` escolhe entre branco e slate-900 o de maior contraste APCA
+  (0.0.98G, o modelo do rascunho da WCAG 3). A PO reprovou o texto escuro sobre
+  um workspace laranja: a WCAG 2 escolhia escuro em laranja, vermelho e azul
+  médio porque o branco fica entre 2,8:1 e 3,7:1. Agora esses tons dão branco;
+  amarelo, lima, âmbar e branco seguem escuros. O preto puro saiu do cálculo.
+  Cursor e clique escurecem a marca e nunca levam o texto abaixo de Lc 50.
+  Quando escurecer apagaria o texto, eles clareiam, e se faltar espaço para
+  dois degraus os dois dividem o que há. A tinta (`--primary-ink`) continua em
+  4.5:1 sobre o branco. Novo export: `apcaContrast` e `MIN_TEXT_LC` em
+  `@hywork/ui/theme`.
+- **`#edf1f5` no cabeçalho e no menu do admin** (`--hw-color-admin-bg`, era
+  `#EFF0F1`) e **na borda** (`--hw-color-border`, era `217 20% 82%`). No modo
+  escuro a borda não muda.
+- **`#edf1f5` a 40%** no fundo da `FilterBar` (novo `--hw-filter-surface`,
+  classe `bg-hw-filter-surface`, no lugar de `bg-muted/50`) e no cabeçalho,
+  rodapé e listra da `Table`/`DataList` (`--hw-table-surface` e
+  `--hw-table-stripe`, eram gray-50). O alfa vem no token, então essas três
+  classes não aceitam `/NN`. Cursor (gray-100) e seleção (gray-200) não mudam.
+- **Paridade de pixels:** a referência congelada recebe a borda decidida, como
+  já recebia a marca; `test:browser` segue 24/24.
+
 
 ### Tom suave no selo de estado, e a 0.10.3 dentro da linha do DS 2.0
 

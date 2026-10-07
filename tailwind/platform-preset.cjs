@@ -22,6 +22,9 @@ module.exports = {
           surface: "rgb(var(--admin-surface) / <alpha-value>)",
           sidebar: "rgb(var(--admin-sidebar) / <alpha-value>)",
         },
+        // Fundo da FilterBar. O token já traz o alfa (#edf1f5 a 40%), por
+        // isso sem <alpha-value>: `bg-hw-filter-surface/NN` não existe.
+        "hw-filter-surface": "rgb(var(--hw-filter-surface))",
       },
     },
   },

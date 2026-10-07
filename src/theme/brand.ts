@@ -26,14 +26,19 @@ export type BrandThemeVars = Partial<Record<BrandVariable, string>>;
 type Rgb = readonly [number, number, number];
 type Hsl = readonly [number, number, number];
 
-/** WCAG 2.x AA for normal text. */
+/** WCAG 2.x AA for normal text — the bar for the brand as text on white. */
 export const AA_CONTRAST = 4.5;
+
+/**
+ * Floor, in APCA Lc, for the text on the brand. Picking the stronger of white
+ * and slate-900 never lands below ~54 on any color; hover and active may not
+ * take the label under this floor (or under its resting contrast, if lower).
+ */
+export const MIN_TEXT_LC = 50;
 
 const WHITE: Hsl = [0, 0, 100];
 // slate-900, the darkest text the product already uses (page titles).
 const NEAR_BLACK: Hsl = [222.2, 47.4, 11.2];
-// Last resort: for any color, white or pure black reaches at least 4.58:1.
-const BLACK: Hsl = [0, 0, 0];
 // The surface the brand is read on as text or line: --background (white).
 const SURFACE: Hsl = WHITE;
 
@@ -93,34 +98,77 @@ export function contrastRatio(a: Hsl, b: Hsl): number {
   return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
 }
 
+/**
+ * APCA lightness contrast (Lc) of `text` on `background`, 0.0.98G-4g — the
+ * perceptual model of the WCAG 3 draft. Positive for dark text on a light
+ * fill, negative for light text on a dark one; compare with Math.abs.
+ *
+ * WCAG 2 rates white on a saturated orange or blue below black (3.6:1 against
+ * 5:1 on #ff3b0a), which is not how people read it: the PO rejected the dark
+ * label on an orange workspace (07/10/2026). APCA ranks it the other way.
+ */
+export function apcaContrast(text: Hsl, background: Hsl): number {
+  const y = ([r, g, b]: Rgb) =>
+    0.2126729 * (r / 255) ** 2.4 + 0.7151522 * (g / 255) ** 2.4 + 0.072175 * (b / 255) ** 2.4;
+  const soft = (v: number) => (v > 0.022 ? v : v + (0.022 - v) ** 1.414);
+  const yt = soft(y(hslToRgb(text)));
+  const yb = soft(y(hslToRgb(background)));
+  if (Math.abs(yb - yt) < 0.0005) return 0;
+  if (yb > yt) {
+    const sapc = (yb ** 0.56 - yt ** 0.57) * 1.14;
+    return sapc < 0.1 ? 0 : (sapc - 0.027) * 100;
+  }
+  const sapc = (yb ** 0.65 - yt ** 0.62) * 1.14;
+  return sapc > -0.1 ? 0 : (sapc + 0.027) * 100;
+}
+
+const textContrast = (fill: Hsl, text: Hsl) => Math.abs(apcaContrast(text, fill));
+
 /** HSL channels as the tokens write them: `"200 57% 18%"`. */
 export function formatHsl([h, s, l]: Hsl): string {
   return `${round1(h)} ${round1(s)}% ${round1(l)}%`;
 }
 
-/** White when it reaches AA on the fill; otherwise the dark text that does. */
+/**
+ * The label on the brand: white or slate-900, whichever reads stronger (APCA).
+ * Orange, red and mid blue get white; yellow, lime, amber and white get dark.
+ */
 function foregroundFor(fill: Hsl): Hsl {
-  if (contrastRatio(fill, WHITE) >= AA_CONTRAST) return WHITE;
-  if (contrastRatio(fill, NEAR_BLACK) >= AA_CONTRAST) return NEAR_BLACK;
-  return BLACK;
+  return textContrast(fill, WHITE) >= textContrast(fill, NEAR_BLACK) ? WHITE : NEAR_BLACK;
+}
+
+/** Lightness points (up to `limit`) the fill can move in `dir` with the label still at `floor`. */
+function room(fill: Hsl, foreground: Hsl, dir: -1 | 1, limit: number, floor: number): number {
+  const [h, s, l] = fill;
+  let reach = 0;
+  for (let d = 1; d <= limit; d += 1) {
+    const next = round1(l + dir * d);
+    if (next < 0 || next > 100 || textContrast([h, s, next], foreground) < floor) break;
+    reach = d;
+  }
+  return reach;
 }
 
 /**
- * Hover and active move the fill's lightness away from the foreground, so the
- * text never loses contrast while the pointer is on it. The step grows with
- * lightness (a light fill needs a larger change to read as "pressed"); on the
- * design system default (L 18%) it lands on the primary-600/700 scale.
+ * Hover and active: the fill one and two steps darker — or lighter, when
+ * darkening has less room before the label drops under the floor — so the
+ * text never fades while the pointer is on it. The step grows with lightness
+ * (a light fill needs a larger change to read as "pressed"); on the design
+ * system default (L 18%) it lands on the primary-600/700 scale. When there is
+ * no room for two full steps, the two states split what there is.
  */
-function shade(fill: Hsl, foreground: Hsl, times: 1 | 2): Hsl {
+function shades(fill: Hsl, foreground: Hsl): [Hsl, Hsl] {
   const [h, s, l] = fill;
-  const step = Math.max(3, Math.round(l * 0.15)) * times;
-  const base = contrastRatio(fill, foreground);
-  for (const next of [l - step, l + step]) {
-    if (next < 0 || next > 100) continue;
-    const candidate: Hsl = [h, s, round1(next)];
-    if (contrastRatio(candidate, foreground) >= Math.min(base, AA_CONTRAST)) return candidate;
-  }
-  return fill;
+  const step = Math.max(3, Math.round(l * 0.15));
+  const floor = Math.min(textContrast(fill, foreground), MIN_TEXT_LC);
+  const down = room(fill, foreground, -1, 2 * step, floor);
+  const up = room(fill, foreground, 1, 2 * step, floor);
+  const [dir, span] = down >= up ? ([-1, down] as const) : ([1, up] as const);
+  const hover = span === 2 * step ? step : Math.ceil(span / 2);
+  return [
+    [h, s, round1(l + dir * hover)],
+    [h, s, round1(l + dir * span)],
+  ];
 }
 
 /**
@@ -150,19 +198,21 @@ function inkFor(fill: Hsl): Hsl {
  * // Client: <BrandTheme color={hex}> or useBrandTheme(hex) — see core/brand-theme.
  * ```
  *
- * Text on the brand always reaches WCAG AA (4.5:1): white when it passes,
- * otherwise near-black (slate-900), otherwise black.
+ * The label on the brand is white or slate-900, whichever has the higher APCA
+ * contrast (PO, 07/10/2026); the ink — the brand as text on white — keeps
+ * WCAG AA (4.5:1).
  */
 export function brandThemeVars(hex?: string | null): BrandThemeVars {
   const rgb = parseHex(hex);
   if (!rgb) return {};
   const fill = rgbToHsl(rgb);
   const foreground = foregroundFor(fill);
+  const [hover, active] = shades(fill, foreground);
   return {
     "--hw-brand-primary": formatHsl(fill),
     "--hw-brand-primary-foreground": formatHsl(foreground),
-    "--hw-brand-primary-hover": formatHsl(shade(fill, foreground, 1)),
-    "--hw-brand-primary-active": formatHsl(shade(fill, foreground, 2)),
+    "--hw-brand-primary-hover": formatHsl(hover),
+    "--hw-brand-primary-active": formatHsl(active),
     "--hw-brand-primary-ink": formatHsl(inkFor(fill)),
   };
 }

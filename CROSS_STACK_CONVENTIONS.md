@@ -92,16 +92,18 @@ As variáveis que o design system declara, e de onde vêm (`tokens/core.css`,
 | `--warning` / `-foreground` | `--hw-color-warning-default` / `-foreground` | `38 92% 50%` / `0 0% 100%` |
 | `--error` / `-foreground` | `--hw-color-error-default` / `-foreground` | `0 84% 60%` / `0 0% 100%` |
 | `--info` / `-foreground` | `--hw-color-info-default` / `-foreground` | `199 89% 48%` / `0 0% 100%` |
-| `--border` | `--hw-color-border` | `217 20% 82%` |
+| `--border` | `--hw-color-border` | `210 28.6% 94.5%` (#edf1f5, PO 07/10/2026) |
 | `--input` | `--hw-color-input` | `217 20% 50%` |
 | `--ring` | tinta da marca, senão a marca, senão `--hw-color-ring` | `217 87.2% 21.4%` |
 | `--radius` | — | `0.5rem` |
 | `--chart-1`…`--chart-5` | `--hw-color-chart-1`…`5` | `200 57% 18%` · `142 76% 36%` · `38 92% 50%` · `0 84% 60%` · `199 89% 48%` |
-| `--admin-bg` / `-surface` / `-sidebar` (RGB) | `--hw-color-admin-*` | `239 240 241` · `255 255 255` · `30 58 95` |
+| `--admin-bg` / `-surface` / `-sidebar` (RGB) | `--hw-color-admin-*` | `237 241 245` (#edf1f5, PO 07/10/2026) · `255 255 255` · `30 58 95` |
 
 São os mesmos valores que o admin declarava até 06/10 — remover o `:root`
-dele não muda pixel nenhum sem marca (há um teste aqui provando isso). No
-`.dark` valem os `--hw-color-*` do modo escuro de `platform.css`.
+dele não muda pixel nenhum sem marca (há um teste aqui provando isso) —, com
+duas exceções decididas pela PO em 07/10/2026: `--border` e `--admin-bg`
+passaram a `#edf1f5`. No `.dark` valem os `--hw-color-*` do modo escuro de
+`platform.css`.
 
 O preset declara todas as chaves que o consumidor usa, com `<alpha-value>`:
 `background`, `foreground`, `card`, `popover`, `primary` (com `50`…`900`,
@@ -140,8 +142,8 @@ import { BrandTheme } from "@hywork/ui/platform";
 | Gancho | O que é |
 |---|---|
 | `--hw-brand-primary` | a marca, em canais HSL |
-| `--hw-brand-primary-foreground` | texto sobre a marca: branco se passa 4.5:1; senão slate-900; senão preto |
-| `--hw-brand-primary-hover` / `-active` | preenchimento no cursor e pressionado, afastando-se do texto (contraste nunca cai abaixo de 4.5:1) |
+| `--hw-brand-primary-foreground` | texto sobre a marca: branco ou slate-900, o de maior contraste perceptual (APCA). Laranja, vermelho e azul médio dão branco; amarelo, lima, âmbar e branco dão escuro. Nunca abaixo de Lc 50 |
+| `--hw-brand-primary-hover` / `-active` | preenchimento no cursor e pressionado, um e dois degraus mais escuros (ou mais claros, quando escurecer apagaria o texto); o texto nunca cai abaixo de Lc 50 |
 | `--hw-brand-primary-ink` | a marca como texto/linha sobre o branco: a própria marca se já tem 4.5:1, escurecida até ter |
 
 Escreva no `<html>`: é o único lugar que alcança também os portais (Dialog,

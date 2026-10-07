@@ -61,7 +61,8 @@ Documento antigo e código existente **não** são mandato para manter um defeit
 - O design system vence (Rick, 06/10/2026): ele declara todas as variáveis da
   aplicação e o preset as lê sem fallback. A cor do workspace entra só pelo
   gancho `--hw-brand-primary` (`brandThemeVars`); estado e destrutivo não seguem
-  a marca. Texto sobre a marca e a marca sobre o fundo mantêm contraste AA.
+  a marca. Texto sobre a marca: branco ou slate-900, o de maior contraste
+  perceptual (APCA, PO 07/10/2026); a marca sobre o fundo mantém contraste AA.
 - Alvo de toque e escala de controle seguem o guia; não encolher alvo para
   parecer minimalista.
 - Responsividade pertence ao componente. Uma página nunca decide como o

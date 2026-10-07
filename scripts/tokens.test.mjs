@@ -51,18 +51,32 @@ test('the values the admin declared on 06/10/2026 are what the design system now
   };
   // the :root the admin carried until 06/10/2026 — the same capture as provenance/
   const admin = block(read('provenance/platform/context.css'), ':root');
+  // what the PO changed afterwards, in the DS 2.0 validation (07/10/2026)
+  const decided = { '--border': '210 28.6% 94.5%', '--admin-bg': '237 241 245' };
   for (const [name, value] of Object.entries(admin))
-    assert.equal(resolve(contract[name] ?? tokens[name]), value, name);
+    assert.equal(resolve(contract[name] ?? tokens[name]), decided[name] ?? value, name);
+});
+
+test('the PO palette of 07/10/2026: #edf1f5 for frame and border, at 40% for filter and table', () => {
+  const platform = block(read('tokens/platform.css'), ':root');
+  const root = block(core, ':root');
+  assert.equal(platform['--hw-color-admin-bg'], '237 241 245');
+  assert.equal(platform['--hw-color-border'], '210 28.6% 94.5%'); // #edf1f5
+  assert.equal(platform['--hw-filter-surface'], '237 241 245 / 0.4');
+  assert.equal(root['--hw-table-surface'], '237 241 245 / 0.4');
 });
 
 test('zebra, hover and selection are three distinct steps', () => {
   const root = block(core, ':root');
-  assert.equal(root['--hw-table-stripe'], '249 250 251');
+  assert.equal(root['--hw-table-stripe'], '237 241 245 / 0.4');
   assert.equal(root['--hw-table-hover'], '243 244 246');
   assert.equal(root['--hw-table-selected'], '229 231 235');
   const steps = ['--hw-table-stripe', '--hw-table-hover', '--hw-table-selected'].map((t) => root[t]);
   assert.equal(new Set(steps).size, 3);
-  // cada degrau mais escuro que o anterior
-  const sum = (v) => v.split(' ').map(Number).reduce((a, b) => a + b);
+  // cada degrau mais escuro que o anterior, como aparece sobre o branco
+  const sum = (v) => {
+    const [rgb, alpha = '1'] = v.split(' / ');
+    return rgb.split(' ').map((c) => 255 - Number(alpha) * (255 - Number(c))).reduce((a, b) => a + b);
+  };
   assert.ok(sum(steps[0]) > sum(steps[1]) && sum(steps[1]) > sum(steps[2]));
 });

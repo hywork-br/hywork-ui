@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import { AA_CONTRAST, BRAND_VARIABLES, brandThemeVars, contrastRatio, parseHex } from "./brand";
+import {
+  AA_CONTRAST,
+  BRAND_VARIABLES,
+  MIN_TEXT_LC,
+  apcaContrast,
+  brandThemeVars,
+  contrastRatio,
+  parseHex,
+} from "./brand";
 
 type Hsl = [number, number, number];
 const channels = (value: string | undefined): Hsl => {
@@ -8,6 +16,8 @@ const channels = (value: string | undefined): Hsl => {
   return value!.replace(/%/g, "").split(" ").map(Number) as Hsl;
 };
 const WHITE: Hsl = [0, 0, 100];
+const SLATE_900: Hsl = [222.2, 47.4, 11.2];
+const lc = (fill: Hsl, text: Hsl) => Math.abs(apcaContrast(text, fill));
 
 function check(hex: string) {
   const vars = brandThemeVars(hex);
@@ -16,10 +26,13 @@ function check(hex: string) {
   const hover = channels(vars["--hw-brand-primary-hover"]);
   const active = channels(vars["--hw-brand-primary-active"]);
   const ink = channels(vars["--hw-brand-primary-ink"]);
-  // Texto sobre a marca: AA em repouso, no cursor e pressionado.
-  expect(contrastRatio(fill, fg)).toBeGreaterThanOrEqual(AA_CONTRAST);
-  expect(contrastRatio(hover, fg)).toBeGreaterThanOrEqual(AA_CONTRAST);
-  expect(contrastRatio(active, fg)).toBeGreaterThanOrEqual(AA_CONTRAST);
+  // Texto sobre a marca: o de maior contraste APCA entre branco e slate-900,
+  // nunca abaixo do piso — em repouso, no cursor e pressionado.
+  const other = fg[2] === 100 ? SLATE_900 : WHITE;
+  expect(lc(fill, fg)).toBeGreaterThanOrEqual(lc(fill, other));
+  expect(lc(fill, fg)).toBeGreaterThanOrEqual(MIN_TEXT_LC);
+  expect(lc(hover, fg)).toBeGreaterThanOrEqual(MIN_TEXT_LC);
+  expect(lc(active, fg)).toBeGreaterThanOrEqual(MIN_TEXT_LC);
   // A marca como texto/linha sobre o fundo branco.
   expect(contrastRatio(ink, WHITE)).toBeGreaterThanOrEqual(AA_CONTRAST);
   // Hover e active mudam o preenchimento, na mesma matiz.
@@ -84,15 +97,31 @@ describe("brandThemeVars", () => {
     expect(ink).toEqual(fill);
   });
 
-  it("meio-tom em que nem branco nem slate-900 chegam a 4.5:1 cai no preto", () => {
-    const { fg } = check("#777777");
-    expect(fg).toEqual([0, 0, 0]);
+  it.each(["#ff3b0a", "#f97316", "#ea580c", "#ff5722"])(
+    "laranja (%s): texto branco — a PO reprovou o escuro sobre o laranja (07/10)",
+    (hex) => {
+      const { fill, fg, hover } = check(hex);
+      expect(fg).toEqual(WHITE);
+      // A WCAG 2 daria o escuro: o branco fica abaixo de 4.5:1 nesses tons.
+      expect(contrastRatio(fill, WHITE)).toBeLessThan(AA_CONTRAST);
+      expect(hover[2]).toBeLessThan(fill[2]); // cursor escurece
+    },
+  );
+
+  it("azul médio (#3b82f6) e vermelho (#ef4444): texto branco", () => {
+    expect(check("#3b82f6").fg).toEqual(WHITE);
+    expect(check("#ef4444").fg).toEqual(WHITE);
   });
 
-  it("azul médio (#3b82f6): branco reprova, texto escuro passa", () => {
-    const { fill, fg } = check("#3b82f6");
-    expect(contrastRatio(fill, WHITE)).toBeLessThan(AA_CONTRAST);
-    expect(fg).toEqual([222.2, 47.4, 11.2]);
+  it.each(["#fb923c", "#f59e0b", "#84cc16", "#22c55e"])(
+    "tons claros (%s): texto escuro (slate-900)",
+    (hex) => {
+      expect(check(hex).fg).toEqual(SLATE_900);
+    },
+  );
+
+  it("meio-tom cinza (#777777): texto branco", () => {
+    expect(check("#777777").fg).toEqual(WHITE);
   });
 
   it("vale para qualquer cor: varredura de 4096 cores #rgb", () => {
@@ -105,5 +134,17 @@ describe("contrastRatio", () => {
   it("segue a fórmula da WCAG", () => {
     expect(contrastRatio(WHITE, [0, 0, 0])).toBeCloseTo(21, 5);
     expect(contrastRatio(WHITE, WHITE)).toBe(1);
+  });
+});
+
+describe("apcaContrast", () => {
+  it("bate com os valores de referência do APCA 0.0.98G", () => {
+    const BLACK: Hsl = [0, 0, 0];
+    const GRAY_888: Hsl = [0, 0, 53.3]; // #888888
+    expect(apcaContrast(BLACK, WHITE)).toBeCloseTo(106.04, 1);
+    expect(apcaContrast(WHITE, BLACK)).toBeCloseTo(-107.88, 1);
+    expect(apcaContrast(GRAY_888, WHITE)).toBeCloseTo(63.06, 1);
+    expect(apcaContrast(WHITE, GRAY_888)).toBeCloseTo(-68.54, 1);
+    expect(apcaContrast(WHITE, WHITE)).toBe(0);
   });
 });

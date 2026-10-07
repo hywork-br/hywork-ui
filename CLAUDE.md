@@ -86,7 +86,8 @@ as lê sem fallback. O consumidor não declara cor nem variável própria — a 
 
 A única cor que o consumidor informa é a **marca do workspace**, pelo gancho
 `--hw-brand-primary`, calculado por `brandThemeVars(hex)` (`@hywork/ui/theme`).
-Dela derivam `--primary`, `--primary-foreground` (contraste AA), hover, active,
+Dela derivam `--primary`, `--primary-foreground` (branco ou slate-900, pelo
+contraste perceptual APCA), hover, active,
 `--primary-ink` (a marca legível sobre o branco) e `--ring`. Estado e
 destrutivo não seguem a marca. Contrato completo em
 [CROSS_STACK_CONVENTIONS.md](CROSS_STACK_CONVENTIONS.md) §3.

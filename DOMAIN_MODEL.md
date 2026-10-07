@@ -22,7 +22,7 @@ corrigido para o valor literal da escolha.
 
 | Elemento | Opção eleita | Classes da amostra | Componente |
 |---|---|---|---|
-| Filtro de listagem | A — barra com fundo suave | `flex flex-wrap gap-3 p-4 bg-muted/50 rounded-lg items-end`; campos altura 40, raio 4 | `platform/filter-bar` |
+| Filtro de listagem | A — barra com fundo suave | `flex flex-wrap gap-3 p-4 bg-muted/50 rounded-lg items-end` (fundo trocado por `#edf1f566` em 07/10/2026); campos altura 40, raio 4 | `platform/filter-bar` |
 | Título de página | B — 24px · bold · slate-900 | `text-2xl font-bold text-slate-900` | `platform/page-title` |
 | Card de item | A — raio 12 · respiro 24 | `Card · rounded-lg p-6` | `core/card`, `platform/item-card` |
 | Botão de ação principal | A — token do design system | `bg-primary`, raio 6, altura 40 | `core/button` |
@@ -70,7 +70,7 @@ Três decisões do Rick, de 06/10/2026:
 | # | Decisão | Como está no design system |
 |---|---|---|
 | 1 | **O design system vence.** O consumidor não redefine cor nem token: nada de chave em `theme.extend.colors`, nada de `:root` com variável que sombreia as do design system. | `tokens/core.css` declara todas as variáveis da aplicação; o preset as lê sem fallback; `@hywork/ui/consumer-check` reprova a sobrescrita no CI do consumidor |
-| 2 | **Botão principal, aba ativa, anel de foco e link usam a cor do workspace.** Sem cor, ou cor inválida, vale o primário do design system (`200 57% 18%`). O texto sobre a marca mantém contraste AA (4.5:1) sozinho. | gancho `--hw-brand-primary`, escrito por `brandThemeVars(hex)`; `<BrandTheme>` e `useBrandTheme()` |
+| 2 | **Botão principal, aba ativa, anel de foco e link usam a cor do workspace.** Sem cor, ou cor inválida, vale o primário do design system (`200 57% 18%`). O texto sobre a marca é calculado sozinho — desde 07/10/2026 pelo contraste perceptual (APCA), ver "Validação do DS 2.0". | gancho `--hw-brand-primary`, escrito por `brandThemeVars(hex)`; `<BrandTheme>` e `useBrandTheme()` |
 | 3 | **Tabelas e listagens são listradas por padrão.** | `Table striped` e `DataList striped`, ligados por padrão |
 
 **O que segue a marca e o que não segue.** A marca é a única cor que o
@@ -91,10 +91,32 @@ com texto em cima usam a marca. Para o default e para marcas escuras, as duas
 são a mesma cor.
 
 **Listras, cursor e seleção.** Três degraus de cinza, cada um vencendo o
-anterior: listra gray-50 (`--hw-table-stripe`), cursor gray-100
+anterior: listra `#edf1f5` a 40% (`--hw-table-stripe`, gray-50 até 07/10), cursor gray-100
 (`--hw-table-hover`) e linha selecionada gray-200 (`--hw-table-selected`). O
 cursor era gray-50 e sumiria nas linhas listradas; a seleção era gray-100 e
 empataria com o cursor novo — por isso os dois subiram um degrau.
+
+### Validação do DS 2.0 — ajustes da PO (Luiza, 07/10/2026)
+
+Documento "Design system v2 ajustes", sobre o preview da branch
+`docs/design-system-hywork-ui` do Platform. Valores literais, como sempre:
+
+| Ponto | Decisão | Onde está |
+|---|---|---|
+| Texto do botão sobre a cor do workspace | "A cor do texto do botão deve corresponder à cor de fundo": num workspace laranja o texto escuro não tinha contraste. O texto passa a ser o de **maior contraste perceptual (APCA)** entre branco e slate-900. A WCAG 2 dava escuro para laranja, vermelho e azul médio (o branco fica em 2,8:1–3,7:1 nesses tons); o APCA dá branco, que é como se lê. Amarelo, lima, âmbar e branco seguem com texto escuro. A tinta da marca sobre o branco (aba, link, foco) continua em 4.5:1 | `brandThemeVars` → `--hw-brand-primary-foreground` |
+| Menu administrativo | `#edf1f5` — "está tudo muito cinza" | `--hw-color-admin-bg` = `237 241 245` (cabeçalho e menu lateral) |
+| Cor de borda | `#edf1f5` | `--hw-color-border` = `210 28.6% 94.5%` |
+| Fundo do filtro | `#edf1f566` (`#edf1f5` a 40%) | `--hw-filter-surface`, classe `bg-hw-filter-surface` |
+| Fundo de tabela/listagem | `#edf1f566` | `--hw-table-surface` (cabeçalho e rodapé) e `--hw-table-stripe` (listra) |
+
+Os tokens a 40% trazem o alfa no próprio valor (`237 241 245 / 0.4`): sobre o
+branco dão ≈ `#f8f9fb`. Por isso as classes `bg-hw-filter-surface`,
+`bg-hw-table-surface` e `bg-hw-table-stripe` não aceitam `/NN`.
+
+Os outros pontos do documento eram de tela, não de componente, e foram
+corrigidos no Platform: fundo e card cortado do Analytics, cor do workspace em
+Configurações, item selecionado da troca de visualização de Campanhas em cinza
+da paleta (`Button` `secondary`) e a capa do formulário de usuário.
 
 ---
 
@@ -162,7 +184,7 @@ Ordem no rodapé: ação secundária (Cancelar) à esquerda da principal.
 | | |
 |---|---|
 | Decisão | tabela do design system, com cabeçalho em 11px maiúsculo e linhas divididas por borda |
-| Listras | linhas pares em gray-50, por padrão; cursor gray-100; selecionada gray-200 (Rick, 06/10/2026) |
+| Listras | linhas pares em `#edf1f5` a 40% (PO, 07/10/2026; era gray-50), por padrão; cursor gray-100; selecionada gray-200 (Rick, 06/10/2026) |
 | Componente | `core/table`, composto em `platform/data-list` |
 | Status | ✅ feito — colunas declaradas, carregamento e vazio embutidos; listras desde a 0.11.0 |
 
@@ -315,7 +337,7 @@ rótulo, cada um de um tamanho, que não diz o que faz até o cursor parar em ci
 
 | | |
 |---|---|
-| Decisão | barra horizontal · fundo neutro a 50% · raio 12 · respiro 16 · campos alinhados pela base · seleções com forma de campo (altura 40, raio 4) e o nome da dimensão dentro do campo · busca arredondada (decisão do campo de busca) |
+| Decisão | barra horizontal · fundo `#edf1f5` a 40% (PO, 07/10/2026; era neutro a 50%) · raio 12 · respiro 16 · campos alinhados pela base · seleções com forma de campo (altura 40, raio 4) e o nome da dimensão dentro do campo · busca arredondada (decisão do campo de busca) |
 | Componente | `platform/filter-bar` |
 | Status | ✅ feito — 7 stories, 15 testes; 20 implementações migradas |
 
@@ -601,3 +623,4 @@ página e passa a ter regra escrita.
 | 06/10/2026 | Rick: o design system vence em cor e token; a marca do workspace é a única entrada de cor; tabelas listradas por padrão |
 | 06/10/2026 | HCK-136: `Badge` com tom suave para a segunda coluna de estado da linha (pedido da PO de 05/10; aguardando validação) |
 | 07/10/2026 | `Stepper`, `DatePicker` e `StatCard` entram como proposta para o DHO, aguardando o aval visual da PO |
+| 07/10/2026 | Validação do DS 2.0 pela PO: texto sobre a marca pelo contraste perceptual (APCA); `#edf1f5` no cabeçalho e menu do admin e na borda; `#edf1f5` a 40% no filtro e no cabeçalho/listra da tabela |

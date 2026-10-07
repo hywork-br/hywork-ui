@@ -22,7 +22,7 @@ const meta = {
           "A cor de marca do workspace é a **única** cor que o consumidor informa " +
           "(Rick, 06/10/2026). Botão principal, aba ativa, anel de foco, link, " +
           "checkbox, switch, rádio e progresso seguem a marca; o texto sobre ela " +
-          "tem contraste AA calculado. Estado (sucesso, atenção, erro, informação) " +
+          "é branco ou escuro, o que tiver mais contraste perceptual (APCA). Estado (sucesso, atenção, erro, informação) " +
           "e destrutivo **não** seguem a marca.\n\n" +
           "Na aplicação, escreva no `<html>`: `<html style={brandThemeVars(hex)}>` " +
           "no servidor, ou `useBrandTheme(hex)` no cliente — é o que alcança os portais.",
@@ -84,17 +84,19 @@ function Amostra({ nome, cor }: { nome: string; cor?: string }) {
 }
 
 /**
- * Três workspaces lado a lado: sem marca (o primário do design system), um
- * índigo (#434cad, texto branco) e um amarelo (#facc15). No amarelo o texto do
- * botão passa a escuro, e aba, link, checkbox e anel de foco usam a marca
- * escurecida até 4.5:1 sobre o branco — a marca amarela não vira aba ilegível.
- * Badges de estado e o botão destrutivo não mudam entre os três.
+ * Quatro workspaces lado a lado: sem marca (o primário do design system), um
+ * índigo (#434cad), um laranja (#ff3b0a) e um amarelo (#facc15). No laranja o
+ * texto do botão é branco — a PO reprovou o escuro (07/10/2026), que a WCAG 2
+ * escolheria. No amarelo o texto passa a escuro, e aba, link, checkbox e anel
+ * de foco usam a marca escurecida até 4.5:1 sobre o branco — a marca amarela
+ * não vira aba ilegível. Badges de estado e o botão destrutivo não mudam.
  */
-export const TresMarcas: Story = {
+export const Marcas: Story = {
   render: () => (
     <div className="flex flex-wrap gap-4">
       <Amostra nome="Design system" />
       <Amostra nome="Índigo" cor="#434cad" />
+      <Amostra nome="Laranja" cor="#ff3b0a" />
       <Amostra nome="Amarelo" cor="#facc15" />
     </div>
   ),

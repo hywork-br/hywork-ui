@@ -279,8 +279,9 @@ const config = {
         "white": "#fff",
         "black": "#000",
         "hw-table-border": "rgb(var(--hw-table-border) / <alpha-value>)",
-        "hw-table-surface": "rgb(var(--hw-table-surface) / <alpha-value>)",
-        "hw-table-stripe": "rgb(var(--hw-table-stripe) / <alpha-value>)",
+        // surface e stripe trazem o alfa no token (#edf1f5 a 40%, PO 07/10/2026)
+        "hw-table-surface": "rgb(var(--hw-table-surface))",
+        "hw-table-stripe": "rgb(var(--hw-table-stripe))",
         "hw-table-hover": "rgb(var(--hw-table-hover) / <alpha-value>)",
         "hw-table-selected": "rgb(var(--hw-table-selected) / <alpha-value>)",
         "hw-table-heading": "rgb(var(--hw-table-heading) / <alpha-value>)",

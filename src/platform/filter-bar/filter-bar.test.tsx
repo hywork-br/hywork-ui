@@ -171,7 +171,7 @@ describe("FilterBar — espaçamento", () => {
         />
       </FilterBar>,
     );
-    expect(screen.getByRole("search")).toHaveClass("bg-muted/50", "rounded-lg", "p-4", "gap-3", "items-end");
+    expect(screen.getByRole("search")).toHaveClass("bg-hw-filter-surface", "rounded-lg", "p-4", "gap-3", "items-end");
     expect(screen.getByRole("searchbox")).toHaveClass("rounded-full", "h-10");
     expect(screen.getByRole("combobox")).toHaveClass("rounded-sm", "h-10");
   });

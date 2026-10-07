@@ -37,7 +37,7 @@ compor um alvo confortável no fluxo que os usa.
 
 Default de botão/campo em 40px, texto de controles em 14px, raios existentes,
 Montserrat e a cor de marca do workspace (pelo gancho `--hw-brand-primary`, com
-contraste AA calculado — ver CROSS_STACK_CONVENTIONS.md §3). O preset concentra os valores em tokens sem trocar
+texto escolhido pelo contraste perceptual APCA — ver CROSS_STACK_CONVENTIONS.md §3). O preset concentra os valores em tokens sem trocar
 automaticamente todos os seletores por uma estética nova.
 
 As variantes compactas, a borda histórica do Input e matizes de status existentes

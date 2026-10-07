@@ -184,19 +184,23 @@
      declarava no próprio :root até 06/10/2026. */
   --radius: 0.5rem;
 
-  /* Listagem. Cabeçalho e rodapé em --hw-table-surface (gray-50).
+  /* Listagem. Cabeçalho e rodapé em --hw-table-surface (#edf1f5 a 40%).
      As linhas do corpo seguem três degraus de cinza, do mais leve ao mais
      marcado — cada estado mais forte que o anterior, para que nenhum some
      sobre outro (Rick, 06/10/2026):
-       listra      gray-50   linhas pares, por padrão
+       listra      #edf1f5 a 40% (≈ #f8f9fb sobre o branco; era gray-50 até
+                   07/10/2026, decisão da PO)   linhas pares, por padrão
        cursor      gray-100  visível também sobre a linha listrada
        selecionada gray-200  vence listra e cursor
      Até 06/10 a seleção era gray-100 e o cursor gray-50: com a listra em
      gray-50, o cursor sumia nas linhas pares e a seleção ficaria igual ao
      cursor novo. */
   --hw-table-border: 229 231 235;
-  --hw-table-surface: 249 250 251;
-  --hw-table-stripe: 249 250 251;
+  /* Cabeçalho, rodapé e listra: #edf1f566 — #edf1f5 a 40%, decisão da PO de
+     07/10/2026 (eram gray-50). O alfa vem no token: sobre o branco dá
+     ≈ #f8f9fb, ainda mais leve que o cursor e a seleção. */
+  --hw-table-surface: 237 241 245 / 0.4;
+  --hw-table-stripe: 237 241 245 / 0.4;
   --hw-table-hover: 243 244 246;
   --hw-table-selected: 229 231 235;
   --hw-table-heading: 99 115 129;

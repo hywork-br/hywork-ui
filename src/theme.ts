@@ -6,5 +6,5 @@
 // Nos componentes de cliente, a mesma função sai de "@hywork/ui/platform"
 // (e "/builder"), junto de <BrandTheme> e useBrandTheme().
 
-export { brandThemeVars, BRAND_VARIABLES } from "./theme/brand";
+export { apcaContrast, brandThemeVars, BRAND_VARIABLES, MIN_TEXT_LC } from "./theme/brand";
 export type { BrandThemeVars, BrandVariable } from "./theme/brand";
