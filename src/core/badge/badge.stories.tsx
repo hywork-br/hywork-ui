@@ -25,6 +25,25 @@ export const Papeis: Story = {
   ),
 };
 
+/**
+ * Tom suave: o mesmo papel num preenchimento claro. Para separar duas colunas de
+ * estado na mesma linha — em Usuários, "Ativo" (conta) fica no tom cheio e o
+ * status do convite no suave. O tom cheio continua o padrão.
+ */
+export const TomSuave: Story = {
+  render: () => (
+    <div className="space-y-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <Badge variant="positive">Ativo</Badge>
+        <Badge variant="positive" tone="subtle">Acesso configurado</Badge>
+        <Badge variant="attention" tone="subtle">Convite pendente</Badge>
+        <Badge variant="negative" tone="subtle">Cancelado</Badge>
+        <Badge variant="informative" tone="subtle">Agendado</Badge>
+      </div>
+    </div>
+  ),
+};
+
 /** Qual papel usar, pelo que o estado significa na tela. */
 export const QuandoUsarCada: Story = {
   render: () => (

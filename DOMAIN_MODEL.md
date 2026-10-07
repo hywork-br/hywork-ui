@@ -22,7 +22,7 @@ corrigido para o valor literal da escolha.
 
 | Elemento | Opção eleita | Classes da amostra | Componente |
 |---|---|---|---|
-| Filtro de listagem | A — barra com fundo suave | `flex flex-wrap gap-3 p-4 bg-muted/50 rounded-lg items-end`; campos altura 40, raio 4 | `platform/filter-bar` |
+| Filtro de listagem | A — barra com fundo suave | `flex flex-wrap gap-3 p-4 bg-muted/50 rounded-lg items-end` (fundo trocado por `#edf1f566` em 07/10/2026); campos altura 40, raio 4 | `platform/filter-bar` |
 | Título de página | B — 24px · bold · slate-900 | `text-2xl font-bold text-slate-900` | `platform/page-title` |
 | Card de item | A — raio 12 · respiro 24 | `Card · rounded-lg p-6` | `core/card`, `platform/item-card` |
 | Botão de ação principal | A — token do design system | `bg-primary`, raio 6, altura 40 | `core/button` |
@@ -37,7 +37,7 @@ corrigido para o valor literal da escolha.
 | Ações de linha | A — menu suspenso | `<DropdownMenu>` com gatilho de 32px | `platform/row-actions` |
 | Rótulo de campo | B — semibold · slate-800 | `text-sm font-semibold text-slate-800` | `core/label` |
 | Mensagem de erro | B — red-500 · colado no campo | `text-sm text-red-500` | `core/form-message` |
-| Campo de busca | B — arredondado | `rounded-full px-4` | `core/search-input` |
+| Campo de busca | B — arredondado → raio 4 desde 07/10/2026 (Rick) | `rounded-full px-4` → `rounded-sm` | `core/search-input` |
 | Área de upload | C — borda 2px · horizontal | `border-2 border-dashed rounded-xl flex items-center gap-4`, respiro 16/32 | `platform/upload-area` |
 | Carrossel | A — setas nas laterais | setas circulares de 28px, brancas, com borda, na linha do trilho | `core/carousel` |
 
@@ -51,6 +51,72 @@ escolha fica, mas o texto do selo `positive`/`success` usa `--hw-on-status`
 WCAG AA (4,5:1); o texto escuro dá 7:1. É a mesma correção que os botões de
 status já tinham. Os selos `attention`, `negative` e `info` têm fundo escuro e
 seguem com texto branco (6,5:1 ou mais).
+
+---
+
+## Cor e token — o design system vence (Rick, 06/10/2026)
+
+Os usuários seguiam relatando que o produto está "tudo muito branco". Na
+mesma conversa apareceu a causa de fundo: o contrato dizia que as variáveis da
+aplicação venciam as do design system, e o admin mantinha a própria cópia de
+`--primary`, `--background` e companhia. Nas palavras do Rick: *"Não tem essa
+de 'o plataform vence do DS', isso não tem que acontecer. Se criamos o
+hywork-ui pra centralizar tudo isso, ele tem que vencer em todos os pontos. O
+design system precisa ser aplicado de forma correta, coerente e eficiente,
+sem falhas."*
+
+Três decisões do Rick, de 06/10/2026:
+
+| # | Decisão | Como está no design system |
+|---|---|---|
+| 1 | **O design system vence.** O consumidor não redefine cor nem token: nada de chave em `theme.extend.colors`, nada de `:root` com variável que sombreia as do design system. | `tokens/core.css` declara todas as variáveis da aplicação; o preset as lê sem fallback; `@hywork/ui/consumer-check` reprova a sobrescrita no CI do consumidor |
+| 2 | **Botão principal, aba ativa, anel de foco e link usam a cor do workspace.** Sem cor, ou cor inválida, vale o primário do design system (`200 57% 18%`). O texto sobre a marca é calculado sozinho — desde 07/10/2026 pelo contraste perceptual (APCA), ver "Validação do DS 2.0". | gancho `--hw-brand-primary`, escrito por `brandThemeVars(hex)`; `<BrandTheme>` e `useBrandTheme()` |
+| 3 | **Tabelas e listagens são listradas por padrão.** | `Table striped` e `DataList striped`, ligados por padrão |
+
+**O que segue a marca e o que não segue.** A marca é a única cor que o
+consumidor informa. Seguem: botão `default` (preenchimento, cursor e clique),
+`link`, aba ativa, anel de foco, checkbox, rádio, switch, progresso, slider,
+spinner, badge `default`. **Não seguem**: os papéis de estado (sucesso,
+atenção, erro, informação), o destrutivo e as escolhas literais da PO que não
+eram "primária" — título slate-900, rótulo slate-800, estado vazio gray-400,
+badge positivo emerald-500, esqueleto gray-200, seta branca do carrossel.
+
+**A marca sobre o fundo branco.** Uma marca clara (amarelo, verde-limão) passa
+no preenchimento — o texto do botão vira escuro — mas não serve como texto ou
+linha sobre o branco: a aba ativa e o link ficariam ilegíveis. Por isso há a
+tinta da marca (`--primary-ink`): é a própria marca quando ela já tem 4.5:1
+sobre o branco, e a marca escurecida, mesma matiz, quando não tem. Aba, link,
+anel de foco, borda do checkbox e trilho do switch usam a tinta; preenchimentos
+com texto em cima usam a marca. Para o default e para marcas escuras, as duas
+são a mesma cor.
+
+**Listras, cursor e seleção.** Três degraus de cinza, cada um vencendo o
+anterior: listra `#edf1f5` a 40% (`--hw-table-stripe`, gray-50 até 07/10), cursor gray-100
+(`--hw-table-hover`) e linha selecionada gray-200 (`--hw-table-selected`). O
+cursor era gray-50 e sumiria nas linhas listradas; a seleção era gray-100 e
+empataria com o cursor novo — por isso os dois subiram um degrau.
+
+### Validação do DS 2.0 — ajustes da PO (Luiza, 07/10/2026)
+
+Documento "Design system v2 ajustes", sobre o preview da branch
+`docs/design-system-hywork-ui` do Platform. Valores literais, como sempre:
+
+| Ponto | Decisão | Onde está |
+|---|---|---|
+| Texto do botão sobre a cor do workspace | "A cor do texto do botão deve corresponder à cor de fundo": num workspace laranja o texto escuro não tinha contraste. O texto passa a ser o de **maior contraste perceptual (APCA)** entre branco e slate-900. A WCAG 2 dava escuro para laranja, vermelho e azul médio (o branco fica em 2,8:1–3,7:1 nesses tons); o APCA dá branco, que é como se lê. Amarelo, lima, âmbar e branco seguem com texto escuro. A tinta da marca sobre o branco (aba, link, foco) continua em 4.5:1 | `brandThemeVars` → `--hw-brand-primary-foreground` |
+| Menu administrativo | `#edf1f5` — "está tudo muito cinza" | `--hw-color-admin-bg` = `237 241 245` (cabeçalho e menu lateral) |
+| Cor de borda | `#edf1f5` | `--hw-color-border` = `210 28.6% 94.5%` |
+| Fundo do filtro | `#edf1f566` (`#edf1f5` a 40%) | `--hw-filter-surface`, classe `bg-hw-filter-surface` |
+| Fundo de tabela/listagem | `#edf1f566` | `--hw-table-surface` (cabeçalho e rodapé) e `--hw-table-stripe` (listra) |
+
+Os tokens a 40% trazem o alfa no próprio valor (`237 241 245 / 0.4`): sobre o
+branco dão ≈ `#f8f9fb`. Por isso as classes `bg-hw-filter-surface`,
+`bg-hw-table-surface` e `bg-hw-table-stripe` não aceitam `/NN`.
+
+Os outros pontos do documento eram de tela, não de componente, e foram
+corrigidos no Platform: fundo e card cortado do Analytics, cor do workspace em
+Configurações, item selecionado da troca de visualização de Campanhas em cinza
+da paleta (`Button` `secondary`) e a capa do formulário de usuário.
 
 ---
 
@@ -73,6 +139,7 @@ incluíam uma tela com família tipográfica própria (`font-ltwave`).
 | | |
 |---|---|
 | Decisão | altura 48 · a lista ocupa a linha e divide a largura em partes iguais · borda inferior 1px · item ativo com texto na cor primária, peso 600 e indicador de 2px na primária · inativos em cor esmaecida, peso normal · fundo transparente |
+| Primária | a marca do workspace, na tinta legível sobre o fundo (`--primary-ink`) — ver "Cor e token" |
 | Componente | `core/tabs` |
 | Status | ✅ feito (29/09) — até então as abas tinham o tamanho do texto e o ativo em cor de texto, fora da escolha |
 
@@ -117,8 +184,9 @@ Ordem no rodapé: ação secundária (Cancelar) à esquerda da principal.
 | | |
 |---|---|
 | Decisão | tabela do design system, com cabeçalho em 11px maiúsculo e linhas divididas por borda |
+| Listras | linhas pares em `#edf1f5` a 40% (PO, 07/10/2026; era gray-50), por padrão; cursor gray-100; selecionada gray-200 (Rick, 06/10/2026) |
 | Componente | `core/table`, composto em `platform/data-list` |
-| Status | ✅ feito — colunas declaradas, carregamento e vazio embutidos |
+| Status | ✅ feito — colunas declaradas, carregamento e vazio embutidos; listras desde a 0.11.0 |
 
 **A maior migração do projeto: 44 telas.** 17 usam `<table>` cru e 27 montam a
 listagem com `div` e grid.
@@ -175,6 +243,24 @@ Só `outline` continua vazado, porque é o que o nome descreve.
 
 `success`, `warning`, `destructive` e `info` seguem válidos como nomes
 anteriores dos mesmos papéis.
+
+**Tom suave — para duas colunas de estado na mesma linha** (HCK-136, pedido da
+PO em 05/10/2026, proposta de 06/10/2026 aguardando validação). Na tela de
+Usuários, "Ativo" (a conta) e "Acesso configurado" (o convite) eram o mesmo
+verde lado a lado, e a PO perguntou se a paleta tinha outra variação para
+diferenciá-los. Não tinha: `positive` é um verde só. O `Badge` ganhou
+`tone="subtle"`:
+
+| Tom | Preenchimento | Texto | Contraste |
+|---|---|---|---|
+| `solid` (padrão) | a cor do papel (`--hw-status-success-fill` no verde) | `--hw-on-status` no verde, branco nos outros | 6,5:1 a 7:1 |
+| `subtle` | a cor do papel a 15% | a tinta do papel (`--hw-status-success` = emerald-700 no verde) | 4,8:1 a 5,5:1 |
+
+A regra: **o estado principal da linha fica no tom cheio; uma segunda coluna de
+estado vai inteira no suave** — inclusive os outros papéis dela, para a coluna
+não misturar os dois tons. Continua sendo o mesmo papel: o tom não cria um
+sexto estado, e não serve para categoria. `neutral`, `outline` e os genéricos
+não têm tom.
 
 ### Estado vazio — respiro 64, e sem moldura
 
@@ -251,7 +337,7 @@ rótulo, cada um de um tamanho, que não diz o que faz até o cursor parar em ci
 
 | | |
 |---|---|
-| Decisão | barra horizontal · fundo neutro a 50% · raio 12 · respiro 16 · campos alinhados pela base · seleções com forma de campo (altura 40, raio 4) e o nome da dimensão dentro do campo · busca arredondada (decisão do campo de busca) |
+| Decisão | barra horizontal · fundo `#edf1f5` a 40% (PO, 07/10/2026; era neutro a 50%) · raio 12 · respiro 16 · campos alinhados pela base · seleções com forma de campo (altura 40, raio 4) e o nome da dimensão dentro do campo · busca no mesmo raio 4 (Rick, 07/10/2026; era arredondada) |
 | Componente | `platform/filter-bar` |
 | Status | ✅ feito — 7 stories, 15 testes; 20 implementações migradas |
 
@@ -396,12 +482,13 @@ ou desligado, ela é papel semântico e usa `Badge` ou `--hw-status-*`.
 | | |
 |---|---|
 | Decisão | cor primária vinda do token · raio 6 · altura 40 |
-| Token | `--primary` com fallback `--hw-color-primary-default` |
+| Token | `--primary`, derivado da marca do workspace (`--hw-brand-primary`) e, sem ela, de `--hw-color-primary-default`; cursor e clique em `--primary-hover`/`--primary-active` |
 | Componente | `core/button` |
-| Status | ✅ existe |
+| Status | ✅ existe — segue a marca desde a 0.11.0 |
 
 **Elimina os três hex fixos em uso** (`#143748`, `#9333ea`, `#072c66`). Botão
-primário nunca carrega cor literal — assim o tema do cliente funciona.
+primário nunca carrega cor literal — a cor do workspace chega pelo gancho de
+marca, e só por ele (Rick, 06/10/2026).
 
 ### Rótulo de campo — semibold
 
@@ -427,15 +514,19 @@ A escolha visual foi o `text-red-500` literal. No design system esse valor vira
 **token**, para que o componente não carregue cor literal — a aparência é a
 eleita, a implementação é tokenizada.
 
-### Campo de busca — arredondado
+### Campo de busca — raio 4, como os demais campos
 
 | | |
 |---|---|
-| Decisão | altura 40 · raio total · ícone de lupa à esquerda |
+| Decisão | altura 40 · **raio 4** · ícone de lupa à esquerda |
 | Componente | `core/search-input` |
 | Status | ✅ feito — 4 stories, 5 testes |
 
-Vale para a busca. **Não muda o `Input` geral**, que mantém o raio 4.
+**Mudou em 07/10/2026 (Rick).** A escolha da PO de 23/09 era raio total, só
+para a busca. Na barra de filtros, a pílula ficava ao lado de selects, gatilhos
+e botões de raio 4 e destoava de tudo. Agora todo controle do filtro tem o
+mesmo raio: campo de texto, busca, select, gatilho de dropdown e botão. Quem
+marca o campo como busca é a lupa, não o formato.
 
 A `FilterBar.Search` passou a usá-lo: até então a barra desenhava um `Input`
 comum de raio 4, ou seja, o padrão mais visível do produto não seguia a decisão.
@@ -444,10 +535,9 @@ Dentro da barra o botão de limpar do campo fica desligado — quem desfaz é o
 "Limpar" da barra. Dois botões para a mesma ação, lado a lado, é uma escolha a
 mais sem ganho. Solto (num seletor, num diálogo) ele aparece.
 
-**Dentro da barra de filtros:** a busca é arredondada — a própria decisão do
-campo de busca diz que vale "isolado e dentro de filtros". As seleções seguem a
-amostra da Opção A do filtro: forma de campo, raio 4, com o nome da dimensão
-dentro. Chips são a Opção B do filtro, que não foi eleita: `FilterBar.Chips`
+**Dentro da barra de filtros:** busca e seleções têm a mesma forma de campo,
+raio 4. As seleções seguem a amostra da Opção A do filtro, com o nome da
+dimensão dentro. Chips são a Opção B do filtro, que não foi eleita: `FilterBar.Chips`
 continua na API só para não quebrar quem o usa, e desenha um select.
 
 ### Área de upload — borda 2px, horizontal
@@ -533,4 +623,8 @@ página e passa a ter regra escrita.
 | Data | O que mudou |
 |---|---|
 | 23/09/2026 | 18 padrões decididos pela PO a partir do catálogo comparativo |
+| 06/10/2026 | Rick: o design system vence em cor e token; a marca do workspace é a única entrada de cor; tabelas listradas por padrão |
+| 06/10/2026 | HCK-136: `Badge` com tom suave para a segunda coluna de estado da linha (pedido da PO de 05/10; aguardando validação) |
 | 07/10/2026 | `Stepper`, `DatePicker` e `StatCard` entram como proposta para o DHO, aguardando o aval visual da PO |
+| 07/10/2026 | Rick: o campo de busca deixa o raio total e passa ao raio 4 dos campos, selects e botões do filtro |
+| 07/10/2026 | Validação do DS 2.0 pela PO: texto sobre a marca pelo contraste perceptual (APCA); `#edf1f5` no cabeçalho e menu do admin e na borda; `#edf1f5` a 40% no filtro e no cabeçalho/listra da tabela |

@@ -70,13 +70,54 @@ migração foi feita lá.
 - [ ] Alinhar `--primary` e `--radius` do Builder aos do Platform
 - [ ] Corrigir `hw-cloud-builder/lib/theme-utils.ts`: o tema do workspace escreve
       `--color-primary`, mas o Tailwind lê `--primary` — a cor de marca do
-      cliente não chega em 202 usos de `bg-primary`
+      cliente não chega em 202 usos de `bg-primary`. Desde a 0.11.0 a correção é
+      trocar a escrita por `useBrandTheme(hex)` / `brandThemeVars(hex)` (ver F1.1)
 
 **Por que primeiro:** é a única camada que alcança até o código que nunca será
 migrado. Um token muda a cor de todo componente local que usa `bg-primary`.
 
 **Resolve:** 6 alturas de controle, 7 raios, 9 títulos de página, 3 cores de
 botão primário.
+
+### F1.1 · O design system vence — tokens, marca e listras 🚧
+
+Decisões do Rick de 06/10/2026, registradas em [DOMAIN_MODEL.md](DOMAIN_MODEL.md)
+("Cor e token"). Os usuários seguiam achando o produto "tudo muito branco", e o
+contrato deixava o admin sobrescrever a cor do design system.
+
+**No hywork-ui (0.11.0):**
+
+- [x] `tokens/core.css` declara todas as variáveis da aplicação, com os valores
+      exatos que o admin declarava; o preset as lê sem fallback
+- [x] Gancho de marca `--hw-brand-primary` → `--primary`, `--primary-foreground`,
+      hover, active, `--primary-ink` e `--ring`; `brandThemeVars(hex)` com
+      contraste AA garantido; `<BrandTheme>` e `useBrandTheme()`
+- [x] Componentes seguem a marca (botão, link, abas, checkbox, rádio, switch,
+      progresso, slider, foco); estado e destrutivo não
+- [x] Trava `@hywork/ui/consumer-check` para o teste do consumidor
+- [x] `Table`/`DataList` listrados por padrão; cursor e seleção com degrau próprio
+- [x] Auditoria de cor literal em `src/**` (campos, véu, slider, toast, editor)
+- [ ] Tag `v0.11.0` — depois do merge na `develop`
+
+**No admin (`hywork-plataform`), na branch de adoção do design system:**
+
+1. Subir `@hywork/ui` para a 0.11.0.
+2. Apagar de `src/app/styles/globals.css` os blocos `:root` e `.dark` de
+   variáveis (linhas 13–86 hoje: `--background` … `--chart-5` e `--radius`) —
+   os `@import` de `core.css` e `platform.css` ficam, e o resto do arquivo
+   também. Sem marca, nenhum pixel muda (o teste de tokens prova).
+3. Atualizar o comentário do `tailwind.config.ts` ("as variáveis de tema em
+   globals.css continuam prevalecendo") — não há mais chave de cor ali.
+4. Aplicar a marca: `useBrandTheme(workspace?.workspace_theme?.color_primary_hex)`
+   no `WorkspaceProvider` (`src/context/workspace-context/workspace-context.tsx`).
+   Fora de um workspace vale o primário do design system.
+5. Criar `src/design-system.test.ts` com `assertNoTokenOverrides` (exemplo em
+   CROSS_STACK_CONVENTIONS.md §3) — a partir dele, sobrescrever cor quebra o CI.
+6. Conferir por captura, antes e depois, três telas com listagem (listras), uma
+   com abas e um workspace de cor clara (o texto do botão vira escuro).
+
+**No Builder:** o mesmo passo 2 quando ele instalar o pacote, e o passo 4 no
+lugar de `lib/theme-utils.ts`.
 
 ### F2 · Piloto — `FilterBar` 🚧
 
@@ -237,3 +278,4 @@ Bloqueiam implementação. Ver [PADROES.md](PADROES.md#decisões-em-aberto).
 | 24/09/2026 | `FilterBar` criado — primeiro padrão autoral do design system |
 | 24/09/2026 | Badge, Tabs, Label e Skeleton conforme a decisão da PO; saem da derivação |
 | 24/09/2026 | DataList, ItemCard, EmptyState, PageTitle e ListPagination criados |
+| 06/10/2026 | O design system vence em cor e token: contrato das variáveis, marca do workspace, trava do consumidor e listras (0.11.0) |

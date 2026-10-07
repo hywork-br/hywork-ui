@@ -11,9 +11,21 @@ css.href = `/.storybook/static/${source ? "source" : "package"}.css`;
 document.head.append(css);
 document.documentElement.style.setProperty("--font-montserrat", '"Montserrat Variable", sans-serif');
 if (params.get("theme") === "dark") document.documentElement.classList.add("dark");
+// A referência congelada traz a borda de 06/10 (217 20% 82%); a PO a trocou por
+// #edf1f5 na validação de 07/10/2026. A comparação é de componente, não de
+// valor de token: a referência recebe a borda decidida, como recebe a marca.
+// No escuro a borda não mudou.
+if (source && params.get("theme") !== "dark") document.documentElement.style.setProperty("--border", "210 28.6% 94.5%");
 if (params.get("theme") === "tenant") {
-  document.documentElement.style.setProperty("--primary", "270 60% 35%");
-  document.documentElement.style.setProperty("--primary-foreground", "0 0% 100%");
+  // A referência congelada recebia a marca sobrescrevendo --primary. Desde
+  // 06/10/2026 o pacote só aceita o gancho de marca: --primary é dele.
+  const root = document.documentElement.style;
+  root.setProperty(source ? "--primary" : "--hw-brand-primary", "270 60% 35%");
+  root.setProperty(source ? "--primary-foreground" : "--hw-brand-primary-foreground", "0 0% 100%");
+  // A mesma decisão leva a marca ao anel de foco. Na referência o anel era
+  // uma variável à parte; aqui ele recebe a marca como o pacote a deriva (a
+  // tinta, que para este roxo escuro é a própria marca).
+  if (source) root.setProperty("--ring", "270 60% 35%");
 }
 // A paridade compara as PRIMITIVAS extraídas contra a referência congelada.
 // Padrões autorais (FilterBar e os próximos) não têm equivalente em

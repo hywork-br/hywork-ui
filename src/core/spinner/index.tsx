@@ -24,7 +24,7 @@ export const Spinner: React.FC<SpinnerProps> = ({ className, size = "md", ...pro
   <div role="status" className={cn("flex items-center justify-center", className)} {...props}>
     <div
       className={cn(
-        "animate-spin rounded-full border-primary/30 border-t-primary motion-reduce:animate-none",
+        "animate-spin rounded-full border-primary-ink/30 border-t-primary-ink motion-reduce:animate-none",
         tamanhos[size],
       )}
     />

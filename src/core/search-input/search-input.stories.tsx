@@ -9,7 +9,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Em repouso: lupa à esquerda, raio total, altura 40. */
+/** Em repouso: lupa à esquerda, raio 4, altura 40. */
 export const Padrao: Story = {};
 
 /** Com texto, o botão de limpar aparece à direita. */
