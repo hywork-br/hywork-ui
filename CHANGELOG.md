@@ -1,6 +1,6 @@
 # Changelog
 
-## Não lançado — componentes do wizard de ciclo (DHO)
+## 0.11.0 — componentes do wizard de ciclo (DHO)
 
 Três componentes genéricos que a tela "Criar ciclo de avaliação" do DHO precisa
 (D-16 da Fase 0). A estrutura vem do protótipo da PO; o **visual é proposta** e
