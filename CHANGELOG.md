@@ -1,5 +1,35 @@
 # Changelog
 
+## Não lançado — componentes do wizard de ciclo (DHO)
+
+Três componentes genéricos que a tela "Criar ciclo de avaliação" do DHO precisa
+(D-16 da Fase 0). A estrutura vem do protótipo da PO; o **visual é proposta** e
+aguarda o aval dela — ver `DOMAIN_MODEL.md`, "Componentes novos aguardando o
+aval da PO". Nenhuma API existente muda.
+
+- **`DatePicker` em `core`:** data única. Mostra dd/mm/aaaa e devolve
+  `'YYYY-MM-DD'`, sem fuso (toda a aritmética em `Date.UTC`). Digitação com
+  máscara (colar ISO também vale) e calendário em popover com o teclado do
+  WAI-ARIA (setas, Home/End, PageUp/PageDown, Shift para ano, Alt+↓ para abrir).
+  Datas fora de `min`/`max` desabilitadas; texto inválido ou fora do intervalo
+  devolve `null` e mostra o motivo colado ao campo, ligado por
+  `aria-describedby`. Calendário próprio, **sem dependência nova**: o
+  `react-day-picker` viraria peer obrigatória (política da 0.10.2) e o Builder
+  tem a 8.x, de API incompatível com a 9.x.
+- **`Stepper` em `platform`:** trilha de passos de wizard. `horizontal` são
+  segmentos preenchidos até o passo atual (só leitura); `vertical` é a lista com
+  número em círculo, ✓ nos concluídos, cadeado nos `locked` (`aria-disabled`,
+  sem clique) e o atual com `aria-current="step"`. Clicável só com `onSelect`.
+- **`StatCard` em `platform`:** cartão de indicador — ícone, rótulo, valor, nota
+  e variação já formatada (`delta`) com tom `positive`/`negative`/`neutral`, que
+  o leitor de tela ouve por extenso. `tone="attention"` destaca o cartão.
+- `date-picker` entra em `nativeNames` do derive e no `manifest.json`.
+- Os testes dos três passam também pelo axe-core (sem contraste, que o jsdom não
+  mede); no navegador, o contraste das stories novas foi conferido com o axe.
+  A única reprovação é a da mensagem de erro do `DatePicker`, que é o
+  `FormMessage`: o red-500 eleito pela PO dá 3,76:1 sobre branco, como em todo
+  campo do pacote — pendência de decisão, não deste componente.
+
 ## 0.10.3 — `test:browser` verde
 
 - **Selo de sucesso com contraste:** o verde da PO (emerald-500) fica, e o texto
