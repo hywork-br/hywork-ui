@@ -276,6 +276,10 @@
       "file": "src/core/command/index.tsx"
     },
     {
+      "name": "date-picker",
+      "file": "src/core/date-picker/index.tsx"
+    },
+    {
       "name": "form",
       "file": "src/core/form/index.tsx"
     },
