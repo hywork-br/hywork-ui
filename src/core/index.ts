@@ -25,6 +25,7 @@ export * from "./label";
 export * from "./popover";
 export * from "./progress";
 export * from "./radio-group";
+export * from "./rating-scale";
 export * from "./scroll-area";
 export * from "./search-input";
 export * from "./select";

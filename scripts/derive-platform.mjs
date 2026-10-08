@@ -37,9 +37,10 @@ export const componentNames = 'accordion alert-dialog alert avatar badge breadcr
  * Primitivas escritas direto aqui, sem captura do Platform (0.10.0): não têm
  * `provenance/`, então o derive não as gera nem as confere — só as mantém no
  * barrel do core. Sem esta lista, rodar o derive as tirava do barrel.
- * `brand-theme` entrou com a marca do workspace e `date-picker` com o wizard do DHO.
+ * `brand-theme` entrou com a marca do workspace, `date-picker` com o wizard do
+ * DHO e `rating-scale` com o formulário de avaliação do DHO.
  */
-export const nativeNames = ['brand-theme', 'carousel', 'command', 'date-picker', 'form', 'form-message', 'search-input', 'spinner', 'toast'];
+export const nativeNames = ['brand-theme', 'carousel', 'command', 'date-picker', 'form', 'form-message', 'rating-scale', 'search-input', 'spinner', 'toast'];
 
 /** Tudo o que o barrel do core exporta, em ordem alfabética. */
 export const coreNames = [...componentNames, ...nativeNames].sort((a, b) => a.localeCompare(b));

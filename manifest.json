@@ -292,6 +292,10 @@
       "file": "src/core/form-message/index.tsx"
     },
     {
+      "name": "rating-scale",
+      "file": "src/core/rating-scale/index.tsx"
+    },
+    {
       "name": "search-input",
       "file": "src/core/search-input/index.tsx"
     },
