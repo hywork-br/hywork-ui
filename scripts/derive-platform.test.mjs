@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { componentNames, authoredNames, nativeNames, coreNames, tokenize, extractComponent } from './derive-platform.mjs';
+import { componentNames, authoredNames, nativeNames, coreNames, tokenize, extractComponent, checkRadioOnArrow } from './derive-platform.mjs';
 import { existsSync } from 'node:fs';
 const read = p => readFileSync(new URL('../'+p, import.meta.url), 'utf8');
 const hash = s => createHash('sha256').update(s).digest('hex');
@@ -24,6 +24,13 @@ test('source integrity gate rejects a behavior mutation', () => {
   const changed = original.replace('event.stopPropagation();', '');
   assert.notEqual(changed, original);
   assert.notEqual(hash(changed), manifest.source.files['src/components/ui/input.tsx'].normalizedSha256);
+});
+test('the derivation makes radio arrows check, and fails loudly if the captured root drifts', () => {
+  const original = read('provenance/platform/components/radio-group.tsx');
+  assert.ok(extractComponent('radio-group', original).includes('checkFocusedRadioAfterArrow(event)'));
+  const drifted = original.replace('{...props}\n      ref={ref}', '{...props} ref={ref}');
+  assert.notEqual(drifted, original);
+  assert.throws(() => checkRadioOnArrow(drifted), /arrow fix source not found/);
 });
 test('token conversion removes literal colors without changing functional code', () => {
   assert.equal(tokenize('border-[#e5e7eb] hover:bg-[#F9FAFB] onClick={save}'),
