@@ -129,6 +129,7 @@ describe("BarList", () => {
     expect(botoes[0]).toHaveAttribute("type", "button");
     await user.click(botoes[0]);
     expect(onSelect).toHaveBeenCalledOnce();
+    expect(onSelect).toHaveBeenCalledWith();
   });
 
   it("navega pelo teclado: Tab percorre as linhas clicáveis, Enter e Espaço selecionam", async () => {

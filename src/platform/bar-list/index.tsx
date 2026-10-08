@@ -89,7 +89,8 @@ const BarList = React.forwardRef<HTMLUListElement, BarListProps>(
               {item.onSelect ? (
                 <button
                   type="button"
-                  onClick={item.onSelect}
+                  // The click event stays here: onSelect takes no arguments.
+                  onClick={() => item.onSelect?.()}
                   className={cn(
                     linha,
                     "outline-none transition-colors motion-reduce:!transition-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
