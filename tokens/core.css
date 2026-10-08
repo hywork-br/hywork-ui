@@ -27,6 +27,10 @@
   --hw-leading-3xl: 2.25rem;
   --hw-text-4xl: 2.25rem;
   --hw-leading-4xl: 2.5rem;
+  /* Corpo: o tamanho que todo texto sem classe herda do body. Padrão 16px;
+     o admin usa 14px (platform.css). */
+  --hw-text-body: var(--hw-text-base);
+  --hw-leading-body: var(--hw-leading-base);
   --hw-weight-light: 300;
   --hw-weight-normal: 400;
   --hw-weight-medium: 500;

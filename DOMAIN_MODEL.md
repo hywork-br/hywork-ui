@@ -134,6 +134,38 @@ da paleta (`Button` `secondary`) e a capa do formulário de usuário.
 Substitui as **9 combinações** em uso, que iam de 20px/semibold a 30px/black e
 incluíam uma tela com família tipográfica própria (`font-ltwave`).
 
+### Corpo de texto — 14px no admin
+
+| | |
+|---|---|
+| Decisão | todo texto sem classe de tamanho sai em 14px, altura de linha 20px |
+| Token | `--hw-text-body` · `--hw-leading-body` (16px no padrão; 14px em `tokens/platform.css`) |
+| Onde | regra base do `body` no `platform-preset` |
+| Status | ✅ feito (Rick, 08/10/2026) |
+
+Os controles já eram 14px, mas nada fixava o corpo: com 1rem = 16px, o conteúdo
+de card, modal e popover e os textos soltos das telas saíam em 16px ao lado de
+campos e botões de 14px. A escala `text-*` não muda — `text-base` continua 16px
+e o rem continua 16px, para não encolher espaçamentos, alturas e os valores em
+px já escritos.
+
+Quem mostra conteúdo **da intranet** dentro do admin (canvas do Page Builder,
+prévias de página) fixa `text-base` no contêiner: a intranet segue com 16px, e o
+editor tem de mostrar o que o colaborador vê.
+
+### Título de card — 18px
+
+| | |
+|---|---|
+| Decisão | `CardTitle` em 18px semibold, o mesmo nível do título de modal |
+| Token | `--hw-text-lg` |
+| Componente | `core/card` |
+| Status | ✅ feito (Rick, 08/10/2026) |
+
+Vinha do shadcn em 24px, o mesmo tamanho do título de página: telas com cards
+empilhavam vários títulos de página. Hierarquia agora: página 24, card e modal
+18, corpo 14, apoio 12.
+
 ### Abas — sublinhado
 
 | | |
