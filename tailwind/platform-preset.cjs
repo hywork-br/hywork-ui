@@ -13,6 +13,19 @@ const core = require("./core-preset.cjs");
 
 module.exports = {
   presets: [core],
+  // Corpo do admin (Rick, 08/10/2026): o body lê --hw-text-body (14px em
+  // platform.css), e todo texto sem classe herda dele. Os controles já eram
+  // 14px; o que mudava era o texto solto, em 16px.
+  plugins: [
+    function bodyText({ addBase }) {
+      addBase({
+        body: {
+          fontSize: "var(--hw-text-body)",
+          lineHeight: "var(--hw-leading-body)",
+        },
+      });
+    },
+  ],
   theme: {
     extend: {
       colors: {

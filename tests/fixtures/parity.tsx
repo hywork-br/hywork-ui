@@ -16,6 +16,10 @@ if (params.get("theme") === "dark") document.documentElement.classList.add("dark
 // valor de token: a referência recebe a borda decidida, como recebe a marca.
 // No escuro a borda não mudou.
 if (source && params.get("theme") !== "dark") document.documentElement.style.setProperty("--border", "210 28.6% 94.5%");
+// Corpo do admin em 14px (Rick, 08/10/2026): o pacote aplica --hw-text-body ao
+// body pelo platform-preset. A referência congelada recebe o corpo decidido,
+// como recebe a borda e a marca.
+if (source) Object.assign(document.body.style, { fontSize: "0.875rem", lineHeight: "1.25rem" });
 if (params.get("theme") === "tenant") {
   // A referência congelada recebia a marca sobrescrevendo --primary. Desde
   // 06/10/2026 o pacote só aceita o gancho de marca: --primary é dele.

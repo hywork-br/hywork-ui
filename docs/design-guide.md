@@ -19,7 +19,7 @@ transforma cada valor ou exceção em decisão aprovada.
 | Eixo | Regra |
 | --- | --- |
 | Tipografia | Montserrat no corpo e títulos; hierarquia por peso e escala, não por troca de família |
-| Corpo de controles | 14px, com rótulo legível e sem caixa-alta ornamental |
+| Corpo | 14px no admin — controles e texto corrido (`--hw-text-body`, 08/10/2026); títulos: página 24, card e modal 18; rótulo legível e sem caixa-alta ornamental |
 | Altura | Controles principais de 40px; 44px em contexto de toque; 36px é variante compacta explícita, não novo default |
 | Espaçamento | Base de 4px; relações próximas com 8px; grupos com 16/24px |
 | Raios | Escala pequena e consistente: 4/8/12px; não transformar todos os controles em pills |

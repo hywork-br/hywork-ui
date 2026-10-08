@@ -6,6 +6,11 @@
    destas variáveis nem as do contrato em core.css. A cor do workspace entra
    por --hw-brand-primary — ver brandThemeVars(). */
 :root {
+  /* Corpo do admin em 14px (Rick, 08/10/2026): o texto sem classe — conteúdo
+     de card, modal e popover, células e itens soltos — saía em 16px ao lado
+     de controles de 14px. A regra no body vem do platform-preset. */
+  --hw-text-body: var(--hw-text-sm);
+  --hw-leading-body: var(--hw-leading-sm);
   --hw-color-background: 217 0% 100%;
   --hw-color-foreground: 217 0% 10%;
   --hw-color-card-default: 217 0% 100%;
