@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.12.1 — corpo de 14px no admin
+
+- **Corpo do admin em 14px** (Rick, 08/10/2026). Tokens novos
+  `--hw-text-body`/`--hw-leading-body` (16px no padrão; 14px/20px em
+  `tokens/platform.css`), aplicados ao `body` por uma regra base do
+  `platform-preset`. O texto sem classe — conteúdo de card, modal e popover,
+  células e itens soltos — deixa de sair em 16px ao lado dos controles de 14px.
+  A escala `text-*` e o rem não mudam.
+- **`CardTitle` de 24px para 18px** (`text-lg`): era o mesmo tamanho do título
+  de página. Hierarquia: página 24, card e modal 18, corpo 14, apoio 12.
+- **Consumidor:** onde o admin mostra conteúdo da intranet (canvas do Page
+  Builder, prévias), fixe `text-base` no contêiner — a intranet segue em 16px.
+
 ## 0.12.0 — design system 2.0: o DS vence, marca do workspace e ajustes da PO
 
 A linha `feat/ds-autoridade-tokens` (validada pela PO na branch
