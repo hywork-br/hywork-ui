@@ -563,11 +563,18 @@ linha vira uma seção como as de cima, com a data.
 | `Stepper` | `platform/stepper` | wizard de ciclo: 5 segmentos no topo, preenchidos até o passo atual; lista lateral com número em círculo, ✓ nos anteriores e o atual destacado | segmento de 6px na primária (trilha em `primary/20`, como o `Progress`); linha de 40px, círculo de 28px, atual com fundo `primary/10`, rótulo semibold e círculo preenchido; bloqueado com cadeado e borda tracejada | 📋 aguardando aval (07/10/2026) — 6 stories, 13 testes |
 | `DatePicker` | `core/date-picker` | campos "Início" e "Encerramento" do wizard (o protótipo tem só texto dd/mm/aaaa) | campo do `Input` com o botão de calendário à direita; calendário em popover, semana de domingo a sábado, dia de 40px, escolhido na primária, hoje sublinhado | 📋 aguardando aval (07/10/2026) — 6 stories, 30 testes |
 | `StatCard` | `platform/stat-card` | 4 indicadores no topo da lista de ciclos e dos resultados: ícone, rótulo, valor, nota; chip de variação; um card "em destaque" | moldura do `Card` (raio 12, respiro 24); valor de 24px bold em `--hw-text-heading`; variação nos pares fundo/texto do `Alert` (sucesso, erro, neutro); atenção com fundo e borda de aviso | 📋 aguardando aval (07/10/2026) — 11 stories, 8 testes |
+| `RatingScale` | `core/rating-scale` | formulário de avaliação do líder (DHO, Etapa 6): uma escala de 1 a 5 por pergunta, com um rótulo por nota e um segundo valor de referência ao lado | notas em linha, cada uma com o número (16px semibold) e o rótulo (12px) dentro; moldura do campo (`hw-field-border`, fundo `hw-field`), raio 8; escolhida preenchida na primária com `primary-foreground` (segue a marca); referência como ponto de 8px no canto da nota; abaixo de 640px só o número, alvo de 44px, e legenda dos extremos; erro na borda das notas, com o `FormMessage` embaixo | 📋 aguardando aval (07/10/2026) — 12 stories, 25 testes |
 
 `DatePicker` entra em `core` porque os dois consumidores têm campo de data (34
 arquivos do Platform e 8 do Builder com `type="date"`, levantados em 07/10). `Stepper` e `StatCard` ficam em `platform`: hoje só o admin tem
 assistente de passos e painel de indicadores. Subir para `core` depois não quebra
 quem importa de `@hywork/ui/platform`.
+
+`RatingScale` entra em `core` porque o Builder vai usá-la na fase da intranet do
+DHO, com a mesma anatomia. É um grupo de rádio com teclado próprio (setas mudam
+e marcam, Home/End), não o `RadioGroup` do Radix: a escala precisa de
+`readOnly` focável e de marcar na tecla rápida, e o Radix não tem nem um nem
+outro. O `RadioGroup` recebeu a correção das setas na mesma entrega.
 
 ---
 
@@ -628,3 +635,4 @@ página e passa a ter regra escrita.
 | 07/10/2026 | `Stepper`, `DatePicker` e `StatCard` entram como proposta para o DHO, aguardando o aval visual da PO |
 | 07/10/2026 | Rick: o campo de busca deixa o raio total e passa ao raio 4 dos campos, selects e botões do filtro |
 | 07/10/2026 | Validação do DS 2.0 pela PO: texto sobre a marca pelo contraste perceptual (APCA); `#edf1f5` no cabeçalho e menu do admin e na borda; `#edf1f5` a 40% no filtro e no cabeçalho/listra da tabela |
+| 07/10/2026 | `RatingScale` entra como proposta para o formulário de avaliação do DHO, aguardando o aval visual da PO |
