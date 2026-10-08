@@ -147,6 +147,12 @@ export function extractComponent(name, source) {
     result = result.replace('props.value?.map((_, i)', '(props.value ?? props.defaultValue ?? [0]).map((_, i)');
     result = result.replace('key={i}', 'key={i}\n            aria-label={props["aria-label"]}\n            aria-labelledby={props["aria-labelledby"]}');
   }
+  if (name === 'progress') {
+    // The captured component reads `value` only to place the indicator and never
+    // hands it to Radix, so the root never exposes aria-valuenow (DHO, Fase 1 §10).
+    if (!result.includes('    ref={ref}\n')) throw new Error('progress: anchor for the value hand-off not found');
+    result = result.replace('    ref={ref}\n', '    ref={ref}\n    value={value}\n');
+  }
   return result.trimEnd()+'\n';
 }
 
