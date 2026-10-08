@@ -58,6 +58,7 @@ src/
 │   ├── form-message/      ✅  token --hw-error-text
 │   ├── brand-theme/       ✅  <BrandTheme> e useBrandTheme — cor do workspace
 │   ├── date-picker/       📋  data única, calendário próprio — aguarda aval da PO
+│   ├── progress-ring/     📋  anel de progresso, SVG — aguarda aval da PO
 │   └── …                  demais primitivas — todas com story
 │
 ├── platform/              Padrões do admin (hywork-plataform)
@@ -72,6 +73,7 @@ src/
 │   ├── upload-area/       ✅
 │   ├── stepper/           📋  trilha de passos de wizard — aguarda aval da PO
 │   ├── stat-card/         📋  cartão de indicador — aguarda aval da PO
+│   ├── bar-list/          📋  lista de barras proporcionais — aguarda aval da PO
 │   └── …                  multi-select, icon-select, rich-text-editor
 │
 ├── builder/               Padrões da intranet (hw-cloud-builder)

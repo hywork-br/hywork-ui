@@ -595,11 +595,19 @@ linha vira uma seção como as de cima, com a data.
 | `Stepper` | `platform/stepper` | wizard de ciclo: 5 segmentos no topo, preenchidos até o passo atual; lista lateral com número em círculo, ✓ nos anteriores e o atual destacado | segmento de 6px na primária (trilha em `primary/20`, como o `Progress`); linha de 40px, círculo de 28px, atual com fundo `primary/10`, rótulo semibold e círculo preenchido; bloqueado com cadeado e borda tracejada | 📋 aguardando aval (07/10/2026) — 6 stories, 13 testes |
 | `DatePicker` | `core/date-picker` | campos "Início" e "Encerramento" do wizard (o protótipo tem só texto dd/mm/aaaa) | campo do `Input` com o botão de calendário à direita; calendário em popover, semana de domingo a sábado, dia de 40px, escolhido na primária, hoje sublinhado | 📋 aguardando aval (07/10/2026) — 6 stories, 30 testes |
 | `StatCard` | `platform/stat-card` | 4 indicadores no topo da lista de ciclos e dos resultados: ícone, rótulo, valor, nota; chip de variação; um card "em destaque" | moldura do `Card` (raio 12, respiro 24); valor de 24px bold em `--hw-text-heading`; variação nos pares fundo/texto do `Alert` (sucesso, erro, neutro); atenção com fundo e borda de aviso | 📋 aguardando aval (07/10/2026) — 11 stories, 8 testes |
+| `BarList` | `platform/bar-list` | Etapa 2 do DHO (HCK-255, D1-23 do Rick, 08/10/2026): uma linha por item com rótulo, texto à direita ("92% · 78 de 85") e barra proporcional; linha clicável quando a tela passa `onSelect` | linha de 14px, rótulo em `foreground` e valor em `muted-foreground` com algarismos tabulares; barra de 8px, raio total, na tinta da marca (`--primary-ink`) sobre trilha neutra (`--muted`); linha clicável com cursor `accent` e o anel de foco | 📋 aguardando aval (08/10/2026) — 9 stories, 16 testes |
+| `ProgressRing` | `core/progress-ring` | Etapa 2 do DHO (HCK-255, D1-23): o `Progress` em forma de anel, para espaço quadrado — ao lado de um título, dentro de um card | SVG de 48/72/96px, traço de 4/6/8px; arco na tinta da marca (`--primary-ink`), trilha neutra (`--muted`), ponta reta para não exagerar o valor; centro em semibold `--hw-text-heading`, 12/14/18px | 📋 aguardando aval (08/10/2026) — 8 stories, 11 testes |
 
 `DatePicker` entra em `core` porque os dois consumidores têm campo de data (34
 arquivos do Platform e 8 do Builder com `type="date"`, levantados em 07/10). `Stepper` e `StatCard` ficam em `platform`: hoje só o admin tem
 assistente de passos e painel de indicadores. Subir para `core` depois não quebra
-quem importa de `@hywork/ui/platform`.
+quem importa de `@hywork/ui/platform`. Pelo mesmo motivo `BarList` fica em
+`platform`, e `ProgressRing` entra em `core` ao lado do `Progress`, de que é a
+forma em anel: é primitiva, sem noção de tarefa.
+
+`BarList` e `ProgressRing` seguem a marca como o `Progress` (ver "O que segue a
+marca"), pela tinta, porque são linha sobre o fundo. A trilha é neutra
+(`--muted`), como pedido na D1-23, e não `primary/20` como a do `Progress`.
 
 ---
 
@@ -660,3 +668,4 @@ página e passa a ter regra escrita.
 | 07/10/2026 | `Stepper`, `DatePicker` e `StatCard` entram como proposta para o DHO, aguardando o aval visual da PO |
 | 07/10/2026 | Rick: o campo de busca deixa o raio total e passa ao raio 4 dos campos, selects e botões do filtro |
 | 07/10/2026 | Validação do DS 2.0 pela PO: texto sobre a marca pelo contraste perceptual (APCA); `#edf1f5` no cabeçalho e menu do admin e na borda; `#edf1f5` a 40% no filtro e no cabeçalho/listra da tabela |
+| 08/10/2026 | `BarList` e `ProgressRing` entram como proposta para a Etapa 2 do DHO (HCK-255, D1-23), aguardando o aval visual da PO; o `Progress` passa a expor `aria-valuenow` |

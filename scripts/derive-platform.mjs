@@ -38,7 +38,7 @@ export const componentNames = 'accordion alert-dialog alert avatar badge breadcr
  * `provenance/`, então o derive não as gera nem as confere — só as mantém no
  * barrel do core. Sem esta lista, rodar o derive as tirava do barrel.
  * `brand-theme` entrou com a marca do workspace, `date-picker` com o wizard do DHO
- * e `progress-ring` com o painel de resultados do DHO (HCK-255).
+ * e `progress-ring` com a Etapa 2 do DHO (HCK-255).
  */
 export const nativeNames = ['brand-theme', 'carousel', 'command', 'date-picker', 'form', 'form-message', 'progress-ring', 'search-input', 'spinner', 'toast'];
 
