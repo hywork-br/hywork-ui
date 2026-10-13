@@ -2,4 +2,5 @@
 // Visual em proposta, aguardando o aval da PO (DOMAIN_MODEL.md).
 
 export * from "./chart-frame";
+export * from "./grouped-bar-chart";
 export type { ChartCategory, ChartColor, ChartSeries, ChartValueFormatter } from "./shared/types";
