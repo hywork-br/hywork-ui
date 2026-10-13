@@ -36,6 +36,12 @@ publicar no GitHub Packages — esta última exige token no CI e na Vercel.
 Em qualquer caso, **versão fixa e lockfile versionado**. Nunca aponte um
 consumidor para branch flutuante.
 
+**Gráficos.** `@hywork/ui/charts` é uma entrada à parte e a única que importa o
+`recharts`, declarado como peer **opcional** (`>=3.1 <4`): quem importa a
+entrada instala o `recharts` (o admin já o tem); quem não importa — a intranet,
+hoje — não precisa dele. `@hywork/ui/platform` e `@hywork/ui/builder` nunca o
+carregam; o `smoke:consumer` confere isso no tarball instalado.
+
 ## 3. Configuração
 
 ```ts

@@ -25,6 +25,7 @@ npm (`private: true`); o release por tag gera o tarball como asset do GitHub.
 | Vitest | testes unitários |
 | Playwright | testes de comportamento em Chromium e Firefox |
 | Lucide | ícones |
+| Recharts 3 | radar, barras agrupadas e linha — só na entrada `charts`, como peer opcional |
 
 ---
 
@@ -76,6 +77,14 @@ src/
 │
 ├── builder/               Padrões da intranet (hw-cloud-builder)
 │
+├── charts/                Gráficos — entrada própria, @hywork/ui/charts (D1-23, DHO)
+│   ├── chart-frame/       📋  moldura: título, base, "Como é calculado", rodapé, vazio — aguarda aval da PO
+│   ├── radar-chart/       📋  radar; vira barras com < 3 eixos ou < 360px — aguarda aval da PO
+│   ├── grouped-bar-chart/ 📋  barras agrupadas na horizontal — aguarda aval da PO
+│   ├── line-chart/        📋  linha com ponto provisório e marcador — aguarda aval da PO
+│   ├── distribution-bar/  📋  barra empilhada 100%, só CSS — aguarda aval da PO
+│   └── shared/            cores por token, escala, quebra de rótulo, tabela do leitor de tela
+│
 ├── lib/
 │   └── cn.ts              merge de classes (clsx + tailwind-merge)
 │
@@ -84,6 +93,7 @@ src/
 │
 ├── platform.ts            entrada pública → core + platform
 ├── builder.ts             entrada pública → core + builder
+├── charts.ts              entrada pública → gráficos; a única que importa o recharts
 ├── theme.ts               entrada pura (sem "use client") → brandThemeVars
 └── consumer-check.ts      entrada pura → trava contra sobrescrita de token
 
@@ -111,6 +121,7 @@ tailwind/
 |---|---|
 | `src/platform.ts` | API pública para o `hywork-plataform` |
 | `src/builder.ts` | API pública para o `hw-cloud-builder` |
+| `src/charts.ts` | `@hywork/ui/charts` — gráficos; exige `recharts` (`>=3.1 <4`) no consumidor, e só esta entrada o importa |
 | `src/theme.ts` | `@hywork/ui/theme` — `brandThemeVars`, sem "use client" (Server Component, Node) |
 | `src/consumer-check.ts` | `@hywork/ui/consumer-check` — `assertNoTokenOverrides`, para o teste do consumidor |
 | `tokens/core.css` | tokens comuns e as variáveis da aplicação — obrigatório nos dois consumidores, que não declaram cor própria |
@@ -153,6 +164,8 @@ vazio — quando aplicáveis ao componente.
 
 - **Vitest** — comportamento de componente, colocalizado (`<nome>.test.tsx`)
 - **Playwright** — interação real em dois navegadores, em `tests/browser/`
+  (os gráficos têm página própria, `tests/fixtures/charts.html`, com os números
+  do exemplo da HCK-256)
 - **axe-core** — auditoria de acessibilidade, via `@storybook/addon-a11y` e nos testes
 - **smoke-consumer** — instala o tarball num projeto limpo e valida exports,
   declarações, diretiva de cliente e preset
