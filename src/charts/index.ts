@@ -4,4 +4,5 @@
 export * from "./chart-frame";
 export * from "./radar-chart";
 export * from "./grouped-bar-chart";
+export * from "./line-chart";
 export type { ChartCategory, ChartColor, ChartSeries, ChartValueFormatter } from "./shared/types";
