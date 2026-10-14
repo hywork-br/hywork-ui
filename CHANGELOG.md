@@ -46,6 +46,42 @@ o aval da PO, e a **cor de cada faixa** da distribuição é decisão dela — v
   do admin, em "Gráficos".
 - `recharts` e `react-is` entram nas `devDependencies`, na versão fixa.
 
+## Não lançado — `BarList`, `ProgressRing` e o `aria-valuenow` do `Progress` (DHO, HCK-255)
+
+Dois componentes genéricos que a Etapa 2 do DHO precisa (HCK-255, decisão
+D1-23 do Rick, 08/10/2026), e a correção de acessibilidade do
+`Progress` apontada no §10 do plano da Fase 1. O **visual dos dois novos é
+proposta** e aguarda o aval da PO — ver `DOMAIN_MODEL.md`, "Componentes novos
+aguardando o aval da PO". Nenhuma API existente muda; sem dependência nova
+(SVG e CSS com tokens, sem `recharts`).
+
+- **`BarList` em `platform`:** uma linha por item — rótulo, texto à direita
+  (`valueLabel`, ex. "92% · 78 de 85") e barra proporcional. Largura
+  `value / max` limitada a 0–100%; o `max` do item vence o da lista, que vence
+  o maior valor. `max` zero, negativo ou inválido dá barra vazia, nunca NaN.
+  Sem `valueLabel`, a direita mostra o `value` (pt-BR); `null` a deixa vazia.
+  Lista semântica (`ul`/`li`); a barra é desenho (`aria-hidden`). Linha com
+  `onSelect` vira `button` com anel de foco; o texto quebra dentro da linha.
+  Barra na tinta da marca (`--primary-ink`), trilha neutra (`--muted`).
+- **`ProgressRing` em `core`:** anel de progresso em SVG, `role="progressbar"`
+  com `aria-valuenow`/`aria-valuemin`/`aria-valuemax`. `value` limitado a
+  `[0, max]` (`max` padrão 100; zero dá valor 0 e anel vazio). Tamanhos de 48,
+  72 e 96px; o centro mostra a porcentagem arredondada ou o `label` da tela, que
+  também vira `aria-valuetext` quando é texto. Nome padrão "Progresso", que cede
+  ao `aria-label`/`aria-labelledby`. Arco na tinta da marca, trilha neutra.
+- **`Progress` expõe `aria-valuenow`:** o `value` passa a chegar ao Radix (antes
+  só posicionava o indicador). A correção está na derivação
+  (`extractComponent`), como a do `Slider`; o componente segue derivado e a
+  paridade de pixels não muda. Um `aria-valuenow` passado à mão pela tela
+  continua valendo — o front do DHO pode tirá-lo quando subir de versão.
+- `progress-ring` entra em `nativeNames` do derive e no `manifest.json`.
+- Testes com axe-core (sem contraste, que o jsdom não mede): `BarList` 16,
+  `ProgressRing` 11, `Progress` 6 (o primeiro teste dele). No navegador, as
+  stories novas e as do `Progress` passaram no axe com contraste, sem rolagem
+  horizontal em 390px. A única reprovação é a da story `Vazio` do `BarList`,
+  que mostra o `EmptyState`: o texto gray-400 eleito pela PO dá 2,53:1 sobre
+  branco — pendência daquele componente, não deste.
+
 ## 0.12.1 — corpo de 14px no admin
 
 - **Corpo do admin em 14px** (Rick, 08/10/2026). Tokens novos

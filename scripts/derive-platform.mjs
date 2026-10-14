@@ -37,9 +37,10 @@ export const componentNames = 'accordion alert-dialog alert avatar badge breadcr
  * Primitivas escritas direto aqui, sem captura do Platform (0.10.0): não têm
  * `provenance/`, então o derive não as gera nem as confere — só as mantém no
  * barrel do core. Sem esta lista, rodar o derive as tirava do barrel.
- * `brand-theme` entrou com a marca do workspace e `date-picker` com o wizard do DHO.
+ * `brand-theme` entrou com a marca do workspace, `date-picker` com o wizard do DHO
+ * e `progress-ring` com a Etapa 2 do DHO (HCK-255).
  */
-export const nativeNames = ['brand-theme', 'carousel', 'command', 'date-picker', 'form', 'form-message', 'search-input', 'spinner', 'toast'];
+export const nativeNames = ['brand-theme', 'carousel', 'command', 'date-picker', 'form', 'form-message', 'progress-ring', 'search-input', 'spinner', 'toast'];
 
 /** Tudo o que o barrel do core exporta, em ordem alfabética. */
 export const coreNames = [...componentNames, ...nativeNames].sort((a, b) => a.localeCompare(b));
@@ -146,6 +147,12 @@ export function extractComponent(name, source) {
     // Preserve the API while making its declared defaultValue and label usable.
     result = result.replace('props.value?.map((_, i)', '(props.value ?? props.defaultValue ?? [0]).map((_, i)');
     result = result.replace('key={i}', 'key={i}\n            aria-label={props["aria-label"]}\n            aria-labelledby={props["aria-labelledby"]}');
+  }
+  if (name === 'progress') {
+    // The captured component reads `value` only to place the indicator and never
+    // hands it to Radix, so the root never exposes aria-valuenow (DHO, Fase 1 §10).
+    if (!result.includes('    ref={ref}\n')) throw new Error('progress: anchor for the value hand-off not found');
+    result = result.replace('    ref={ref}\n', '    ref={ref}\n    value={value}\n');
   }
   return result.trimEnd()+'\n';
 }

@@ -600,11 +600,19 @@ linha vira uma seção como as de cima, com a data.
 | `GroupedBarChart` | `charts/grouped-bar-chart` | "Por pilar" (líder × autoavaliação) e "Comparar ciclos" (atual × comparado, por competência) | na horizontal; barra de 12px, 2px de vão, ponta arredondada (4px) e base reta; valor na ponta em 11px `muted-foreground`; grade vertical em `--border`; a linha inteira ganha o anel de foco | 📋 aguardando aval (13/10/2026) — 8 stories, 13 testes |
 | `LineChart` | `charts/line-chart` | "Evolução": até 6 ciclos encerrados e o atual "parcial"/"provisório" tracejado; marcador de "modelos diferentes" | linha de 2px; ponto de 8px com anel da superfície; provisório vazado, com o trecho até ele tracejado (6/4); marcador em losango; só o último valor escrito; legenda só quando há provisório ou marcador | 📋 aguardando aval (13/10/2026) — 7 stories, 8 testes |
 | `DistributionBar` | `charts/distribution-bar` | "Distribuição dos resultados": 4 faixas somando 100% e o "Ver" de cada faixa | barra de 24px, raio 4 nas pontas, 2px de vão entre as fatias; legenda com rótulo de 14px e, embaixo, "25% · 1 pessoa"; numa linha, em duas ou em uma coluna, nunca 3 + 1; cores das faixas: ver abaixo | 📋 aguardando aval (13/10/2026) — 7 stories, 10 testes |
+| `BarList` | `platform/bar-list` | Etapa 2 do DHO (HCK-255, D1-23 do Rick, 08/10/2026): uma linha por item com rótulo, texto à direita ("92% · 78 de 85") e barra proporcional; linha clicável quando a tela passa `onSelect` | linha de 14px, rótulo em `foreground` e valor em `muted-foreground` com algarismos tabulares; barra de 8px, raio total, na tinta da marca (`--primary-ink`) sobre trilha neutra (`--muted`); linha clicável com cursor `accent` e o anel de foco | 📋 aguardando aval (08/10/2026) — 9 stories, 16 testes |
+| `ProgressRing` | `core/progress-ring` | Etapa 2 do DHO (HCK-255, D1-23): o `Progress` em forma de anel, para espaço quadrado — ao lado de um título, dentro de um card | SVG de 48/72/96px, traço de 4/6/8px; arco na tinta da marca (`--primary-ink`), trilha neutra (`--muted`), ponta reta para não exagerar o valor; centro em semibold `--hw-text-heading`, 12/14/18px | 📋 aguardando aval (08/10/2026) — 8 stories, 11 testes |
 
 `DatePicker` entra em `core` porque os dois consumidores têm campo de data (34
 arquivos do Platform e 8 do Builder com `type="date"`, levantados em 07/10). `Stepper` e `StatCard` ficam em `platform`: hoje só o admin tem
 assistente de passos e painel de indicadores. Subir para `core` depois não quebra
-quem importa de `@hywork/ui/platform`.
+quem importa de `@hywork/ui/platform`. Pelo mesmo motivo `BarList` fica em
+`platform`, e `ProgressRing` entra em `core` ao lado do `Progress`, de que é a
+forma em anel: é primitiva, sem noção de tarefa.
+
+`BarList` e `ProgressRing` seguem a marca como o `Progress` (ver "O que segue a
+marca"), pela tinta, porque são linha sobre o fundo. A trilha é neutra
+(`--muted`), como pedido na D1-23, e não `primary/20` como a do `Progress`.
 
 ### Gráficos — `@hywork/ui/charts` (D1-23, Rick, 13/10/2026)
 
@@ -696,4 +704,5 @@ página e passa a ter regra escrita.
 | 07/10/2026 | `Stepper`, `DatePicker` e `StatCard` entram como proposta para o DHO, aguardando o aval visual da PO |
 | 07/10/2026 | Rick: o campo de busca deixa o raio total e passa ao raio 4 dos campos, selects e botões do filtro |
 | 07/10/2026 | Validação do DS 2.0 pela PO: texto sobre a marca pelo contraste perceptual (APCA); `#edf1f5` no cabeçalho e menu do admin e na borda; `#edf1f5` a 40% no filtro e no cabeçalho/listra da tabela |
+| 08/10/2026 | `BarList` e `ProgressRing` entram como proposta para a Etapa 2 do DHO (HCK-255, D1-23), aguardando o aval visual da PO; o `Progress` passa a expor `aria-valuenow` |
 | 13/10/2026 | Gráficos da Etapa 3 do DHO (HCK-256, D1-23) em `@hywork/ui/charts`: `ChartFrame`, `RadarChart`, `GroupedBarChart`, `LineChart` e `DistributionBar`, aguardando o aval visual da PO e a escolha das cores das faixas |

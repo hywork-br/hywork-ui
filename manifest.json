@@ -292,6 +292,10 @@
       "file": "src/core/form-message/index.tsx"
     },
     {
+      "name": "progress-ring",
+      "file": "src/core/progress-ring/index.tsx"
+    },
+    {
       "name": "search-input",
       "file": "src/core/search-input/index.tsx"
     },
