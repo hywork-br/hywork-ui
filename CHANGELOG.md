@@ -1,5 +1,16 @@
 # Changelog
 
+## Não lançado — `Breadcrumb`: níveis ocultos em pt-BR
+
+- O `BreadcrumbEllipsis` tinha o texto de leitor de tela "More", em inglês,
+  nos produtos em pt-BR (QA do DHO, 14/10/2026). Ganha `label`, com padrão
+  "Mais", no padrão do `closeLabel` do `Sheet` e do `Dialog` da 0.13.0. Visual
+  idêntico: o texto é só do leitor de tela.
+- O `Breadcrumb` é autoral (`authoredNames` do derive), então a troca está no
+  próprio componente, sem passar pelo derive. Testes: 2 do `BreadcrumbEllipsis`
+  (os primeiros do `Breadcrumb`).
+- **Consumidor:** teste que acha o texto "More" passa a achá-lo por "Mais".
+
 ## 0.13.0 — gráficos, `BarList`, `ProgressRing` e `RatingScale` para o DHO
 
 Lançada em 14/10/2026 por decisão do Rick, para o DHO usar a versão publicada
