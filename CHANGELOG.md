@@ -1,5 +1,51 @@
 # Changelog
 
+## Não lançado — gráficos em `@hywork/ui/charts` (DHO, HCK-256)
+
+Os gráficos da Etapa 3 do DHO (Resultados do ciclo), pela decisão D1-23 do
+Rick (13/10/2026): nascem no design system. O **visual é proposta** e aguarda
+o aval da PO, e a **cor de cada faixa** da distribuição é decisão dela — ver
+`DOMAIN_MODEL.md`, "Gráficos". Nenhuma API existente muda.
+
+- **Entrada nova `@hywork/ui/charts`** (`src/charts.ts`, no `tsup` e no
+  `exports`), com `"use client"`. É a única que importa o `recharts`, agora
+  **peer opcional** (`>=3.1 <4`; 3.10.1 no desenvolvimento, a versão do lock
+  do admin). `@hywork/ui`, `/platform` e `/builder` não o carregam: o
+  `smoke:consumer` percorre os imports do tarball instalado e confere, e
+  `scripts/charts-entry.test.mjs` barra import de `recharts` fora de
+  `src/charts`, dependência direta e cor literal nos gráficos.
+- **`ChartFrame`:** título (h2), base, botão "Como é calculado" com popover,
+  controles, rodapé; `state` `loading` (esqueleto, `aria-busy`) e `empty`
+  ("Sem dados suficientes" ou `emptyMessage`).
+- **`RadarChart`:** uma série por polígono; nome do eixo com nota e marcador
+  em linhas próprias; `onSelect` pelo nome do eixo (botão) e pelo setor.
+  `null` abre o polígono em vez de levar o ponto ao centro. Vira
+  `GroupedBarChart` com menos de 3 categorias ou abaixo de 360px.
+- **`GroupedBarChart`:** barras agrupadas na horizontal, valor na ponta, nome
+  que quebra numa coluna nunca mais estreita que a palavra mais longa; altura
+  pela quantidade de categorias. `onSelect` pelo clique na linha e por um botão
+  de teclado por linha.
+- **`LineChart`:** uma série; `provisional` deixa o ponto vazado e o trecho até
+  ele tracejado, `flag` vira losango; só o último valor escrito; `null`
+  interrompe a linha.
+- **`DistributionBar`:** barra empilhada 100% só em CSS; legenda com rótulo e
+  "25% · 1 pessoa", numa linha, em duas ou em uma coluna; `onSelect` pela
+  legenda (botão) e pela fatia. Cor padrão: rampa de `--chart-1`; `color`
+  aceita um token `chart-1..5` por faixa.
+- **Comum:** cores só por token (`--chart-1..5`, séries na ordem `1, 5, 2, 3,
+  4`); números chegam arredondados e `formatValue` formata (padrão
+  `Intl` pt-BR); tabela do leitor de tela em cada gráfico e desenho fora da
+  árvore de acessibilidade; animação de 400ms, desligada por
+  `prefers-reduced-motion`; com `width` fixo não há medição nem animação — é
+  o modo de impressão.
+- Testes: 55 no Vitest (axe sem contraste, `ResizeObserver` e
+  `prefers-reduced-motion` simulados em `tests/resize-observer.ts`) e 18 no
+  Playwright, em Chromium e Firefox (`tests/browser/charts.spec.ts`): axe com
+  contraste, sem rolagem horizontal em 1440/390/320px, teclado com anel de
+  foco, clique e dica, movimento reduzido e impressão. 37 stories no catálogo
+  do admin, em "Gráficos".
+- `recharts` e `react-is` entram nas `devDependencies`, na versão fixa.
+
 ## 0.12.1 — corpo de 14px no admin
 
 - **Corpo do admin em 14px** (Rick, 08/10/2026). Tokens novos

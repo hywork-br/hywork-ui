@@ -595,11 +595,47 @@ linha vira uma seção como as de cima, com a data.
 | `Stepper` | `platform/stepper` | wizard de ciclo: 5 segmentos no topo, preenchidos até o passo atual; lista lateral com número em círculo, ✓ nos anteriores e o atual destacado | segmento de 6px na primária (trilha em `primary/20`, como o `Progress`); linha de 40px, círculo de 28px, atual com fundo `primary/10`, rótulo semibold e círculo preenchido; bloqueado com cadeado e borda tracejada | 📋 aguardando aval (07/10/2026) — 6 stories, 13 testes |
 | `DatePicker` | `core/date-picker` | campos "Início" e "Encerramento" do wizard (o protótipo tem só texto dd/mm/aaaa) | campo do `Input` com o botão de calendário à direita; calendário em popover, semana de domingo a sábado, dia de 40px, escolhido na primária, hoje sublinhado | 📋 aguardando aval (07/10/2026) — 6 stories, 30 testes |
 | `StatCard` | `platform/stat-card` | 4 indicadores no topo da lista de ciclos e dos resultados: ícone, rótulo, valor, nota; chip de variação; um card "em destaque" | moldura do `Card` (raio 12, respiro 24); valor de 24px bold em `--hw-text-heading`; variação nos pares fundo/texto do `Alert` (sucesso, erro, neutro); atenção com fundo e borda de aviso | 📋 aguardando aval (07/10/2026) — 11 stories, 8 testes |
+| `ChartFrame` | `charts/chart-frame` | moldura de cada gráfico da aba Resultados (HCK-256): título, base "N pessoas", "Como é calculado", rodapé "Baseado na nota final do ciclo", vazio "Sem dados suficientes" | moldura do `Card` (raio 12, respiro 24, sem sombra); título de 18px semibold em `--hw-text-heading`, base 14px e rodapé 12px em `muted-foreground`; "Como é calculado" é botão `ghost` com ícone que abre um popover; esqueleto de 256px; vazio centralizado em 192px | 📋 aguardando aval (13/10/2026) — 7 stories, 7 testes |
+| `RadarChart` | `charts/radar-chart` | "Resultado por competência": líder × autoavaliação, pessoas e "poucos dados" por eixo, clique no eixo | contorno de 2px e preenchimento a 12% na cor da série; ponto de 8px com anel da superfície; grade em `--border`; nome do eixo em 12px medium, nota e marcador em 11px, cada um na sua linha; escala escrita só com anéis a 16px ou mais | 📋 aguardando aval (13/10/2026) — 8 stories, 10 testes |
+| `GroupedBarChart` | `charts/grouped-bar-chart` | "Por pilar" (líder × autoavaliação) e "Comparar ciclos" (atual × comparado, por competência) | na horizontal; barra de 12px, 2px de vão, ponta arredondada (4px) e base reta; valor na ponta em 11px `muted-foreground`; grade vertical em `--border`; a linha inteira ganha o anel de foco | 📋 aguardando aval (13/10/2026) — 8 stories, 13 testes |
+| `LineChart` | `charts/line-chart` | "Evolução": até 6 ciclos encerrados e o atual "parcial"/"provisório" tracejado; marcador de "modelos diferentes" | linha de 2px; ponto de 8px com anel da superfície; provisório vazado, com o trecho até ele tracejado (6/4); marcador em losango; só o último valor escrito; legenda só quando há provisório ou marcador | 📋 aguardando aval (13/10/2026) — 7 stories, 8 testes |
+| `DistributionBar` | `charts/distribution-bar` | "Distribuição dos resultados": 4 faixas somando 100% e o "Ver" de cada faixa | barra de 24px, raio 4 nas pontas, 2px de vão entre as fatias; legenda com rótulo de 14px e, embaixo, "25% · 1 pessoa"; numa linha, em duas ou em uma coluna, nunca 3 + 1; cores das faixas: ver abaixo | 📋 aguardando aval (13/10/2026) — 7 stories, 10 testes |
 
 `DatePicker` entra em `core` porque os dois consumidores têm campo de data (34
 arquivos do Platform e 8 do Builder com `type="date"`, levantados em 07/10). `Stepper` e `StatCard` ficam em `platform`: hoje só o admin tem
 assistente de passos e painel de indicadores. Subir para `core` depois não quebra
 quem importa de `@hywork/ui/platform`.
+
+### Gráficos — `@hywork/ui/charts` (D1-23, Rick, 13/10/2026)
+
+Os gráficos da Etapa 3 do DHO nascem aqui, por decisão do Rick, e não no
+plataform. É uma exceção consciente à "regra do segundo consumidor" do
+`AGENTS.md` §2: hoje só o admin os usa. Para não impor o `recharts` a quem não
+desenha gráfico, eles vivem numa **entrada própria**, `@hywork/ui/charts`, a
+única que importa o `recharts` (peer opcional, `>=3.1 <4`). `platform` e
+`builder` não o carregam — o `smoke:consumer` e `scripts/charts-entry.test.mjs`
+conferem. Barras horizontais de uma série só não entram aqui: são o `BarList`.
+
+A API é genérica: séries, categorias, valores **já arredondados**, textos
+prontos ("4 pessoas", "poucos dados", "Provisório") e `onSelect(id)`. O
+gráfico não sabe o que é ciclo, pessoa ou competência. O formatador vem por
+prop (padrão `Intl` pt-BR). Cada gráfico tem a tabela do leitor de tela, o
+desenho fica fora da árvore de acessibilidade, o que se escolhe tem botão de
+teclado com anel de foco, e `prefers-reduced-motion` desliga a animação (de
+400ms). Com `width` fixo, o gráfico não mede nem anima: é o modo de impressão
+(o PDF da HCK-257 sai pela impressão do navegador).
+
+O **radar vira barras agrupadas** com menos de três eixos (a história pede) e
+abaixo de 360px de largura, onde os nomes dos eixos espremem o desenho até ele
+não se ler. É decisão de comportamento do componente, não da tela.
+
+**Pendências para o aval da PO:**
+
+| Ponto | Proposta | Por quê |
+|---|---|---|
+| Cores das duas séries | `--chart-1` (azul-marinho, o primário) e `--chart-5` (azul-claro); `--chart-2..4` vêm depois | `--chart-2`, `--chart-3` e `--chart-4` são verde, âmbar e vermelho e, ao lado de um resultado, parecem estado. O validador de paleta aprova o par (ΔE 36 em deuteranopia, 37 em visão normal), mas aponta `--chart-1` fora da faixa de luminosidade e abaixo do croma mínimo (lê como quase cinza-escuro) e `--chart-5` a 2,79:1 sobre o branco, abaixo de 3:1. O alívio exigido está lá: legenda, valor escrito e tabela. A paleta de gráficos em si é decisão da PO |
+| **Cor de cada faixa** da distribuição | rampa de `--chart-1`, da faixa mais baixa (40%) à mais alta (100%) | É decisão de produto. A rampa passa nos checks de rampa ordinal (luminosidade monotônica, degraus visíveis, a mais clara a 2,19:1) e não usa verde, âmbar nem vermelho que leiam como "ruim" e "bom". `color` aceita um token `chart-1..5` por faixa, nunca uma cor livre: é a porta para a escolha da PO e cai quando ela virar o padrão (o `AGENTS.md` §8 proíbe cor escolhida pela tela) |
+| A marca do workspace | os gráficos **não** seguem a marca | Cor de série é identidade, não ação; como os papéis de estado, fica igual em todo workspace. A tinta da marca segue só no anel de foco |
 
 ---
 
@@ -660,3 +696,4 @@ página e passa a ter regra escrita.
 | 07/10/2026 | `Stepper`, `DatePicker` e `StatCard` entram como proposta para o DHO, aguardando o aval visual da PO |
 | 07/10/2026 | Rick: o campo de busca deixa o raio total e passa ao raio 4 dos campos, selects e botões do filtro |
 | 07/10/2026 | Validação do DS 2.0 pela PO: texto sobre a marca pelo contraste perceptual (APCA); `#edf1f5` no cabeçalho e menu do admin e na borda; `#edf1f5` a 40% no filtro e no cabeçalho/listra da tabela |
+| 13/10/2026 | Gráficos da Etapa 3 do DHO (HCK-256, D1-23) em `@hywork/ui/charts`: `ChartFrame`, `RadarChart`, `GroupedBarChart`, `LineChart` e `DistributionBar`, aguardando o aval visual da PO e a escolha das cores das faixas |
