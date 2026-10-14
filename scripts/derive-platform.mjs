@@ -37,10 +37,11 @@ export const componentNames = 'accordion alert-dialog alert avatar badge breadcr
  * Primitivas escritas direto aqui, sem captura do Platform (0.10.0): não têm
  * `provenance/`, então o derive não as gera nem as confere — só as mantém no
  * barrel do core. Sem esta lista, rodar o derive as tirava do barrel.
- * `brand-theme` entrou com a marca do workspace, `date-picker` com o wizard do DHO
- * e `progress-ring` com a Etapa 2 do DHO (HCK-255).
+ * `brand-theme` entrou com a marca do workspace, `date-picker` com o wizard do
+ * DHO, `progress-ring` com a Etapa 2 do DHO (HCK-255) e `rating-scale` com o
+ * formulário de avaliação do DHO.
  */
-export const nativeNames = ['brand-theme', 'carousel', 'command', 'date-picker', 'form', 'form-message', 'progress-ring', 'search-input', 'spinner', 'toast'];
+export const nativeNames = ['brand-theme', 'carousel', 'command', 'date-picker', 'form', 'form-message', 'progress-ring', 'rating-scale', 'search-input', 'spinner', 'toast'];
 
 /** Tudo o que o barrel do core exporta, em ordem alfabética. */
 export const coreNames = [...componentNames, ...nativeNames].sort((a, b) => a.localeCompare(b));
@@ -117,6 +118,47 @@ export function applyColorRoles(name, source) {
   return result;
 }
 
+/**
+ * Setas mudam E marcam o rádio (padrão WAI-ARIA do grupo de rádio). O Radix
+ * move o foco num setTimeout e só marca se a tecla ainda estiver apertada
+ * quando o foco chega: a tecla rápida — ou automatizada — movia sem marcar, e
+ * o DHO teve de escrever um hook para isso (07/10/2026). A correção clica, depois
+ * daquele timeout, o rádio que ficou com o foco; o clique passa pelo Radix,
+ * então `onValueChange` dispara e o grupo não controlado também atualiza.
+ * Falha se o trecho sumir da captura, como as trocas de cor.
+ */
+const radioArrowRoot = '>(({ className, ...props }, ref) => {\n  return (\n    <RadioGroupPrimitive.Root\n      className={cn("grid gap-2", className)}\n      {...props}\n      ref={ref}';
+const radioArrowHelper = `// Setas mudam E marcam (WAI-ARIA). O Radix move o foco num setTimeout e só
+// marca se a tecla ainda estiver apertada quando o foco chega: a tecla rápida
+// movia sem marcar. Depois desse timeout, clica o rádio que ficou com o foco —
+// o clique passa pelo Radix, então onValueChange dispara também no grupo não
+// controlado. Nada acontece se o foco não andou ou se o rádio já está marcado.
+const ARROW_KEYS = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"]
+
+function checkFocusedRadioAfterArrow(event: React.KeyboardEvent<HTMLDivElement>) {
+  if (!ARROW_KEYS.includes(event.key)) return
+  const group = event.currentTarget
+  const origin = document.activeElement
+  setTimeout(() => {
+    const focused = document.activeElement
+    if (!(focused instanceof HTMLButtonElement) || focused === origin) return
+    if (!group.contains(focused) || focused.getAttribute("role") !== "radio") return
+    if (focused.getAttribute("aria-checked") === "true" || focused.disabled) return
+    focused.click()
+  })
+}
+
+`;
+
+export function checkRadioOnArrow(source) {
+  const declaration = 'const RadioGroup = React.forwardRef<';
+  if (!source.includes(radioArrowRoot) || !source.includes(declaration))
+    throw new Error('radio-group: arrow fix source not found');
+  return source
+    .replace(declaration, radioArrowHelper + declaration)
+    .replace(radioArrowRoot, '>(({ className, onKeyDown, ...props }, ref) => {\n  return (\n    <RadioGroupPrimitive.Root\n      className={cn("grid gap-2", className)}\n      {...props}\n      onKeyDown={(event) => {\n        onKeyDown?.(event)\n        checkFocusedRadioAfterArrow(event)\n      }}\n      ref={ref}');
+}
+
 export function extractComponent(name, source) {
   // A referência congelada em provenance/ guarda os componentes como estavam
   // em src/components/<nome>.tsx. Eles passaram a viver em
@@ -141,6 +183,7 @@ export function extractComponent(name, source) {
     '<ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit]">',
     '<ScrollAreaPrimitive.Viewport tabIndex={0} className="h-full w-full rounded-[inherit] focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring">');
   result = applyColorRoles(name, result);
+  if (name === 'radio-group') result = checkRadioOnArrow(result);
   if (name === 'card') result = result.replace('<h3', '<h2');
   if (name === 'alert') result = result.replace('<h5', '<h2');
   if (name === 'slider') {

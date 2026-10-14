@@ -1,5 +1,60 @@
 # Changelog
 
+## Não lançada
+
+### `RatingScale` — escala de resposta (formulário de avaliação do DHO)
+
+Componente genérico que o formulário de avaliação do líder precisa (D-16 da
+Fase 0). O **visual é proposta** e aguarda o aval da PO — ver
+`DOMAIN_MODEL.md`, "Componentes novos aguardando o aval da PO". Nenhuma API
+existente muda e não há dependência nova.
+
+- **`RatingScale` em `core`** (sai nas duas entradas, `platform` e `builder`;
+  o Builder vai usá-la na fase da intranet). Notas de 1 a N em linha, cada uma
+  com o número e o rótulo; `labels` define a escala (índice 0 = nota 1; sem
+  rótulos, 5 notas). API: `name`, `value` (`number | null`), `onChange`,
+  `labels`, `disabled`, `readOnly`, `error`, `aria-label`,
+  `showSelectedLabel`, `compareValue` — e, opcionais, `aria-labelledby` (para
+  apontar o texto visível da pergunta) e `className`.
+- **Grupo de rádio de verdade:** `role="radiogroup"`, uma parada de Tab por
+  escala; setas mudam **e marcam** em qualquer velocidade de tecla (dão a
+  volta nas pontas), Home/End vão à primeira e à última, Espaço marca, Enter
+  não. `readOnly` é focável e anunciado como só leitura — as setas passeiam
+  pelas notas sem marcar; `disabled` sai da ordem do Tab. `error` liga a
+  mensagem ao grupo por `aria-describedby` e marca `aria-invalid`. `name` vai
+  num campo oculto, para o formulário nativo.
+- **`compareValue`:** um segundo valor marcado com um ponto discreto no canto
+  da nota, que o leitor de tela ouve como "valor de referência". Não é uma
+  escolha; o que a referência é, a tela diz.
+- **Responsiva no componente:** a partir de 640px, número e rótulo em cada
+  nota; abaixo, só o número (alvo de 44px) e uma legenda dos dois extremos. O
+  nome acessível é sempre "número, rótulo".
+- `rating-scale` entra em `nativeNames` do derive e no `manifest.json`.
+
+### `RadioGroup`: as setas marcam também na tecla rápida
+
+- O Radix move o foco num `setTimeout` e só marca se a tecla ainda estiver
+  apertada quando o foco chega — uma tecla rápida (ou automatizada) movia o
+  foco sem marcar, e o DHO teve de escrever um hook
+  (`use-radio-arrow-select`) para contornar. Agora o `RadioGroup` clica o
+  rádio que ficou com o foco depois daquele timeout: `onValueChange` dispara,
+  também no grupo não controlado. Sem mudança de API; o `onKeyDown` da tela
+  continua sendo chamado. **O hook do consumidor pode sair** ao subir a versão.
+- A correção está na transformação do derive (`checkRadioOnArrow`), não só na
+  saída, e reprova se o trecho da captura mudar. Visual idêntico: a paridade
+  não muda.
+
+### Testes
+
+- Vitest: 25 testes do `RatingScale` e 6 do `RadioGroup` (que não tinha
+  nenhum), todos com o axe-core; o do `RadioGroup` reprova sem a correção.
+- `test:browser` ganha `rating-scale.spec.ts` (Chromium e Firefox): axe com
+  contraste nos temas claro e com marca, teclado real (a tecla do Playwright é
+  a "tecla rápida" — sem a correção, o `RadioGroup` reprova no Chromium) e a
+  largura de 320px sem rolagem horizontal. A mensagem de erro fica fora do
+  contraste pelo mesmo motivo da 0.11.0 (red-500 da PO, 3,76:1).
+- `smoke:consumer` confere o `RatingScale` no tarball instalado, nas entradas
+  `@hywork/ui` e `@hywork/ui/builder`.
 ## Não lançado — gráficos em `@hywork/ui/charts` (DHO, HCK-256)
 
 Os gráficos da Etapa 3 do DHO (Resultados do ciclo), pela decisão D1-23 do

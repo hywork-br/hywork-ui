@@ -602,6 +602,7 @@ linha vira uma seção como as de cima, com a data.
 | `DistributionBar` | `charts/distribution-bar` | "Distribuição dos resultados": 4 faixas somando 100% e o "Ver" de cada faixa | barra de 24px, raio 4 nas pontas, 2px de vão entre as fatias; legenda com rótulo de 14px e, embaixo, "25% · 1 pessoa"; numa linha, em duas ou em uma coluna, nunca 3 + 1; cores das faixas: ver abaixo | 📋 aguardando aval (13/10/2026) — 7 stories, 10 testes |
 | `BarList` | `platform/bar-list` | Etapa 2 do DHO (HCK-255, D1-23 do Rick, 08/10/2026): uma linha por item com rótulo, texto à direita ("92% · 78 de 85") e barra proporcional; linha clicável quando a tela passa `onSelect` | linha de 14px, rótulo em `foreground` e valor em `muted-foreground` com algarismos tabulares; barra de 8px, raio total, na tinta da marca (`--primary-ink`) sobre trilha neutra (`--muted`); linha clicável com cursor `accent` e o anel de foco | 📋 aguardando aval (08/10/2026) — 9 stories, 16 testes |
 | `ProgressRing` | `core/progress-ring` | Etapa 2 do DHO (HCK-255, D1-23): o `Progress` em forma de anel, para espaço quadrado — ao lado de um título, dentro de um card | SVG de 48/72/96px, traço de 4/6/8px; arco na tinta da marca (`--primary-ink`), trilha neutra (`--muted`), ponta reta para não exagerar o valor; centro em semibold `--hw-text-heading`, 12/14/18px | 📋 aguardando aval (08/10/2026) — 8 stories, 11 testes |
+| `RatingScale` | `core/rating-scale` | formulário de avaliação do líder (DHO, Etapa 6): uma escala de 1 a 5 por pergunta, com um rótulo por nota e um segundo valor de referência ao lado | notas em linha, cada uma com o número (16px semibold) e o rótulo (12px) dentro; moldura do campo (`hw-field-border`, fundo `hw-field`), raio 8; escolhida preenchida na primária com `primary-foreground` (segue a marca); referência como ponto de 8px no canto da nota; abaixo de 640px só o número, alvo de 44px, e legenda dos extremos; erro na borda das notas, com o `FormMessage` embaixo | 📋 aguardando aval (07/10/2026) — 12 stories, 25 testes |
 
 `DatePicker` entra em `core` porque os dois consumidores têm campo de data (34
 arquivos do Platform e 8 do Builder com `type="date"`, levantados em 07/10). `Stepper` e `StatCard` ficam em `platform`: hoje só o admin tem
@@ -644,6 +645,12 @@ não se ler. É decisão de comportamento do componente, não da tela.
 | Cores das duas séries | `--chart-1` (azul-marinho, o primário) e `--chart-5` (azul-claro); `--chart-2..4` vêm depois | `--chart-2`, `--chart-3` e `--chart-4` são verde, âmbar e vermelho e, ao lado de um resultado, parecem estado. O validador de paleta aprova o par (ΔE 36 em deuteranopia, 37 em visão normal), mas aponta `--chart-1` fora da faixa de luminosidade e abaixo do croma mínimo (lê como quase cinza-escuro) e `--chart-5` a 2,79:1 sobre o branco, abaixo de 3:1. O alívio exigido está lá: legenda, valor escrito e tabela. A paleta de gráficos em si é decisão da PO |
 | **Cor de cada faixa** da distribuição | rampa de `--chart-1`, da faixa mais baixa (40%) à mais alta (100%) | É decisão de produto. A rampa passa nos checks de rampa ordinal (luminosidade monotônica, degraus visíveis, a mais clara a 2,19:1) e não usa verde, âmbar nem vermelho que leiam como "ruim" e "bom". `color` aceita um token `chart-1..5` por faixa, nunca uma cor livre: é a porta para a escolha da PO e cai quando ela virar o padrão (o `AGENTS.md` §8 proíbe cor escolhida pela tela) |
 | A marca do workspace | os gráficos **não** seguem a marca | Cor de série é identidade, não ação; como os papéis de estado, fica igual em todo workspace. A tinta da marca segue só no anel de foco |
+
+`RatingScale` entra em `core` porque o Builder vai usá-la na fase da intranet do
+DHO, com a mesma anatomia. É um grupo de rádio com teclado próprio (setas mudam
+e marcam, Home/End), não o `RadioGroup` do Radix: a escala precisa de
+`readOnly` focável e de marcar na tecla rápida, e o Radix não tem nem um nem
+outro. O `RadioGroup` recebeu a correção das setas na mesma entrega.
 
 ---
 
@@ -704,5 +711,6 @@ página e passa a ter regra escrita.
 | 07/10/2026 | `Stepper`, `DatePicker` e `StatCard` entram como proposta para o DHO, aguardando o aval visual da PO |
 | 07/10/2026 | Rick: o campo de busca deixa o raio total e passa ao raio 4 dos campos, selects e botões do filtro |
 | 07/10/2026 | Validação do DS 2.0 pela PO: texto sobre a marca pelo contraste perceptual (APCA); `#edf1f5` no cabeçalho e menu do admin e na borda; `#edf1f5` a 40% no filtro e no cabeçalho/listra da tabela |
+| 07/10/2026 | `RatingScale` entra como proposta para o formulário de avaliação do DHO, aguardando o aval visual da PO |
 | 08/10/2026 | `BarList` e `ProgressRing` entram como proposta para a Etapa 2 do DHO (HCK-255, D1-23), aguardando o aval visual da PO; o `Progress` passa a expor `aria-valuenow` |
 | 13/10/2026 | Gráficos da Etapa 3 do DHO (HCK-256, D1-23) em `@hywork/ui/charts`: `ChartFrame`, `RadarChart`, `GroupedBarChart`, `LineChart` e `DistributionBar`, aguardando o aval visual da PO e a escolha das cores das faixas |

@@ -60,6 +60,8 @@ src/
 │   ├── brand-theme/       ✅  <BrandTheme> e useBrandTheme — cor do workspace
 │   ├── date-picker/       📋  data única, calendário próprio — aguarda aval da PO
 │   ├── progress-ring/     📋  anel de progresso, SVG — aguarda aval da PO
+│   ├── rating-scale/      📋  escala de resposta 1–N com rótulos — aguarda aval da PO
+│   ├── radio-group/       ✅  setas mudam e marcam, também na tecla rápida
 │   └── …                  demais primitivas — todas com story
 │
 ├── platform/              Padrões do admin (hywork-plataform)
