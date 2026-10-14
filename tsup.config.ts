@@ -7,7 +7,8 @@ export default defineConfig([
     // Componentes: tudo leva "use client", exigido pelo App Router para
     // componentes com estado vindos de um pacote.
     dts: true,
-    entry: ["src/index.ts", "src/platform.ts", "src/builder.ts"],
+    // `charts` é a única entrada que importa o recharts (peer opcional).
+    entry: ["src/index.ts", "src/platform.ts", "src/builder.ts", "src/charts.ts"],
     external: ["react", "react-dom"],
     format: ["esm"],
     minify: false,

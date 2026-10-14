@@ -25,6 +25,7 @@ npm (`private: true`); o release por tag gera o tarball como asset do GitHub.
 | Vitest | testes unitários |
 | Playwright | testes de comportamento em Chromium e Firefox |
 | Lucide | ícones |
+| Recharts 3 | radar, barras agrupadas e linha — só na entrada `charts`, como peer opcional |
 
 ---
 
@@ -46,7 +47,7 @@ src/
 │   ├── input/
 │   ├── select/
 │   ├── table/
-│   ├── dialog/
+│   ├── dialog/            ✅  botão de fechar "Fechar" (`closeLabel`), como o `Sheet`
 │   ├── badge/
 │   ├── tabs/
 │   ├── breadcrumb/
@@ -58,6 +59,9 @@ src/
 │   ├── form-message/      ✅  token --hw-error-text
 │   ├── brand-theme/       ✅  <BrandTheme> e useBrandTheme — cor do workspace
 │   ├── date-picker/       📋  data única, calendário próprio — aguarda aval da PO
+│   ├── progress-ring/     📋  anel de progresso, SVG — lançado na 0.13.0, aval da PO pendente
+│   ├── rating-scale/      📋  escala de resposta 1–N com rótulos — lançado na 0.13.0, aval da PO pendente
+│   ├── radio-group/       ✅  setas mudam e marcam, também na tecla rápida
 │   └── …                  demais primitivas — todas com story
 │
 ├── platform/              Padrões do admin (hywork-plataform)
@@ -72,9 +76,18 @@ src/
 │   ├── upload-area/       ✅
 │   ├── stepper/           📋  trilha de passos de wizard — aguarda aval da PO
 │   ├── stat-card/         📋  cartão de indicador — aguarda aval da PO
+│   ├── bar-list/          📋  lista de barras proporcionais — lançado na 0.13.0, aval da PO pendente
 │   └── …                  multi-select, icon-select, rich-text-editor
 │
 ├── builder/               Padrões da intranet (hw-cloud-builder)
+│
+├── charts/                Gráficos — entrada própria, @hywork/ui/charts (D1-23, DHO)
+│   ├── chart-frame/       📋  moldura: título, base, "Como é calculado", rodapé, vazio — lançado na 0.13.0, aval da PO pendente
+│   ├── radar-chart/       📋  radar; vira barras com < 3 eixos ou < 360px — lançado na 0.13.0, aval da PO pendente
+│   ├── grouped-bar-chart/ 📋  barras agrupadas na horizontal — lançado na 0.13.0, aval da PO pendente
+│   ├── line-chart/        📋  linha com ponto provisório e marcador — lançado na 0.13.0, aval da PO pendente
+│   ├── distribution-bar/  📋  barra empilhada 100%, só CSS — lançado na 0.13.0, aval da PO pendente
+│   └── shared/            cores por token, escala, quebra de rótulo, tabela do leitor de tela
 │
 ├── lib/
 │   └── cn.ts              merge de classes (clsx + tailwind-merge)
@@ -84,6 +97,7 @@ src/
 │
 ├── platform.ts            entrada pública → core + platform
 ├── builder.ts             entrada pública → core + builder
+├── charts.ts              entrada pública → gráficos; a única que importa o recharts
 ├── theme.ts               entrada pura (sem "use client") → brandThemeVars
 └── consumer-check.ts      entrada pura → trava contra sobrescrita de token
 
@@ -111,6 +125,7 @@ tailwind/
 |---|---|
 | `src/platform.ts` | API pública para o `hywork-plataform` |
 | `src/builder.ts` | API pública para o `hw-cloud-builder` |
+| `src/charts.ts` | `@hywork/ui/charts` — gráficos; exige `recharts` (`>=3.1 <4`) no consumidor, e só esta entrada o importa |
 | `src/theme.ts` | `@hywork/ui/theme` — `brandThemeVars`, sem "use client" (Server Component, Node) |
 | `src/consumer-check.ts` | `@hywork/ui/consumer-check` — `assertNoTokenOverrides`, para o teste do consumidor |
 | `tokens/core.css` | tokens comuns e as variáveis da aplicação — obrigatório nos dois consumidores, que não declaram cor própria |
@@ -153,6 +168,8 @@ vazio — quando aplicáveis ao componente.
 
 - **Vitest** — comportamento de componente, colocalizado (`<nome>.test.tsx`)
 - **Playwright** — interação real em dois navegadores, em `tests/browser/`
+  (os gráficos têm página própria, `tests/fixtures/charts.html`, com os números
+  do exemplo da HCK-256)
 - **axe-core** — auditoria de acessibilidade, via `@storybook/addon-a11y` e nos testes
 - **smoke-consumer** — instala o tarball num projeto limpo e valida exports,
   declarações, diretiva de cliente e preset

@@ -36,7 +36,7 @@ describe("DialogFooter", () => {
         <button>Salvar</button>
       </>,
     );
-    const botoes = screen.getAllByRole("button").filter((b) => b.textContent !== "Close");
+    const botoes = screen.getAllByRole("button").filter((b) => b.textContent !== "Fechar");
     expect(botoes.map((b) => b.textContent)).toEqual(["Cancelar", "Salvar"]);
   });
 });
@@ -65,5 +65,30 @@ describe("DialogContent", () => {
     );
     const titulo = container.ownerDocument.querySelector('[role="dialog"] h2');
     expect(titulo?.parentElement).toHaveClass("gap-4");
+  });
+});
+
+describe("botão de fechar", () => {
+  it('chama-se "Fechar" por padrão, em pt-BR', () => {
+    render(
+      <Dialog open>
+        <DialogContent>
+          <DialogTitle>Confirmar</DialogTitle>
+        </DialogContent>
+      </Dialog>,
+    );
+    expect(screen.getByRole("button", { name: "Fechar" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Close" })).not.toBeInTheDocument();
+  });
+
+  it("aceita outro rótulo pela tela", () => {
+    render(
+      <Dialog open>
+        <DialogContent closeLabel="Fechar detalhes">
+          <DialogTitle>Detalhes</DialogTitle>
+        </DialogContent>
+      </Dialog>,
+    );
+    expect(screen.getByRole("button", { name: "Fechar detalhes" })).toBeInTheDocument();
   });
 });
