@@ -47,7 +47,7 @@ src/
 │   ├── input/
 │   ├── select/
 │   ├── table/
-│   ├── dialog/
+│   ├── dialog/            ✅  botão de fechar "Fechar" (`closeLabel`), como o `Sheet`
 │   ├── badge/
 │   ├── tabs/
 │   ├── breadcrumb/
@@ -59,8 +59,8 @@ src/
 │   ├── form-message/      ✅  token --hw-error-text
 │   ├── brand-theme/       ✅  <BrandTheme> e useBrandTheme — cor do workspace
 │   ├── date-picker/       📋  data única, calendário próprio — aguarda aval da PO
-│   ├── progress-ring/     📋  anel de progresso, SVG — aguarda aval da PO
-│   ├── rating-scale/      📋  escala de resposta 1–N com rótulos — aguarda aval da PO
+│   ├── progress-ring/     📋  anel de progresso, SVG — lançado na 0.13.0, aval da PO pendente
+│   ├── rating-scale/      📋  escala de resposta 1–N com rótulos — lançado na 0.13.0, aval da PO pendente
 │   ├── radio-group/       ✅  setas mudam e marcam, também na tecla rápida
 │   └── …                  demais primitivas — todas com story
 │
@@ -76,17 +76,17 @@ src/
 │   ├── upload-area/       ✅
 │   ├── stepper/           📋  trilha de passos de wizard — aguarda aval da PO
 │   ├── stat-card/         📋  cartão de indicador — aguarda aval da PO
-│   ├── bar-list/          📋  lista de barras proporcionais — aguarda aval da PO
+│   ├── bar-list/          📋  lista de barras proporcionais — lançado na 0.13.0, aval da PO pendente
 │   └── …                  multi-select, icon-select, rich-text-editor
 │
 ├── builder/               Padrões da intranet (hw-cloud-builder)
 │
 ├── charts/                Gráficos — entrada própria, @hywork/ui/charts (D1-23, DHO)
-│   ├── chart-frame/       📋  moldura: título, base, "Como é calculado", rodapé, vazio — aguarda aval da PO
-│   ├── radar-chart/       📋  radar; vira barras com < 3 eixos ou < 360px — aguarda aval da PO
-│   ├── grouped-bar-chart/ 📋  barras agrupadas na horizontal — aguarda aval da PO
-│   ├── line-chart/        📋  linha com ponto provisório e marcador — aguarda aval da PO
-│   ├── distribution-bar/  📋  barra empilhada 100%, só CSS — aguarda aval da PO
+│   ├── chart-frame/       📋  moldura: título, base, "Como é calculado", rodapé, vazio — lançado na 0.13.0, aval da PO pendente
+│   ├── radar-chart/       📋  radar; vira barras com < 3 eixos ou < 360px — lançado na 0.13.0, aval da PO pendente
+│   ├── grouped-bar-chart/ 📋  barras agrupadas na horizontal — lançado na 0.13.0, aval da PO pendente
+│   ├── line-chart/        📋  linha com ponto provisório e marcador — lançado na 0.13.0, aval da PO pendente
+│   ├── distribution-bar/  📋  barra empilhada 100%, só CSS — lançado na 0.13.0, aval da PO pendente
 │   └── shared/            cores por token, escala, quebra de rótulo, tabela do leitor de tela
 │
 ├── lib/

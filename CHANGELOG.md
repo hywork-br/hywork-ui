@@ -1,61 +1,15 @@
 # Changelog
 
-## Não lançada
+## 0.13.0 — gráficos, `BarList`, `ProgressRing` e `RatingScale` para o DHO
 
-### `RatingScale` — escala de resposta (formulário de avaliação do DHO)
+Lançada em 14/10/2026 por decisão do Rick, para o DHO usar a versão publicada
+no lugar das cópias temporárias do plataform. O **aval visual da PO segue
+pendente**: o visual dos componentes novos continua proposta, e eles continuam
+em `DOMAIN_MODEL.md`, "Componentes novos aguardando o aval da PO". Nenhuma API
+existente quebra; a única dependência nova é o `recharts`, peer opcional e só
+da entrada `@hywork/ui/charts`.
 
-Componente genérico que o formulário de avaliação do líder precisa (D-16 da
-Fase 0). O **visual é proposta** e aguarda o aval da PO — ver
-`DOMAIN_MODEL.md`, "Componentes novos aguardando o aval da PO". Nenhuma API
-existente muda e não há dependência nova.
-
-- **`RatingScale` em `core`** (sai nas duas entradas, `platform` e `builder`;
-  o Builder vai usá-la na fase da intranet). Notas de 1 a N em linha, cada uma
-  com o número e o rótulo; `labels` define a escala (índice 0 = nota 1; sem
-  rótulos, 5 notas). API: `name`, `value` (`number | null`), `onChange`,
-  `labels`, `disabled`, `readOnly`, `error`, `aria-label`,
-  `showSelectedLabel`, `compareValue` — e, opcionais, `aria-labelledby` (para
-  apontar o texto visível da pergunta) e `className`.
-- **Grupo de rádio de verdade:** `role="radiogroup"`, uma parada de Tab por
-  escala; setas mudam **e marcam** em qualquer velocidade de tecla (dão a
-  volta nas pontas), Home/End vão à primeira e à última, Espaço marca, Enter
-  não. `readOnly` é focável e anunciado como só leitura — as setas passeiam
-  pelas notas sem marcar; `disabled` sai da ordem do Tab. `error` liga a
-  mensagem ao grupo por `aria-describedby` e marca `aria-invalid`. `name` vai
-  num campo oculto, para o formulário nativo.
-- **`compareValue`:** um segundo valor marcado com um ponto discreto no canto
-  da nota, que o leitor de tela ouve como "valor de referência". Não é uma
-  escolha; o que a referência é, a tela diz.
-- **Responsiva no componente:** a partir de 640px, número e rótulo em cada
-  nota; abaixo, só o número (alvo de 44px) e uma legenda dos dois extremos. O
-  nome acessível é sempre "número, rótulo".
-- `rating-scale` entra em `nativeNames` do derive e no `manifest.json`.
-
-### `RadioGroup`: as setas marcam também na tecla rápida
-
-- O Radix move o foco num `setTimeout` e só marca se a tecla ainda estiver
-  apertada quando o foco chega — uma tecla rápida (ou automatizada) movia o
-  foco sem marcar, e o DHO teve de escrever um hook
-  (`use-radio-arrow-select`) para contornar. Agora o `RadioGroup` clica o
-  rádio que ficou com o foco depois daquele timeout: `onValueChange` dispara,
-  também no grupo não controlado. Sem mudança de API; o `onKeyDown` da tela
-  continua sendo chamado. **O hook do consumidor pode sair** ao subir a versão.
-- A correção está na transformação do derive (`checkRadioOnArrow`), não só na
-  saída, e reprova se o trecho da captura mudar. Visual idêntico: a paridade
-  não muda.
-
-### Testes
-
-- Vitest: 25 testes do `RatingScale` e 6 do `RadioGroup` (que não tinha
-  nenhum), todos com o axe-core; o do `RadioGroup` reprova sem a correção.
-- `test:browser` ganha `rating-scale.spec.ts` (Chromium e Firefox): axe com
-  contraste nos temas claro e com marca, teclado real (a tecla do Playwright é
-  a "tecla rápida" — sem a correção, o `RadioGroup` reprova no Chromium) e a
-  largura de 320px sem rolagem horizontal. A mensagem de erro fica fora do
-  contraste pelo mesmo motivo da 0.11.0 (red-500 da PO, 3,76:1).
-- `smoke:consumer` confere o `RatingScale` no tarball instalado, nas entradas
-  `@hywork/ui` e `@hywork/ui/builder`.
-## Não lançado — gráficos em `@hywork/ui/charts` (DHO, HCK-256)
+### Gráficos em `@hywork/ui/charts` (DHO, HCK-256)
 
 Os gráficos da Etapa 3 do DHO (Resultados do ciclo), pela decisão D1-23 do
 Rick (13/10/2026): nascem no design system. O **visual é proposta** e aguarda
@@ -101,7 +55,7 @@ o aval da PO, e a **cor de cada faixa** da distribuição é decisão dela — v
   do admin, em "Gráficos".
 - `recharts` e `react-is` entram nas `devDependencies`, na versão fixa.
 
-## Não lançado — `BarList`, `ProgressRing` e o `aria-valuenow` do `Progress` (DHO, HCK-255)
+### `BarList`, `ProgressRing` e o `aria-valuenow` do `Progress` (DHO, HCK-255)
 
 Dois componentes genéricos que a Etapa 2 do DHO precisa (HCK-255, decisão
 D1-23 do Rick, 08/10/2026), e a correção de acessibilidade do
@@ -136,6 +90,73 @@ aguardando o aval da PO". Nenhuma API existente muda; sem dependência nova
   horizontal em 390px. A única reprovação é a da story `Vazio` do `BarList`,
   que mostra o `EmptyState`: o texto gray-400 eleito pela PO dá 2,53:1 sobre
   branco — pendência daquele componente, não deste.
+
+### `RatingScale` — escala de resposta (formulário de avaliação do DHO)
+
+Componente genérico que o formulário de avaliação do líder precisa (D-16 da
+Fase 0). O **visual é proposta** e aguarda o aval da PO — ver
+`DOMAIN_MODEL.md`, "Componentes novos aguardando o aval da PO". Nenhuma API
+existente muda e não há dependência nova.
+
+- **`RatingScale` em `core`** (sai nas duas entradas, `platform` e `builder`;
+  o Builder vai usá-la na fase da intranet). Notas de 1 a N em linha, cada uma
+  com o número e o rótulo; `labels` define a escala (índice 0 = nota 1; sem
+  rótulos, 5 notas). API: `name`, `value` (`number | null`), `onChange`,
+  `labels`, `disabled`, `readOnly`, `error`, `aria-label`,
+  `showSelectedLabel`, `compareValue` — e, opcionais, `aria-labelledby` (para
+  apontar o texto visível da pergunta) e `className`.
+- **Grupo de rádio de verdade:** `role="radiogroup"`, uma parada de Tab por
+  escala; setas mudam **e marcam** em qualquer velocidade de tecla (dão a
+  volta nas pontas), Home/End vão à primeira e à última, Espaço marca, Enter
+  não. `readOnly` é focável e anunciado como só leitura — as setas passeiam
+  pelas notas sem marcar; `disabled` sai da ordem do Tab. `error` liga a
+  mensagem ao grupo por `aria-describedby` e marca `aria-invalid`. `name` vai
+  num campo oculto, para o formulário nativo.
+- **`compareValue`:** um segundo valor marcado com um ponto discreto no canto
+  da nota, que o leitor de tela ouve como "valor de referência". Não é uma
+  escolha; o que a referência é, a tela diz.
+- **Responsiva no componente:** a partir de 640px, número e rótulo em cada
+  nota; abaixo, só o número (alvo de 44px) e uma legenda dos dois extremos. O
+  nome acessível é sempre "número, rótulo".
+- `rating-scale` entra em `nativeNames` do derive e no `manifest.json`.
+
+### `RadioGroup`: as setas marcam também na tecla rápida
+
+- O Radix move o foco num `setTimeout` e só marca se a tecla ainda estiver
+  apertada quando o foco chega — uma tecla rápida (ou automatizada) movia o
+  foco sem marcar, e o DHO teve de escrever um hook
+  (`use-radio-arrow-select`) para contornar. Agora o `RadioGroup` clica o
+  rádio que ficou com o foco depois daquele timeout: `onValueChange` dispara,
+  também no grupo não controlado. Sem mudança de API; o `onKeyDown` da tela
+  continua sendo chamado. **O hook do consumidor pode sair** ao subir a versão.
+- A correção está na transformação do derive (`checkRadioOnArrow`), não só na
+  saída, e reprova se o trecho da captura mudar. Visual idêntico: a paridade
+  não muda.
+
+### Testes do `RatingScale` e do `RadioGroup`
+
+- Vitest: 25 testes do `RatingScale` e 6 do `RadioGroup` (que não tinha
+  nenhum), todos com o axe-core; o do `RadioGroup` reprova sem a correção.
+- `test:browser` ganha `rating-scale.spec.ts` (Chromium e Firefox): axe com
+  contraste nos temas claro e com marca, teclado real (a tecla do Playwright é
+  a "tecla rápida" — sem a correção, o `RadioGroup` reprova no Chromium) e a
+  largura de 320px sem rolagem horizontal. A mensagem de erro fica fora do
+  contraste pelo mesmo motivo da 0.11.0 (red-500 da PO, 3,76:1).
+- `smoke:consumer` confere o `RatingScale` no tarball instalado, nas entradas
+  `@hywork/ui` e `@hywork/ui/builder`.
+
+### `Sheet` e `Dialog`: botão de fechar em pt-BR
+
+- O botão de fechar do `Sheet` e do `Dialog` tinha o nome acessível "Close",
+  em inglês, nos produtos em pt-BR (QA, 14/10/2026). `SheetContent` e
+  `DialogContent` ganham `closeLabel`, com padrão "Fechar", como o
+  `clearLabel` do `SearchInput` e o `triggerLabel` do `RowActions`. Visual
+  idêntico: o texto é só do leitor de tela.
+- O `Sheet` é derivado da captura, então a troca está no derive
+  (`labelSheetClose`) e reprova se o trecho da captura mudar; o `Dialog` é
+  autoral. Testes: 2 do `Sheet` (o primeiro dele), 2 do `Dialog` e 1 do derive.
+- **Consumidor:** teste que acha o botão pelo nome "Close" passa a achá-lo por
+  "Fechar".
 
 ## 0.12.1 — corpo de 14px no admin
 
