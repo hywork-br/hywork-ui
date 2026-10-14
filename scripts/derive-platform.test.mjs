@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { componentNames, authoredNames, nativeNames, coreNames, tokenize, extractComponent, checkRadioOnArrow } from './derive-platform.mjs';
+import { componentNames, authoredNames, nativeNames, coreNames, tokenize, extractComponent, checkRadioOnArrow, labelSheetClose } from './derive-platform.mjs';
 import { existsSync } from 'node:fs';
 const read = p => readFileSync(new URL('../'+p, import.meta.url), 'utf8');
 const hash = s => createHash('sha256').update(s).digest('hex');
@@ -31,6 +31,16 @@ test('the derivation makes radio arrows check, and fails loudly if the captured 
   const drifted = original.replace('{...props}\n      ref={ref}', '{...props} ref={ref}');
   assert.notEqual(drifted, original);
   assert.throws(() => checkRadioOnArrow(drifted), /arrow fix source not found/);
+});
+test('the derivation names the sheet close button in pt-BR, and fails loudly if the capture drifts', () => {
+  const original = read('provenance/platform/components/sheet.tsx');
+  const derived = extractComponent('sheet', original);
+  assert.ok(derived.includes('closeLabel = "Fechar"'));
+  assert.ok(derived.includes('<span className="sr-only">{closeLabel}</span>'));
+  assert.ok(!derived.includes('>Close<'));
+  const drifted = original.replace('<span className="sr-only">Close</span>', '<span className="sr-only">Close panel</span>');
+  assert.notEqual(drifted, original);
+  assert.throws(() => labelSheetClose(drifted), /close label source not found/);
 });
 test('token conversion removes literal colors without changing functional code', () => {
   assert.equal(tokenize('border-[#e5e7eb] hover:bg-[#F9FAFB] onClick={save}'),

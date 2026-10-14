@@ -159,6 +159,25 @@ export function checkRadioOnArrow(source) {
     .replace(radioArrowRoot, '>(({ className, onKeyDown, ...props }, ref) => {\n  return (\n    <RadioGroupPrimitive.Root\n      className={cn("grid gap-2", className)}\n      {...props}\n      onKeyDown={(event) => {\n        onKeyDown?.(event)\n        checkFocusedRadioAfterArrow(event)\n      }}\n      ref={ref}');
 }
 
+/**
+ * O botão de fechar do `Sheet` capturado se chama "Close", em inglês, nos
+ * produtos em pt-BR (QA, 14/10/2026). Como o `clearLabel` do `SearchInput` e o
+ * `triggerLabel` do `RowActions`, o rótulo vira prop com padrão em pt-BR:
+ * `closeLabel = "Fechar"`. Falha se o trecho sumir da captura.
+ */
+const sheetPropsSource = 'interface SheetContentProps\n  extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,\n    VariantProps<typeof sheetVariants> {}';
+const sheetParamsSource = '({ side = "right", className, children, ...props }, ref)';
+const sheetCloseSource = '<span className="sr-only">Close</span>';
+
+export function labelSheetClose(source) {
+  if (![sheetPropsSource, sheetParamsSource, sheetCloseSource].every((part) => source.includes(part)))
+    throw new Error('sheet: close label source not found');
+  return source
+    .replace(sheetPropsSource, sheetPropsSource.slice(0, -2)+'{\n  /** Nome acessível do botão de fechar, para leitores de tela. */\n  closeLabel?: string\n}')
+    .replace(sheetParamsSource, '({ side = "right", className, children, closeLabel = "Fechar", ...props }, ref)')
+    .replace(sheetCloseSource, '<span className="sr-only">{closeLabel}</span>');
+}
+
 export function extractComponent(name, source) {
   // A referência congelada em provenance/ guarda os componentes como estavam
   // em src/components/<nome>.tsx. Eles passaram a viver em
@@ -184,6 +203,7 @@ export function extractComponent(name, source) {
     '<ScrollAreaPrimitive.Viewport tabIndex={0} className="h-full w-full rounded-[inherit] focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring">');
   result = applyColorRoles(name, result);
   if (name === 'radio-group') result = checkRadioOnArrow(result);
+  if (name === 'sheet') result = labelSheetClose(result);
   if (name === 'card') result = result.replace('<h3', '<h2');
   if (name === 'alert') result = result.replace('<h5', '<h2');
   if (name === 'slider') {
