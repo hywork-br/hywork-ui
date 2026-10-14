@@ -27,6 +27,7 @@ Acompanhamento em [PLANO_DESIGN_SYSTEM.md](PLANO_DESIGN_SYSTEM.md).
 ```ts
 import { FilterBar, Button } from "@hywork/ui/platform";  // no Platform
 import { FilterBar, Button } from "@hywork/ui/builder";   // no Builder
+import { ChartFrame, RadarChart } from "@hywork/ui/charts"; // gráficos — exige o recharts
 ```
 
 ```ts
