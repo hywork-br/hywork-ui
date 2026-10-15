@@ -28,13 +28,13 @@ execFileSync(process.execPath,['--input-type=module','-e',`
   import { RatingScale as BuilderRatingScale } from '@hywork/ui/builder';
   import { brandThemeVars } from '@hywork/ui/theme';
   import { findTokenOverrides } from '@hywork/ui/consumer-check';
-  import { ChartFrame, RadarChart, GroupedBarChart, LineChart, DistributionBar } from '@hywork/ui/charts';
+  import { ChartFrame, RadarChart, GroupedBarChart, LineChart, DistributionBar, DonutChart } from '@hywork/ui/charts';
   import { createRequire } from 'node:module';
   import { readFileSync } from 'node:fs';
   const require=createRequire(import.meta.url);
   const preset=require('@hywork/ui/tailwind/platform-preset.cjs');
   if (![Button,Input,Table,Dialog,Select,BrandTheme,RatingScale,BuilderRatingScale].every(Boolean)) throw Error('Missing export');
-  if (![ChartFrame,RadarChart,GroupedBarChart,LineChart,DistributionBar].every(Boolean)) throw Error('Missing chart export');
+  if (![ChartFrame,RadarChart,GroupedBarChart,LineChart,DistributionBar,DonutChart].every(Boolean)) throw Error('Missing chart export');
   // O design system declara as variáveis e o preset as lê sem fallback.
   // As cores vêm do preset base, que o do Platform compõe em presets.
   const colors=preset.presets[0].theme.extend.colors;

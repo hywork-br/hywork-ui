@@ -87,6 +87,7 @@ src/
 │   ├── grouped-bar-chart/ 📋  barras agrupadas na horizontal — lançado na 0.13.0, aval da PO pendente
 │   ├── line-chart/        📋  linha com ponto provisório e marcador — lançado na 0.13.0, aval da PO pendente
 │   ├── distribution-bar/  📋  barra empilhada 100%, só CSS — lançado na 0.13.0, aval da PO pendente
+│   ├── donut-chart/       📋  rosca com valor e rótulo no centro, SVG — HCK-256 (R6), ainda não lançado
 │   └── shared/            cores por token, escala, quebra de rótulo, tabela do leitor de tela
 │
 ├── lib/
