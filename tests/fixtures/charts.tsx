@@ -1,8 +1,8 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import "@fontsource-variable/montserrat";
-import { ChartFrame, DistributionBar, GroupedBarChart, LineChart, RadarChart } from "../../src/charts";
-import { bands, comparison, competencies, cycles, evolution, leaderSelf, pillars, score } from "../../src/charts/shared/fixtures";
+import { ChartFrame, DistributionBar, DonutChart, GroupedBarChart, LineChart, RadarChart, donutColors } from "../../src/charts";
+import { areas, bands, comparison, competencies, cycles, evolution, leaderSelf, pillars, score } from "../../src/charts/shared/fixtures";
 
 // The charts of HCK-256 with the numbers of its example, on the package CSS.
 // `?print` renders them at a fixed width, as the print view does; `?theme=tenant`
@@ -71,7 +71,28 @@ function Page() {
           width={width}
         />
       </ChartFrame>
-      <ChartFrame title="Por estrutura organizacional" state="empty" footer="Baseado na nota final do ciclo" />
+      <ChartFrame title="Por estrutura organizacional" base="Clique em uma área para o detalhe.">
+        <div className="flex flex-col items-center gap-5">
+          <DonutChart
+            aria-label="Pessoas por área"
+            segments={areas}
+            centerValue="3,8"
+            centerLabel="Média geral"
+            size={180}
+            onSegmentClick={pick("área")}
+          />
+          <ul className="flex w-full flex-col gap-1">
+            {areas.map((area, i) => (
+              <li key={area.id} className="flex items-center gap-2.5 px-2 py-1 text-sm">
+                <span aria-hidden="true" className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ backgroundColor: donutColors(areas)[i] }} />
+                <span className="flex-1 font-semibold">{area.label}</span>
+                <span className="tabular-nums text-muted-foreground">{area.value}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </ChartFrame>
+      <ChartFrame title="Por estrutura organizacional, sem dados" state="empty" footer="Baseado na nota final do ciclo" />
       <ChartFrame title="Líderes" state="loading" />
     </main>
   );

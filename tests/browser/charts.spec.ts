@@ -133,3 +133,27 @@ test("print keeps the fixed width, the colours and drops the calculation button"
   await expect(page.locator("[data-part='distribution-track']")).toHaveCSS("print-color-adjust", "exact");
   await info.attach("print", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" });
 });
+
+test("the donut: a slice by keyboard, with a visible ring, or by pointer on the ring", async ({ page }, info) => {
+  await page.setViewportSize({ width: 1200, height: 1000 });
+  await open(page);
+  const donut = page.getByRole("group", { name: "Pessoas por área" });
+  const first = donut.getByRole("button", { name: "Comercial: 62" });
+  const second = donut.getByRole("button", { name: "Tecnologia: 48" });
+  await second.focus();
+  await page.keyboard.press("Shift+Tab");
+  await expect(first).toBeFocused();
+  // The ring is drawn by two arcs on the slice edges: SVG has no box-shadow.
+  await expect(first.locator("[data-part='focus-ring']").first()).toHaveCSS("opacity", "1");
+  await expect(second.locator("[data-part='focus-ring']").first()).toHaveCSS("opacity", "0");
+  await info.attach("donut focus", { body: await donut.screenshot(), contentType: "image/png" });
+  await page.keyboard.press("Enter");
+  await expect(selected(page)).toHaveText("Selecionado: área: sales");
+
+  // Operations, the fifth slice, runs from 194° to 325° clockwise from 12 o'clock;
+  // its middle, on the 180px ring (radius 54 of 140 → 69px), is at 259°.
+  const box = (await donut.boundingBox())!;
+  const angle = (259 * Math.PI) / 180;
+  await page.mouse.click(box.x + 90 + 69 * Math.sin(angle), box.y + 90 - 69 * Math.cos(angle));
+  await expect(selected(page)).toHaveText("Selecionado: área: operations");
+});

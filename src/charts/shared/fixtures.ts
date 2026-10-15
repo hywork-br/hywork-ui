@@ -62,3 +62,13 @@ export const calibratedBands = [
 
 /** Nota com uma casa, sempre: "4,0", não "4". */
 export const score = (value: number) => value.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+
+/** Pessoas por área, como no bloco "Por estrutura organizacional" do protótipo da HCK-256. */
+export const areas = [
+  { id: "sales", label: "Comercial", value: 62 },
+  { id: "tech", label: "Tecnologia", value: 48 },
+  { id: "product", label: "Produto", value: 24 },
+  { id: "support", label: "Suporte", value: 41 },
+  { id: "operations", label: "Operações", value: 118 },
+  { id: "finance", label: "Financeiro", value: 32 },
+];
