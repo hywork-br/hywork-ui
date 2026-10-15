@@ -50,7 +50,7 @@ src/
 │   ├── dialog/            ✅  botão de fechar "Fechar" (`closeLabel`), como o `Sheet`
 │   ├── badge/
 │   ├── tabs/
-│   ├── breadcrumb/
+│   ├── breadcrumb/        ✅  níveis ocultos "Mais" (`label`), como o `closeLabel` do `Dialog`
 │   ├── pagination/
 │   ├── skeleton/
 │   ├── carousel/
