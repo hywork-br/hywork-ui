@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.14.0 — `DonutChart` em `@hywork/ui/charts` e `Breadcrumb` em pt-BR
+
+Lançada em 15/10/2026 para o DHO, pelo aval permanente do Rick (14/10) para os
+componentes que o DHO usa. O **aval visual da PO segue pendente**: o visual do
+`DonutChart` é proposta e fica em `DOMAIN_MODEL.md`, "Componentes novos
+aguardando o aval da PO". Nenhuma API existente quebra.
+
+### `DonutChart` (DHO, HCK-256, validação da PO de 15/10, R6)
+
+- Rosca com um segmento por item (`segments: { id, label, value, color? }[]`),
+  fração `value / soma`, valor e rótulo opcionais no centro (`centerValue`,
+  `centerLabel`), tamanho por `size` (padrão 140px, a geometria do protótipo:
+  raio 54, traço 18). Soma zero desenha só o trilho neutro.
+- Cores só por token de gráfico (`chart-1..5`), na ordem das séries de
+  `shared/scale.ts`; do 6º segmento em diante a ordem se repete a 55% de
+  opacidade. `donutColors(segments)` devolve as mesmas cores para a lista ao
+  lado, que é da tela (`legend` opcional, padrão desligado).
+- Acessibilidade: `role="img"` com nome gerado ("label: valor") ou
+  `aria-label` + descrição; com `onSegmentClick`, cada fatia vira botão, com
+  Tab/Enter/Espaço e anel de foco em `stroke-ring`.
+- **Para a PO:** com 6 itens, as cores `chart-2..4` (verde, âmbar, vermelho)
+  podem ser lidas como estado; a paleta de gráficos continua pendente.
+
+### `Breadcrumb`: níveis ocultos em pt-BR
+
+- O `BreadcrumbEllipsis` tinha o texto de leitor de tela "More", em inglês,
+  nos produtos em pt-BR (QA do DHO, 14/10/2026). Ganha `label`, com padrão
+  "Mais", no padrão do `closeLabel` do `Sheet` e do `Dialog` da 0.13.0. Visual
+  idêntico: o texto é só do leitor de tela.
+- O `Breadcrumb` é autoral (`authoredNames` do derive), então a troca está no
+  próprio componente, sem passar pelo derive. Testes: 2 do `BreadcrumbEllipsis`
+  (os primeiros do `Breadcrumb`).
+- **Consumidor:** teste que acha o texto "More" passa a achá-lo por "Mais".
+
 ## 0.13.0 — gráficos, `BarList`, `ProgressRing` e `RatingScale` para o DHO
 
 Lançada em 14/10/2026 por decisão do Rick, para o DHO usar a versão publicada

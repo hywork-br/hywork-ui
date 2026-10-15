@@ -40,9 +40,9 @@ test('nothing outside src/charts imports recharts or the charts', () => {
   }
 });
 
-test('the charts barrel exports the five components and not the example data', () => {
+test('the charts barrel exports the six components and not the example data', () => {
   const barrel = read('src/charts/index.ts');
-  for (const name of ['chart-frame', 'radar-chart', 'grouped-bar-chart', 'line-chart', 'distribution-bar'])
+  for (const name of ['chart-frame', 'radar-chart', 'grouped-bar-chart', 'line-chart', 'distribution-bar', 'donut-chart'])
     assert.ok(barrel.includes(`export * from "./${name}";`), name + ' missing from the charts barrel');
   assert.equal(barrel.includes('fixtures'), false);
   assert.equal(read('src/charts/shared/index.ts').includes('fixtures'), false);

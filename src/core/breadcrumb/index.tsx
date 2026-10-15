@@ -89,10 +89,16 @@ const BreadcrumbSeparator = ({
 )
 BreadcrumbSeparator.displayName = "BreadcrumbSeparator"
 
+interface BreadcrumbEllipsisProps extends React.ComponentProps<"span"> {
+  /** Texto dos níveis ocultos, para leitores de tela. */
+  label?: string
+}
+
 const BreadcrumbEllipsis = ({
   className,
+  label = "Mais",
   ...props
-}: React.ComponentProps<"span">) => (
+}: BreadcrumbEllipsisProps) => (
   <span
     role="presentation"
     aria-hidden="true"
@@ -100,7 +106,7 @@ const BreadcrumbEllipsis = ({
     {...props}
   >
     <MoreHorizontal className="h-4 w-4" />
-    <span className="sr-only">More</span>
+    <span className="sr-only">{label}</span>
   </span>
 )
 BreadcrumbEllipsis.displayName = "BreadcrumbElipssis"
