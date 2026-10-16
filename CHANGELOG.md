@@ -1,5 +1,53 @@
 # Changelog
 
+## Não lançada — voz da Hywork, `Banner` e ações do `ItemCard` no pé
+
+Pedido do Vitor (16/10/2026), a partir da HyStore nova do admin. O **aval
+visual da PO segue pendente** para o `Banner` e os tokens novos. Nenhuma API
+existente quebra.
+
+### Tokens: a voz da Hywork (`vendor`)
+
+- `--vendor`, `--vendor-foreground`, `--vendor-strong`, `--vendor-ink` e
+  `--vendor-subtle` no contrato, de `--hw-color-vendor-*` no admin e na
+  intranet; `bg-vendor-*` e `text-vendor-*` no preset. É a secundária do
+  guideline de marca, `#e9501b` (decisão de 12/08/2026), e não segue a marca do
+  workspace.
+- Branco sobre `#e9501b` dá 3,7:1 e reprova texto de 14px: a superfície com
+  texto é `strong` (4,8:1); o texto laranja é `ink` (5,6:1 sobre o branco,
+  4,9:1 sobre `subtle`). Teste em `scripts/tokens.test.mjs`.
+- **Consumidor:** a HyStore declarava `--vendor-orange` e `--vendor-orange-vivid`
+  num `style` local, porque o design system não tinha a cor. Passa a usar as
+  classes; `consumer-check` agora reprova quem declarar `--vendor*`.
+
+### `Banner` (`@hywork/ui/platform`)
+
+- Faixa de destaque: `media`, `title`, `status`, `description`, `actions`,
+  `tone` e `titleAs`. Região nomeada pelo título.
+- `tone="vendor"`: invertido, fundo `vendor-strong` com texto branco — o
+  convite para um módulo novo. `tone="default"`: a moldura do card.
+- Abaixo de 640px, as ações ocupam a largura, com alvo de 44px e rótulo que
+  quebra linha. 7 testes (com axe) e 4 stories.
+
+### `Button`: `inverse` e `inverse-outline`
+
+- Para ações sobre superfície colorida, como o `Banner` da voz da Hywork:
+  `inverse` usa o fundo da página como preenchimento; `inverse-outline`, contorno
+  e texto na cor da superfície. 3 testes, 1 story.
+
+### `Badge`: `variant="vendor"`
+
+- "Novidade" num item que a Hywork lança: `vendor-subtle` com texto `vendor-ink`.
+
+### `ItemCard`: ações no pé, a 16px do texto
+
+- O card vira coluna com vão de 16px, e as ações ganham `mt-auto`: numa grade,
+  os botões da linha alinham no pé. Antes a tela fazia isso com `mt-auto` por
+  fora, que anulava o `mt-4` e colava o texto no botão (HyStore, aba Serviços).
+- Visual igual fora da grade: o vão continua 16px.
+- **Consumidor:** pode tirar o `[&>div:last-child]:mt-auto` e o `pt-4` que
+  somava; com os dois, o vão dobra.
+
 ## 0.15.0 — `DistributionBar` com legenda em lista
 
 Lançada em 16/10/2026 para o DHO, pelo aval permanente do Rick (14/10) para os
