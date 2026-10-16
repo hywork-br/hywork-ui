@@ -34,7 +34,9 @@ existente quebra.
 
 - Para ações sobre superfície colorida, como o `Banner` da voz da Hywork:
   `inverse` usa o fundo da página como preenchimento; `inverse-outline`, contorno
-  e texto na cor da superfície. 3 testes, 1 story.
+  e texto na cor da superfície, com hover que escurece a superfície (clarear
+  derrubava o branco sobre `vendor-strong` para 3,8:1; escurecer dá 5,7:1).
+  3 testes, 1 story.
 
 ### `Badge`: `variant="vendor"`
 

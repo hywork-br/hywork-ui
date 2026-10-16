@@ -20,6 +20,8 @@ describe("Button sobre superfície colorida", () => {
     );
     const button = screen.getByRole("button", { name: "Ver o módulo" });
     expect(button).toHaveClass("border-current", "bg-transparent");
+    // hover escurece: clarear a superfície derrubava o contraste do texto branco
+    expect(button).toHaveClass("hover:bg-foreground/10");
     expect(button.className).not.toMatch(/text-(foreground|primary|vendor)/);
   });
 
