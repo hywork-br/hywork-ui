@@ -57,4 +57,18 @@ describe("ItemCard — semântica do container", () => {
     const { container } = render(<ItemCard title="Item" as="article" />);
     expect(container.firstElementChild?.tagName).toBe("ARTICLE");
   });
+
+  it("ações no pé, a 16px do conteúdo, mesmo quando a grade estica o card", () => {
+    render(
+      <ItemCard as="article" title="Item" description="Uma linha" actions={<button>Abrir</button>}>
+        <p>Conteúdo</p>
+      </ItemCard>,
+    );
+    const card = screen.getByRole("article");
+    // O vão vem do gap do card: o `mt-auto` das ações não o anula.
+    expect(card).toHaveClass("flex", "flex-col", "gap-4");
+    const actions = screen.getByRole("button", { name: "Abrir" }).parentElement;
+    expect(actions).toHaveClass("mt-auto");
+    expect(actions?.className).not.toMatch(/\bmt-4\b/);
+  });
 });
