@@ -16,6 +16,10 @@ const meta = {
           "Só CSS, sem `recharts`. A legenda é o texto do gráfico; com `onSelect`, cada item " +
           "vira botão e cada fatia responde ao clique. Legenda numa linha, em duas ou em uma " +
           "coluna, conforme a largura — nunca 3 + 1.\n\n" +
+          '**Legenda em lista** (`legend="list"`, protótipo da HCK-256, ajuste R7 da validação ' +
+          "da PO de 15/10/2026): barra de 12px e uma linha por faixa, com borda superior fina — " +
+          "cor, rótulo, nota, percentual e, com `onSelect`, o texto de `selectLabel` (padrão " +
+          '"Ver"), que o consumidor traduz. Proposta de 16/10/2026, aval visual da PO pendente.\n\n' +
           "**Cor das faixas: pendente da PO.** O padrão é uma rampa de `--chart-1`, do claro " +
           "ao escuro, sem verde, âmbar ou vermelho que pareçam estado; `color` aceita um token " +
           "`chart-1..5` por faixa. Importe de `@hywork/ui/charts`.",
@@ -63,3 +67,28 @@ export const Estreita: Story = { args: { className: "w-[340px]" } };
 
 /** Na metade de um painel: duas colunas. */
 export const MeiaLargura: Story = { args: { className: "w-[480px]" } };
+
+/**
+ * Legenda em lista, como no protótipo da HCK-256 (ajuste R7 da PO, 15/10):
+ * uma linha por faixa, e a linha inteira abre a faixa. Proposta de 16/10,
+ * aval visual da PO pendente.
+ */
+export const LegendaEmLista: Story = {
+  name: "Legenda em lista",
+  args: { legend: "list", className: undefined },
+  render: (args) => {
+    const [escolhida, setEscolhida] = React.useState("nenhuma");
+    return (
+      <div className="flex max-w-[480px] flex-col gap-3">
+        <DistributionBar {...args} onSelect={setEscolhida} />
+        <p className="text-sm text-muted-foreground">Escolhida: {escolhida}</p>
+      </div>
+    );
+  },
+};
+
+/** Legenda em lista, só leitura e depois da calibragem: sem "Ver", e a faixa com 0% segue na lista. */
+export const LegendaEmListaSemClique: Story = {
+  name: "Legenda em lista, sem clique",
+  args: { legend: "list", bands: calibratedBands, className: "max-w-[480px]" },
+};
