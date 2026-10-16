@@ -39,6 +39,13 @@ existente quebra.
 
 - "Novidade" num item que a Hywork lança: `vendor-subtle` com texto `vendor-ink`.
 
+### `DialogContent`: `showCloseButton`
+
+- `showCloseButton={false}` tira o X do canto, para a tela que põe o próprio
+  "Fechar" com texto. A HyStore escondia o X por CSS (`[&>button.absolute]:hidden`)
+  e o leitor de tela, fora do navegador, via dois "Fechar". Padrão `true`: nada
+  muda para quem não passa a prop. 1 teste.
+
 ### `ItemCard`: ações no pé, a 16px do texto
 
 - O card vira coluna com vão de 16px, e as ações ganham `mt-auto`: numa grade,
