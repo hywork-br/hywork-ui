@@ -30,6 +30,11 @@ export interface DistributionBand {
  * separadas por 2px da superfície, pontas arredondadas (4px). Faixa com 0%
  * não desenha fatia, mas segue na legenda.
  *
+ * Com `legend="list"` (protótipo da HCK-256, ajuste R7 da validação da PO
+ * de 15/10/2026), a barra fica com 12px e a legenda vira uma lista vertical:
+ * uma linha por faixa, com borda superior fina — cor, rótulo, nota,
+ * percentual e, com `onSelect`, o texto de `selectLabel` ("Ver").
+ *
  * A legenda é o texto do gráfico: o leitor de tela a lê no lugar da barra,
  * que é desenho. Com `onSelect`, cada item da legenda vira botão (o teclado
  * chega por ele) e cada fatia responde ao clique.
@@ -40,6 +45,14 @@ export interface DistributionBarProps extends Omit<React.HTMLAttributes<HTMLDivE
   onSelect?: (bandId: string) => void;
   /** Formata o percentual. Padrão: pt-BR, "25%". */
   formatValue?: ChartValueFormatter;
+  /**
+   * `"auto"` (padrão): rótulo e, embaixo, "25% · 1 pessoa", numa linha, em
+   * duas ou em uma coluna, conforme a largura. `"list"`: uma linha por faixa,
+   * como no protótipo, com a barra de 12px.
+   */
+  legend?: "auto" | "list";
+  /** Texto no fim de cada linha da lista quando há `onSelect`. Padrão: "Ver". Só em `legend="list"`. */
+  selectLabel?: string;
 }
 
 const percent = new Intl.NumberFormat("pt-BR", { style: "percent", maximumFractionDigits: 1 });
@@ -62,19 +75,148 @@ const legendColumns = (count: number, width: number) => {
   return [count, Math.ceil(count / 2), 1].find((c) => c >= 1 && width / c >= MIN_COLUMN) ?? 1;
 };
 
+const FOCUS_RING =
+  "outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card motion-reduce:!transition-none";
+
+interface LegendProps {
+  bands: DistributionBand[];
+  colors: string[];
+  values: number[];
+  formatValue: ChartValueFormatter;
+  onSelect?: (bandId: string) => void;
+}
+
+/**
+ * Uma linha por faixa (protótipo da HCK-256): borda superior fina, cor,
+ * rótulo no espaço livre, nota em destaque, percentual e, com `onSelect`, a
+ * linha inteira é o botão, com `selectLabel` no fim. O botão avança 8px para
+ * os lados, para o fundo do hover e o anel de foco não colarem no texto.
+ */
+function ListLegend({ bands, colors, values, formatValue, onSelect, selectLabel }: LegendProps & { selectLabel: string }) {
+  return (
+    <ul data-part="legend" data-legend="list" className="flex flex-col">
+      {bands.map((band, i) => {
+        const content = (
+          <>
+            <span
+              aria-hidden="true"
+              className="h-2.5 w-2.5 shrink-0 rounded-sm [print-color-adjust:exact]"
+              style={{ backgroundColor: colors[i] }}
+            />
+            <span className="min-w-0 flex-1 break-words text-sm text-foreground">{band.label}</span>{" "}
+            {band.note && (
+              <>
+                <span className="shrink-0 text-sm font-semibold tabular-nums text-foreground">{band.note}</span>
+                <span className="sr-only">,</span>{" "}
+              </>
+            )}
+            <span className="w-11 shrink-0 text-right text-xs tabular-nums text-muted-foreground">
+              {formatValue(values[i])}
+            </span>
+            {onSelect && (
+              <>
+                {" "}
+                <span className="shrink-0 whitespace-nowrap text-xs font-semibold text-primary-ink">{selectLabel}</span>
+              </>
+            )}
+          </>
+        );
+        return (
+          <li key={band.id} className="min-w-0 border-t border-border">
+            {onSelect ? (
+              <button
+                type="button"
+                data-part="band"
+                onClick={() => onSelect(band.id)}
+                className={cn("-mx-2 flex w-[calc(100%+1rem)] items-center gap-3 rounded-md px-2 py-2.5 text-left", FOCUS_RING)}
+              >
+                {content}
+              </button>
+            ) : (
+              <div data-part="band" className="flex items-center gap-3 py-2.5">
+                {content}
+              </div>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+/** Rótulo e, embaixo, "25% · 1 pessoa"; numa linha, em duas ou em uma coluna — nunca 3 + 1. */
+function AutoLegend({ bands, colors, values, formatValue, onSelect }: LegendProps) {
+  const [legendRef, legendWidth] = useElementWidth<HTMLUListElement>();
+  return (
+    <ul
+      ref={legendRef}
+      data-part="legend"
+      data-legend="auto"
+      className="grid gap-x-4 gap-y-1"
+      style={{ gridTemplateColumns: `repeat(${legendColumns(bands.length, legendWidth)}, minmax(0, 1fr))` }}
+    >
+      {bands.map((band, i) => {
+        const content = (
+          <>
+            <span className="flex items-baseline gap-2">
+              <span
+                aria-hidden="true"
+                className="h-2.5 w-2.5 shrink-0 rounded-sm [print-color-adjust:exact]"
+                style={{ backgroundColor: colors[i] }}
+              />
+              <span className="min-w-0 break-words text-sm text-foreground">{band.label}</span>
+            </span>{" "}
+            <span className="block pl-[18px] text-sm">
+              <span className="font-semibold tabular-nums text-foreground">{formatValue(values[i])}</span>
+              {band.note && (
+                <span className="text-xs text-muted-foreground">
+                  <span aria-hidden="true"> · </span>
+                  <span className="sr-only">,</span> {band.note}
+                </span>
+              )}
+            </span>
+          </>
+        );
+        return (
+          <li key={band.id} className="min-w-0">
+            {onSelect ? (
+              <button
+                type="button"
+                data-part="band"
+                onClick={() => onSelect(band.id)}
+                className={cn("block w-full rounded-md px-2 py-1.5 text-left", FOCUS_RING)}
+              >
+                {content}
+              </button>
+            ) : (
+              <div data-part="band" className="px-2 py-1.5">
+                {content}
+              </div>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 const DistributionBar = React.forwardRef<HTMLDivElement, DistributionBarProps>(
-  ({ bands, onSelect, formatValue = defaultPercent, className, ...props }, ref) => {
-    const [legendRef, legendWidth] = useElementWidth<HTMLUListElement>();
+  ({ bands, onSelect, formatValue = defaultPercent, legend = "auto", selectLabel = "Ver", className, ...props }, ref) => {
     const colors = bands.map((b, i) => (b.color ? chartColor(b.color) : rampColor(i, bands.length)));
     const values = bands.map((b) => Math.max(0, toValue(b.value) ?? 0));
     const total = values.reduce((a, v) => a + v, 0);
+    const list = legend === "list";
+    const legendProps: LegendProps = { bands, colors, values, formatValue, onSelect };
 
     return (
-      <div ref={ref} role="group" className={cn("flex min-w-0 flex-col gap-3", className)} {...props}>
+      <div ref={ref} role="group" className={cn("flex min-w-0 flex-col", list ? "gap-4" : "gap-3", className)} {...props}>
         <div
           aria-hidden="true"
           data-part="distribution-track"
-          className="flex h-6 w-full gap-0.5 overflow-hidden rounded bg-card [print-color-adjust:exact]"
+          className={cn(
+            "flex w-full gap-0.5 overflow-hidden bg-card [print-color-adjust:exact]",
+            list ? "h-3 rounded-full" : "h-6 rounded",
+          )}
         >
           {total > 0 ? (
             bands.map((band, i) =>
@@ -96,53 +238,7 @@ const DistributionBar = React.forwardRef<HTMLDivElement, DistributionBarProps>(
           )}
         </div>
 
-        <ul
-          ref={legendRef}
-          className="grid gap-x-4 gap-y-1"
-          style={{ gridTemplateColumns: `repeat(${legendColumns(bands.length, legendWidth)}, minmax(0, 1fr))` }}
-        >
-          {bands.map((band, i) => {
-            const content = (
-              <>
-                <span className="flex items-baseline gap-2">
-                  <span
-                    aria-hidden="true"
-                    className="h-2.5 w-2.5 shrink-0 rounded-sm [print-color-adjust:exact]"
-                    style={{ backgroundColor: colors[i] }}
-                  />
-                  <span className="min-w-0 break-words text-sm text-foreground">{band.label}</span>
-                </span>{" "}
-                <span className="block pl-[18px] text-sm">
-                  <span className="font-semibold tabular-nums text-foreground">{formatValue(values[i])}</span>
-                  {band.note && (
-                    <span className="text-xs text-muted-foreground">
-                      <span aria-hidden="true"> · </span>
-                      <span className="sr-only">,</span> {band.note}
-                    </span>
-                  )}
-                </span>
-              </>
-            );
-            return (
-              <li key={band.id} className="min-w-0">
-                {onSelect ? (
-                  <button
-                    type="button"
-                    data-part="band"
-                    onClick={() => onSelect(band.id)}
-                    className="block w-full rounded-md px-2 py-1.5 text-left outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card motion-reduce:!transition-none"
-                  >
-                    {content}
-                  </button>
-                ) : (
-                  <div data-part="band" className="px-2 py-1.5">
-                    {content}
-                  </div>
-                )}
-              </li>
-            );
-          })}
-        </ul>
+        {list ? <ListLegend {...legendProps} selectLabel={selectLabel} /> : <AutoLegend {...legendProps} />}
       </div>
     );
   },
