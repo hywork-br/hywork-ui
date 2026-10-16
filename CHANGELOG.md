@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.15.0 — `DistributionBar` com legenda em lista
+
+Lançada em 16/10/2026 para o DHO, pelo aval permanente do Rick (14/10) para os
+componentes que o DHO usa. O **aval visual da PO segue pendente**. Nenhuma API
+existente quebra: o padrão continua `legend="auto"`.
+
+### `DistributionBar`: `legend="list"` (DHO, HCK-256, validação da PO de 15/10, R7)
+
+- Nova prop `legend?: "auto" | "list"` (padrão `"auto"`, o comportamento de
+  antes). `"list"` segue o protótipo: barra de 12px e, embaixo, uma linha por
+  faixa com borda superior fina — cor, rótulo, `note` (ex.: "1 pessoa"),
+  percentual e, com `onSelect`, a linha inteira como botão.
+- Nova prop `selectLabel?: string` (padrão "Ver"), o texto da ação da linha no
+  modo lista, para o consumidor traduzir.
+- Acessibilidade igual à de antes: a barra fica fora da árvore e a lista é o
+  texto do gráfico. 5 testes novos (com axe) e 2 stories.
+- **Consumidor:** substitui a cópia temporária de lista que o plataform criaria
+  para a "Distribuição dos resultados" do DHO.
+
 ## 0.14.0 — `DonutChart` em `@hywork/ui/charts` e `Breadcrumb` em pt-BR
 
 Lançada em 15/10/2026 para o DHO, pelo aval permanente do Rick (14/10) para os
