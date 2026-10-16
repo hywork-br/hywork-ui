@@ -1,9 +1,9 @@
 # Changelog
 
-## Não lançada — voz da Hywork, `Banner` e ações do `ItemCard` no pé
+## Não lançada — voz da Hywork, `Banner`, `PromoCard` e ações do `ItemCard` no pé
 
 Pedido do Vitor (16/10/2026), a partir da HyStore nova do admin. O **aval
-visual da PO segue pendente** para o `Banner` e os tokens novos. Nenhuma API
+visual da PO segue pendente** para o `Banner`, o `PromoCard` e os tokens novos. Nenhuma API
 existente quebra.
 
 ### Tokens: a voz da Hywork (`vendor`)
@@ -29,6 +29,19 @@ existente quebra.
 - Abaixo de 640px, o ícone sobe para cima do título e as ações ocupam a
   largura, com alvo de 44px e rótulo que quebra linha. 7 testes (com axe) e 4
   stories.
+
+### `PromoCard` (`@hywork/ui/platform`)
+
+- Card de convite em pé: `media`, `eyebrow`, `title`, `description`, `actions`,
+  `tone`, `size`, `titleAs`, `onDismiss` e `dismissLabel`. Artigo nomeado pelo
+  título. Pedido do Vitor para a home nova do admin (16/10/2026): a coluna
+  "Descubra" (produto, HyTalks, blog) e o convite no pé do menu.
+- Tudo empilha, o título quebra linha e a ação ocupa a largura no pé do card:
+  num carrossel, os botões alinham de um card para o outro. O `Banner` deita a
+  anatomia e espreme a frase numa coluna estreita; o `ItemCard` corta o título.
+- `tone="vendor"` como no `Banner`; `size="compact"` (respiro 16, ícone 32)
+  para o menu lateral; `onDismiss` põe um X de 40px no canto. 10 testes (com
+  axe) e 4 stories, uma delas dentro do `Carousel`.
 
 ### `Button`: `inverse` e `inverse-outline`
 

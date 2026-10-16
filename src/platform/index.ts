@@ -11,6 +11,7 @@ export * from "./upload-area";
 export * from "./page-title";
 export * from "./item-card";
 export * from "./banner";
+export * from "./promo-card";
 export * from "./data-list";
 export * from "./multi-select";
 export * from "./icon-select";

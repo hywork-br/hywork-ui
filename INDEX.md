@@ -69,6 +69,7 @@ src/
 │   ├── data-list/         ✅  substitui 44 telas
 │   ├── item-card/         ✅  substitui 21 implementações
 │   ├── banner/            📋  faixa de destaque, voz da Hywork — aguarda aval da PO
+│   ├── promo-card/        📋  card de convite em pé (Descubra, pé do menu) — aguarda aval da PO
 │   ├── list-pagination/   ✅  substitui 3
 │   ├── empty-state/       ✅  substitui 8 variações
 │   ├── error-state/       ✅  substitui 6 linhas de erro escritas à mão
