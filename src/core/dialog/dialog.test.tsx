@@ -91,4 +91,15 @@ describe("botão de fechar", () => {
     );
     expect(screen.getByRole("button", { name: "Fechar detalhes" })).toBeInTheDocument();
   });
+
+  it("sai do canto com showCloseButton={false}, para a tela que tem o próprio Fechar", () => {
+    render(
+      <Dialog open>
+        <DialogContent showCloseButton={false}>
+          <DialogTitle>Capturas</DialogTitle>
+        </DialogContent>
+      </Dialog>,
+    );
+    expect(screen.queryByRole("button", { name: "Fechar" })).not.toBeInTheDocument();
+  });
 });

@@ -49,6 +49,7 @@ export const DESIGN_SYSTEM_VARIABLES: readonly string[] = [
   "destructive", "destructive-foreground", "success", "success-foreground", "warning",
   "warning-foreground", "error", "error-foreground", "info", "info-foreground",
   "border", "input", "ring", "radius", "chart-1", "chart-2", "chart-3", "chart-4", "chart-5",
+  "vendor", "vendor-foreground", "vendor-strong", "vendor-ink", "vendor-subtle",
   "admin-bg", "admin-surface", "admin-sidebar",
 ].map((name) => `--${name}`);
 

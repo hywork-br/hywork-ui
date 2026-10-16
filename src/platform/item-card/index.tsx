@@ -15,6 +15,11 @@ import { cn } from "../../lib/cn";
  *
  * A anatomia é fixa: mídia · título · metadados · ações. O que não couber nela
  * entra como `children`, abaixo dos metadados.
+ *
+ * Ações no pé (16/10/2026): numa grade, os cards da linha têm a mesma altura e
+ * as ações descem para o pé, alinhadas entre os cards, sempre a 16px do texto.
+ * Antes a tela fazia isso à mão com `mt-auto`, que anulava o `mt-4` das ações
+ * e colava o texto no botão (HyStore, Serviços).
  */
 // `title` do HTML é string; aqui ele é conteúdo renderizável, então o
 // atributo nativo sai da herança.
@@ -62,7 +67,7 @@ const ItemCard = React.forwardRef<HTMLDivElement, ItemCardProps>(
       <Container
         ref={ref}
         className={cn(
-          "relative rounded-lg border border-border bg-card p-6 text-card-foreground",
+          "relative flex flex-col gap-4 rounded-lg border border-border bg-card p-6 text-card-foreground",
           clicavel &&
             "cursor-pointer transition-colors motion-reduce:!transition-none hover:bg-accent/40 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
           className,
@@ -95,10 +100,10 @@ const ItemCard = React.forwardRef<HTMLDivElement, ItemCardProps>(
           </div>
         </div>
 
-        {children && <div className="mt-4">{children}</div>}
+        {children && <div>{children}</div>}
 
         {actions && (
-          <div className="relative z-10 mt-4 flex flex-wrap items-center gap-2">{actions}</div>
+          <div className="relative z-10 mt-auto flex flex-wrap items-center gap-2">{actions}</div>
         )}
       </Container>
     );

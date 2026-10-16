@@ -46,3 +46,16 @@ export const Tamanhos: Story = {
     </div>
   ),
 };
+
+/**
+ * Sobre superfície colorida, como o Banner da voz da Hywork: `inverse` para a
+ * ação principal e `inverse-outline` para a segunda. Fora dela, não usar.
+ */
+export const SobreCor: Story = {
+  render: () => (
+    <div className="flex flex-wrap items-center gap-3 rounded-lg bg-vendor-strong p-6 text-vendor-foreground">
+      <Button variant="inverse">Agendar conversa</Button>
+      <Button variant="inverse-outline">Ver o módulo</Button>
+    </div>
+  ),
+};

@@ -80,3 +80,34 @@ test('zebra, hover and selection are three distinct steps', () => {
   };
   assert.ok(sum(steps[0]) > sum(steps[1]) && sum(steps[1]) > sum(steps[2]));
 });
+
+test('the Hywork voice: the brand guideline secondary, readable wherever it carries text', () => {
+  const hsl = (v) => {
+    const [h, s, l] = v.replace(/%/g, '').split(' ').map(Number);
+    const a = (s / 100) * Math.min(l / 100, 1 - l / 100);
+    const f = (n) => {
+      const k = (n + h / 30) % 12;
+      return l / 100 - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+    };
+    return [f(0), f(8), f(4)];
+  };
+  const lum = (rgb) =>
+    rgb
+      .map((c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4))
+      .reduce((sum, c, i) => sum + c * [0.2126, 0.7152, 0.0722][i], 0);
+  const ratio = (a, b) => {
+    const [hi, lo] = [lum(hsl(a)), lum(hsl(b))].sort((x, y) => y - x);
+    return (hi + 0.05) / (lo + 0.05);
+  };
+  for (const file of ['tokens/platform.css', 'tokens/builder.css']) {
+    const t = block(read(file), ':root');
+    // #e9501b, o guideline (decisão de 12/08/2026)
+    assert.deepEqual(hsl(t['--hw-color-vendor-default']).map((c) => Math.round(c * 255)), [233, 80, 27], file);
+    const white = t['--hw-color-vendor-foreground'];
+    assert.ok(ratio(white, t['--hw-color-vendor-strong']) >= 4.5, file + ': branco sobre strong');
+    assert.ok(ratio(t['--hw-color-vendor-ink'], t['--hw-color-background']) >= 4.5, file + ': ink sobre o fundo');
+    assert.ok(ratio(t['--hw-color-vendor-ink'], t['--hw-color-vendor-subtle']) >= 4.5, file + ': ink sobre subtle');
+  }
+  for (const name of ['--vendor', '--vendor-foreground', '--vendor-strong', '--vendor-ink', '--vendor-subtle'])
+    assert.equal(contract[name].includes('brand'), false, name + ' follows the brand');
+});

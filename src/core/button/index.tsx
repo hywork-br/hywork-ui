@@ -31,6 +31,14 @@ const buttonVariants = cva(
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
+        // Sobre superfície colorida (o Banner da voz da Hywork, 16/10/2026):
+        // o primário de lá é o fundo da página, e o secundário, contorno na
+        // cor do texto da superfície. Fora de superfície colorida, não usar.
+        // O hover do contorno escurece a superfície: clarear derrubava o texto
+        // branco sobre o laranja forte de 4,8:1 para 3,8:1; escurecer dá 5,7:1.
+        inverse: "bg-background text-foreground hover:bg-background/90",
+        "inverse-outline":
+          "border border-current bg-transparent hover:bg-foreground/10",
         link: "text-primary-ink underline-offset-4 hover:underline",
       },
       size: {
