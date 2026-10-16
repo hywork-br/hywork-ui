@@ -73,6 +73,17 @@
   --hw-color-chart-3: 38 92% 50%;
   --hw-color-chart-4: 0 84% 60%;
   --hw-color-chart-5: 199 89% 48%;
+  /* Voz da Hywork: o que a Hywork, e não o workspace, diz na tela — "Novidade",
+     o convite para um módulo novo. É a secundária do guideline de marca,
+     #e9501b (decisão de 12/08/2026: o guideline vence o Figma), e não segue
+     a marca do workspace. Branco sobre #e9501b dá 3,7:1 e reprova texto de
+     14px; por isso a superfície com texto usa `strong` (4,8:1) e o texto
+     laranja sobre o branco usa `ink` (5,6:1; 4,9:1 sobre `subtle`). */
+  --hw-color-vendor-default: 15.4 82.4% 51%;
+  --hw-color-vendor-strong: 15.4 82.4% 44%;
+  --hw-color-vendor-ink: 15.4 82.4% 40%;
+  --hw-color-vendor-subtle: 15.4 82.4% 95%;
+  --hw-color-vendor-foreground: 0 0% 100%;
   --hw-color-admin-bg: 237 241 245;
   --hw-color-admin-surface: 255 255 255;
   --hw-color-admin-sidebar: 30 58 95;

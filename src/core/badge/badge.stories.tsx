@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Sparkles } from "lucide-react";
 import { Badge } from "./index";
 
 const meta = {
@@ -71,3 +72,16 @@ export const ComIcone: Story = {
 
 /** Sem preenchimento, para rótulo que não é estado — uma tag, um tipo. */
 export const Contorno: Story = { args: { variant: "outline", children: "Comunicado" } };
+
+/**
+ * Voz da Hywork: "Novidade" num item que a Hywork lança. É categoria, não
+ * estado, e não segue a marca do workspace.
+ */
+export const VozDaHywork: Story = {
+  render: () => (
+    <Badge variant="vendor">
+      <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+      Novidade
+    </Badge>
+  ),
+};

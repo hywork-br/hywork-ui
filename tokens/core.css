@@ -305,4 +305,11 @@
   --chart-3: var(--hw-color-chart-3);
   --chart-4: var(--hw-color-chart-4);
   --chart-5: var(--hw-color-chart-5);
+
+  /* Voz da Hywork: não segue a marca do workspace, como o estado. */
+  --vendor: var(--hw-color-vendor-default);
+  --vendor-foreground: var(--hw-color-vendor-foreground);
+  --vendor-strong: var(--hw-color-vendor-strong);
+  --vendor-ink: var(--hw-color-vendor-ink);
+  --vendor-subtle: var(--hw-color-vendor-subtle);
 }

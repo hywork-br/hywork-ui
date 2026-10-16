@@ -23,6 +23,10 @@ import { cn } from "../../lib/cn";
  * `success`, `warning`, `destructive` e `info` seguem válidos como nomes
  * anteriores dos mesmos papéis.
  *
+ * **Voz da Hywork** (`variant="vendor"`, 16/10/2026): categoria, não estado —
+ * "Novidade" num item que a Hywork lança. Laranja claro do guideline com o
+ * texto na tinta laranja (4,9:1); não segue a marca do workspace.
+ *
  * **Tom suave** (`tone="subtle"`, HCK-136, 06/10/2026): o mesmo papel num
  * preenchimento claro — a cor do papel a 15% — com o texto na tinta do papel.
  * Serve para separar duas colunas de estado na mesma linha, que no tom cheio
@@ -52,6 +56,7 @@ const badgeVariants = cva(
         default: "bg-primary text-primary-foreground",
         secondary: "bg-muted text-muted-foreground",
         outline: "border border-border bg-transparent text-foreground",
+        vendor: "bg-vendor-subtle text-vendor-ink",
       },
       tone: {
         solid: "",
