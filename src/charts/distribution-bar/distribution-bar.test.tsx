@@ -83,6 +83,67 @@ describe("DistributionBar", () => {
     expect(segments(container)[0].className).toContain("motion-reduce:!transition-none");
   });
 
+  it("keeps the legend in columns by default", () => {
+    const { container } = render(<DistributionBar bands={bands} />);
+    expect(container.querySelector("[data-part='legend']")).toHaveAttribute("data-legend", "auto");
+    expect(container.querySelector("[data-part='distribution-track']")?.className).toContain("h-6");
+  });
+
+  it("lays the legend out as a list, one row per band, under the 12px bar of the prototype", () => {
+    const { container } = render(<DistributionBar bands={calibratedBands} legend="list" />);
+    const legend = container.querySelector<HTMLElement>("[data-part='legend']");
+    expect(legend).toHaveAttribute("data-legend", "list");
+    expect(legend?.style.gridTemplateColumns).toBe("");
+    expect(container.querySelector("[data-part='distribution-track']")?.className).toContain("h-3");
+    // The empty band draws nothing, but stays in the list.
+    expect(segments(container)).toHaveLength(3);
+    const rows = screen.getAllByRole("listitem");
+    expect(rows.map((row) => row.textContent)).toEqual([
+      "Abaixo do esperado 0 pessoas, 0%",
+      "Em desenvolvimento 2 pessoas, 50%",
+      "Dentro do esperado 1 pessoa, 25%",
+      "Acima do esperado 1 pessoa, 25%",
+    ]);
+    expect(rows.every((row) => row.className.includes("border-t"))).toBe(true);
+    expect(screen.queryByRole("button")).toBeNull();
+  });
+
+  it("makes each row of the list a button, ending in the select label the consumer translates", async () => {
+    const onSelect = vi.fn();
+    const { container, rerender } = render(<DistributionBar bands={bands} legend="list" onSelect={onSelect} />);
+    expect(screen.getAllByRole("button")[1]).toHaveAccessibleName("Em desenvolvimento 1 pessoa, 25% Ver");
+    rerender(<DistributionBar bands={bands} legend="list" onSelect={onSelect} selectLabel="View" />);
+    const buttons = screen.getAllByRole("button");
+    expect(buttons).toHaveLength(4);
+    expect(buttons[1]).toHaveAccessibleName("Em desenvolvimento 1 pessoa, 25% View");
+    await userEvent.tab();
+    await userEvent.tab();
+    await userEvent.keyboard("{Enter}");
+    expect(onSelect).toHaveBeenLastCalledWith("developing");
+    await userEvent.click(segments(container)[3]);
+    expect(onSelect).toHaveBeenLastCalledWith("exceeds");
+  });
+
+  it("writes the row without the note, and with no comma, when the band has none", () => {
+    render(<DistributionBar bands={[{ id: "a", label: "Acima do esperado", value: 12.5 }]} legend="list" />);
+    expect(screen.getByRole("listitem")).toHaveTextContent(/^Acima do esperado 12,5%$/);
+  });
+
+  it("passes axe with the list legend, static and clickable", async () => {
+    const { container } = render(
+      <div>
+        <DistributionBar aria-label="Distribuição em lista" bands={bands} legend="list" />
+        <DistributionBar
+          aria-label="Distribuição em lista clicável"
+          bands={calibratedBands}
+          legend="list"
+          onSelect={() => undefined}
+        />
+      </div>,
+    );
+    expect((await axe.run(container, axeOptions)).violations).toEqual([]);
+  });
+
   it("passes axe, static and clickable", async () => {
     const { container } = render(
       <div>
