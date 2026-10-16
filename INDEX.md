@@ -86,7 +86,7 @@ src/
 │   ├── radar-chart/       📋  radar; vira barras com < 3 eixos ou < 360px — lançado na 0.13.0, aval da PO pendente
 │   ├── grouped-bar-chart/ 📋  barras agrupadas na horizontal — lançado na 0.13.0, aval da PO pendente
 │   ├── line-chart/        📋  linha com ponto provisório e marcador — lançado na 0.13.0, aval da PO pendente
-│   ├── distribution-bar/  📋  barra empilhada 100%, só CSS — lançado na 0.13.0, aval da PO pendente
+│   ├── distribution-bar/  📋  barra empilhada 100%, só CSS — lançado na 0.13.0, aval da PO pendente; legend="list" (HCK-256, R7) lançado na 0.15.0
 │   ├── donut-chart/       📋  rosca com valor e rótulo no centro, SVG — HCK-256 (R6), lançado na 0.14.0
 │   └── shared/            cores por token, escala, quebra de rótulo, tabela do leitor de tela
 │
