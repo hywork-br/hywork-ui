@@ -20,8 +20,9 @@ import { cn } from "../../lib/cn";
  * 1px, sem sombra), para o destaque que não é da Hywork.
  *
  * Responsivo por conta própria: as ações descem para baixo do texto quando
- * não cabem e, abaixo de 640px, ocupam a largura, com alvo de 44px e rótulo
- * que quebra linha em vez de vazar.
+ * não cabem. Abaixo de 640px, o ícone sobe para cima do título (ao lado, ele
+ * espremia a frase numa coluna de 170px em 320px) e as ações ocupam a largura,
+ * com alvo de 44px e rótulo que quebra linha em vez de vazar.
  */
 export interface BannerProps extends Omit<React.HTMLAttributes<HTMLElement>, "title"> {
   title: React.ReactNode;
@@ -70,7 +71,7 @@ const Banner = React.forwardRef<HTMLElement, BannerProps>(
         )}
         {...props}
       >
-        <div className="flex min-w-0 flex-1 basis-80 items-start gap-4">
+        <div className="flex min-w-0 flex-1 basis-80 flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
           {media && (
             <div
               aria-hidden="true"

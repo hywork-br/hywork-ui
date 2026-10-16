@@ -26,8 +26,9 @@ existente quebra.
   `tone` e `titleAs`. Região nomeada pelo título.
 - `tone="vendor"`: invertido, fundo `vendor-strong` com texto branco — o
   convite para um módulo novo. `tone="default"`: a moldura do card.
-- Abaixo de 640px, as ações ocupam a largura, com alvo de 44px e rótulo que
-  quebra linha. 7 testes (com axe) e 4 stories.
+- Abaixo de 640px, o ícone sobe para cima do título e as ações ocupam a
+  largura, com alvo de 44px e rótulo que quebra linha. 7 testes (com axe) e 4
+  stories.
 
 ### `Button`: `inverse` e `inverse-outline`
 

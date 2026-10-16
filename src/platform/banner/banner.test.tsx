@@ -49,10 +49,14 @@ describe("Banner", () => {
     expect(screen.getByRole("button", { name: "Agendar" })).toBeInTheDocument();
   });
 
-  it("no celular, as ações ocupam a largura com alvo de 44px", () => {
-    render(<Banner title="T" actions={<button type="button">Agendar</button>} />);
+  it("no celular, o ícone sobe e as ações ocupam a largura com alvo de 44px", () => {
+    render(
+      <Banner title="T" media={<svg data-testid="icone" />} actions={<button type="button">Agendar</button>} />,
+    );
     const actions = screen.getByRole("button").parentElement;
     expect(actions).toHaveClass("max-sm:w-full", "max-sm:[&>*]:min-h-11", "max-sm:[&>*]:whitespace-normal");
+    // ícone em cima do título até 640px; ao lado dele a partir daí
+    expect(screen.getByTestId("icone").parentElement?.parentElement).toHaveClass("flex-col", "sm:flex-row");
   });
 
   it("passa na auditoria do axe", async () => {
