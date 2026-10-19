@@ -203,7 +203,7 @@
     {
       "name": "progress",
       "file": "src/core/progress/index.tsx",
-      "status": "source-derived"
+      "status": "authored"
     },
     {
       "name": "radio-group",

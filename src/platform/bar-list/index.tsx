@@ -21,6 +21,13 @@ import { cn } from "../../lib/cn";
  *
  * Barra na tinta da marca (`--primary-ink`), trilha neutra (`--muted`). O
  * texto quebra dentro da linha; nunca a ultrapassa.
+ *
+ * Por item, `marker` desenha uma marca vertical fina, mais alta que a barra,
+ * para um valor de referência — a média da empresa ao lado da do time. Está
+ * na unidade do `value` e sobre o mesmo denominador. Como a barra, a marca é
+ * desenho: o leitor de tela ouve o `markerLabel` (padrão "Referência: N"),
+ * depois do texto da direita. `tone="attention"` pinta a barra na cor de
+ * aviso.
  */
 export interface BarListItem {
   id: string;
@@ -32,6 +39,12 @@ export interface BarListItem {
   valueLabel?: React.ReactNode;
   /** Com ele, a linha vira botão. */
   onSelect?: () => void;
+  /** Valor de referência, na unidade do `value` e sobre o mesmo denominador. */
+  marker?: number;
+  /** O que a marca é, para o leitor de tela — "Empresa: 3,7". Padrão: "Referência: N". */
+  markerLabel?: string;
+  /** `attention` pinta a barra na cor de aviso. */
+  tone?: "default" | "attention";
 }
 
 export interface BarListProps extends Omit<React.HTMLAttributes<HTMLUListElement>, "children"> {
@@ -59,8 +72,25 @@ const BarList = React.forwardRef<HTMLUListElement, BarListProps>(
     return (
       <ul ref={ref} className={cn("flex min-w-0 flex-col gap-1", className)} {...props}>
         {items.map((item) => {
-          const largura = barWidth(item.value, item.max ?? max ?? maior);
+          const denominador = item.max ?? max ?? maior;
+          const largura = barWidth(item.value, denominador);
           const direita = item.valueLabel === undefined ? numero.format(finite(item.value)) : item.valueLabel;
+          const marca = typeof item.marker === "number" && Number.isFinite(item.marker) ? item.marker : null;
+          const atencao = item.tone === "attention";
+
+          const trilha = (
+            <span aria-hidden="true" className="block h-2 w-full overflow-hidden rounded-full bg-muted">
+              <span
+                data-part="bar"
+                data-tone={atencao ? "attention" : undefined}
+                className={cn(
+                  "block h-full rounded-full transition-[width] duration-300 motion-reduce:!transition-none",
+                  atencao ? "bg-warning" : "bg-primary-ink",
+                )}
+                style={{ width: `${largura}%` }}
+              />
+            </span>
+          );
 
           // Spans only: a button may hold phrasing content alone.
           const conteudo = (
@@ -73,14 +103,27 @@ const BarList = React.forwardRef<HTMLUListElement, BarListProps>(
                     {direita}
                   </span>
                 )}
+                {marca !== null && (
+                  <>
+                    {" "}
+                    <span className="sr-only">{item.markerLabel ?? `Referência: ${numero.format(marca)}`}</span>
+                  </>
+                )}
               </span>
-              <span aria-hidden="true" className="block h-2 w-full overflow-hidden rounded-full bg-muted">
-                <span
-                  data-part="bar"
-                  className="block h-full rounded-full bg-primary-ink transition-[width] duration-300 motion-reduce:!transition-none"
-                  style={{ width: `${largura}%` }}
-                />
-              </span>
+              {marca !== null ? (
+                // The marker rises above and below the bar, which clips its fill.
+                <span className="relative block">
+                  {trilha}
+                  <span
+                    aria-hidden="true"
+                    data-part="marker"
+                    className="absolute -inset-y-1 w-0.5 -translate-x-1/2 rounded-full bg-foreground ring-1 ring-background"
+                    style={{ left: `${barWidth(marca, denominador)}%` }}
+                  />
+                </span>
+              ) : (
+                trilha
+              )}
             </>
           );
 
