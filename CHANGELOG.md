@@ -1,5 +1,61 @@
 # Changelog
 
+## 0.16.0 — `StatCard` com cor do ícone e destaque, marca de referência em `Progress` e `BarList`, `RatingScale` de 1 a 10
+
+Lançada em 19/10/2026 para o DHO, pelo aval permanente do Rick (14/10) para os
+componentes que o DHO usa. O **aval visual da PO segue pendente**. Nenhuma API
+existente quebra: sem as props novas, os quatro componentes ficam como estavam.
+
+### `StatCard`: cor do ícone, cartão de destaque, detalhe e barra (DHO, HCK-255 C1 e HCK-259 L5, validação da PO de 19/10)
+
+- Nova prop `iconTone?: "primary" | "info" | "success" | "warning" | "danger" | "neutral"`:
+  o quadradinho do ícone no papel de estado, com fundo suave e traço (os pares
+  suaves do `Badge`). Sem ela, a primária (o aviso em `attention`), como antes.
+- `tone` ganha `"highlight"`: o cartão escuro da nota final, com fundo na tinta
+  do texto (`--foreground`) e valor na superfície (`--background`); rótulo,
+  detalhe e nota a 80%. APCA |Lc| ≥ 77 nos temas claro e escuro (no escuro o par
+  se inverte). Ícone e variação usam os pares preenchidos do `Badge`.
+- Nova prop `valueDetail?: ReactNode`: texto menor ao lado do valor ("4,2 / 5,0"),
+  pela linha de base, descendo de linha se faltar espaço.
+- Nova prop `progress?: number` (0–100): barra fina sob o valor, só desenho;
+  aviso em `attention`, trilha e preenchimento próprios no destaque.
+- Novos tipos: `StatCardTone`, `StatCardIconTone`. 13 testes novos (com axe e o
+  contraste APCA calculado dos tokens) e 8 stories.
+
+### `Progress`: marca de referência e tom de atenção (HCK-259 L6)
+
+- Novas props `marker?: number` (0–100; marca vertical fina, mais alta que a
+  barra), `markerLabel?: string` (descrição da barra para o leitor de tela;
+  padrão "Referência: N%") e `tone?: "default" | "attention"` (preenchimento na
+  cor de aviso). Novo tipo exportado: `ProgressProps`.
+- **O `Progress` passa de derivado a autoral** (`authoredNames`; `status:
+  "authored"` no `manifest.json`) e sai da página de paridade fonte × pacote:
+  a captura corta tudo o que passa da barra. Sem `marker` e sem `tone`, a barra
+  é a mesma, nó a nó. 7 testes novos e 5 stories.
+
+### `BarList`: marca de referência e atenção por item (HCK-259 L4)
+
+- `BarListItem` ganha `marker?: number` (na unidade do `value`, sobre o mesmo
+  denominador), `markerLabel?: string` (lido depois do texto da direita e, na
+  linha clicável, parte do nome do botão; padrão "Referência: N") e
+  `tone?: "default" | "attention"` (barra na cor de aviso). 8 testes novos e 3
+  stories, entre elas "Time vs. empresa".
+
+### `RatingScale`: escala de 1 a 10 com o rótulo embaixo (HCK-235 M1)
+
+- Nova prop `labelDisplay?: "auto" | "inline" | "selected"` (padrão `"auto"`:
+  `inline` até 5 notas, `selected` acima). Em `selected`, as notas ficam numa
+  linha compacta (alvo de 44px de altura, ≥ 24px de largura em 320px) e o
+  rótulo aparece embaixo: o da nota sob o cursor ou em foco, senão o da
+  escolhida, senão a legenda dos extremos. Nome acessível, teclado, `readOnly`,
+  referência e erro iguais aos de antes. 17 testes novos e 8 stories.
+
+### Testes
+
+- Nova página `tests/fixtures/indicators.html` no Playwright (Chromium e
+  Firefox): axe com contraste, APCA do destaque nos temas claro e escuro,
+  geometria da marca e escala de 10 em 320/360px sem rolagem horizontal.
+
 ## 0.15.0 — `DistributionBar` com legenda em lista
 
 Lançada em 16/10/2026 para o DHO, pelo aval permanente do Rick (14/10) para os
