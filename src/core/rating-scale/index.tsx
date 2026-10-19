@@ -23,8 +23,14 @@ import { FormMessage } from "../form-message";
  *   ouve "valor de referência" nela. O que a referência é, a tela diz.
  * - `name` vai num campo oculto, para o formulário nativo receber a nota.
  *
- * Responsividade: a partir de 640px (`sm`) cada nota mostra o número e o
- * rótulo; abaixo, só o número, com uma legenda dos dois extremos embaixo.
+ * Onde fica o rótulo (`labelDisplay`):
+ * - `inline` — a partir de 640px (`sm`) cada nota mostra o número e o
+ *   rótulo; abaixo, só o número, com uma legenda dos dois extremos embaixo.
+ * - `selected` — as notas ficam numa linha compacta, só com o número, e o
+ *   rótulo aparece embaixo da linha: o da nota sob o cursor ou em foco, senão
+ *   o da escolhida, senão a legenda dos dois extremos. É o que cabe numa
+ *   escala de 1 a 10, em que os rótulos não cabem lado a lado.
+ * - `auto` (padrão) — `inline` até 5 notas e `selected` acima de 5.
  * O nome acessível de cada nota é sempre "número, rótulo".
  *
  * O componente não sabe o que está sendo avaliado. Novo componente: o aval
@@ -46,14 +52,22 @@ export interface RatingScaleProps {
   "aria-label"?: string;
   /** Alternativa ao `aria-label`: o id do texto visível que nomeia a escala. */
   "aria-labelledby"?: string;
-  /** Mostra embaixo o rótulo da nota escolhida. */
+  /** Mostra embaixo o rótulo da nota escolhida. No modo `selected` ele já aparece sempre. */
   showSelectedLabel?: boolean;
   /** Um segundo valor de referência, marcado com um ponto discreto, sem ser selecionável. */
   compareValue?: number | null;
+  /**
+   * Onde fica o rótulo: dentro de cada nota (`inline`) ou embaixo da linha, o
+   * da nota em foco ou escolhida (`selected`). Padrão `auto`: `inline` até 5
+   * notas, `selected` acima.
+   */
+  labelDisplay?: "auto" | "inline" | "selected";
   className?: string;
 }
 
 const PADRAO = 5;
+/** Acima disto, os rótulos não cabem lado a lado: `auto` vira `selected`. */
+const MAX_INLINE = 5;
 
 /** A nota de 1 a `tamanho`, ou `null` quando vazia ou fora da escala. */
 function notaValida(nota: number | null | undefined, tamanho: number): number | null {
@@ -72,6 +86,7 @@ const RatingScale = React.forwardRef<HTMLDivElement, RatingScaleProps>(
       error,
       showSelectedLabel = false,
       compareValue,
+      labelDisplay = "auto",
       className,
       "aria-label": ariaLabel,
       "aria-labelledby": ariaLabelledby,
@@ -92,6 +107,11 @@ const RatingScale = React.forwardRef<HTMLDivElement, RatingScaleProps>(
     const paradaDoTab = escolhida ?? 1;
     const interativo = !disabled && !readOnly;
     const comErro = Boolean(error);
+    const embaixo = labelDisplay === "selected" || (labelDisplay === "auto" && tamanho > MAX_INLINE);
+    // Só no modo `selected`: a nota sob o cursor e a nota em foco mostram o rótulo embaixo.
+    const [sobCursor, setSobCursor] = React.useState<number | null>(null);
+    const [emFoco, setEmFoco] = React.useState<number | null>(null);
+    const previa = disabled ? null : (sobCursor ?? emFoco);
 
     const escolher = (nota: number) => {
       if (interativo && nota !== escolhida) onChange(nota);
@@ -130,6 +150,41 @@ const RatingScale = React.forwardRef<HTMLDivElement, RatingScaleProps>(
     };
 
     const extremos = rotulo(1) || rotulo(tamanho);
+    const legendaExtremos = (
+      <>
+        <span>{rotulo(1) && `1 · ${rotulo(1)}`}</span>
+        <span className="text-right">{rotulo(tamanho) && `${tamanho} · ${rotulo(tamanho)}`}</span>
+      </>
+    );
+
+    // Modo `selected`: o rótulo da nota sob o cursor ou em foco, senão o da
+    // escolhida, senão os extremos. O leitor de tela ouve o rótulo na própria
+    // nota; aqui é só visual.
+    const mostrada = previa ?? escolhida;
+    const rotuloMostrado = mostrada ? rotulo(mostrada) : undefined;
+    const legendaEmbaixo =
+      mostrada && rotuloMostrado ? (
+        <p
+          aria-hidden="true"
+          data-selected-label=""
+          data-preview={mostrada !== escolhida || undefined}
+          className={cn(
+            "min-h-5 break-words text-sm",
+            mostrada === escolhida ? "font-medium text-foreground" : "text-muted-foreground",
+          )}
+        >
+          <span className="tabular-nums">{mostrada}</span> · {rotuloMostrado}
+        </p>
+      ) : (
+        <div
+          aria-hidden="true"
+          data-selected-label=""
+          data-hint=""
+          className="flex min-h-5 justify-between gap-4 text-xs text-muted-foreground"
+        >
+          {extremos && tamanho > 1 ? legendaExtremos : <span>{`Escolha uma nota de 1 a ${tamanho}`}</span>}
+        </div>
+      );
 
     return (
       <div className={cn("w-full max-w-2xl space-y-1.5", className)}>
@@ -143,7 +198,7 @@ const RatingScale = React.forwardRef<HTMLDivElement, RatingScaleProps>(
           aria-readonly={readOnly || undefined}
           aria-disabled={disabled || undefined}
           onKeyDown={aoTeclar}
-          className="grid auto-cols-fr grid-flow-col gap-2"
+          className={cn("grid auto-cols-fr grid-flow-col", embaixo ? "gap-1 sm:gap-2" : "gap-2")}
         >
           {notas.map((nota) => {
             const marcada = nota === escolhida;
@@ -166,12 +221,16 @@ const RatingScale = React.forwardRef<HTMLDivElement, RatingScaleProps>(
                 tabIndex={nota === paradaDoTab ? 0 : -1}
                 disabled={disabled}
                 onClick={() => escolher(nota)}
+                onFocus={embaixo ? () => setEmFoco(nota) : undefined}
+                onBlur={embaixo ? () => setEmFoco((atual) => (atual === nota ? null : atual)) : undefined}
+                onPointerEnter={embaixo ? () => setSobCursor(nota) : undefined}
+                onPointerLeave={embaixo ? () => setSobCursor((atual) => (atual === nota ? null : atual)) : undefined}
                 className={cn(
-                  "relative flex min-h-11 min-w-0 flex-col items-center justify-center gap-1 rounded-md border px-1.5 py-2 text-center outline-none ring-offset-background",
+                  "relative flex min-h-11 min-w-0 flex-col items-center justify-center gap-1 rounded-md border py-2 text-center outline-none ring-offset-background",
                   "transition-colors motion-reduce:!transition-none",
                   "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                   "disabled:cursor-not-allowed disabled:opacity-50",
-                  "sm:justify-start sm:py-3",
+                  embaixo ? "px-0" : "px-1.5 sm:justify-start sm:py-3",
                   marcada
                     ? "border-primary bg-primary text-primary-foreground"
                     : cn(
@@ -182,10 +241,17 @@ const RatingScale = React.forwardRef<HTMLDivElement, RatingScaleProps>(
                   readOnly && "cursor-default",
                 )}
               >
-                <span aria-hidden="true" className="text-base font-semibold leading-6 tabular-nums">
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    "font-semibold leading-6 tabular-nums",
+                    // "10" has to fit a 25px note at 320px.
+                    embaixo ? "text-sm sm:text-base" : "text-base",
+                  )}
+                >
                   {nota}
                 </span>
-                {texto && (
+                {texto && !embaixo && (
                   <span
                     aria-hidden="true"
                     className={cn(
@@ -212,15 +278,16 @@ const RatingScale = React.forwardRef<HTMLDivElement, RatingScaleProps>(
         </div>
 
         {/* Abaixo de 640px os rótulos saem dos botões: a legenda mostra os extremos. */}
-        {extremos && tamanho > 1 && (
+        {!embaixo && extremos && tamanho > 1 && (
           <div aria-hidden="true" className="flex justify-between gap-4 text-xs text-muted-foreground sm:hidden">
-            <span>{rotulo(1) && `1 · ${rotulo(1)}`}</span>
-            <span className="text-right">{rotulo(tamanho) && `${tamanho} · ${rotulo(tamanho)}`}</span>
+            {legendaExtremos}
           </div>
         )}
 
+        {embaixo && legendaEmbaixo}
+
         {/* O leitor de tela já ouve o rótulo na nota marcada; aqui é reforço visual. */}
-        {showSelectedLabel && (
+        {showSelectedLabel && !embaixo && (
           <p aria-hidden="true" data-selected-label="" className="min-h-5 text-sm font-medium text-foreground">
             {escolhida ? rotulo(escolhida) : null}
           </p>

@@ -153,3 +153,67 @@ export const EmCard: Story = {
     </Card>
   ),
 };
+
+const n = (v: number) => v.toFixed(1).replace(".", ",");
+const timeVsEmpresa: [string, number, number][] = [
+  ["Entrega e execução", 4.1, 3.8],
+  ["Colaboração", 4.0, 3.9],
+  ["Comunicação", 3.4, 3.7],
+  ["Desenvolvimento de pessoas", 3.2, 3.5],
+];
+
+/**
+ * Média por competência · time vs. empresa (HCK-259, L4): a barra é a média
+ * do time e a marca, a da empresa, na mesma escala (`max` 5). Abaixo da
+ * empresa, a linha fica em atenção. O leitor de tela ouve o `markerLabel`
+ * depois do texto da direita.
+ */
+export const TimeVsEmpresa: Story = {
+  args: {
+    "aria-label": "Média por competência, time vs. empresa",
+    max: 5,
+    items: timeVsEmpresa.map(([label, time, empresa]) => ({
+      id: label,
+      label,
+      value: time,
+      marker: empresa,
+      valueLabel: `${n(time)} · empresa ${n(empresa)}`,
+      markerLabel: `Empresa: ${n(empresa)}`,
+      tone: time < empresa ? ("attention" as const) : undefined,
+    })),
+  },
+  render: (args) => (
+    <div className="w-full max-w-[480px] space-y-2">
+      <BarList {...args} />
+      <p className="flex items-center gap-2 px-2 text-xs text-muted-foreground">
+        <span aria-hidden="true" className="inline-block h-3.5 w-0.5 rounded-full bg-foreground" />
+        Média da empresa
+      </p>
+    </div>
+  ),
+};
+
+/** Só o tom: a linha em atenção ganha a barra na cor de aviso. */
+export const ComAtencao: Story = {
+  args: {
+    "aria-label": "Adesão por área",
+    items: areas.map((item) => (item.value / (item.max ?? 1) < 0.5 ? { ...item, tone: "attention" as const } : item)),
+  },
+};
+
+/** Marca clicável: a referência entra no nome do botão da linha. */
+export const ComMarcaClicavel: Story = {
+  args: {
+    "aria-label": "Média por competência",
+    max: 5,
+    items: timeVsEmpresa.map(([label, time, empresa]) => ({
+      id: label,
+      label,
+      value: time,
+      marker: empresa,
+      valueLabel: n(time),
+      markerLabel: `Empresa: ${n(empresa)}`,
+      onSelect: () => undefined,
+    })),
+  },
+};
