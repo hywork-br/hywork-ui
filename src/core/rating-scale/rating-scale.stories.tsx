@@ -4,6 +4,19 @@ import { RatingScale, type RatingScaleProps } from "./index";
 
 const concordancia = ["Discordo totalmente", "Discordo", "Neutro", "Concordo", "Concordo totalmente"];
 const tresNiveis = ["Abaixo do esperado", "Dentro do esperado", "Acima do esperado"];
+/** A escala de 1 a 10 do modelo de avaliação (HCK-235, M1). */
+const dezNiveis = [
+  "Muito abaixo do esperado",
+  "Abaixo do esperado",
+  "Em desenvolvimento",
+  "Atende parcialmente",
+  "Próximo do esperado",
+  "Atende ao esperado",
+  "Acima do esperado",
+  "Supera as expectativas",
+  "Excelente desempenho",
+  "É referência",
+];
 
 /** A story guarda o valor só para demonstrar; na tela, quem guarda é o formulário. */
 function Controlado(props: RatingScaleProps) {
@@ -43,7 +56,12 @@ const meta = {
           "`compareValue` marca, com um ponto discreto, um segundo valor de " +
           "referência — a tela diz o que ele é. Ele não é uma escolha.\n\n" +
           "Abaixo de 640px os rótulos saem dos botões e a legenda mostra os dois " +
-          "extremos; o leitor de tela ouve sempre a nota com o rótulo. " +
+          "extremos; o leitor de tela ouve sempre a nota com o rótulo.\n\n" +
+          "`labelDisplay` decide onde fica o rótulo: `inline` (dentro de cada nota) " +
+          "ou `selected` (as notas numa linha compacta, e embaixo o rótulo da nota sob " +
+          "o cursor ou em foco, senão o da escolhida, senão os extremos). O padrão, " +
+          "`auto`, é `inline` até 5 notas e `selected` acima — os 10 rótulos da escala " +
+          "de 1 a 10 não cabem lado a lado. " +
           "O aval visual da PO ainda está pendente.",
       },
     },
@@ -127,4 +145,53 @@ export const Formulario: Story = {
       </div>
     );
   },
+};
+
+/**
+ * Escala de 1 a 10 (HCK-235, M1): com mais de 5 notas, `labelDisplay="auto"`
+ * põe as notas numa linha compacta e o rótulo embaixo. Vazia e sem foco, a
+ * linha de baixo mostra os dois extremos; passe o cursor ou use as setas.
+ */
+export const EscalaDeDez: Story = {
+  args: { labels: dezNiveis, "aria-label": "Entrega e execução" },
+};
+
+/** Escala de 1 a 10 com uma nota escolhida: o rótulo dela fica embaixo. */
+export const EscalaDeDezEscolhida: Story = {
+  args: { labels: dezNiveis, value: 6, "aria-label": "Entrega e execução" },
+};
+
+/** Escala de 1 a 10 com a referência (a autoavaliação, por exemplo) num ponto discreto. */
+export const EscalaDeDezComReferencia: Story = {
+  args: { labels: dezNiveis, value: 8, compareValue: 6, "aria-label": "Entrega e execução" },
+};
+
+/** Só leitura, na escala de 10: as setas passeiam e o rótulo embaixo acompanha o foco. */
+export const EscalaDeDezSomenteLeitura: Story = {
+  args: { labels: dezNiveis, value: 7, readOnly: true, compareValue: 5, "aria-label": "Entrega e execução" },
+};
+
+/** Escala de 10 desabilitada. */
+export const EscalaDeDezDesabilitada: Story = {
+  args: { labels: dezNiveis, value: 3, disabled: true, "aria-label": "Entrega e execução" },
+};
+
+/** Escala de 10 com erro do formulário. */
+export const EscalaDeDezComErro: Story = {
+  args: { labels: dezNiveis, error: "Escolha uma nota.", "aria-label": "Entrega e execução" },
+};
+
+/** Escala de 10 em 360px: as dez notas cabem numa linha, sem rolagem horizontal, com 44px de altura. */
+export const EscalaDeDezEstreita: Story = {
+  args: { labels: dezNiveis, value: 9, "aria-label": "Entrega e execução" },
+  render: (args) => (
+    <div className="w-[328px]">
+      <Controlado {...args} />
+    </div>
+  ),
+};
+
+/** `labelDisplay="selected"` também vale para 5 notas, quando a tela quer a linha compacta. */
+export const CincoComRotuloEmbaixo: Story = {
+  args: { value: 4, labelDisplay: "selected" },
 };
