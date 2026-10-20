@@ -244,3 +244,21 @@ export const ResultadoDoCiclo: Story = {
     </div>
   ),
 };
+
+/**
+ * Fileira estreita (226px por cartão, como em 1280px com o menu aberto): ao
+ * lado do ícone, "Acima do esperado" e "Abaixo do esperado" quebram em duas
+ * linhas. Com ícone, o cabeçalho tem sempre a altura de duas linhas do rótulo,
+ * e o valor começa na mesma altura nos quatro cartões. O rótulo não é cortado.
+ */
+export const FileiraEstreita: Story = {
+  args: { className: undefined },
+  render: () => (
+    <div className="grid w-[952px] grid-cols-4 gap-4">
+      <StatCard label="Média geral" value="3,8" note="empresa 3,7" icon={<TrendingUp className="h-4 w-4" />} iconTone="primary" />
+      <StatCard label="Participação" value="82%" valueDetail="9 de 11" progress={82} note="responderam" icon={<Users className="h-4 w-4" />} iconTone="info" />
+      <StatCard label="Acima do esperado" value="3" note="27% do time" icon={<Award className="h-4 w-4" />} iconTone="success" />
+      <StatCard label="Abaixo do esperado" value="2" note="Sugerem PDI imediato" icon={<AlertTriangle className="h-4 w-4" />} tone="attention" />
+    </div>
+  ),
+};
