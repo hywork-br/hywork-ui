@@ -76,7 +76,7 @@ src/
 │   ├── row-actions/       ✅  substitui botões soltos em 15 telas
 │   ├── upload-area/       ✅
 │   ├── stepper/           📋  trilha de passos de wizard — aguarda aval da PO
-│   ├── stat-card/         📋  cartão de indicador; `iconTone`, `tone="highlight"`, `valueDetail` e `progress` na 0.16.0 (HCK-255, HCK-259) — aguarda aval da PO
+│   ├── stat-card/         📋  cartão de indicador; `iconTone`, `tone="highlight"`, `valueDetail` e `progress` na 0.16.0 (HCK-255, HCK-259); cabeçalho de 2 linhas com ícone na 0.16.1 — aguarda aval da PO
 │   ├── bar-list/          📋  lista de barras proporcionais — lançado na 0.13.0; `marker`, `markerLabel` e `tone` por item na 0.16.0 (HCK-259) — aval da PO pendente
 │   └── …                  multi-select, icon-select, rich-text-editor
 │
@@ -173,7 +173,8 @@ vazio — quando aplicáveis ao componente.
   (os gráficos têm página própria, `tests/fixtures/charts.html`, com os números
   do exemplo da HCK-256; os indicadores do DHO — `StatCard`, marcas do
   `Progress` e do `BarList`, escala de 1 a 10 — têm `tests/fixtures/indicators.html`,
-  com contraste APCA do destaque nos temas claro e escuro e a escala em 320/360px)
+  com contraste APCA do destaque nos temas claro e escuro, a escala em 320/360px e,
+  com `?cards=226` ou `?cards=266`, fileiras de 4 `StatCard` com o valor na mesma altura)
 - **axe-core** — auditoria de acessibilidade, via `@storybook/addon-a11y` e nos testes
 - **smoke-consumer** — instala o tarball num projeto limpo e valida exports,
   declarações, diretiva de cliente e preset

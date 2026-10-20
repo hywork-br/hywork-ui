@@ -131,3 +131,68 @@ test("1-to-10 scale: arrows check and the label follows the focus; read-only onl
   await expect(belowReadOnly).toHaveText("8 · Supera as expectativas");
   await expect(readOnly.getByRole("radio", { name: "7, Acima do esperado" })).toHaveAttribute("aria-checked", "true");
 });
+
+// HCK-255/HCK-259 (conference of 20/10/2026): at 1280px with the menu open
+// each counter is 226px wide, and "Acima/Abaixo do esperado" break into two
+// lines next to the 32px icon. The value of every card in a row must still
+// start at the same height; at 266px (1440px) everything fits in one line.
+for (const width of [226, 266]) {
+  test(`a row of ${width}px StatCards keeps the value at the same height, label in one line or two`, async ({ page }, info) => {
+    await page.setViewportSize({ width: 1280, height: 1400 });
+    await page.goto("/tests/fixtures/indicators.html?cards=" + width);
+    await expect(page.getByRole("heading", { name: "Indicadores" })).toBeVisible();
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+    });
+
+    const measure = (row: string) =>
+      page
+        .getByTestId("fileira-" + row)
+        .getByRole("group")
+        .evaluateAll((cards) =>
+          cards.map((card) => {
+            const box = (el: Element) => el.getBoundingClientRect();
+            const label = card.querySelector("[data-part=header] [id]")!;
+            const style = getComputedStyle(label);
+            return {
+              label: label.textContent,
+              width: box(card).width,
+              valueTop: box(card.querySelector("[data-part=value]")!).top - box(card).top,
+              headerHeight: box(card.querySelector("[data-part=header]")!).height,
+              labelHeight: box(label).height,
+              lines: Math.round(box(label).height / parseFloat(style.lineHeight)),
+              // The label stays whole: nothing clipped, clamped or ellipsized.
+              whole:
+                label.scrollHeight <= label.clientHeight + 1 &&
+                label.scrollWidth <= label.clientWidth + 1 &&
+                style.textOverflow !== "ellipsis" &&
+                ["", "none"].includes(style.getPropertyValue("-webkit-line-clamp")),
+            };
+          }),
+        );
+
+    const expectedLines =
+      width === 226
+        ? { "Média geral": 1, Participação: 1, "Acima do esperado": 2, "Abaixo do esperado": 2 }
+        : { "Média geral": 1, Participação: 1, "Acima do esperado": 1, "Abaixo do esperado": 1 };
+
+    for (const row of ["tela", "default", "attention", "highlight"]) {
+      const cards = await measure(row);
+      expect(cards).toHaveLength(4);
+      for (const card of cards) {
+        expect(card.width, `${row} · ${card.label} width`).toBe(width);
+        expect(card.whole, `${row} · ${card.label} whole`).toBe(true);
+        expect(card.lines, `${row} · ${card.label} lines`).toBe(expectedLines[card.label as keyof typeof expectedLines]);
+        expect(Math.abs(card.valueTop - cards[0].valueTop), `${row} · ${card.label} value top`).toBeLessThanOrEqual(0.5);
+      }
+    }
+
+    // Without an icon nothing changes: the header is just the label.
+    for (const card of await measure("sem-icone")) {
+      expect(card.lines, card.label + " lines").toBe(1);
+      expect(card.headerHeight, card.label + " header").toBe(card.labelHeight);
+    }
+
+    await info.attach(`row ${width}`, { body: await page.screenshot({ fullPage: true }), contentType: "image/png" });
+  });
+}
