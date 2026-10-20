@@ -47,10 +47,53 @@ function Escala(props: Partial<React.ComponentProps<typeof RatingScale>> & { nom
   );
 }
 
+// `?cards=226` renders rows of four fixed-width StatCards: the counters of
+// HCK-255/HCK-259 at 1280px with the menu open (226px) or at 1440px (266px).
+// Only on demand, so the 360px tests above never see a 4-card row.
+const largura = Number(params.get("cards")) || 0;
+const contadores = [
+  { label: "Média geral", value: "3,8", note: "empresa 3,7", iconTone: "primary" },
+  { label: "Participação", value: "82%", valueDetail: "9 de 11", progress: 82, iconTone: "info" },
+  { label: "Acima do esperado", value: "3", note: "27% do time", iconTone: "success", delta: { value: "−1", tone: "negative" } },
+  { label: "Abaixo do esperado", value: "2", note: "Sugerem PDI imediato", iconTone: "warning" },
+] as const;
+type Fileira = { nome: string; tone: (i: number) => "default" | "attention" | "highlight"; semIcone?: boolean };
+const fileiras: Fileira[] = [
+  // As in the cycle results: the last counter is the attention card.
+  { nome: "tela", tone: (i) => (i === 3 ? "attention" : "default") },
+  { nome: "default", tone: () => "default" },
+  { nome: "attention", tone: () => "attention" },
+  { nome: "highlight", tone: () => "highlight" },
+  { nome: "sem-icone", tone: () => "default", semIcone: true },
+];
+
+function Fileiras() {
+  return (
+    <section aria-label="Fileiras" className="space-y-4">
+      {fileiras.map(({ nome, tone, semIcone }) => (
+        <div key={nome} data-testid={"fileira-" + nome} className="flex gap-4">
+          {contadores.map(({ iconTone, ...cartao }, i) => (
+            <StatCard
+              key={cartao.label}
+              {...cartao}
+              tone={tone(i)}
+              icon={semIcone ? undefined : icon}
+              iconTone={semIcone ? undefined : iconTone}
+              style={{ width: largura, flex: "none" }}
+            />
+          ))}
+        </div>
+      ))}
+    </section>
+  );
+}
+
 function Pagina() {
   return (
-    <main className="mx-auto max-w-5xl space-y-8 p-4 font-sans">
+    <main className={largura ? "space-y-8 p-4 font-sans" : "mx-auto max-w-5xl space-y-8 p-4 font-sans"}>
       <h1 className="text-2xl font-bold">Indicadores</h1>
+
+      {largura > 0 && <Fileiras />}
 
       <section aria-label="Contadores" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard

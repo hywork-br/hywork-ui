@@ -67,6 +67,19 @@ describe("StatCard", () => {
     expect(screen.getByTestId("icone").parentElement).toHaveAttribute("aria-hidden", "true");
   });
 
+  it("com ícone, o cabeçalho guarda duas linhas do rótulo, em todos os tons; sem ícone, nada muda", () => {
+    // A altura medida, numa fileira de 226px, fica em tests/browser/indicators.spec.ts.
+    const cabecalho = (container: HTMLElement) => container.querySelector("[data-part=header]")!;
+    const { container, rerender } = render(<StatCard label="Abaixo do esperado" value="2" icon={<svg />} />);
+    for (const tone of ["default", "attention", "highlight"] as const) {
+      rerender(<StatCard label="Abaixo do esperado" value="2" icon={<svg />} tone={tone} />);
+      expect(cabecalho(container), tone).toHaveClass("min-h-[calc(2*var(--hw-leading-sm))]", "items-center");
+      expect(cabecalho(container).querySelector("[id]")!.className, tone).not.toMatch(/truncate|line-clamp|overflow-hidden/);
+    }
+    rerender(<StatCard label="Abaixo do esperado" value="2" />);
+    expect(cabecalho(container).className).not.toMatch(/min-h-/);
+  });
+
   it("passa na auditoria do axe, no padrão, em atenção e no destaque", async () => {
     const { container } = render(
       <div>

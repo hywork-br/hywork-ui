@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.16.1 — `StatCard`: valores alinhados numa fileira quando o rótulo quebra
+
+Lançada em 20/10/2026 para o DHO, pelo aval permanente do Rick (14/10). Nenhuma
+API muda.
+
+### `StatCard`: cabeçalho de duas linhas com ícone (DHO, HCK-255 C1 e HCK-259 L4/L5, conferência de 20/10)
+
+- Com `icon`, o cabeçalho (ícone + rótulo) tem sempre a altura de duas linhas do
+  rótulo (`2 × --hw-leading-sm`), com os dois centralizados. Numa fileira de
+  cartões, o valor começa na mesma altura em todos, quer o rótulo caiba numa
+  linha, quer quebre em duas. Antes, em 1280px com o menu aberto (cartão de
+  226px), "Acima do esperado" e "Abaixo do esperado" quebravam e o valor descia
+  8px em relação aos vizinhos.
+- O rótulo nunca é cortado; um rótulo de três linhas faz o cabeçalho crescer.
+  Sem `icon`, nada muda.
+- Teste de navegador novo (`tests/fixtures/indicators.html?cards=226|266`):
+  fileiras de 4 `StatCard` com o topo do valor na mesma altura.
+
 ## 0.16.0 — `StatCard` com cor do ícone e destaque, marca de referência em `Progress` e `BarList`, `RatingScale` de 1 a 10
 
 Lançada em 19/10/2026 para o DHO, pelo aval permanente do Rick (14/10) para os

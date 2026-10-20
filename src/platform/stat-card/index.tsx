@@ -33,6 +33,11 @@ import { cn } from "../../lib/cn";
  * `progress` (0–100) desenha uma barra fina sob o valor. A barra é desenho
  * (`aria-hidden`): o número que ela mostra é o `value`, que o leitor de tela
  * já ouve.
+ *
+ * Com `icon`, o cabeçalho (ícone + rótulo) tem sempre a altura de duas linhas
+ * do rótulo, com os dois centralizados: numa fileira de cartões, o valor começa
+ * na mesma altura em todos, quer o rótulo caiba numa linha, quer quebre em duas.
+ * O rótulo nunca é cortado; um rótulo de três linhas faz o cabeçalho crescer.
  */
 export type StatCardDeltaTone = "positive" | "negative" | "neutral";
 export type StatCardTone = "default" | "attention" | "highlight";
@@ -135,7 +140,15 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
         )}
         {...props}
       >
-        <div className="flex min-w-0 items-center gap-2">
+        <div
+          data-part="header"
+          className={cn(
+            "flex min-w-0 items-center gap-2",
+            // Duas linhas do rótulo, na entrelinha do text-sm: ao lado dos 32px
+            // do ícone, "Abaixo do esperado" quebra num cartão de 226px.
+            icon && "min-h-[calc(2*var(--hw-leading-sm))]",
+          )}
+        >
           {icon && (
             <span
               aria-hidden="true"
@@ -156,7 +169,7 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
           {/* Valor e detalhe pela linha de base; o detalhe desce se faltar espaço. */}
           <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
-            <div className={cn("text-2xl font-bold tracking-tight", destaque ? "text-background" : "text-hw-heading")}>
+            <div data-part="value" className={cn("text-2xl font-bold tracking-tight", destaque ? "text-background" : "text-hw-heading")}>
               {value}
             </div>
             {valueDetail != null && valueDetail !== false && (
