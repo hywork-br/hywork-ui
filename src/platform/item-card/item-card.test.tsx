@@ -1,3 +1,4 @@
+import * as React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -56,5 +57,34 @@ describe("ItemCard — semântica do container", () => {
   it("vira article quando o card é um item de listagem", () => {
     const { container } = render(<ItemCard title="Item" as="article" />);
     expect(container.firstElementChild?.tagName).toBe("ARTICLE");
+  });
+});
+
+// A horizontal até a 0.16.1, gravada antes da vertical existir: qualquer
+// mudança de classe ou de estrutura nela reprova aqui.
+function Horizontal(props: Partial<React.ComponentProps<typeof ItemCard>>) {
+  return (
+    <ItemCard
+      title="Relatório trimestral"
+      description="Atualizado há 2 dias"
+      media={<span data-media="">RT</span>}
+      status={<span data-status="">Ativo</span>}
+      actions={<button type="button">Abrir</button>}
+      {...props}
+    >
+      <p>Conteúdo próprio</p>
+    </ItemCard>
+  );
+}
+
+describe("ItemCard — horizontal intacta", () => {
+  it("mesmo HTML de antes, sem `onOpen`", () => {
+    const { container } = render(<Horizontal />);
+    expect(container.innerHTML).toMatchInlineSnapshot(`"<div class="relative rounded-lg border border-border bg-card p-6 text-card-foreground"><div class="flex items-start gap-3"><div class="shrink-0"><span data-media="">RT</span></div><div class="min-w-0 flex-1"><div class="flex flex-wrap items-center gap-2"><h3 class="min-w-0 truncate text-base font-semibold">Relatório trimestral</h3><span data-status="">Ativo</span></div><p class="mt-1 text-sm text-muted-foreground">Atualizado há 2 dias</p></div></div><div class="mt-4"><p>Conteúdo próprio</p></div><div class="relative z-10 mt-4 flex flex-wrap items-center gap-2"><button type="button">Abrir</button></div></div>"`);
+  });
+
+  it("mesmo HTML de antes, com `onOpen`", () => {
+    const { container } = render(<Horizontal onOpen={() => undefined} as="article" />);
+    expect(container.innerHTML).toMatchInlineSnapshot(`"<article class="relative rounded-lg border border-border bg-card p-6 text-card-foreground cursor-pointer transition-colors motion-reduce:!transition-none hover:bg-accent/40 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"><div class="flex items-start gap-3"><div class="shrink-0"><span data-media="">RT</span></div><div class="min-w-0 flex-1"><div class="flex flex-wrap items-center gap-2"><h3 class="min-w-0 truncate text-base font-semibold"><button type="button" class="text-left outline-none after:absolute after:inset-0 after:content-['']">Relatório trimestral</button></h3><span data-status="">Ativo</span></div><p class="mt-1 text-sm text-muted-foreground">Atualizado há 2 dias</p></div></div><div class="mt-4"><p>Conteúdo próprio</p></div><div class="relative z-10 mt-4 flex flex-wrap items-center gap-2"><button type="button">Abrir</button></div></article>"`);
   });
 });
