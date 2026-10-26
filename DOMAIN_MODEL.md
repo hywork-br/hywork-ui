@@ -634,8 +634,10 @@ autoavaliação"). Por isso deixou de ser derivado e passou a autoral
 ### Gráficos — `@hywork/ui/charts` (D1-23, Rick, 13/10/2026)
 
 Os gráficos da Etapa 3 do DHO nascem aqui, por decisão do Rick, e não no
-plataform. É uma exceção consciente à "regra do segundo consumidor" do
-`AGENTS.md` §2: hoje só o admin os usa. Para não impor o `recharts` a quem não
+plataform. Na época era uma exceção consciente à "regra do segundo consumidor" do
+`AGENTS.md` §2, porque hoje só o admin os usa. Desde 26/10/2026 a regra decide só
+a subida para `core/`, e componente genérico de um só consumidor já nasce aqui:
+deixou de ser exceção. Para não impor o `recharts` a quem não
 desenha gráfico, eles vivem numa **entrada própria**, `@hywork/ui/charts`, a
 única que importa o `recharts` (peer opcional, `>=3.1 <4`). `platform` e
 `builder` não o carregam — o `smoke:consumer` e `scripts/charts-entry.test.mjs`
