@@ -88,7 +88,9 @@ A única cor que o consumidor informa é a **marca do workspace**, pelo gancho
 `--hw-brand-primary`, calculado por `brandThemeVars(hex)` (`@hywork/ui/theme`).
 Dela derivam `--primary`, `--primary-foreground` (branco ou slate-900, pelo
 contraste perceptual APCA), hover, active,
-`--primary-ink` (a marca legível sobre o branco) e `--ring`. Estado e
+`--primary-ink` (a marca legível sobre o branco), `--ring` e o par suave
+`--primary-soft` / `--primary-soft-foreground` (item selecionado numa lista
+vertical, com o texto calculado contra o fundo suave). Estado e
 destrutivo não seguem a marca. Contrato completo em
 [CROSS_STACK_CONVENTIONS.md](CROSS_STACK_CONVENTIONS.md) §3.
 

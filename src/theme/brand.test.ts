@@ -26,6 +26,8 @@ function check(hex: string) {
   const hover = channels(vars["--hw-brand-primary-hover"]);
   const active = channels(vars["--hw-brand-primary-active"]);
   const ink = channels(vars["--hw-brand-primary-ink"]);
+  const soft = channels(vars["--hw-brand-primary-soft"]);
+  const softFg = channels(vars["--hw-brand-primary-soft-foreground"]);
   // Texto sobre a marca: o de maior contraste APCA entre branco e slate-900,
   // nunca abaixo do piso — em repouso, no cursor e pressionado.
   const other = fg[2] === 100 ? SLATE_900 : WHITE;
@@ -35,11 +37,16 @@ function check(hex: string) {
   expect(lc(active, fg)).toBeGreaterThanOrEqual(MIN_TEXT_LC);
   // A marca como texto/linha sobre o fundo branco.
   expect(contrastRatio(ink, WHITE)).toBeGreaterThanOrEqual(AA_CONTRAST);
+  // O par suave (aba vertical ativa): a marca clara de fundo, a marca escura
+  // de texto, com 4.5:1 sobre esse fundo — nunca mais clara que a tinta.
+  expect(soft).toEqual([fill[0], fill[1], 95]);
+  expect(contrastRatio(softFg, soft)).toBeGreaterThanOrEqual(AA_CONTRAST);
+  expect(softFg[2]).toBeLessThanOrEqual(ink[2]);
   // Hover e active mudam o preenchimento, na mesma matiz.
   expect(hover).not.toEqual(fill);
   expect(active).not.toEqual(hover);
-  expect([hover[0], active[0], ink[0]]).toEqual([fill[0], fill[0], fill[0]]);
-  return { vars, fill, fg, hover, active, ink };
+  expect([hover[0], active[0], ink[0], softFg[0]]).toEqual([fill[0], fill[0], fill[0], fill[0]]);
+  return { vars, fill, fg, hover, active, ink, soft, softFg };
 }
 
 describe("brandThemeVars", () => {
@@ -117,6 +124,21 @@ describe("brandThemeVars", () => {
     "tons claros (%s): texto escuro (slate-900)",
     (hex) => {
       expect(check(hex).fg).toEqual(SLATE_900);
+    },
+  );
+
+  it("primário do design system: o par suave é o primary-50 sob o próprio primário", () => {
+    const { fill, soft, softFg } = check("#143748");
+    expect(soft).toEqual([199.6, 56.5, 95]); // --hw-color-primary-50 é 200 57% 95%
+    expect(softFg).toEqual(fill);
+  });
+
+  it.each(["#f97316", "#ff3b0a", "#3b82f6", "#ef4444", "#22c55e"])(
+    "%s: a tinta sobre o branco não basta no fundo suave, e o texto suave escurece mais",
+    (hex) => {
+      const { ink, soft, softFg } = check(hex);
+      expect(contrastRatio(ink, soft)).toBeLessThan(AA_CONTRAST);
+      expect(softFg[2]).toBeLessThan(ink[2]);
     },
   );
 

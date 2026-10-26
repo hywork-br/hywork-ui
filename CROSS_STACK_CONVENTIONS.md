@@ -90,6 +90,7 @@ As variáveis que o design system declara, e de onde vêm (`tokens/core.css`,
 | `--primary-hover` | `--hw-brand-primary-hover`, senão `--hw-color-primary-600` | `200 57% 15%` |
 | `--primary-active` | `--hw-brand-primary-active`, senão `--hw-color-primary-700` | `200 57% 12%` |
 | `--primary-ink` | `--hw-brand-primary-ink`, senão a marca, senão `--hw-color-primary-default` | `200 57% 18%` |
+| `--primary-soft` / `-foreground` | `--hw-brand-primary-soft` / `-soft-foreground`, senão `--hw-color-primary-50` / `--hw-color-primary-default` | `200 57% 95%` / `200 57% 18%` |
 | `--secondary` / `-foreground` | `--hw-color-secondary-default` / `-foreground` | `217 10% 90%` / `0 0% 0%` |
 | `--muted` / `-foreground` | `--hw-color-muted-default` / `-foreground` | `179 10% 95%` / `217 0% 40%` |
 | `--accent` / `-foreground` | `--hw-color-accent-default` / `-foreground` | `179 10% 90%` / `217 0% 15%` |
@@ -113,7 +114,7 @@ passaram a `#edf1f5`. No `.dark` valem os `--hw-color-*` do modo escuro de
 
 O preset declara todas as chaves que o consumidor usa, com `<alpha-value>`:
 `background`, `foreground`, `card`, `popover`, `primary` (com `50`…`900`,
-`foreground`, `hover`, `active`, `ink`), `secondary`, `muted`, `accent`,
+`foreground`, `hover`, `active`, `ink`, `soft`, `soft-foreground`), `secondary`, `muted`, `accent`,
 `destructive`, `success`, `warning`, `error`, `info`, `border`, `input`,
 `ring`, `chart`, `admin.*`, as paletas tokenizadas (`slate`, `gray`, `zinc`,
 `red`, `emerald`, `yellow`, `blue`) e as `hw-*` de papel.
@@ -143,7 +144,7 @@ import { BrandTheme } from "@hywork/ui/platform";
 ```
 
 `brandThemeVars(hex)` aceita `#rgb` ou `#rrggbb`; qualquer outra coisa devolve
-`{}` e vale o primário do design system. Devolve cinco variáveis:
+`{}` e vale o primário do design system. Devolve sete variáveis:
 
 | Gancho | O que é |
 |---|---|
@@ -151,6 +152,7 @@ import { BrandTheme } from "@hywork/ui/platform";
 | `--hw-brand-primary-foreground` | texto sobre a marca: branco ou slate-900, o de maior contraste perceptual (APCA). Laranja, vermelho e azul médio dão branco; amarelo, lima, âmbar e branco dão escuro. Nunca abaixo de Lc 50 |
 | `--hw-brand-primary-hover` / `-active` | preenchimento no cursor e pressionado, um e dois degraus mais escuros (ou mais claros, quando escurecer apagaria o texto); o texto nunca cai abaixo de Lc 50 |
 | `--hw-brand-primary-ink` | a marca como texto/linha sobre o branco: a própria marca se já tem 4.5:1, escurecida até ter |
+| `--hw-brand-primary-soft` / `-soft-foreground` | o par do item selecionado numa lista vertical (aba vertical ativa, HCK-308): fundo na marca a 95% de luminosidade, a mesma do `primary-50`, e texto na marca escurecida até 4.5:1 **sobre esse fundo**. A tinta de cima não serve: sobre o fundo suave ela cai a 3,9–4,2:1 em laranja, vermelho, verde e azul médio |
 
 Escreva no `<html>`: é o único lugar que alcança também os portais (Dialog,
 Select, DropdownMenu, Toast), que o Radix monta fora da árvore da página.

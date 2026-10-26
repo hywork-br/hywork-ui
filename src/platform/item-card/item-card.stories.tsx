@@ -77,3 +77,87 @@ export const ComConteudoProprio: Story = {
     ),
   },
 };
+
+// Dados inventados para a forma vertical.
+const equipe = [
+  { id: "1", iniciais: "LM", titulo: "Lara Menezes", descricao: "Analista de Suporte", status: <Badge variant="positive" tone="subtle">Em dia</Badge> },
+  { id: "2", iniciais: "OT", titulo: "Otávio Teixeira Bragança de Albuquerque", descricao: "Coordenador de Projetos Especiais", status: <Badge variant="attention" tone="subtle">1 pendência</Badge> },
+  { id: "3", iniciais: "CP", titulo: "Cecília Prado", descricao: "Designer", status: <Badge variant="neutral">Sem ciclo</Badge> },
+  { id: "4", iniciais: "BN", titulo: "Bruno Nakamura", descricao: "Desenvolvedor", status: undefined },
+  { id: "5", iniciais: "IS", titulo: "Iara Santos", descricao: "Analista Financeira Sênior", status: <Badge variant="positive" tone="subtle">Em dia</Badge> },
+];
+
+const iniciais = (texto: string) => (
+  <Avatar>
+    <AvatarFallback>{texto}</AvatarFallback>
+  </Avatar>
+);
+
+/**
+ * Vertical: a mídia em cima, num quadro de 108px — passe um `Avatar` (foto ou
+ * iniciais), que o preenche —, o título centralizado numa linha (cortado com
+ * reticências), a descrição, o estado numa linha própria e as ações em largura
+ * total no fim. A moldura é a da decisão da PO: raio 12, respiro 24, sem sombra.
+ *
+ * Proposta para a lista de Pessoas do DHO (HCK-308): o visual aguarda o aval da PO.
+ */
+export const Vertical: Story = {
+  args: {
+    orientation: "vertical",
+    title: "Lara Menezes",
+    description: "Analista de Suporte",
+    media: iniciais("LM"),
+    status: <Badge variant="positive" tone="subtle">Em dia</Badge>,
+    actions: (
+      <Button size="sm" variant="outline">
+        Acompanhar
+      </Button>
+    ),
+    className: "w-[248px]",
+  },
+};
+
+/**
+ * Em grade, a tela escolhe as colunas (aqui, `repeat(auto-fill, minmax(232px,
+ * 1fr))`). As ações ficam no pé de todos os cards da mesma linha, mesmo quando
+ * o título ou a descrição de um deles é mais longo.
+ */
+export const VerticalEmGrade: Story = {
+  render: () => (
+    <ul className="grid w-full max-w-[1100px] grid-cols-[repeat(auto-fill,minmax(232px,1fr))] gap-4">
+      {equipe.map((p) => (
+        <ItemCard
+          key={p.id}
+          as="li"
+          orientation="vertical"
+          title={p.titulo}
+          description={p.descricao}
+          media={iniciais(p.iniciais)}
+          status={p.status}
+          actions={
+            <Button size="sm" variant="outline">
+              Acompanhar
+            </Button>
+          }
+        />
+      ))}
+    </ul>
+  ),
+};
+
+/** Vertical clicável: o card inteiro abre o item, e as ações continuam à parte. */
+export const VerticalClicavel: Story = {
+  args: {
+    orientation: "vertical",
+    title: "Bruno Nakamura",
+    description: "Desenvolvedor",
+    media: iniciais("BN"),
+    onOpen: () => undefined,
+    className: "w-[248px]",
+  },
+};
+
+/** Vertical mínima: só título e descrição. */
+export const VerticalSemMidia: Story = {
+  args: { orientation: "vertical", description: "Encerra em 12 dias", className: "w-[248px]" },
+};

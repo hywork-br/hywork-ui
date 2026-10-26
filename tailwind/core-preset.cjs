@@ -111,7 +111,9 @@ const config = {
           "foreground": "hsl(var(--primary-foreground) / <alpha-value>)",
           "hover": "hsl(var(--primary-hover) / <alpha-value>)",
           "active": "hsl(var(--primary-active) / <alpha-value>)",
-          "ink": "hsl(var(--primary-ink) / <alpha-value>)"
+          "ink": "hsl(var(--primary-ink) / <alpha-value>)",
+          "soft": "hsl(var(--primary-soft) / <alpha-value>)",
+          "soft-foreground": "hsl(var(--primary-soft-foreground) / <alpha-value>)"
         },
         "secondary": {
           "DEFAULT": "hsl(var(--secondary) / <alpha-value>)",

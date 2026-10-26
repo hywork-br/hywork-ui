@@ -18,6 +18,8 @@ export const BRAND_VARIABLES = [
   "--hw-brand-primary-hover",
   "--hw-brand-primary-active",
   "--hw-brand-primary-ink",
+  "--hw-brand-primary-soft",
+  "--hw-brand-primary-soft-foreground",
 ] as const;
 
 export type BrandVariable = (typeof BRAND_VARIABLES)[number];
@@ -41,6 +43,8 @@ const WHITE: Hsl = [0, 0, 100];
 const NEAR_BLACK: Hsl = [222.2, 47.4, 11.2];
 // The surface the brand is read on as text or line: --background (white).
 const SURFACE: Hsl = WHITE;
+// Lightness of the soft fill: the design system's primary-50 (200 57% 95%).
+const SOFT_LIGHTNESS = 95;
 
 const HEX = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
 
@@ -174,15 +178,30 @@ function shades(fill: Hsl, foreground: Hsl): [Hsl, Hsl] {
 /**
  * The brand as text or line on the white surface (active tab, link, focus
  * ring, checkbox border): the brand itself when it already reaches 4.5:1,
- * otherwise darkened — same hue and saturation — until it does.
+ * otherwise darkened — same hue and saturation — until it does. With
+ * `surface`, the same search against another fill (the soft one, below).
  */
-function inkFor(fill: Hsl): Hsl {
+function inkFor(fill: Hsl, surface: Hsl = SURFACE): Hsl {
   const [h, s, l] = fill;
   for (let next = l; next >= 0; next -= 1) {
     const candidate: Hsl = [h, s, round1(clamp(next, 0, 100))];
-    if (contrastRatio(candidate, SURFACE) >= AA_CONTRAST) return candidate;
+    if (contrastRatio(candidate, surface) >= AA_CONTRAST) return candidate;
   }
   return [h, s, 0];
+}
+
+/**
+ * The selected row on a soft fill (vertical tab): the brand at the lightness
+ * of the design system primary-50, same hue and saturation. Without a brand,
+ * the pair falls back to primary-50 under the primary itself.
+ *
+ * The text needs its own ink: the ink above is darkened only until 4.5:1 on
+ * WHITE, and on the soft fill it drops to 3.9–4.2:1 for orange, red, green and
+ * mid blue. So the brand is darkened again, until 4.5:1 on the soft fill.
+ */
+function softFor(fill: Hsl): Hsl {
+  const [h, s] = fill;
+  return [h, s, SOFT_LIGHTNESS];
 }
 
 /**
@@ -200,7 +219,8 @@ function inkFor(fill: Hsl): Hsl {
  *
  * The label on the brand is white or slate-900, whichever has the higher APCA
  * contrast (PO, 07/10/2026); the ink — the brand as text on white — keeps
- * WCAG AA (4.5:1).
+ * WCAG AA (4.5:1), and so does the soft pair — the brand as text on its own
+ * pale fill (selected vertical tab, HCK-308).
  */
 export function brandThemeVars(hex?: string | null): BrandThemeVars {
   const rgb = parseHex(hex);
@@ -208,11 +228,14 @@ export function brandThemeVars(hex?: string | null): BrandThemeVars {
   const fill = rgbToHsl(rgb);
   const foreground = foregroundFor(fill);
   const [hover, active] = shades(fill, foreground);
+  const soft = softFor(fill);
   return {
     "--hw-brand-primary": formatHsl(fill),
     "--hw-brand-primary-foreground": formatHsl(foreground),
     "--hw-brand-primary-hover": formatHsl(hover),
     "--hw-brand-primary-active": formatHsl(active),
     "--hw-brand-primary-ink": formatHsl(inkFor(fill)),
+    "--hw-brand-primary-soft": formatHsl(soft),
+    "--hw-brand-primary-soft-foreground": formatHsl(inkFor(fill, soft)),
   };
 }
