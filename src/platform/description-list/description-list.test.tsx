@@ -10,9 +10,9 @@ const violations = async (container: HTMLElement) =>
   (await axe.run(container, { rules: { "color-contrast": { enabled: false } } })).violations;
 
 const itens: DescriptionListItem[] = [
-  { label: "Nome completo", value: "Marina Alves Duarte", span: 2 },
+  { label: "Nome completo", value: "Ana Beatriz Lima", span: 2 },
   { label: "Nome social", value: null },
-  { label: "Contato de emergência", value: "Helena Duarte · mãe", span: 3 },
+  { label: "Contato de emergência", value: "Paulo Lima · pai", span: 3 },
 ];
 
 /** Os pares rótulo → valor, na ordem. */
@@ -38,7 +38,7 @@ describe("DescriptionList", () => {
       "Contato de emergência",
     ]);
     expect(screen.getAllByRole("definition")).toHaveLength(3);
-    expect(pares(container)[0]).toEqual(["Nome completo", "Marina Alves Duarte"]);
+    expect(pares(container)[0]).toEqual(["Nome completo", "Ana Beatriz Lima"]);
   });
 
   it.each([

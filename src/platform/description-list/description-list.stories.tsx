@@ -6,20 +6,20 @@ import { DescriptionList, type DescriptionListItem } from "./index";
 
 // Dados fictícios, no formato da aba "Perfil & assessment" do protótipo (HCK-308).
 const pessoais: DescriptionListItem[] = [
-  { label: "Nome completo", value: "Marina Alves Duarte", span: 2 },
+  { label: "Nome completo", value: "Ana Beatriz Lima", span: 2 },
   { label: "Nome social", value: null },
-  { label: "Data de nascimento", value: "14/03/1994" },
+  { label: "Data de nascimento", value: "09/07/1990" },
   { label: "Gênero", value: "Feminino" },
   { label: "Estado civil", value: "Solteira" },
   { label: "E-mail corporativo", value: "marina.duarte@empresa.com.br", span: 2 },
-  { label: "Telefone", value: "(11) 98844-2210" },
-  { label: "Contato de emergência", value: "Helena Duarte · mãe · (11) 99712-3380", span: 3 },
+  { label: "Telefone", value: "(11) 90000-1234" },
+  { label: "Contato de emergência", value: "Paulo Lima · pai · (11) 90000-5678", span: 3 },
 ];
 
 const cargo: DescriptionListItem[] = [
   { label: "Cargo", value: "Analista de Operações Pleno", span: 2 },
   { label: "Departamento", value: "Operações" },
-  { label: "Centro de custo", value: "CC-4120 · Operações" },
+  { label: "Centro de custo", value: "CC-1000 · Operações" },
   { label: "Liderança direta", value: "Rafael Moreira", span: 2 },
 ];
 
