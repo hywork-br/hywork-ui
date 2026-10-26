@@ -28,9 +28,15 @@ colaborador ou uma campanha, ele é de domínio e não entra aqui. `TenantSwitch
 `UserNav`, `AdminPanelLayout` e `WorkspaceSwitcher` ficam no consumidor,
 por contrato, e isso não muda com o tempo.
 
-**Regra do segundo consumidor:** componente novo nasce no repositório que
-precisa dele. Só sobe para cá quando o **segundo** consumidor precisar do mesmo.
-Subir cedo demais congela uma API antes de se saber qual é a forma certa.
+**Componente genérico nasce aqui, já no primeiro uso.** Nenhum consumidor cria
+componente genérico próprio: ele entra na camada do produto que o usa,
+`platform/` ou `builder/`.
+
+**Regra do segundo consumidor:** vale para a camada, não para a entrada no design
+system. O componente só sobe para `core/` quando o **segundo** consumidor precisar
+do mesmo. Subir para `core/` cedo demais congela uma API comum antes de se saber
+qual é a forma certa. (Até 26/10/2026 esta regra dizia que o componente nascia no
+consumidor, o que contradizia o fluxo do `CROSS_STACK_CONVENTIONS.md` §9.)
 
 ## 3. Core, Platform ou Builder
 

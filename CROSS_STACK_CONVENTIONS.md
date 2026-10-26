@@ -368,7 +368,10 @@ Na worktree, **nesta ordem**:
 4. Exportar em `src/<camada>/index.ts`.
 
 A camada: `core/` se os dois produtos concordam na anatomia; `platform/` ou
-`builder/` se o padrão é de um só.
+`builder/` se o padrão é de um só. Componente de um só produto nasce na camada
+dele, não no consumidor. Ele sobe para `core/` quando o **segundo** consumidor
+precisar do mesmo (regra do segundo consumidor): subir cedo demais congela uma
+API comum antes de se saber a forma certa.
 
 ```bash
 rtk npm run check && rtk npm run build
@@ -408,10 +411,6 @@ hw-cloud-builder/components/        renderizadores estáticos · feed · reconhe
 
 Um componente de domínio **usa** os do design system por dentro — é assim que
 ele fica alinhado sem subir para a biblioteca.
-
-**Regra do segundo consumidor:** componente genérico que nasceu no consumidor só
-sobe para o `hywork-ui` quando o **segundo** consumidor precisar do mesmo.
-Subir na primeira vez congela uma API antes de se saber a forma certa.
 
 
 ### Cenário 5 · Alterar um componente existente
