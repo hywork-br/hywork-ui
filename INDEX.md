@@ -66,9 +66,9 @@ src/
 │   └── …                  demais primitivas — todas com story
 │
 ├── platform/              Padrões do admin (hywork-plataform)
-│   ├── filter-bar/        ✅  substitui 9 implementações
+│   ├── filter-bar/        ✅  substitui 9 implementações; `clearLabel` (texto do "Limpar", HCK-308)
 │   ├── data-list/         ✅  substitui 44 telas
-│   ├── item-card/         ✅  substitui 21 implementações
+│   ├── item-card/         ✅  substitui 21 implementações; 📋 `orientation="vertical"` — coluna centralizada para grade, mídia em 108px, ações no pé (HCK-308) — aval da PO pendente
 │   ├── list-pagination/   ✅  substitui 3
 │   ├── empty-state/       ✅  substitui 8 variações
 │   ├── error-state/       ✅  substitui 6 linhas de erro escritas à mão
@@ -178,7 +178,9 @@ vazio — quando aplicáveis ao componente.
   com `?cards=226` ou `?cards=266`, fileiras de 4 `StatCard` com o valor na mesma altura;
   o perfil da pessoa da HCK-308 tem `tests/fixtures/profile.html` — abas verticais ao lado
   e acima do conteúdo, a horizontal intacta, a `DescriptionList` em 3, 2 e 1 colunas e o
-  contraste da aba ativa com marcas claras, por `?brand=f97316`)
+  contraste da aba ativa com marcas claras, por `?brand=f97316`; a grade de `ItemCard`
+  verticais e o "Limpar filtros" da `FilterBar` têm `tests/fixtures/people.html` — avatar
+  no quadro de 108px, título com reticências, ações alinhadas no pé da fileira)
 - **axe-core** — auditoria de acessibilidade, via `@storybook/addon-a11y` e nos testes
 - **smoke-consumer** — instala o tarball num projeto limpo e valida exports,
   declarações, diretiva de cliente e preset
