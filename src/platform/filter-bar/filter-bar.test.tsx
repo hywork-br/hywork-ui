@@ -74,6 +74,34 @@ describe("FilterBar", () => {
     expect(onClear).toHaveBeenCalledOnce();
   });
 
+  it("o botão de limpar diz \"Limpar\" por padrão", () => {
+    render(<Exemplo busca="ana" />);
+    expect(screen.getByRole("button", { name: "Limpar" })).toBeInTheDocument();
+  });
+
+  it("`clearLabel` troca o texto do botão, que continua limpando", async () => {
+    const user = userEvent.setup();
+    const onClear = vi.fn();
+    render(
+      <FilterBar onClear={onClear} clearLabel="Limpar filtros">
+        <FilterBar.Search placeholder="Buscar por nome" value="ana" onChange={() => undefined} />
+      </FilterBar>,
+    );
+    await user.click(screen.getByRole("button", { name: "Limpar filtros" }));
+    expect(onClear).toHaveBeenCalledOnce();
+    expect(screen.queryByRole("button", { name: "Limpar" })).toBeNull();
+  });
+
+  it("`clearLabel` não vaza para o DOM como atributo", () => {
+    render(
+      <FilterBar onClear={() => undefined} clearLabel="Limpar filtros">
+        <FilterBar.Search placeholder="Buscar" value="" onChange={() => undefined} />
+      </FilterBar>,
+    );
+    expect(screen.getByRole("search")).not.toHaveAttribute("clearlabel");
+    expect(screen.getByRole("search")).not.toHaveAttribute("clearLabel");
+  });
+
   it("desabilita os controles enquanto carrega, sem removê-los", () => {
     render(<Exemplo busca="ana" loading />);
     expect(screen.getByRole("searchbox", { name: "Buscar por nome" })).toBeDisabled();
