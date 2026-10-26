@@ -252,8 +252,13 @@
      --hw-brand-primary-active      preenchimento pressionado
      --hw-brand-primary-ink         a marca como texto/linha sobre o fundo
                                     branco, escurecida até 4.5:1 se preciso
-   brandThemeVars(hex) calcula as cinco. Sem elas, vale o primário do design
-   system (200 57% 18%).
+     --hw-brand-primary-soft        fundo suave: a marca na luminosidade do
+                                    primary-50 (95%), mesma matiz
+     --hw-brand-primary-soft-foreground
+                                    a marca como texto sobre o fundo suave,
+                                    escurecida até 4.5:1 sobre ele
+   brandThemeVars(hex) calcula as sete. Sem elas, vale o primário do design
+   system (200 57% 18%) — e o par suave é o primary-50 sob o primário.
 
    O seletor repete o bloco em .dark e [data-hw-brand]: uma variável que
    depende de outra é resolvida no elemento onde é declarada. Sem repetir, a
@@ -273,6 +278,12 @@
   --primary-hover: var(--hw-brand-primary-hover, var(--hw-brand-primary, var(--hw-color-primary-600)));
   --primary-active: var(--hw-brand-primary-active, var(--hw-brand-primary, var(--hw-color-primary-700)));
   --primary-ink: var(--hw-brand-primary-ink, var(--hw-brand-primary, var(--hw-color-primary-default)));
+  /* Par suave: item selecionado numa lista vertical (aba vertical, HCK-308).
+     A tinta acima tem 4.5:1 só sobre o branco; sobre o fundo suave ela cai a
+     3,9–4,2:1 em laranja, vermelho, verde e azul médio — por isso o texto tem
+     a sua própria tinta, calculada contra o fundo suave. */
+  --primary-soft: var(--hw-brand-primary-soft, var(--hw-color-primary-50));
+  --primary-soft-foreground: var(--hw-brand-primary-soft-foreground, var(--hw-color-primary-default));
 
   --secondary: var(--hw-color-secondary-default);
   --secondary-foreground: var(--hw-color-secondary-foreground);
