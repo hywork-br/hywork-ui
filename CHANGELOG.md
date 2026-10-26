@@ -1,5 +1,49 @@
 # Changelog
 
+## 0.17.0 — Abas verticais, `DescriptionList`, `ItemCard` vertical e `clearLabel` na `FilterBar`
+
+Lançada em 26/10/2026 para o DHO (HCK-308, página Pessoas do líder), com o aval
+do Rick (26/10). Nenhuma API existente quebra: sem as props novas, os componentes
+ficam como estavam. Os três componentes novos estão na tabela de propostas
+aguardando o aval visual da PO no `DOMAIN_MODEL.md`.
+
+### Tema: par suave da marca (`--primary-soft` / `--primary-soft-foreground`)
+
+- O `brandThemeVars` passa a derivar também um par fundo/texto suave da cor do
+  workspace. O texto da marca sobre o fundo suave ficava entre 3,85 e 4,18:1
+  com marcas laranja, vermelha, verde ou azul médio; o par novo garante 4,5:1.
+- Só acrescenta variáveis; o consumidor continua passando só o hex. Sem marca,
+  o par é `primary-50` com o texto no primário.
+
+### `Tabs` com `orientation="vertical"` (core)
+
+- A lista vira uma coluna de 240px à esquerda a partir de 768px (32px até o
+  conteúdo) e fica acima do conteúdo em tela estreita.
+- Cada aba é uma linha de 44px, raio 4, texto à esquerda; o que vem depois do
+  rótulo (ex.: um `Badge` de contagem) vai para a direita e entra no nome
+  acessível. Ativa em `bg-primary-soft` com `text-primary-soft-foreground`.
+- Setas para cima/baixo, Home e End. A horizontal não muda (teste trava as
+  classes); `Tabs` passou de apelido do Radix a `forwardRef`, com as mesmas props.
+
+### `DescriptionList` (platform, novo)
+
+- Lista de leitura rótulo/valor: `items: { label, value?, span? }[]`,
+  `columns?: 1 | 2 | 3`, `emptyValue?` (padrão "—").
+- `<dl>` com `<dt>/<dd>`; valor vazio mostra o `emptyValue`, zero aparece.
+  Uma coluna abaixo de 640px; com 3 colunas, 2 até 1024px.
+
+### `ItemCard` com `orientation="vertical"` (platform)
+
+- Coluna centralizada para grades de cards: mídia num quadro de 108px, título
+  numa linha com reticências, descrição, estado, `children` e as ações em
+  largura total presas ao pé (alinhadas na mesma fileira).
+- A horizontal não muda: o HTML dela ficou travado em snapshot antes da mudança.
+
+### `FilterBar`: `clearLabel`
+
+- Nova prop `clearLabel?: ReactNode` (padrão "Limpar") para o botão interno de
+  limpar. Sem ela, nada muda.
+
 ## 0.16.1 — `StatCard`: valores alinhados numa fileira quando o rótulo quebra
 
 Lançada em 20/10/2026 para o DHO, pelo aval permanente do Rick (14/10). Nenhuma

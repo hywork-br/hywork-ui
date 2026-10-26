@@ -45,6 +45,7 @@ export interface ConsumerSources {
 export const DESIGN_SYSTEM_VARIABLES: readonly string[] = [
   "background", "foreground", "card", "card-foreground", "popover", "popover-foreground",
   "primary", "primary-foreground", "primary-hover", "primary-active", "primary-ink",
+  "primary-soft", "primary-soft-foreground",
   "secondary", "secondary-foreground", "muted", "muted-foreground", "accent", "accent-foreground",
   "destructive", "destructive-foreground", "success", "success-foreground", "warning",
   "warning-foreground", "error", "error-foreground", "info", "info-foreground",

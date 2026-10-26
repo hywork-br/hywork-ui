@@ -88,7 +88,9 @@ A única cor que o consumidor informa é a **marca do workspace**, pelo gancho
 `--hw-brand-primary`, calculado por `brandThemeVars(hex)` (`@hywork/ui/theme`).
 Dela derivam `--primary`, `--primary-foreground` (branco ou slate-900, pelo
 contraste perceptual APCA), hover, active,
-`--primary-ink` (a marca legível sobre o branco) e `--ring`. Estado e
+`--primary-ink` (a marca legível sobre o branco), `--ring` e o par suave
+`--primary-soft` / `--primary-soft-foreground` (item selecionado numa lista
+vertical, com o texto calculado contra o fundo suave). Estado e
 destrutivo não seguem a marca. Contrato completo em
 [CROSS_STACK_CONVENTIONS.md](CROSS_STACK_CONVENTIONS.md) §3.
 
@@ -131,8 +133,9 @@ localmente. Não propor Vercel nem URL fixa.
 2. Confira em [INDEX.md](INDEX.md) se o componente já existe (em `core`, `platform` ou `builder`).
 3. Escreva a story **antes** do componente. Se a story fica confusa, a API está errada.
 4. Para um componente novo: ele é primitiva, padrão ou domínio? Domínio não entra.
-5. **Não suba na primeira vez que precisar.** Componente nasce no consumidor;
-   quando o segundo consumidor precisar do mesmo, aí sobe para cá.
+5. **Componente genérico nasce aqui, já no primeiro uso**, na camada do produto que
+   o usa (`platform/` ou `builder/`). Só vai para `core/` quando o segundo consumidor
+   precisar do mesmo, com a mesma anatomia (regra do segundo consumidor).
 
 ## Documentação adicional (Essencial)
 
