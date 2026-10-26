@@ -49,7 +49,7 @@ src/
 │   ├── table/
 │   ├── dialog/            ✅  botão de fechar "Fechar" (`closeLabel`), como o `Sheet`
 │   ├── badge/
-│   ├── tabs/
+│   ├── tabs/              ✅  sublinhado (PO); 📋 `orientation="vertical"` — lista à esquerda em 240px, selo à direita, ativa no par suave da marca (HCK-308) — aval da PO pendente
 │   ├── breadcrumb/        ✅  níveis ocultos "Mais" (`label`), como o `closeLabel` do `Dialog`
 │   ├── pagination/
 │   ├── skeleton/
@@ -57,7 +57,7 @@ src/
 │   ├── label/
 │   ├── search-input/      ✅  raio 4, o mesmo dos campos e botões do filtro
 │   ├── form-message/      ✅  token --hw-error-text
-│   ├── brand-theme/       ✅  <BrandTheme> e useBrandTheme — cor do workspace
+│   ├── brand-theme/       ✅  <BrandTheme> e useBrandTheme — cor do workspace; par suave `primary-soft` (fundo/texto do item selecionado, 4.5:1) desde a HCK-308
 │   ├── date-picker/       📋  data única, calendário próprio — aguarda aval da PO
 │   ├── progress/          📋  autoral desde a 0.16.0: marca de referência (`marker`, `markerLabel`) e `tone="attention"` (HCK-259) — aval da PO pendente
 │   ├── progress-ring/     📋  anel de progresso, SVG — lançado na 0.13.0, aval da PO pendente
@@ -78,6 +78,7 @@ src/
 │   ├── stepper/           📋  trilha de passos de wizard — aguarda aval da PO
 │   ├── stat-card/         📋  cartão de indicador; `iconTone`, `tone="highlight"`, `valueDetail` e `progress` na 0.16.0 (HCK-255, HCK-259); cabeçalho de 2 linhas com ícone na 0.16.1 — aguarda aval da PO
 │   ├── bar-list/          📋  lista de barras proporcionais — lançado na 0.13.0; `marker`, `markerLabel` e `tone` por item na 0.16.0 (HCK-259) — aval da PO pendente
+│   ├── description-list/  📋  lista de leitura rótulo/valor (`<dl>`), 1 a 3 colunas com `span`, "—" no valor vazio — HCK-308, aval da PO pendente
 │   └── …                  multi-select, icon-select, rich-text-editor
 │
 ├── builder/               Padrões da intranet (hw-cloud-builder)
@@ -174,7 +175,10 @@ vazio — quando aplicáveis ao componente.
   do exemplo da HCK-256; os indicadores do DHO — `StatCard`, marcas do
   `Progress` e do `BarList`, escala de 1 a 10 — têm `tests/fixtures/indicators.html`,
   com contraste APCA do destaque nos temas claro e escuro, a escala em 320/360px e,
-  com `?cards=226` ou `?cards=266`, fileiras de 4 `StatCard` com o valor na mesma altura)
+  com `?cards=226` ou `?cards=266`, fileiras de 4 `StatCard` com o valor na mesma altura;
+  o perfil da pessoa da HCK-308 tem `tests/fixtures/profile.html` — abas verticais ao lado
+  e acima do conteúdo, a horizontal intacta, a `DescriptionList` em 3, 2 e 1 colunas e o
+  contraste da aba ativa com marcas claras, por `?brand=f97316`)
 - **axe-core** — auditoria de acessibilidade, via `@storybook/addon-a11y` e nos testes
 - **smoke-consumer** — instala o tarball num projeto limpo e valida exports,
   declarações, diretiva de cliente e preset
