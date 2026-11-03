@@ -176,35 +176,86 @@ describe("Tabs — horizontal que não cabe (HCK-258)", () => {
 
   it("a aba focada entra inteira na parte visível, rolando o mínimo", async () => {
     render(<Tres />);
-    const lista = rolavel(screen.getByRole("tablist"), { left: 0, right: 300 });
+    const lista = rolavel(screen.getByRole("tablist"), { A: [20.7, 121], B: [120, 220], C: [250.4, 400.6] });
     // cortada à direita: rola até a borda direita da aba (arredondada para cima)
-    const c = posicao(screen.getByRole("tab", { name: "C" }), { left: 250.4, right: 400.6 });
-    act(() => c.focus());
+    act(() => screen.getByRole("tab", { name: "C" }).focus());
     await waitFor(() => expect(lista.scrollLeft).toBe(101));
     // cortada à esquerda: rola de volta até a borda esquerda dela
-    const a = posicao(screen.getByRole("tab", { name: "A" }), { left: -80.3, right: 20 });
-    act(() => a.focus());
+    act(() => screen.getByRole("tab", { name: "A" }).focus());
     await waitFor(() => expect(lista.scrollLeft).toBe(20));
     // inteira à vista: não rola
-    const b = posicao(screen.getByRole("tab", { name: "B" }), { left: 100, right: 200 });
-    act(() => b.focus());
+    act(() => screen.getByRole("tab", { name: "B" }).focus());
     await umQuadro();
     expect(lista.scrollLeft).toBe(20);
   });
 
   it("aba mais larga que a lista: alinha pelo começo dela", async () => {
     render(<Tres />);
-    const lista = rolavel(screen.getByRole("tablist"), { left: 0, right: 300 });
-    const c = posicao(screen.getByRole("tab", { name: "C" }), { left: 120.5, right: 520 });
-    act(() => c.focus());
+    const lista = rolavel(screen.getByRole("tablist"), { A: [0, 100], C: [120.5, 520] });
+    act(() => screen.getByRole("tab", { name: "C" }).focus());
     await waitFor(() => expect(lista.scrollLeft).toBe(120));
   });
 
   it("na vertical, o foco não mexe na rolagem", async () => {
     render(<Tres orientation="vertical" />);
-    const lista = rolavel(screen.getByRole("tablist"), { left: 0, right: 300 });
-    const c = posicao(screen.getByRole("tab", { name: "C" }), { left: 250, right: 400 });
-    act(() => c.focus());
+    const lista = rolavel(screen.getByRole("tablist"), { A: [0, 100], C: [250, 400] });
+    act(() => screen.getByRole("tab", { name: "C" }).focus());
+    await umQuadro();
+    expect(lista.scrollLeft).toBe(0);
+  });
+
+  it("ao montar, a aba ativa fora da vista entra inteira nela", async () => {
+    render(<Tres defaultValue="c" />);
+    const lista = rolavel(screen.getByRole("tablist"), { A: [0, 150], B: [150, 300], C: [450.2, 600] });
+    await waitFor(() => expect(lista.scrollLeft).toBe(300));
+  });
+
+  it("quando o `value` controlado muda de fora, a nova ativa entra na vista, sem rolar a página", async () => {
+    const scrollIntoView = vi.fn();
+    const original = HTMLElement.prototype.scrollIntoView;
+    HTMLElement.prototype.scrollIntoView = scrollIntoView;
+    try {
+      const { rerender } = render(<Tres value="a" />);
+      const lista = rolavel(screen.getByRole("tablist"), { A: [0, 150], B: [150, 300], C: [450.2, 600] });
+      await umQuadro();
+      expect(lista.scrollLeft).toBe(0);
+      rerender(<Tres value="c" />);
+      await waitFor(() => expect(lista.scrollLeft).toBe(300));
+      rerender(<Tres value="a" />);
+      await waitFor(() => expect(lista.scrollLeft).toBe(0));
+      expect(scrollIntoView).not.toHaveBeenCalled();
+    } finally {
+      HTMLElement.prototype.scrollIntoView = original;
+    }
+  });
+
+  it("a rolagem feita à mão fica onde a pessoa deixou", async () => {
+    render(<Tres />);
+    const lista = rolavel(screen.getByRole("tablist"), { A: [0, 150], C: [450, 600] });
+    await umQuadro();
+    lista.scrollLeft = 250;
+    await umQuadro();
+    expect(lista.scrollLeft).toBe(250);
+    expect(escritas).toBe(1);
+  });
+
+  it("quando tudo cabe, trocar a ativa não rola nada", async () => {
+    const { rerender } = render(<Tres value="a" />);
+    // conteúdo do tamanho da janela: a lista nem toca no `scrollLeft`, mesmo com
+    // uma aba que pareça passar da borda
+    const lista = rolavel(screen.getByRole("tablist"), { A: [0, 100], C: [200, 310] }, 300);
+    rerender(<Tres value="c" />);
+    await umQuadro();
+    act(() => screen.getByRole("tab", { name: "C" }).focus());
+    await umQuadro();
+    expect(lista.scrollLeft).toBe(0);
+    expect(escritas).toBe(0);
+  });
+
+  it("na vertical, a troca da ativa não mexe na rolagem", async () => {
+    const { rerender } = render(<Tres orientation="vertical" value="a" />);
+    const lista = rolavel(screen.getByRole("tablist"), { A: [0, 150], C: [450, 600] });
+    rerender(<Tres orientation="vertical" value="c" />);
     await umQuadro();
     expect(lista.scrollLeft).toBe(0);
   });
@@ -228,9 +279,20 @@ describe("Tabs — horizontal que não cabe (HCK-258)", () => {
   });
 });
 
-function Tres({ orientation }: { orientation?: "horizontal" | "vertical" }) {
+function Tres({
+  orientation,
+  defaultValue = "a",
+  value,
+}: {
+  orientation?: "horizontal" | "vertical";
+  defaultValue?: string;
+  value?: string;
+}) {
   return (
-    <Tabs orientation={orientation} defaultValue="a">
+    <Tabs
+      orientation={orientation}
+      {...(value === undefined ? { defaultValue } : { value, onValueChange: () => {} })}
+    >
       <TabsList aria-label="Seções">
         <TabsTrigger value="a">A</TabsTrigger>
         <TabsTrigger value="b">B</TabsTrigger>
@@ -240,23 +302,33 @@ function Tres({ orientation }: { orientation?: "horizontal" | "vertical" }) {
   );
 }
 
-// jsdom não tem layout nem rolagem: a caixa e o `scrollLeft` vêm daqui.
-const caixaFalsa = ({ left, right }: { left: number; right: number }) =>
+// jsdom não tem layout nem rolagem. `rolavel` dá à lista uma janela de 300px
+// sobre um conteúdo de `conteudo` px, e a cada aba a posição dela no conteúdo:
+// a caixa na tela acompanha o `scrollLeft`, preso entre 0 e o máximo, como num
+// navegador — então rolar duas vezes até a mesma aba não soma.
+const caixaFalsa = (left: number, right: number) =>
   ({ left, right, x: left, y: 0, top: 0, bottom: 48, width: right - left, height: 48, toJSON: () => ({}) }) as DOMRect;
-const posicao = (element: HTMLElement, box: { left: number; right: number }) => {
-  element.getBoundingClientRect = () => caixaFalsa(box);
-  return element;
-};
-const rolavel = (element: HTMLElement, box: { left: number; right: number }) => {
+let escritas = 0;
+const rolavel = (lista: HTMLElement, abas: Record<string, [number, number]>, conteudo = 1000, janela = 300) => {
   let scrollLeft = 0;
-  Object.defineProperty(element, "scrollLeft", {
-    configurable: true,
-    get: () => scrollLeft,
-    set: (value: number) => {
-      scrollLeft = value;
+  escritas = 0;
+  Object.defineProperties(lista, {
+    scrollLeft: {
+      configurable: true,
+      get: () => scrollLeft,
+      set: (value: number) => {
+        escritas++;
+        scrollLeft = Math.min(Math.max(0, conteudo - janela), Math.max(0, value));
+      },
     },
+    scrollWidth: { configurable: true, get: () => conteudo },
+    clientWidth: { configurable: true, get: () => janela },
   });
-  return posicao(element, box);
+  lista.getBoundingClientRect = () => caixaFalsa(0, janela);
+  for (const [nome, [left, right]] of Object.entries(abas))
+    within(lista).getByRole("tab", { name: nome }).getBoundingClientRect = () =>
+      caixaFalsa(left - scrollLeft, right - scrollLeft);
+  return lista;
 };
 const umQuadro = () => new Promise((done) => setTimeout(done, 50));
 

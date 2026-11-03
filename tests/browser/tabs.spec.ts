@@ -7,8 +7,9 @@ import axe from "axe-core";
 // narrower than its label. Now no tab overlaps another and each keeps its whole
 // label; at 390 px the list scrolls inside its 48 px. At 1440 they fit and keep
 // equal widths. The active indicator and the focus ring stay whole while the
-// list scrolls, the keyboard brings the focused tab whole into view, and the
-// vertical list does not change. On the CSS of both products: the admin's and
+// list scrolls, the keyboard brings the focused tab whole into view, the active
+// tab is brought into view on opening and when the value changes from outside
+// (without scrolling the page), and the vertical list does not change. On the CSS of both products: the admin's and
 // the intranet's.
 
 type Box = { x: number; y: number; width: number; height: number };
@@ -24,9 +25,9 @@ const caixas = (locator: Locator): Promise<Box[]> =>
   );
 const caixa = async (locator: Locator) => (await caixas(locator))[0];
 
-async function open(page: Page, width: number, product: string) {
+async function open(page: Page, width: number, product: string, ativa?: string) {
   await page.setViewportSize({ width, height: 900 });
-  await page.goto("/tests/fixtures/tabs.html?product=" + product);
+  await page.goto("/tests/fixtures/tabs.html?product=" + product + (ativa ? "&ativa=" + ativa : ""));
   await expect(page.getByRole("heading", { name: "Abas", exact: true })).toBeVisible();
   await expect(lista(page, "ciclo")).toHaveCSS("height", "48px");
   // Measure on Montserrat: ask for both weights of the tabs instead of trusting
@@ -119,6 +120,55 @@ for (const product of ["platform", "builder"]) {
     await l.evaluate((el) => el.scrollTo({ left: el.scrollWidth }));
     expect(await l.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
     inteira((await caixas(abas(page, "ciclo")))[5], await caixa(l));
+  });
+
+  test(`${product} 390: opening on the last tab shows it whole, without scrolling the page`, async ({ page }) => {
+    await open(page, 390, product, "individuais");
+    await quadro(page);
+    const l = lista(page, "ciclo");
+    const ativa = page.getByRole("tab", { name: "Resultados individuais" });
+    await expect(ativa).toHaveAttribute("aria-selected", "true");
+    expect(await l.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
+    inteira(await caixa(ativa), await caixa(l));
+    expect(await page.evaluate(() => window.scrollY)).toBe(0);
+  });
+
+  test(`${product} 390: a value set from outside brings the new active tab into view; the page stays where it is`, async ({ page }) => {
+    await open(page, 390, product);
+    // a short window, scrolled down to the buttons: the list is out of sight
+    await page.setViewportSize({ width: 390, height: 300 });
+    const l = lista(page, "ciclo");
+    const ultima = page.getByRole("button", { name: "Abrir Resultados individuais" });
+    await ultima.scrollIntoViewIfNeeded();
+    const rolagem = await page.evaluate(() => window.scrollY);
+    const caixaLista = await caixa(l);
+    expect(caixaLista.y + caixaLista.height).toBeLessThan(0);
+
+    await ultima.click();
+    const tab = page.getByRole("tab", { name: "Resultados individuais" });
+    await expect(tab).toHaveAttribute("aria-selected", "true");
+    await quadro(page);
+    // the focus stays on the button: this is the active tab, not the focused one
+    await expect(ultima).toBeFocused();
+    expect(await l.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
+    inteira(await caixa(tab), await caixa(l));
+    expect(await page.evaluate(() => window.scrollY)).toBe(rolagem);
+
+    await page.getByRole("button", { name: "Abrir Visão geral" }).click();
+    await expect(page.getByRole("tab", { name: "Visão geral" })).toHaveAttribute("aria-selected", "true");
+    await quadro(page);
+    expect(await l.evaluate((el) => el.scrollLeft)).toBe(0);
+    expect(await page.evaluate(() => window.scrollY)).toBe(rolagem);
+  });
+
+  test(`${product} 1440: when everything fits, changing the active tab scrolls nothing`, async ({ page }) => {
+    await open(page, 1440, product, "individuais");
+    await quadro(page);
+    const l = lista(page, "ciclo");
+    expect(await l.evaluate((el) => el.scrollLeft)).toBe(0);
+    await page.getByRole("button", { name: "Abrir Visão geral" }).click();
+    await quadro(page);
+    expect(await l.evaluate((el) => el.scrollLeft)).toBe(0);
   });
 
   test(`${product} 390: a click on a tab cut at the edge brings it whole into view`, async ({ page }) => {

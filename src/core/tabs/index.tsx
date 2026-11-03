@@ -57,52 +57,121 @@ const horizontalList =
 const verticalList =
   "data-[orientation=vertical]:flex data-[orientation=vertical]:h-auto data-[orientation=vertical]:flex-col data-[orientation=vertical]:gap-1 data-[orientation=vertical]:border-b-0";
 
-// A aba focada (setas, Home, End, Tab ou clique) entra inteira na parte visível
-// da lista horizontal que rola. O navegador só rola o foco até uma aba que está
-// toda fora da vista: a que está pela metade continuaria cortada, com o anel de
-// foco e o indicador junto. Rola o mínimo, para a borda mais próxima. Espera o
-// quadro seguinte porque a aba recém-ativada fica em peso 600, mais larga, e as
-// colunas mudam de largura depois do foco.
+// Traz uma aba inteira para a parte visível da lista horizontal que rola, com a
+// rolagem mínima (até a borda mais próxima), pelo `scrollLeft` da própria lista:
+// `scrollIntoView` rolaria também a página na vertical. Sem efeito quando tudo
+// cabe ou na vertical. Meio pixel de folga, para não rolar por arredondamento.
+function revealTab(list: HTMLElement, tab: HTMLElement) {
+  if (list.getAttribute("data-orientation") !== "horizontal") return;
+  if (list.scrollWidth <= list.clientWidth) return;
+  const visible = list.getBoundingClientRect();
+  const box = tab.getBoundingClientRect();
+  const before = box.left - visible.left;
+  const after = box.right - visible.right;
+  if (before < -0.5) list.scrollLeft += Math.floor(before);
+  // mais larga que a lista: alinha pelo começo do rótulo
+  else if (after > 0.5) list.scrollLeft += after < before ? Math.ceil(after) : Math.floor(before);
+}
+
+// No quadro seguinte: a aba recém-ativada fica em peso 600, mais larga, e as
+// colunas mudam de largura depois da troca.
+function nextFrame(callback: () => void) {
+  if (typeof requestAnimationFrame !== "function") {
+    const timer = setTimeout(callback, 0);
+    return () => clearTimeout(timer);
+  }
+  const frame = requestAnimationFrame(callback);
+  return () => cancelAnimationFrame(frame);
+}
+
+// A aba focada (setas, Home, End, Tab ou clique) entra inteira na vista. O
+// navegador só rola o foco até uma aba que está toda fora da vista: a que está
+// pela metade continuaria cortada, com o anel de foco e o indicador junto. Vale
+// também com `activationMode="manual"`, em que o foco anda sem ativar.
 function revealFocusedTab(event: React.FocusEvent<HTMLDivElement>) {
   const list = event.currentTarget;
   const tab = event.target;
-  if (tab === list || list.getAttribute("data-orientation") !== "horizontal") return;
-  const reveal = () => {
-    const visible = list.getBoundingClientRect();
-    const box = tab.getBoundingClientRect();
-    const before = box.left - visible.left;
-    const after = box.right - visible.right;
-    if (before < 0) list.scrollLeft += Math.floor(before);
-    // mais larga que a lista: alinha pelo começo do rótulo
-    else if (after > 0) list.scrollLeft += after < before ? Math.ceil(after) : Math.floor(before);
-  };
-  if (typeof requestAnimationFrame === "function") requestAnimationFrame(reveal);
-  else reveal();
+  if (tab !== list) nextFrame(() => revealTab(list, tab));
+}
+
+// A aba ativa entra inteira na vista ao montar e sempre que a ativa muda — por
+// clique, por teclado ou por `value` controlado de fora (`?aba=` na URL). O
+// Radix marca a ativa com `data-state="active"`: a lista observa esse atributo
+// nas abas. Observa também o tamanho da ativa, que muda depois da troca (peso
+// 600) e quando a fonte termina de carregar, para ela não ficar cortada por
+// uma medida antiga. A rolagem feita à mão pela pessoa fica como está.
+function useRevealActiveTab(listRef: React.RefObject<HTMLDivElement | null>) {
+  React.useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const active = () => list.querySelector<HTMLElement>('[role="tab"][data-state="active"]');
+    let cancel = () => {};
+    const reveal = () => {
+      cancel();
+      cancel = nextFrame(() => {
+        const tab = active();
+        if (tab) revealTab(list, tab);
+      });
+    };
+    const resize = typeof ResizeObserver === "function" ? new ResizeObserver(reveal) : null;
+    let watched: HTMLElement | null = null;
+    const watch = () => {
+      const tab = active();
+      if (tab === watched) return;
+      if (watched) resize?.unobserve(watched);
+      watched = tab;
+      if (tab) resize?.observe(tab);
+    };
+    const changes = new MutationObserver(() => {
+      watch();
+      reveal();
+    });
+    changes.observe(list, { subtree: true, childList: true, attributes: true, attributeFilter: ["data-state"] });
+    watch();
+    reveal();
+    return () => {
+      cancel();
+      changes.disconnect();
+      resize?.disconnect();
+    };
+  }, [listRef]);
 }
 
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, onFocus, ...props }, ref) => (
-  <TabsPrimitive.List
-    ref={ref}
-    onFocus={(event) => {
-      onFocus?.(event);
-      revealFocusedTab(event);
-    }}
-    className={cn(
-      // Decisão da PO (Catálogo de Divergências, Abas · Opção B — sublinhado):
-      // `grid h-12 rounded-none border-b bg-transparent p-0`. As abas dividem a
-      // largura em partes iguais; a lista ocupa a linha inteira. A borda
-      // inferior e as colunas estão em `horizontalList`.
-      "grid h-12 w-full grid-flow-col items-stretch rounded-none bg-transparent p-0 text-muted-foreground",
-      horizontalList,
-      verticalList,
-      className
-    )}
-    {...props}
-  />
-));
+>(({ className, onFocus, ...props }, ref) => {
+  const listRef = React.useRef<HTMLDivElement | null>(null);
+  const setRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      listRef.current = node;
+      if (typeof ref === "function") ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref]
+  );
+  useRevealActiveTab(listRef);
+  return (
+    <TabsPrimitive.List
+      ref={setRef}
+      onFocus={(event) => {
+        onFocus?.(event);
+        revealFocusedTab(event);
+      }}
+      className={cn(
+        // Decisão da PO (Catálogo de Divergências, Abas · Opção B — sublinhado):
+        // `grid h-12 rounded-none border-b bg-transparent p-0`. As abas dividem a
+        // largura em partes iguais; a lista ocupa a linha inteira. A borda
+        // inferior e as colunas estão em `horizontalList`.
+        "grid h-12 w-full grid-flow-col items-stretch rounded-none bg-transparent p-0 text-muted-foreground",
+        horizontalList,
+        verticalList,
+        className
+      )}
+      {...props}
+    />
+  );
+});
 TabsList.displayName = TabsPrimitive.List.displayName;
 
 // Aba horizontal: o anel de foco (a folga de 2px e o anel de 2px de sempre)

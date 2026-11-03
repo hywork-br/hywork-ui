@@ -7,7 +7,9 @@ import { brandThemeVars } from "../../src/theme";
 // Horizontal tabs that do not fit (HCK-258): the six tabs of the DHO cycle
 // page across the whole width, three tabs that always fit, and a vertical list
 // that must not change. `?product=builder` loads the intranet CSS instead of
-// the admin one; `?brand=f97316` applies a workspace brand.
+// the admin one; `?brand=f97316` applies a workspace brand. The cycle tabs are
+// controlled, like the page reading `?aba=`: `?ativa=individuais` opens on the
+// last one, and the buttons at the bottom change the value from outside.
 const params = new URLSearchParams(location.search);
 const css = document.createElement("link");
 css.rel = "stylesheet";
@@ -28,12 +30,15 @@ const ciclo = [
   ["individuais", "Resultados individuais"],
 ] as const;
 
+const inicial = params.get("ativa") ?? "visao-geral";
+
 function App() {
+  const [ativa, setAtiva] = React.useState(inicial);
   return (
     <main className="space-y-10 p-6">
       <h1 className="text-2xl font-bold">Abas</h1>
 
-      <Tabs defaultValue="visao-geral" data-testid="ciclo">
+      <Tabs value={ativa} onValueChange={setAtiva} data-testid="ciclo">
         <TabsList aria-label="Seções do ciclo">
           {ciclo.map(([value, label]) => (
             <TabsTrigger key={value} value={value}>
@@ -67,6 +72,19 @@ function App() {
         </TabsList>
         <TabsContent value="perfil" className="text-sm">Informações pessoais.</TabsContent>
       </Tabs>
+
+      <section data-testid="fora" className="flex flex-wrap gap-2">
+        {[ciclo[5], ciclo[0]].map(([value, label]) => (
+          <button
+            key={value}
+            type="button"
+            className="rounded-md border border-border px-3 py-2 text-sm"
+            onClick={() => setAtiva(value)}
+          >
+            Abrir {label}
+          </button>
+        ))}
+      </section>
     </main>
   );
 }

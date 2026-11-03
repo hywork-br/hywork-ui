@@ -173,7 +173,7 @@ empilhavam vários títulos de página. Hierarquia agora: página 24, card e mod
 | Decisão | altura 48 · a lista ocupa a linha e divide a largura em partes iguais · borda inferior 1px · item ativo com texto na cor primária, peso 600 e indicador de 2px na primária · inativos em cor esmaecida, peso normal · fundo transparente |
 | Primária | a marca do workspace, na tinta legível sobre o fundo (`--primary-ink`) — ver "Cor e token" |
 | Componente | `core/tabs` |
-| Quando não cabem | nenhuma aba fica mais estreita que o próprio rótulo (`minmax(max-content,1fr)`) e a lista rola na horizontal, sem barra aparente e sem perder os 48px; a aba focada (setas, Home, End, Tab ou clique) é trazida inteira para a vista. Quando todas cabem na parte igual (rótulo + 12px de cada lado), nada muda |
+| Quando não cabem | nenhuma aba fica mais estreita que o próprio rótulo (`minmax(max-content,1fr)`) e a lista rola na horizontal, sem barra aparente e sem perder os 48px; a aba focada (setas, Home, End, Tab ou clique) é trazida inteira para a vista, e a ativa também, ao abrir a página e sempre que muda (por clique, por teclado ou por `value` controlado, como o `?aba=` da URL), pela rolagem da própria lista, sem rolar a página. Quando todas cabem na parte igual (rótulo + 12px de cada lado), nada muda |
 | Status | ✅ feito (29/09) — até então as abas tinham o tamanho do texto e o ativo em cor de texto, fora da escolha. Rolagem quando não cabem: correção da HCK-258 (03/11/2026) — até a 0.18.1 a coluna espremia abaixo do rótulo e, com as seis abas do ciclo do DHO, os rótulos se sobrepunham a 390 e 768px |
 
 O formato de pílula sai. 33 dos 59 arquivos que hoje montam abas à mão migram
@@ -723,7 +723,7 @@ ao componente. **A página nunca decide** — se decidir, a divergência volta.
 | `data-list` | abaixo de qual largura a tabela vira lista e quais colunas sobrevivem |
 | `filter-bar` | se colapsa em "Filtros (2)" e a partir de qual largura |
 | `dialog` | se ocupa a tela inteira em telas estreitas |
-| `tabs` | rolam na horizontal desde a correção da sobreposição (HCK-258, 03/11/2026), com a aba focada trazida à vista; virar seletor em tela estreita segue a definir |
+| `tabs` | rolam na horizontal desde a correção da sobreposição (HCK-258, 03/11/2026), com a aba focada e a ativa trazidas à vista; virar seletor em tela estreita segue a definir |
 | `carousel` | quantos itens por largura e se os controles mudam |
 | `row-actions` | se o menu vira folha inferior em telas estreitas |
 
