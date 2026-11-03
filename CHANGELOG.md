@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.18.2 — `Tabs`: abas horizontais que não cabem rolam em vez de se sobrepor
+
+Lançada em 03/11/2026 para o DHO (HCK-258, conferência da página do ciclo, com
+seis abas sobrepostas a 390 e 768 px), com o aval do Rick. Nenhuma API muda e
+a orientação vertical não muda.
+
+- Quando as abas cabem na parte igual, nada muda: mesma largura, mesma linha e
+  o mesmo indicador de 2 px.
+- A coluna nunca fica mais estreita que o rótulo
+  (`auto-cols-[minmax(max-content,1fr)]`). Quando o total não cabe, a lista
+  rola na horizontal, com a barra de rolagem escondida e os 48 px de altura
+  inteiros. Rolar ou virar seletor segue "a definir" com a PO; a rolagem é a
+  correção da sobreposição.
+- A linha de baixo da lista passa a ser desenhada por dentro
+  (`shadow-[inset_0_-1px_0_hsl(var(--border))]`), para o indicador não ser
+  cortado pela rolagem. Em repouso, a imagem é a mesma.
+- A aba focada, e a ativa ao abrir e ao trocar, é trazida inteira à vista com a
+  rolagem mínima da própria lista, sem rolar a página.
+- O anel de foco da aba horizontal passa para dentro da aba
+  (`focus-visible:ring-inset`), porque por fora a rolagem o cortaria.
+- Consumidor que redesenha as abas com `border-b` próprio na lista e
+  `-mb-px border-b-2` nas abas fica com a linha dobrada: volte ao padrão do
+  componente.
+
 ## 0.18.1 — `SelectionBar persistent`: "Limpar seleção" guarda o lugar
 
 Lançada em 03/11/2026 para o DHO (HCK-258, conferência da tela), com o aval do
