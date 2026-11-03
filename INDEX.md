@@ -49,7 +49,7 @@ src/
 │   ├── table/
 │   ├── dialog/            ✅  botão de fechar "Fechar" (`closeLabel`), como o `Sheet`
 │   ├── badge/
-│   ├── tabs/              ✅  sublinhado (PO); 📋 `orientation="vertical"` — lista à esquerda em 240px, selo à direita, ativa no par suave da marca (HCK-308) — aval da PO pendente
+│   ├── tabs/              ✅  sublinhado (PO); quando as abas não cabem, nenhuma fica mais estreita que o rótulo e a lista rola na horizontal, com a aba focada e a ativa trazidas à vista (HCK-258); 📋 `orientation="vertical"` — lista à esquerda em 240px, selo à direita, ativa no par suave da marca (HCK-308) — aval da PO pendente
 │   ├── breadcrumb/        ✅  níveis ocultos "Mais" (`label`), como o `closeLabel` do `Dialog`
 │   ├── pagination/
 │   ├── skeleton/
@@ -188,7 +188,13 @@ vazio — quando aplicáveis ao componente.
   carregamento, o fundo `--hw-table-selected` vence listra e cursor, Tab/Espaço com o
   anel de foco e axe com a marca do workspace por `?brand=f97316`; o `SelectionBar` acima
   da lista — a tabela não se move quando a barra aparece, muda de texto e some, em 1280 e
-  390px, o foco fica na barra ao limpar e a forma `persistent`)
+  390px, o foco fica na barra ao limpar e a forma `persistent`; as abas horizontais que
+  não cabem têm `tests/fixtures/tabs.html` — as seis abas da página do ciclo do DHO
+  (HCK-258) sem sobreposição a 390 e 768px e rolando a 390px, partes iguais a 1440px,
+  o indicador de 2px, a linha de 1px e o anel de foco inteiros no pixel enquanto a lista
+  rola, setas/Home/End trazendo a aba focada à vista, a ativa à vista ao abrir (`?ativa=`) e
+  ao mudar o valor de fora, sem rolar a página, e a vertical sem mudança, com o CSS do
+  admin e, por `?product=builder`, o da intranet)
 - **axe-core** — auditoria de acessibilidade, via `@storybook/addon-a11y` e nos testes
 - **smoke-consumer** — instala o tarball num projeto limpo e valida exports,
   declarações, diretiva de cliente e preset
