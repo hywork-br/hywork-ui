@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { componentNames, authoredNames, nativeNames, coreNames, tokenize, extractComponent, checkRadioOnArrow, labelSheetClose } from './derive-platform.mjs';
+import { componentNames, authoredNames, nativeNames, coreNames, tokenize, extractComponent, checkRadioOnArrow, labelSheetClose, dashWhenIndeterminate } from './derive-platform.mjs';
 import { existsSync } from 'node:fs';
 const read = p => readFileSync(new URL('../'+p, import.meta.url), 'utf8');
 const hash = s => createHash('sha256').update(s).digest('hex');
@@ -41,6 +41,20 @@ test('the derivation names the sheet close button in pt-BR, and fails loudly if 
   const drifted = original.replace('<span className="sr-only">Close</span>', '<span className="sr-only">Close panel</span>');
   assert.notEqual(drifted, original);
   assert.throws(() => labelSheetClose(drifted), /close label source not found/);
+});
+test('the derivation draws a dash in the indeterminate checkbox, touching only that state, and fails loudly if the capture drifts', () => {
+  const original = read('provenance/platform/components/checkbox.tsx');
+  const derived = extractComponent('checkbox', original);
+  assert.ok(derived.includes('<MinusIcon className="hidden h-4 w-4 group-data-[state=indeterminate]:block" />'));
+  assert.ok(derived.includes('data-[state=indeterminate]:bg-primary data-[state=indeterminate]:text-primary-foreground'));
+  // Every class the capture had is still there: checked and unchecked keep their look.
+  const classes = (s) => new Set(s.match(/className=(?:\{cn\()?"[^"]*"/g)?.flatMap((c) => c.replace(/^[^"]*"|"$/g, '').split(/\s+/)));
+  for (const c of classes(original)) assert.ok(classes(derived).has(c), 'checkbox lost the captured class ' + c);
+  const added = [...classes(derived)].filter((c) => !classes(original).has(c));
+  assert.deepEqual(added.filter((c) => !c.includes('[state=indeterminate]') && c !== 'group' && c !== 'hidden'), []);
+  const drifted = original.replace('<CheckIcon className="h-4 w-4" />', '<CheckIcon className="h-3.5 w-3.5" />');
+  assert.notEqual(drifted, original);
+  assert.throws(() => dashWhenIndeterminate(drifted), /indeterminate dash source not found/);
 });
 test('token conversion removes literal colors without changing functional code', () => {
   assert.equal(tokenize('border-[#e5e7eb] hover:bg-[#F9FAFB] onClick={save}'),
