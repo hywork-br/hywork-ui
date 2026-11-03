@@ -205,11 +205,17 @@ test("persistent: visible with nothing selected, its action disabled until a row
   await expect(grupo).toContainText("Nenhuma selecionada");
   const exportar = grupo.getByRole("button", { name: "Exportar selecionados" });
   await expect(exportar).toBeDisabled();
-  await expect(grupo.getByRole("button", { name: "Limpar seleção" })).toBeHidden();
+  const limpar = grupo.getByRole("button", { name: "Limpar seleção", includeHidden: true });
+  await expect(limpar).toBeHidden();
+  // Invisível, mas no lugar: as ações não mudam de largura ao marcar.
+  const larguraLimpar = await limpar.evaluate((el) => el.getBoundingClientRect().width);
+  expect(larguraLimpar).toBeGreaterThan(0);
   const tabela = page.getByTestId("com-natural").getByRole("table");
   const antes = (await tabela.boundingBox())!.y;
+  const alturaAntes = (await grupo.boundingBox())!.height;
   await page.getByTestId("com-natural").getByRole("checkbox", { name: "Selecionar Cecília Prado" }).click();
   await expect(exportar).toBeEnabled();
   await expect(grupo.getByRole("button", { name: "Limpar seleção" })).toBeVisible();
   expect((await tabela.boundingBox())!.y).toBe(antes);
+  expect((await grupo.boundingBox())!.height).toBe(alturaAntes);
 });

@@ -125,7 +125,7 @@ describe("SelectionBar", () => {
     expect(screen.getByRole("button", { name: "Marcar mais uma" })).toHaveFocus();
   });
 
-  it("persistent: à vista sem seleção, sem a moldura da marca, ações desabilitadas e sem Limpar", () => {
+  it("persistent: à vista sem seleção, sem a moldura da marca, ações desabilitadas e Limpar guardando o lugar", () => {
     render(
       <SelectionBar persistent count={0} label="Nenhuma selecionada" onClear={() => undefined}>
         <Button size="sm">Exportar selecionados</Button>
@@ -136,10 +136,12 @@ describe("SelectionBar", () => {
     expect(barra).not.toHaveClass("bg-primary/5");
     expect(within(barra).getByText("Nenhuma selecionada")).toBeInTheDocument();
     expect(within(barra).getByRole("button", { name: "Exportar selecionados" })).toBeDisabled();
-    // Como o "Limpar" da FilterBar: sem nada a desfazer, o botão sai do layout.
-    const limpar = within(barra).getByRole("button", { name: "Limpar seleção" });
+    // Sem nada a desfazer, o botão fica invisível e desabilitado, mas no lugar:
+    // as ações não mudam de largura ao marcar o primeiro item.
+    const limpar = within(barra).getByRole("button", { name: "Limpar seleção", hidden: true });
     expect(limpar).toBeDisabled();
-    expect(limpar).toHaveClass("hidden");
+    expect(limpar).toHaveClass("invisible");
+    expect(limpar).not.toHaveClass("hidden");
   });
 
   it("persistent: a ação se habilita ao marcar e volta a desabilitar ao limpar", async () => {
