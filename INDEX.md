@@ -63,11 +63,13 @@ src/
 │   ├── progress-ring/     📋  anel de progresso, SVG — lançado na 0.13.0, aval da PO pendente
 │   ├── rating-scale/      📋  escala de resposta 1–N com rótulos — lançado na 0.13.0; `labelDisplay` (rótulo embaixo, escala de 1 a 10, HCK-235) na 0.16.0 — aval da PO pendente
 │   ├── radio-group/       ✅  setas mudam e marcam, também na tecla rápida
+│   ├── checkbox/          ✅  estado misto preenchido, com traço no lugar do ✓ (Rick, 03/11/2026, HCK-258) — derivada: a troca vive em `scripts/derive-platform.mjs`
 │   └── …                  demais primitivas — todas com story
 │
 ├── platform/              Padrões do admin (hywork-plataform)
 │   ├── filter-bar/        ✅  substitui 9 implementações; `clearLabel` (texto do "Limpar", HCK-308)
 │   ├── data-list/         ✅  substitui 44 telas; 📋 `selection` — coluna de caixas e "selecionar as linhas visíveis" no cabeçalho, controlada pela tela (HCK-258) — aval da PO pendente
+│   ├── selection-bar/     📋  ação em massa sobre a seleção: contagem, "Selecionar todas as N", ações, "Limpar seleção"; some guardando o lugar ou fica à vista (`persistent`) — forma B, proposta (HCK-258), aval da PO pendente
 │   ├── item-card/         ✅  substitui 21 implementações; 📋 `orientation="vertical"` — coluna centralizada para grade, mídia em 108px, ações no pé (HCK-308) — aval da PO pendente
 │   ├── list-pagination/   ✅  substitui 3
 │   ├── empty-state/       ✅  substitui 8 variações
@@ -184,7 +186,9 @@ vazio — quando aplicáveis ao componente.
   de linhas do `DataList` tem `tests/fixtures/selection.html` — a linha marcada mantém a
   altura com listra, `rowHeight` e `minWidth`, a coluna de seleção mede 40px também no
   carregamento, o fundo `--hw-table-selected` vence listra e cursor, Tab/Espaço com o
-  anel de foco e axe com a marca do workspace por `?brand=f97316`)
+  anel de foco e axe com a marca do workspace por `?brand=f97316`; o `SelectionBar` acima
+  da lista — a tabela não se move quando a barra aparece, muda de texto e some, em 1280 e
+  390px, o foco fica na barra ao limpar e a forma `persistent`)
 - **axe-core** — auditoria de acessibilidade, via `@storybook/addon-a11y` e nos testes
 - **smoke-consumer** — instala o tarball num projeto limpo e valida exports,
   declarações, diretiva de cliente e preset
