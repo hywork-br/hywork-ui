@@ -11,6 +11,7 @@ export * from "./upload-area";
 export * from "./page-title";
 export * from "./item-card";
 export * from "./data-list";
+export * from "./selection-bar";
 export * from "./multi-select";
 export * from "./icon-select";
 export * from "./rich-text-editor";
