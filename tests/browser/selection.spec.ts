@@ -1,5 +1,6 @@
 import { test, expect, type Locator, type Page } from "@playwright/test";
 import axe from "axe-core";
+import { apcaContrast, rgbToHsl } from "../../src/theme/brand";
 
 // Row selection on the DataList (HCK-258), in a real browser
 // (tests/fixtures/selection.tsx).
@@ -120,11 +121,95 @@ for (const brand of [undefined, "f97316"]) {
   test("selection page passes axe, contrast included — brand " + (brand ?? "none"), async ({ page }) => {
     await open(page, brand);
     await page.getByRole("checkbox", { name: "Selecionar Lara Menezes" }).first().click();
+    await expect(page.getByTestId("barra").getByRole("group", { name: "Ações da seleção" })).toBeVisible();
     await page.addScriptTag({ content: axe.source });
-    const violations = await page.evaluate(async () => {
-      const result = await (window as typeof window & { axe: typeof axe }).axe.run();
+    // The label on the brand fill (the primary button in the bar) follows the
+    // PO decision of 07/10/2026: white or slate-900, by APCA, not WCAG 2 — white
+    // on orange is 2.8:1 by WCAG 2 and reads stronger. It is checked by APCA
+    // below; everything else on the page goes through the whole axe run.
+    const violations = await page.evaluate(async (comMarca) => {
+      const result = await (window as typeof window & { axe: typeof axe }).axe.run(
+        comMarca ? { exclude: [[".bg-primary.text-primary-foreground"]] } : undefined,
+      );
       return result.violations.map((v) => ({ id: v.id, targets: v.nodes.map((n) => n.target) }));
-    });
+    }, Boolean(brand));
     expect(violations).toEqual([]);
+    const botao = page.getByTestId("barra").getByRole("button", { name: "Enviar lembrete" });
+    const [texto, fundo] = await botao.evaluate((el) => [getComputedStyle(el).color, getComputedStyle(el).backgroundColor]);
+    const rgb = (c: string) => (c.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number) as [number, number, number];
+    const lc = (t: [number, number, number]) => Math.abs(apcaContrast(rgbToHsl(t), rgbToHsl(rgb(fundo))));
+    const outro = rgb(texto)[0] > 127 ? ([15, 23, 42] as [number, number, number]) : ([255, 255, 255] as [number, number, number]);
+    expect(lc(rgb(texto))).toBeGreaterThanOrEqual(lc(outro));
   });
 }
+
+// SelectionBar above the first list.
+const topoDaTabela = async (page: Page) =>
+  (await page.getByTestId("com").getByRole("table").boundingBox())!.y;
+
+for (const largura of [1280, 390]) {
+  test(`the list does not move when the SelectionBar appears and goes away — ${largura}px`, async ({ page }) => {
+    await open(page);
+    await page.setViewportSize({ width: largura, height: 1600 });
+    const barra = page.getByTestId("barra");
+    const altura = (await barra.boundingBox())!.height;
+    const antes = await topoDaTabela(page);
+    await page.getByRole("checkbox", { name: "Selecionar Lara Menezes" }).first().click();
+    await expect(barra.getByRole("group", { name: "Ações da seleção" })).toBeVisible();
+    expect(await topoDaTabela(page)).toBe(antes);
+    expect((await barra.boundingBox())!.height).toBe(altura);
+    // "Selecionar todas as N" ao lado da contagem, e a contagem da tela.
+    await page.getByRole("checkbox", { name: "Selecionar todas desta página" }).click();
+    await barra.getByRole("button", { name: "Selecionar todas as 57 pendências" }).click();
+    await expect(barra.getByRole("group")).toContainText("Todas as 57 pendências selecionadas");
+    expect(await topoDaTabela(page)).toBe(antes);
+    await barra.getByRole("button", { name: "Limpar seleção" }).click();
+    await expect(barra.getByRole("group", { name: "Ações da seleção" })).toBeHidden();
+    expect(await topoDaTabela(page)).toBe(antes);
+  });
+}
+
+test("the SelectionBar announces the count, and the action works on the selection", async ({ page }) => {
+  await open(page);
+  const status = page.getByTestId("barra").getByRole("status");
+  await expect(status).toHaveAttribute("aria-live", "polite");
+  await page.getByRole("checkbox", { name: "Selecionar Lara Menezes" }).first().click();
+  await expect(status).toHaveText("1 selecionada");
+  await page.getByRole("checkbox", { name: "Selecionar Iara Santos" }).first().click();
+  await expect(status).toHaveText("2 selecionadas");
+  await page.getByRole("button", { name: "Enviar lembrete" }).click();
+  await expect(page.getByTestId("enviado")).toHaveText("Lembrete: 2 pessoas");
+});
+
+test("hidden, the SelectionBar is out of the Tab order; cleared, the focus stays on it and Tab goes on to the list", async ({ page }) => {
+  await open(page);
+  // Escondida, nenhum botão dela recebe foco: o primeiro Tab chega à lista.
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("checkbox", { name: "Selecionar todas desta página" })).toBeFocused();
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Space");
+  const limpar = page.getByTestId("barra").getByRole("button", { name: "Limpar seleção" });
+  await limpar.focus();
+  await page.keyboard.press("Enter");
+  await expect(page.getByTestId("barra")).toBeFocused();
+  await expect(limpar).toBeHidden();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("checkbox", { name: "Selecionar todas desta página" })).toBeFocused();
+});
+
+test("persistent: visible with nothing selected, its action disabled until a row is marked", async ({ page }) => {
+  await open(page);
+  const barra = page.getByTestId("persistente");
+  const grupo = barra.getByRole("group", { name: "Exportação" });
+  await expect(grupo).toBeVisible();
+  await expect(grupo).toContainText("Nenhuma selecionada");
+  const exportar = grupo.getByRole("button", { name: "Exportar selecionados" });
+  await expect(exportar).toBeDisabled();
+  await expect(grupo.getByRole("button", { name: "Limpar seleção" })).toBeHidden();
+  const tabela = page.getByTestId("com-natural").getByRole("table");
+  const antes = (await tabela.boundingBox())!.y;
+  await page.getByTestId("com-natural").getByRole("checkbox", { name: "Selecionar Cecília Prado" }).click();
+  await expect(exportar).toBeEnabled();
+  await expect(grupo.getByRole("button", { name: "Limpar seleção" })).toBeVisible();
+  expect((await tabela.boundingBox())!.y).toBe(antes);
+});

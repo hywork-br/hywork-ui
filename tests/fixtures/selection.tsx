@@ -1,8 +1,8 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import "@fontsource-variable/montserrat";
-import { Badge } from "../../src/core";
-import { DataList, type DataListColumn } from "../../src/platform/index";
+import { Badge, Button } from "../../src/core";
+import { DataList, SelectionBar, type DataListColumn } from "../../src/platform/index";
 import { brandThemeVars } from "../../src/theme";
 
 // Row selection on the DataList (HCK-258), on the package CSS. What jsdom
@@ -10,7 +10,9 @@ import { brandThemeVars } from "../../src/theme";
 // stripe, `rowHeight` and `minWidth` on; the selection column does not make a
 // row taller nor change width while loading; the marked row paints the table
 // selection token over the stripe and the hover; the focus ring shows on the
-// box. Invented data only. `?brand=f97316` applies a workspace brand.
+// box. The SelectionBar above the first list must not move the list when it
+// appears or goes away, and must keep the focus when cleared. Invented data
+// only. `?brand=f97316` applies a workspace brand.
 //
 // The badge is the neutral one, as in the "Pendências" tab. The subtle status
 // badges (`tone="subtle"`) fall below 4.5:1 on a marked row (3.93–4.49:1,
@@ -50,17 +52,44 @@ const COLUNAS: DataListColumn<Pessoa>[] = [
 
 const getKey = (p: Pessoa) => p.id;
 const getLabel = (p: Pessoa) => `Selecionar ${p.nome}`;
+const NO_FILTRO = 57;
+const contagem = (n: number) => (n === 0 ? "Nenhuma selecionada" : n === 1 ? "1 selecionada" : `${n} selecionadas`);
 
 function App() {
   const [marcadas, setMarcadas] = React.useState<ReadonlySet<string>>(new Set());
   const [naturais, setNaturais] = React.useState<ReadonlySet<string>>(new Set());
   const [aberto, setAberto] = React.useState("nenhum");
+  const [todas, setTodas] = React.useState(false);
+  const [enviado, setEnviado] = React.useState("nenhum");
+  const paginaInteira = PESSOAS.every((p) => marcadas.has(p.id));
+  const marcar = (proximas: Set<string>) => {
+    setTodas(false);
+    setMarcadas(proximas);
+  };
   return (
     <main className="space-y-8 p-6">
       <h1 className="text-2xl font-bold">Pendências</h1>
 
       <section className="space-y-2">
         <p data-testid="aberto" className="text-sm">Aberto: {aberto}</p>
+        <p data-testid="enviado" className="text-sm">Lembrete: {enviado}</p>
+        <SelectionBar
+          data-testid="barra"
+          count={todas ? NO_FILTRO : marcadas.size}
+          label={todas ? `Todas as ${NO_FILTRO} pendências selecionadas` : contagem(marcadas.size)}
+          detail={
+            paginaInteira && !todas ? (
+              <Button variant="link" size="sm" onClick={() => setTodas(true)}>
+                Selecionar todas as {NO_FILTRO} pendências
+              </Button>
+            ) : undefined
+          }
+          onClear={() => marcar(new Set())}
+        >
+          <Button size="sm" onClick={() => setEnviado(todas ? `${NO_FILTRO} pessoas` : `${marcadas.size} pessoas`)}>
+            Enviar lembrete
+          </Button>
+        </SelectionBar>
         <DataList
           data-testid="com"
           aria-label="Pendências com altura fixa"
@@ -70,10 +99,20 @@ function App() {
           rowHeight="h-[76px]"
           minWidth="720px"
           onRowClick={(p) => setAberto(p.nome)}
-          selection={{ selectedKeys: marcadas, onChange: setMarcadas, getLabel, selectAllLabel: "Selecionar todas desta página" }}
+          selection={{ selectedKeys: marcadas, onChange: marcar, getLabel, selectAllLabel: "Selecionar todas desta página" }}
         />
       </section>
 
+      <SelectionBar
+        data-testid="persistente"
+        aria-label="Exportação"
+        persistent
+        count={naturais.size}
+        label={contagem(naturais.size)}
+        onClear={() => setNaturais(new Set())}
+      >
+        <Button size="sm">Exportar selecionados</Button>
+      </SelectionBar>
       <DataList
         data-testid="com-natural"
         aria-label="Pendências com seleção"
