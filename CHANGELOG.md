@@ -1,5 +1,54 @@
 # Changelog
 
+## 0.18.0 — Seleção no `DataList`, `SelectionBar` e traço no estado misto da `Checkbox`
+
+Lançada em 03/11/2026 para o DHO (HCK-258, lembrete do RH na aba Pendências do
+ciclo), com o aval do Rick (03/11). Nenhuma API existente quebra: sem
+`selection`, o `DataList` fica como estava. A forma da `SelectionBar` foi
+escolhida pelo Rick (forma B); a seleção do `DataList` segue na tabela de
+propostas aguardando o aval visual da PO no `DOMAIN_MODEL.md`.
+
+### `DataList`: seleção de linhas (`selection`)
+
+- Nova prop `selection?: { selectedKeys, onChange, getLabel, selectAllLabel?,
+  isSelectable? }`. `getLabel` dá o nome acessível de cada caixa.
+- Coluna de 40px à esquerda com a `Checkbox`; a célula inteira é o alvo. A
+  caixa do cabeçalho marca e desmarca só as linhas visíveis, com estado misto;
+  "todas as N" do filtro, em todas as páginas, fica com a tela.
+- Linha marcada no cinza de seleção da tabela (`--hw-table-selected`), sem
+  mudar a altura. Linha não selecionável mostra a caixa desabilitada; no
+  carregamento, a caixa do cabeçalho fica desabilitada e as linhas ficam sem
+  caixa.
+
+### `SelectionBar` (platform, novo)
+
+- Ação em massa sobre a seleção de uma listagem: a contagem escrita pela tela
+  (`label`), ao lado dela `detail` ("Selecionar todas as 57" ou uma nota), as
+  ações em `children` e "Limpar seleção" (`onClear`, `clearLabel?`).
+- Forma B (a barra de Bases de dados), só com tokens: `border-primary/30`,
+  `bg-primary/5`, `rounded-md`, ações `size="sm"`. As ações ficam desabilitadas
+  sozinhas com `count` 0.
+- Sem seleção, a barra some sem deslocar a lista; com `persistent`, fica à
+  vista sem a moldura da marca e com as ações desabilitadas. A contagem é
+  anunciada numa região viva; ao limpar, o foco fica na barra.
+- Substitui as quatro formas que o produto tinha (Usuários, avaliadores do
+  assistente do ciclo, Bases de dados, pessoas da Estrutura organizacional e
+  resultados individuais do ciclo). A migração dessas telas vem nos fronts.
+
+### `Checkbox`: traço no estado misto
+
+- O estado `indeterminate` passa a ser preenchido como o marcado, com um traço
+  no lugar do ✓. Antes desenhava o ✓ sem preenchimento. Vale para toda caixa em
+  estado misto.
+
+### Dependências de desenvolvimento
+
+- `storybook` e `@storybook/*` de 10.5.10 para 10.6.5 e `vite` de 8.2.2 para
+  8.3.5: o `audit:gate` (que também roda no `release.yml`) reprovava um aviso
+  crítico do Storybook e um alto do vite. O `npm audit fix` subiu
+  `markdown-it`, `postcss-selector-parser` e `undici` dentro das faixas. Nada
+  muda no pacote publicado.
+
 ## 0.17.0 — Abas verticais, `DescriptionList`, `ItemCard` vertical e `clearLabel` na `FilterBar`
 
 Lançada em 26/10/2026 para o DHO (HCK-308, página Pessoas do líder), com o aval
