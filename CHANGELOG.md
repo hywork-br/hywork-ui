@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.18.1 — `SelectionBar persistent`: "Limpar seleção" guarda o lugar
+
+Lançada em 03/11/2026 para o DHO (HCK-258, conferência da tela), com o aval do
+Rick. Nenhuma API muda.
+
+- Com `persistent` e nada selecionado, "Limpar seleção" fica no lugar,
+  invisível e desabilitado (`invisible`), em vez de sair do layout (`hidden`).
+  As ações não mudam de largura ao marcar o primeiro item, então a barra não
+  ganha uma linha num contêiner estreito e a lista não pula. Na conferência, a
+  barra dos avaliadores do assistente do ciclo, num cartão de ~400 px, pulava
+  44 px ao marcar alguém a 1024–1366 px.
+- O teste de navegador da forma `persistent` passa a conferir que o botão
+  ocupa espaço sem seleção e que a altura da barra não muda ao marcar.
+
 ## 0.18.0 — Seleção no `DataList`, `SelectionBar` e traço no estado misto da `Checkbox`
 
 Lançada em 03/11/2026 para o DHO (HCK-258, lembrete do RH na aba Pendências do
