@@ -29,9 +29,13 @@ async function open(page: Page, width: number, product: string) {
   await page.goto("/tests/fixtures/tabs.html?product=" + product);
   await expect(page.getByRole("heading", { name: "Abas", exact: true })).toBeVisible();
   await expect(lista(page, "ciclo")).toHaveCSS("height", "48px");
+  // Measure on Montserrat: ask for both weights of the tabs instead of trusting
+  // `fonts.ready`, which resolves at once if no load has started yet.
   await page.evaluate(async () => {
+    await Promise.all(["400 14px", "600 14px"].map((font) => document.fonts.load(`${font} "Montserrat Variable"`)));
     await document.fonts.ready;
   });
+  expect(await page.evaluate(() => document.fonts.check('600 14px "Montserrat Variable"'))).toBe(true);
 }
 
 /** The colour of the pixels of `region`, read from a real screenshot. */
@@ -168,10 +172,19 @@ for (const product of ["platform", "builder"]) {
       mesmaCor(pixel(meio, base - 1), indicador, `${ativa}: indicator, last row`);
       mesmaCor(pixel(meio, base - 2), indicador, `${ativa}: indicator, row above`);
       mesmaCor(pixel(meio, base - 3), fundo, `${ativa}: above the indicator`);
-      // an inactive tab: the 1px line, and the background above it
-      const outra = (await caixas(abas(page, "ciclo"))).find((b) => b.x >= caixaLista.x && b.x + b.width <= caixaLista.x + caixaLista.width && b.x !== t.x)!;
-      mesmaCor(pixel(outra.x + outra.width / 2, base - 1), linha, `${ativa}: the line under an inactive tab`);
-      mesmaCor(pixel(outra.x + outra.width / 2, base - 2), fundo, `${ativa}: above the line`);
+      // the most visible inactive tab, in the middle of its visible part: the
+      // 1px line, and the background above it
+      const visiveis = (await caixas(abas(page, "ciclo")))
+        .filter((b) => b.x !== t.x)
+        .map((b) => {
+          const de = Math.max(b.x, caixaLista.x);
+          const ate = Math.min(b.x + b.width, caixaLista.x + caixaLista.width);
+          return { meio: (de + ate) / 2, largura: ate - de };
+        })
+        .sort((a, b) => b.largura - a.largura);
+      expect(visiveis[0].largura).toBeGreaterThan(20);
+      mesmaCor(pixel(visiveis[0].meio, base - 1), linha, `${ativa}: the line under an inactive tab`);
+      mesmaCor(pixel(visiveis[0].meio, base - 2), fundo, `${ativa}: above the line`);
     }
   });
 
