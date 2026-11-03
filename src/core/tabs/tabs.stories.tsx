@@ -29,6 +29,43 @@ export const Padrao: Story = {
   ),
 };
 
+const ciclo = [
+  ["visao-geral", "Visão geral"],
+  ["pendencias", "Pendências"],
+  ["calibragem", "Calibragem"],
+  ["devolutiva", "Devolutiva"],
+  ["resultados", "Resultados do ciclo"],
+  ["individuais", "Resultados individuais"],
+] as const;
+
+/**
+ * Quando as abas não cabem, nenhuma encolhe abaixo do próprio rótulo: a lista
+ * rola na horizontal, sem barra de rolagem aparente e sem perder os 48px. Com
+ * o teclado, a aba focada entra na área visível. Quando cabem, continuam
+ * dividindo a largura em partes iguais, como em `Padrao`.
+ *
+ * Aqui, as seis abas da página do ciclo do DHO (HCK-258) num contêiner de
+ * 360px.
+ */
+export const RotulosLongosEmContainerEstreito: Story = {
+  render: () => (
+    <Tabs defaultValue="visao-geral" className="w-[360px]">
+      <TabsList aria-label="Seções do ciclo">
+        {ciclo.map(([value, label]) => (
+          <TabsTrigger key={value} value={value}>
+            {label}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+      {ciclo.map(([value, label]) => (
+        <TabsContent key={value} value={value} className="pt-4 text-sm">
+          {label} do ciclo.
+        </TabsContent>
+      ))}
+    </Tabs>
+  ),
+};
+
 /** Uma aba indisponível continua visível, para não esconder o que existe. */
 export const ComAbaDesabilitada: Story = {
   render: () => (

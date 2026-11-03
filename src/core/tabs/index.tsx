@@ -9,14 +9,16 @@ import { cn } from "../../lib/cn";
  * Duas orientações, pelo `orientation` do Radix:
  *
  * - horizontal (padrão) — a decisão da PO, "Abas · sublinhado". As classes
- *   abaixo são as de sempre e não dependem da vertical.
+ *   sem prefixo são as de sempre; o que a horizontal precisa para rolar quando
+ *   as abas não cabem (HCK-258) vive sob `data-[orientation=horizontal]:`.
  * - vertical (HCK-308, perfil da pessoa do DHO) — a lista vira uma coluna de
  *   240px à esquerda e o conteúdo fica à direita; abaixo de 768px a lista vem
  *   acima do conteúdo. Proposta: o visual aguarda o aval da PO.
  *
  * O Radix escreve `data-orientation` na raiz, na lista, em cada aba e no
  * conteúdo. Todo estilo da vertical vive sob `data-[orientation=vertical]:`,
- * então a horizontal não muda nem um pixel — e uma aba horizontal dentro do
+ * e todo estilo novo da horizontal sob `data-[orientation=horizontal]:`, então
+ * uma não mexe na outra — e uma aba horizontal dentro do
  * conteúdo de uma vertical continua horizontal, porque cada parte lê o próprio
  * atributo.
  */
@@ -35,21 +37,66 @@ const Tabs = React.forwardRef<
 ));
 Tabs.displayName = TabsPrimitive.Root.displayName;
 
+// Lista horizontal quando as abas não cabem (HCK-258, 03/11/2026). Cada coluna
+// é uma parte igual da linha, mas nunca mais estreita que o próprio rótulo
+// (`minmax(max-content,1fr)`): quando todas cabem, nada muda; quando não cabem,
+// a lista rola na horizontal em vez de sobrepor os rótulos — antes era
+// `auto-cols-fr` (`minmax(0,1fr)`), que espremia a coluna abaixo do texto.
+//
+// A barra de rolagem fica escondida, para não roubar altura dos 48px. Uma
+// lista que rola recorta o que passa da própria caixa de conteúdo, e a borda
+// fica fora dela: o indicador de 2px da aba ativa, que cobre a borda de 1px
+// (`-mb-px`), perderia a linha de baixo. Por isso a borda inferior de 1px é
+// desenhada por dentro (`shadow-[inset…]`, na mesma cor `--border`) — o mesmo
+// pixel, agora dentro da área que a rolagem mostra, e fixo enquanto o conteúdo
+// rola. Tudo sob `data-[orientation=horizontal]:`, para a vertical não mudar.
+const horizontalList =
+  "data-[orientation=horizontal]:auto-cols-[minmax(max-content,1fr)] data-[orientation=horizontal]:overflow-x-auto data-[orientation=horizontal]:overflow-y-hidden data-[orientation=horizontal]:shadow-[inset_0_-1px_0_hsl(var(--border))] data-[orientation=horizontal]:[scrollbar-width:none] data-[orientation=horizontal]:[&::-webkit-scrollbar]:hidden";
+
 // Lista vertical: uma linha por aba, 4px entre elas, sem a borda inferior.
 const verticalList =
   "data-[orientation=vertical]:flex data-[orientation=vertical]:h-auto data-[orientation=vertical]:flex-col data-[orientation=vertical]:gap-1 data-[orientation=vertical]:border-b-0";
 
+// A aba focada (setas, Home, End, Tab ou clique) entra inteira na parte visível
+// da lista horizontal que rola. O navegador só rola o foco até uma aba que está
+// toda fora da vista: a que está pela metade continuaria cortada, com o anel de
+// foco e o indicador junto. Rola o mínimo, para a borda mais próxima. Espera o
+// quadro seguinte porque a aba recém-ativada fica em peso 600, mais larga, e as
+// colunas mudam de largura depois do foco.
+function revealFocusedTab(event: React.FocusEvent<HTMLDivElement>) {
+  const list = event.currentTarget;
+  const tab = event.target;
+  if (tab === list || list.getAttribute("data-orientation") !== "horizontal") return;
+  const reveal = () => {
+    const visible = list.getBoundingClientRect();
+    const box = tab.getBoundingClientRect();
+    const before = box.left - visible.left;
+    const after = box.right - visible.right;
+    if (before < 0) list.scrollLeft += Math.floor(before);
+    // mais larga que a lista: alinha pelo começo do rótulo
+    else if (after > 0) list.scrollLeft += after < before ? Math.ceil(after) : Math.floor(before);
+  };
+  if (typeof requestAnimationFrame === "function") requestAnimationFrame(reveal);
+  else reveal();
+}
+
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
+>(({ className, onFocus, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
+    onFocus={(event) => {
+      onFocus?.(event);
+      revealFocusedTab(event);
+    }}
     className={cn(
       // Decisão da PO (Catálogo de Divergências, Abas · Opção B — sublinhado):
       // `grid h-12 rounded-none border-b bg-transparent p-0`. As abas dividem a
-      // largura em partes iguais; a lista ocupa a linha inteira.
-      "grid h-12 w-full auto-cols-fr grid-flow-col items-stretch rounded-none border-b border-border bg-transparent p-0 text-muted-foreground",
+      // largura em partes iguais; a lista ocupa a linha inteira. A borda
+      // inferior e as colunas estão em `horizontalList`.
+      "grid h-12 w-full grid-flow-col items-stretch rounded-none bg-transparent p-0 text-muted-foreground",
+      horizontalList,
       verticalList,
       className
     )}
@@ -57,6 +104,11 @@ const TabsList = React.forwardRef<
   />
 ));
 TabsList.displayName = TabsPrimitive.List.displayName;
+
+// Aba horizontal: o anel de foco (a folga de 2px e o anel de 2px de sempre)
+// fica por dentro da aba. Por fora, a lista que rola o recortaria em cima,
+// embaixo e nas pontas.
+const horizontalTrigger = "data-[orientation=horizontal]:focus-visible:ring-inset";
 
 // Aba vertical: linha da largura da coluna, 44px de alvo, texto à esquerda e o
 // que vier depois do rótulo (um `Badge` de contagem) empurrado para a direita
@@ -80,6 +132,7 @@ const TabsTrigger = React.forwardRef<
       // já tem 4.5:1 sobre o branco, escurecida quando não tem — uma marca
       // amarela não pode virar uma aba ilegível.
       "relative -mb-px inline-flex h-12 items-center justify-center whitespace-nowrap rounded-none border-b-2 border-transparent bg-transparent px-3 text-sm font-normal text-muted-foreground ring-offset-background transition-colors motion-reduce:!transition-none hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-primary-ink data-[state=active]:font-semibold data-[state=active]:text-primary-ink data-[state=active]:shadow-none",
+      horizontalTrigger,
       verticalTrigger,
       className
     )}

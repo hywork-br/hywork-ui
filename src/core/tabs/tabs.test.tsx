@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
 
@@ -10,22 +10,48 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./index";
 const violations = async (container: HTMLElement) =>
   (await axe.run(container, { rules: { "color-contrast": { enabled: false } } })).violations;
 
-// As classes da horizontal até a 0.16.1 — a decisão da PO (Abas · sublinhado).
-const HORIZONTAL = {
-  root: [] as string[],
+// As classes da horizontal da 0.16.1 à 0.18.1 — a decisão da PO (Abas · sublinhado).
+const ATE_0_18_1 = {
   list: "grid h-12 w-full auto-cols-fr grid-flow-col items-stretch rounded-none border-b border-border bg-transparent p-0 text-muted-foreground".split(" "),
   trigger:
     "relative -mb-px inline-flex h-12 items-center justify-center whitespace-nowrap rounded-none border-b-2 border-transparent bg-transparent px-3 text-sm font-normal text-muted-foreground ring-offset-background transition-colors motion-reduce:!transition-none hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-primary-ink data-[state=active]:font-semibold data-[state=active]:text-primary-ink data-[state=active]:shadow-none".split(" "),
+};
+
+// HCK-258 (03/11/2026): abas que não cabem rolam em vez de se sobrepor. Saem da
+// lista a coluna que espremia o rótulo (`auto-cols-fr` = `minmax(0,1fr)`) e a
+// borda, que a rolagem recortaria embaixo do indicador; entram, só na
+// horizontal, a coluna do tamanho do rótulo, a rolagem sem barra e a mesma
+// linha de 1px desenhada por dentro. A aba ganha o anel de foco por dentro.
+const SAIU_DA_LISTA = ["auto-cols-fr", "border-b", "border-border"];
+const ROLAGEM = {
+  list: [
+    "data-[orientation=horizontal]:auto-cols-[minmax(max-content,1fr)]",
+    "data-[orientation=horizontal]:overflow-x-auto",
+    "data-[orientation=horizontal]:overflow-y-hidden",
+    "data-[orientation=horizontal]:shadow-[inset_0_-1px_0_hsl(var(--border))]",
+    "data-[orientation=horizontal]:[scrollbar-width:none]",
+    "data-[orientation=horizontal]:[&::-webkit-scrollbar]:hidden",
+  ],
+  trigger: ["data-[orientation=horizontal]:focus-visible:ring-inset"],
+};
+
+const HORIZONTAL = {
+  root: [] as string[],
+  list: [...ATE_0_18_1.list.filter((c) => !SAIU_DA_LISTA.includes(c)), ...ROLAGEM.list],
+  trigger: [...ATE_0_18_1.trigger, ...ROLAGEM.trigger],
   content: "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2".split(" "),
 };
 
-/** Toda classe que não era da horizontal só vale sob `data-orientation="vertical"`. */
+/** Toda classe que não é da horizontal só vale sob `data-orientation="vertical"`. */
 const soNaVertical = (element: HTMLElement, horizontal: string[]) => {
   const classes = element.className.split(/\s+/).filter(Boolean);
   for (const c of horizontal) expect(classes).toContain(c);
   for (const c of classes.filter((c) => !horizontal.includes(c)))
     expect(c.split(":").slice(0, -1)).toContain("data-[orientation=vertical]");
 };
+
+/** As variantes de uma classe: `data-[orientation=horizontal]:[&::-webkit-scrollbar]:hidden` → as duas primeiras. */
+const variantes = (c: string): string[] => c.match(/(?:\[[^\]]*\]|[^:[])+(?=:)/g) ?? [];
 
 function Perfil({ orientation }: { orientation?: "horizontal" | "vertical" }) {
   return (
@@ -69,7 +95,170 @@ describe("Tabs — horizontal (padrão)", () => {
     await user.keyboard("{ArrowRight}");
     expect(screen.getByRole("tab", { name: "PDI" })).toHaveAttribute("aria-selected", "true");
   });
+
+  it("Home e End vão à primeira e à última aba", async () => {
+    const user = userEvent.setup();
+    render(<Perfil />);
+    await user.click(screen.getByRole("tab", { name: "PDI" }));
+    await user.keyboard("{End}");
+    expect(screen.getByRole("tab", { name: "Feedbacks" })).toHaveFocus();
+    expect(screen.getByRole("tab", { name: "Feedbacks" })).toHaveAttribute("aria-selected", "true");
+    await user.keyboard("{Home}");
+    expect(screen.getByRole("tab", { name: "Perfil & assessment" })).toHaveFocus();
+  });
 });
+
+describe("Tabs — horizontal que não cabe (HCK-258)", () => {
+  it("a coluna nunca fica mais estreita que o rótulo, e a lista rola sem barra", () => {
+    render(<Perfil />);
+    const lista = screen.getByRole("tablist");
+    for (const c of SAIU_DA_LISTA) expect(lista).not.toHaveClass(c);
+    expect(lista).toHaveClass(
+      "data-[orientation=horizontal]:auto-cols-[minmax(max-content,1fr)]",
+      "data-[orientation=horizontal]:overflow-x-auto",
+      "data-[orientation=horizontal]:overflow-y-hidden",
+      "data-[orientation=horizontal]:[scrollbar-width:none]",
+      "data-[orientation=horizontal]:[&::-webkit-scrollbar]:hidden",
+    );
+  });
+
+  it("a linha de 1px é desenhada por dentro, no token da borda, sem cor literal", () => {
+    render(<Perfil />);
+    const lista = screen.getByRole("tablist");
+    expect(lista).toHaveClass("data-[orientation=horizontal]:shadow-[inset_0_-1px_0_hsl(var(--border))]");
+    expect(lista.className).not.toMatch(/#[0-9a-f]{3,8}|rgb\(|hsl\((?!var\(--border\)\))/i);
+  });
+
+  it("o anel de foco da aba fica por dentro dela", () => {
+    render(<Perfil />);
+    for (const aba of screen.getAllByRole("tab")) {
+      expect(aba).toHaveClass("data-[orientation=horizontal]:focus-visible:ring-inset");
+      // a folga e o anel continuam os da decisão: 2px + 2px
+      expect(aba).toHaveClass("focus-visible:ring-2", "focus-visible:ring-offset-2");
+    }
+  });
+
+  it("tudo o que entrou só vale na horizontal: a vertical não muda", () => {
+    render(<Perfil />);
+    const lista = screen.getByRole("tablist");
+    const aba = screen.getAllByRole("tab")[0];
+    const novas = (element: HTMLElement, antes: string[]) =>
+      element.className.split(/\s+/).filter((c) => c && !antes.includes(c) && !variantes(c).includes("data-[orientation=vertical]"));
+    expect(novas(lista, ATE_0_18_1.list)).toEqual(ROLAGEM.list);
+    expect(novas(aba, ATE_0_18_1.trigger)).toEqual(ROLAGEM.trigger);
+    for (const c of [...ROLAGEM.list, ...ROLAGEM.trigger]) expect(variantes(c)[0]).toBe("data-[orientation=horizontal]");
+    // o que saiu da lista já não valia na vertical: ela é `flex` e `border-b-0`
+    expect(lista).toHaveClass("data-[orientation=vertical]:flex", "data-[orientation=vertical]:border-b-0");
+  });
+
+  it("as setas percorrem as seis abas da página do ciclo, de ponta a ponta", async () => {
+    const user = userEvent.setup();
+    const abas = ["Visão geral", "Pendências", "Calibragem", "Devolutiva", "Resultados do ciclo", "Resultados individuais"];
+    render(
+      <Tabs defaultValue="0" className="w-[360px]">
+        <TabsList aria-label="Seções do ciclo">
+          {abas.map((nome, i) => (
+            <TabsTrigger key={nome} value={String(i)}>
+              {nome}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>,
+    );
+    await user.click(screen.getByRole("tab", { name: "Visão geral" }));
+    for (const nome of abas.slice(1)) {
+      await user.keyboard("{ArrowRight}");
+      expect(screen.getByRole("tab", { name: nome })).toHaveFocus();
+    }
+    await user.keyboard("{Home}");
+    expect(screen.getByRole("tab", { name: "Visão geral" })).toHaveAttribute("aria-selected", "true");
+  });
+
+  it("a aba focada entra inteira na parte visível, rolando o mínimo", async () => {
+    render(<Tres />);
+    const lista = rolavel(screen.getByRole("tablist"), { left: 0, right: 300 });
+    // cortada à direita: rola até a borda direita da aba (arredondada para cima)
+    const c = posicao(screen.getByRole("tab", { name: "C" }), { left: 250.4, right: 400.6 });
+    act(() => c.focus());
+    await waitFor(() => expect(lista.scrollLeft).toBe(101));
+    // cortada à esquerda: rola de volta até a borda esquerda dela
+    const a = posicao(screen.getByRole("tab", { name: "A" }), { left: -80.3, right: 20 });
+    act(() => a.focus());
+    await waitFor(() => expect(lista.scrollLeft).toBe(20));
+    // inteira à vista: não rola
+    const b = posicao(screen.getByRole("tab", { name: "B" }), { left: 100, right: 200 });
+    act(() => b.focus());
+    await umQuadro();
+    expect(lista.scrollLeft).toBe(20);
+  });
+
+  it("aba mais larga que a lista: alinha pelo começo dela", async () => {
+    render(<Tres />);
+    const lista = rolavel(screen.getByRole("tablist"), { left: 0, right: 300 });
+    const c = posicao(screen.getByRole("tab", { name: "C" }), { left: 120.5, right: 520 });
+    act(() => c.focus());
+    await waitFor(() => expect(lista.scrollLeft).toBe(120));
+  });
+
+  it("na vertical, o foco não mexe na rolagem", async () => {
+    render(<Tres orientation="vertical" />);
+    const lista = rolavel(screen.getByRole("tablist"), { left: 0, right: 300 });
+    const c = posicao(screen.getByRole("tab", { name: "C" }), { left: 250, right: 400 });
+    act(() => c.focus());
+    await umQuadro();
+    expect(lista.scrollLeft).toBe(0);
+  });
+
+  it("o `onFocus` da tela continua sendo chamado", () => {
+    const onFocus = vi.fn();
+    render(
+      <Tabs defaultValue="a">
+        <TabsList aria-label="Seções" onFocus={onFocus}>
+          <TabsTrigger value="a">A</TabsTrigger>
+        </TabsList>
+      </Tabs>,
+    );
+    act(() => screen.getByRole("tab", { name: "A" }).focus());
+    expect(onFocus).toHaveBeenCalled();
+  });
+
+  it("passa no axe", async () => {
+    const { container } = render(<Perfil />);
+    expect(await violations(container)).toEqual([]);
+  });
+});
+
+function Tres({ orientation }: { orientation?: "horizontal" | "vertical" }) {
+  return (
+    <Tabs orientation={orientation} defaultValue="a">
+      <TabsList aria-label="Seções">
+        <TabsTrigger value="a">A</TabsTrigger>
+        <TabsTrigger value="b">B</TabsTrigger>
+        <TabsTrigger value="c">C</TabsTrigger>
+      </TabsList>
+    </Tabs>
+  );
+}
+
+// jsdom não tem layout nem rolagem: a caixa e o `scrollLeft` vêm daqui.
+const caixaFalsa = ({ left, right }: { left: number; right: number }) =>
+  ({ left, right, x: left, y: 0, top: 0, bottom: 48, width: right - left, height: 48, toJSON: () => ({}) }) as DOMRect;
+const posicao = (element: HTMLElement, box: { left: number; right: number }) => {
+  element.getBoundingClientRect = () => caixaFalsa(box);
+  return element;
+};
+const rolavel = (element: HTMLElement, box: { left: number; right: number }) => {
+  let scrollLeft = 0;
+  Object.defineProperty(element, "scrollLeft", {
+    configurable: true,
+    get: () => scrollLeft,
+    set: (value: number) => {
+      scrollLeft = value;
+    },
+  });
+  return posicao(element, box);
+};
+const umQuadro = () => new Promise((done) => setTimeout(done, 50));
 
 describe("Tabs — vertical", () => {
   it("marca a orientação na raiz, na lista, nas abas e no conteúdo", () => {

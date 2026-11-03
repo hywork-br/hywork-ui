@@ -29,7 +29,7 @@ corrigido para o valor literal da escolha.
 | Indicador de status | D — preenchido por cor de estado | `rounded-full bg-emerald-500 px-2.5 py-1 text-white` | `core/badge` |
 | Estado vazio | C — respiro 64 · cinza claro | `text-center text-sm text-gray-400 py-16` | `platform/empty-state` |
 | Listagem de dados | A — Table do design system | `<Table>` | `core/table`, `platform/data-list` |
-| Abas | B — sublinhado | `grid h-12 rounded-none border-b bg-transparent p-0`; abas de largura igual; ativa na primária, peso 600 | `core/tabs` |
+| Abas | B — sublinhado | `grid h-12 rounded-none border-b bg-transparent p-0`; abas de largura igual, nunca mais estreitas que o rótulo (quando não cabem, a lista rola — HCK-258, 03/11/2026); ativa na primária, peso 600 | `core/tabs` |
 | Modal | D — largo com rolagem | `max-w-4xl max-h-[90vh] overflow-y-auto` | `core/dialog` |
 | Carregamento | B — pulso escrito à mão | `bg-gray-200 rounded animate-pulse` | `core/skeleton` |
 | Paginação | B — intervalo e setas | "1–20 de 143" + ‹ › | `platform/list-pagination` |
@@ -173,10 +173,21 @@ empilhavam vários títulos de página. Hierarquia agora: página 24, card e mod
 | Decisão | altura 48 · a lista ocupa a linha e divide a largura em partes iguais · borda inferior 1px · item ativo com texto na cor primária, peso 600 e indicador de 2px na primária · inativos em cor esmaecida, peso normal · fundo transparente |
 | Primária | a marca do workspace, na tinta legível sobre o fundo (`--primary-ink`) — ver "Cor e token" |
 | Componente | `core/tabs` |
-| Status | ✅ feito (29/09) — até então as abas tinham o tamanho do texto e o ativo em cor de texto, fora da escolha |
+| Quando não cabem | nenhuma aba fica mais estreita que o próprio rótulo (`minmax(max-content,1fr)`) e a lista rola na horizontal, sem barra aparente e sem perder os 48px; a aba focada (setas, Home, End, Tab ou clique) é trazida inteira para a vista. Quando todas cabem na parte igual (rótulo + 12px de cada lado), nada muda |
+| Status | ✅ feito (29/09) — até então as abas tinham o tamanho do texto e o ativo em cor de texto, fora da escolha. Rolagem quando não cabem: correção da HCK-258 (03/11/2026) — até a 0.18.1 a coluna espremia abaixo do rótulo e, com as seis abas do ciclo do DHO, os rótulos se sobrepunham a 390 e 768px |
 
 O formato de pílula sai. 33 dos 59 arquivos que hoje montam abas à mão migram
 para este componente.
+
+Como a lista que rola recorta tudo o que passa da própria caixa de conteúdo,
+duas peças mudaram de lugar sem mudar de pixel ou de medida. A borda inferior de
+1px, que fica fora dessa caixa e cortaria a linha de baixo do indicador de 2px
+(ele a cobre com `-mb-px`), passou a ser desenhada por dentro, na mesma cor
+`--border` (`shadow-[inset_0_-1px_0_hsl(var(--border))]` no lugar de `border-b
+border-border`): em repouso, a imagem é a mesma. O anel de foco (2px de folga e
+2px de anel) passou para dentro da aba (`ring-inset`), porque por fora seria
+cortado em cima, embaixo e nas pontas: **esta é a única diferença visível
+quando as abas cabem**, e só com o foco do teclado. A vertical não muda.
 
 ### Modal — largo com rolagem
 
@@ -712,7 +723,7 @@ ao componente. **A página nunca decide** — se decidir, a divergência volta.
 | `data-list` | abaixo de qual largura a tabela vira lista e quais colunas sobrevivem |
 | `filter-bar` | se colapsa em "Filtros (2)" e a partir de qual largura |
 | `dialog` | se ocupa a tela inteira em telas estreitas |
-| `tabs` | se rolam na horizontal ou viram seletor quando não cabem |
+| `tabs` | rolam na horizontal desde a correção da sobreposição (HCK-258, 03/11/2026), com a aba focada trazida à vista; virar seletor em tela estreita segue a definir |
 | `carousel` | quantos itens por largura e se os controles mudam |
 | `row-actions` | se o menu vira folha inferior em telas estreitas |
 
