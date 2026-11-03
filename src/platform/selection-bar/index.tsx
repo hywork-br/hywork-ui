@@ -52,8 +52,10 @@ export interface SelectionBarProps extends Omit<React.HTMLAttributes<HTMLDivElem
   clearLabel?: React.ReactNode;
   /**
    * Fica à vista sem seleção: a contagem diz que nada está selecionado, as
-   * ações aparecem desabilitadas e "Limpar seleção" não aparece. Para a tela
-   * em que a ação é fixa, como "Exportar selecionados".
+   * ações aparecem desabilitadas e "Limpar seleção" fica no lugar, invisível —
+   * a largura das ações não muda ao marcar, e a barra não ganha uma linha num
+   * contêiner estreito. Para a tela em que a ação é fixa, como "Exportar
+   * selecionados".
    */
   persistent?: boolean;
   /** Nome do grupo de ações, para o leitor de tela. Padrão: "Ações da seleção". */
@@ -140,16 +142,18 @@ const SelectionBar = React.forwardRef<HTMLDivElement, SelectionBarProps>(
             {children}
           </fieldset>
 
-          {/* Sem seleção não há o que limpar. Na barra à vista (`persistent`) o
-              botão sai, como o "Limpar" da FilterBar; na barra escondida ele
-              continua no lugar, invisível, para a altura ser a da barra aberta. */}
+          {/* Sem seleção não há o que limpar, mas o botão continua no lugar,
+              invisível e desabilitado: na barra escondida, para a altura ser a da
+              barra aberta; na barra à vista (`persistent`), para as ações não
+              mudarem de largura ao marcar o primeiro item — num contêiner
+              estreito, o botão que aparecia ganhava uma linha e a lista pulava. */}
           <Button
             type="button"
             variant="ghost"
             size="sm"
             onClick={limpar}
             disabled={!ativa}
-            className={cn(!ativa && (persistent ? "hidden" : "invisible"))}
+            className={cn(!ativa && "invisible")}
           >
             <X className="mr-1 size-4" aria-hidden="true" />
             {clearLabel}
