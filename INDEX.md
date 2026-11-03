@@ -67,7 +67,7 @@ src/
 │
 ├── platform/              Padrões do admin (hywork-plataform)
 │   ├── filter-bar/        ✅  substitui 9 implementações; `clearLabel` (texto do "Limpar", HCK-308)
-│   ├── data-list/         ✅  substitui 44 telas
+│   ├── data-list/         ✅  substitui 44 telas; 📋 `selection` — coluna de caixas e "selecionar as linhas visíveis" no cabeçalho, controlada pela tela (HCK-258) — aval da PO pendente
 │   ├── item-card/         ✅  substitui 21 implementações; 📋 `orientation="vertical"` — coluna centralizada para grade, mídia em 108px, ações no pé (HCK-308) — aval da PO pendente
 │   ├── list-pagination/   ✅  substitui 3
 │   ├── empty-state/       ✅  substitui 8 variações
@@ -180,7 +180,11 @@ vazio — quando aplicáveis ao componente.
   e acima do conteúdo, a horizontal intacta, a `DescriptionList` em 3, 2 e 1 colunas e o
   contraste da aba ativa com marcas claras, por `?brand=f97316`; a grade de `ItemCard`
   verticais e o "Limpar filtros" da `FilterBar` têm `tests/fixtures/people.html` — avatar
-  no quadro de 108px, título com reticências, ações alinhadas no pé da fileira)
+  no quadro de 108px, título com reticências, ações alinhadas no pé da fileira; a seleção
+  de linhas do `DataList` tem `tests/fixtures/selection.html` — a linha marcada mantém a
+  altura com listra, `rowHeight` e `minWidth`, a coluna de seleção mede 40px também no
+  carregamento, o fundo `--hw-table-selected` vence listra e cursor, Tab/Espaço com o
+  anel de foco e axe com a marca do workspace por `?brand=f97316`)
 - **axe-core** — auditoria de acessibilidade, via `@storybook/addon-a11y` e nos testes
 - **smoke-consumer** — instala o tarball num projeto limpo e valida exports,
   declarações, diretiva de cliente e preset
