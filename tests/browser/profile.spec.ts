@@ -136,6 +136,24 @@ test("description list: one column below 640px, no item wider than the list", as
   expect(await page.locator("[data-testid=lista] dd").nth(1).textContent()).toBe("—");
 });
 
+test("description list: the label is regular in the secondary color, the value semibold in the text color (HCK-360)", async ({ page }) => {
+  await open(page, 1280);
+  const estilo = (selector: string) =>
+    page.locator(selector).first().evaluate((el) => {
+      const s = getComputedStyle(el);
+      return { peso: s.fontWeight, cor: s.color, tamanho: s.fontSize };
+    });
+  const rotulo = await estilo("[data-testid=lista] dt");
+  const valor = await estilo("[data-testid=lista] dd");
+  expect(rotulo.peso).toBe("400");
+  expect(valor.peso).toBe("600");
+  expect(rotulo.tamanho).toBe("14px");
+  expect(valor.tamanho).toBe("14px");
+  expect(rotulo.cor).not.toBe(valor.cor);
+  const fundo = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+  expect(contrastRatio(rgbToHsl(rgb(rotulo.cor)), rgbToHsl(rgb(fundo)))).toBeGreaterThanOrEqual(4.5);
+});
+
 for (const brand of [undefined, "f97316"]) {
   test("profile passes axe, contrast included — brand " + (brand ?? "none"), async ({ page }, info) => {
     await open(page, 1440, brand);

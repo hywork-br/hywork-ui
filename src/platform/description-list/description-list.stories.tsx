@@ -38,7 +38,9 @@ const meta = {
           "passa.\n\n" +
           "Responsiva por conta própria: uma coluna abaixo de 640px; com `columns={3}`, duas " +
           "colunas até 1024px e três a partir daí.\n\n" +
-          "Proposta para o perfil da pessoa do DHO (HCK-308): o visual aguarda o aval da PO.",
+          "Rótulo em peso normal na cor secundária e valor em semibold (aval da PO, Luiza Vieira, " +
+          "03/11/2026, HCK-360). O restante do visual, proposto para o perfil da pessoa do DHO " +
+          "(HCK-308), aguarda o aval da PO.",
       },
     },
   },
