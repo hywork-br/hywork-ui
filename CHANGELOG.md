@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.19.0 — `FileThumbnail` novo e `DescriptionList` com rótulo e valor diferenciados
+
+Lançada em 03/11/2026 para o DHO (HCK-360, validação da PO), com o aval do Rick.
+Nenhuma API existente muda.
+
+- **`FileThumbnail` (novo, `@hywork/ui/platform`):** mostra um arquivo como
+  miniatura clicável, com nome e tamanho. Imagem usa a própria prévia; PDF, vídeo
+  e outros tipos usam o ícone do tipo; imagem que falha cai no ícone. Props:
+  `name`, `mime`, `src?`, `sizeLabel?`, `loading?` e `onOpen`. É proposta
+  aguardando o aval da PO: ainda não é precedente para outra tela.
+- **`DescriptionList` (mudança visual):** o `dt` passa de `font-semibold
+  text-hw-label` para `font-normal text-muted-foreground`, e o `dd` continua
+  `font-semibold`. O nome do campo deixa de ter o mesmo peso da informação. O DOM
+  não muda. Vale para todas as telas que usam a lista.
+
 ## 0.18.2 — `Tabs`: abas horizontais que não cabem rolam em vez de se sobrepor
 
 Lançada em 03/11/2026 para o DHO (HCK-258, conferência da página do ciclo, com
