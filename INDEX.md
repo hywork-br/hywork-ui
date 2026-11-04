@@ -80,7 +80,8 @@ src/
 │   ├── stepper/           📋  trilha de passos de wizard — aguarda aval da PO
 │   ├── stat-card/         📋  cartão de indicador; `iconTone`, `tone="highlight"`, `valueDetail` e `progress` na 0.16.0 (HCK-255, HCK-259); cabeçalho de 2 linhas com ícone na 0.16.1 — aguarda aval da PO
 │   ├── bar-list/          📋  lista de barras proporcionais — lançado na 0.13.0; `marker`, `markerLabel` e `tone` por item na 0.16.0 (HCK-259) — aval da PO pendente
-│   ├── description-list/  📋  lista de leitura rótulo/valor (`<dl>`), 1 a 3 colunas com `span`, "—" no valor vazio — HCK-308, aval da PO pendente
+│   ├── description-list/  📋  lista de leitura rótulo/valor (`<dl>`), 1 a 3 colunas com `span`, "—" no valor vazio — HCK-308; rótulo em peso normal e cor secundária, valor semibold (aval da PO, 03/11/2026, HCK-360); o resto do visual, aval da PO pendente
+│   ├── file-thumbnail/    📋  arquivo como miniatura clicável: imagem ou ícone do tipo, nome e tamanho; `src` opcional para URL que chega depois, imagem que falha cai no ícone — HCK-360, aval da PO pendente
 │   └── …                  multi-select, icon-select, rich-text-editor
 │
 ├── builder/               Padrões da intranet (hw-cloud-builder)
@@ -194,7 +195,12 @@ vazio — quando aplicáveis ao componente.
   o indicador de 2px, a linha de 1px e o anel de foco inteiros no pixel enquanto a lista
   rola, setas/Home/End trazendo a aba focada à vista, a ativa à vista ao abrir (`?ativa=`) e
   ao mudar o valor de fora, sem rolar a página, e a vertical sem mudança, com o CSS do
-  admin e, por `?product=builder`, o da intranet)
+  admin e, por `?product=builder`, o da intranet; a miniatura de arquivo tem
+  `tests/fixtures/file-thumbnail.html` — imagem real que carrega e que falha, quadro que não
+  muda de tamanho do esqueleto à imagem, nome longo em uma linha sem alargar nada, coluna
+  estreita, grade, sem rolagem lateral de 320 a 768px, Tab/Enter/Espaço com o anel de foco
+  e axe com contraste, com a marca do workspace por `?brand=f97316` e no tema escuro por
+  `?theme=dark`)
 - **axe-core** — auditoria de acessibilidade, via `@storybook/addon-a11y` e nos testes
 - **smoke-consumer** — instala o tarball num projeto limpo e valida exports,
   declarações, diretiva de cliente e preset
