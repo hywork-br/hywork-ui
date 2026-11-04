@@ -41,6 +41,16 @@ describe("DescriptionList", () => {
     expect(pares(container)[0]).toEqual(["Nome completo", "Ana Beatriz Lima"]);
   });
 
+  it("rótulo em peso normal na cor secundária e valor em semibold: não têm a mesma fonte (HCK-360)", () => {
+    render(<DescriptionList items={[{ label: "Cargo", value: "Analista" }]} />);
+    const dt = screen.getByRole("term");
+    const dd = screen.getByRole("definition");
+    expect(dt).toHaveClass("text-sm", "font-normal", "text-muted-foreground");
+    expect(dt).not.toHaveClass("font-semibold");
+    expect(dd).toHaveClass("text-sm", "font-semibold", "text-foreground");
+    expect(dd).not.toHaveClass("font-normal");
+  });
+
   it.each([
     ["null", null],
     ["undefined", undefined],
