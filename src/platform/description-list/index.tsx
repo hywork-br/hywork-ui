@@ -16,9 +16,13 @@ import { cn } from "../../lib/cn";
  * Zero é valor.
  *
  * Referência de estrutura: a grade de campos da aba "Perfil & assessment" do
- * protótipo da PO (DHO, HCK-308) — rótulo de 14px semibold, como o rótulo de
- * campo (`--hw-text-label`, decisão da PO), e valor de 14px semibold. Substitui
- * os `<dl>` escritos à mão no admin. O visual aguarda o aval da PO.
+ * protótipo da PO (DHO, HCK-308). Substitui os `<dl>` escritos à mão no admin.
+ *
+ * Rótulo e valor se diferenciam (aval da PO, Luiza Vieira, validação de
+ * 03/11/2026, HCK-360): rótulo de 14px em peso normal na cor secundária
+ * (`muted-foreground`), valor de 14px semibold em `foreground`. O rótulo de
+ * campo de formulário (`core/label`, semibold) não muda. O restante do visual
+ * (grade e espaços) aguarda o aval da PO.
  */
 export interface DescriptionListItem {
   /** Rótulo do campo. */
@@ -78,7 +82,7 @@ const DescriptionList = React.forwardRef<HTMLDListElement, DescriptionListProps>
             key={`${index}-${item.label}`}
             className={cn("flex min-w-0 flex-col gap-1", spanClass(item.span ?? 1, columns))}
           >
-            <dt className="text-sm font-semibold text-hw-label">{item.label}</dt>
+            <dt className="text-sm font-normal text-muted-foreground">{item.label}</dt>
             <dd className="break-words text-sm font-semibold text-foreground" data-empty={vazio || undefined}>
               {vazio ? emptyValue : item.value}
             </dd>

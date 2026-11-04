@@ -19,3 +19,4 @@ export * from "./stepper";
 export * from "./stat-card";
 export * from "./bar-list";
 export * from "./description-list";
+export * from "./file-thumbnail";
