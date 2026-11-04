@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.19.1 — `Select`: valor vazio não chega à tela
+
+Lançada em 04/11/2026 (HCK-365), com o aval do Rick. Nenhuma API muda.
+
+- Dentro de um `<form>`, o Radix desenha um `<select>` nativo que informa `""`
+  quando o valor e a opção chegam no mesmo render. A tela recebia `""` e perdia
+  um valor que ninguém mudou: foi a causa de "editar usuário zera a função"
+  (HCK-360). O `Select` deixa de repassar valor vazio. Um item não pode ter valor
+  vazio, então `""` nunca é escolha da pessoa.
+
 ## 0.19.0 — `FileThumbnail` novo e `DescriptionList` com rótulo e valor diferenciados
 
 Lançada em 03/11/2026 para o DHO (HCK-360, validação da PO), com o aval do Rick.
