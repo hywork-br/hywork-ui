@@ -11,10 +11,12 @@ import { cn } from "../../lib/cn";
  * para o módulo People era uma caixa branca igual aos cards e sumia entre
  * eles.
  *
- * `tone="vendor"` é a voz da Hywork: fundo `vendor-strong` (a secundária do
- * guideline, um tom abaixo para o texto branco de 14px passar 4.5:1) e texto
- * `vendor-foreground`. Não segue a marca do workspace. As ações vão em
- * `Button variant="inverse"` e `"inverse-outline"`.
+ * `tone="vendor"` é a voz da Hywork: fundo `vendor-surface` (o azul do
+ * guideline, #104a74, branco a 9,3:1) e texto `vendor-foreground`, com o
+ * laranja só no detalhe, o quadrado do ícone (`vendor-strong`). "Não curti
+ * esse laranjão, prefiro o azul como base" (Vitor, 20/10/2026). Não segue a
+ * marca do workspace. As ações vão em `Button variant="inverse"` e
+ * `"inverse-outline"`.
  *
  * `tone="default"` é a mesma anatomia na moldura do card (raio 12, borda de
  * 1px, sem sombra), para o destaque que não é da Hywork.
@@ -65,7 +67,7 @@ const Banner = React.forwardRef<HTMLElement, BannerProps>(
         className={cn(
           "flex flex-wrap items-center gap-x-6 gap-y-4 rounded-lg p-5 sm:p-6",
           vendor
-            ? "bg-vendor-strong text-vendor-foreground"
+            ? "bg-vendor-surface text-vendor-foreground"
             : "border border-border bg-card text-card-foreground",
           className,
         )}
@@ -77,7 +79,7 @@ const Banner = React.forwardRef<HTMLElement, BannerProps>(
               aria-hidden="true"
               className={cn(
                 "grid h-12 w-12 shrink-0 place-items-center rounded-md [&>svg]:h-6 [&>svg]:w-6",
-                vendor ? "bg-vendor-foreground/15" : "bg-primary/10 text-primary-ink",
+                vendor ? "bg-vendor-strong" : "bg-primary/10 text-primary-ink",
               )}
             >
               {media}

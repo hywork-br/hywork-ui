@@ -107,7 +107,10 @@ test('the Hywork voice: the brand guideline secondary, readable wherever it carr
     assert.ok(ratio(white, t['--hw-color-vendor-strong']) >= 4.5, file + ': branco sobre strong');
     assert.ok(ratio(t['--hw-color-vendor-ink'], t['--hw-color-background']) >= 4.5, file + ': ink sobre o fundo');
     assert.ok(ratio(t['--hw-color-vendor-ink'], t['--hw-color-vendor-subtle']) >= 4.5, file + ': ink sobre subtle');
+    // #104a74, o azul do guideline: a base da voz (Vitor, 20/10/2026)
+    assert.deepEqual(hsl(t['--hw-color-vendor-surface']).map((c) => Math.round(c * 255)), [16, 74, 116], file);
+    assert.ok(ratio(white, t['--hw-color-vendor-surface']) >= 4.5, file + ': branco sobre surface');
   }
-  for (const name of ['--vendor', '--vendor-foreground', '--vendor-strong', '--vendor-ink', '--vendor-subtle'])
+  for (const name of ['--vendor', '--vendor-foreground', '--vendor-strong', '--vendor-ink', '--vendor-subtle', '--vendor-surface'])
     assert.equal(contract[name].includes('brand'), false, name + ' follows the brand');
 });

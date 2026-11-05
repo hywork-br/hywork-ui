@@ -21,13 +21,20 @@ describe("Banner", () => {
     expect(screen.getByRole("heading", { level: 3, name: "Módulo People" })).toBeInTheDocument();
   });
 
-  it("voz da Hywork: invertido, no laranja forte com texto branco, sem borda", () => {
+  it("voz da Hywork: invertido, no azul do guideline com texto branco, sem borda", () => {
     render(<Banner tone="vendor" title="Novo: módulo People" description="Frase." />);
     const region = screen.getByRole("region");
-    expect(region).toHaveClass("bg-vendor-strong", "text-vendor-foreground");
+    expect(region).toHaveClass("bg-vendor-surface", "text-vendor-foreground");
     expect(region).not.toHaveClass("border");
-    // a frase herda o branco: o cinza de apoio some sobre o laranja
+    // a frase herda o branco: o cinza de apoio some sobre o azul
     expect(screen.getByText("Frase.")).not.toHaveClass("text-muted-foreground");
+  });
+
+  it("voz da Hywork: o laranja fica no detalhe, o quadrado do ícone", () => {
+    const { container } = render(
+      <Banner tone="vendor" title="Novo: módulo People" media={<svg data-icon="" />} />,
+    );
+    expect(container.querySelector("[data-icon]")?.parentElement).toHaveClass("bg-vendor-strong");
   });
 
   it("padrão: a moldura do card, com a frase em cinza de apoio", () => {

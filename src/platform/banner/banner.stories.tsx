@@ -20,8 +20,9 @@ const meta = {
           "Faixa de destaque no topo de uma tela ou seção: ícone, título, selo, " +
           "uma frase e até duas ações.\n\n" +
           "`tone=\"vendor\"` é a **voz da Hywork**: o convite para um módulo ou " +
-          "serviço novo, no laranja do guideline, invertido (fundo laranja, texto " +
-          "branco). Não segue a marca do workspace. As ações usam os botões " +
+          "serviço novo, no azul do guideline, invertido (fundo azul, texto " +
+          "branco), com o laranja só no quadrado do ícone. Não segue a marca do " +
+          "workspace. As ações usam os botões " +
           "`inverse` e `inverse-outline`.\n\n" +
           "`tone=\"default\"` é a mesma anatomia na moldura do card, para o " +
           "destaque que não é da Hywork ou o estado depois do pedido. O aval " +

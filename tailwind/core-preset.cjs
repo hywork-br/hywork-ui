@@ -124,7 +124,8 @@ const config = {
           "foreground": "hsl(var(--vendor-foreground) / <alpha-value>)",
           "strong": "hsl(var(--vendor-strong) / <alpha-value>)",
           "ink": "hsl(var(--vendor-ink) / <alpha-value>)",
-          "subtle": "hsl(var(--vendor-subtle) / <alpha-value>)"
+          "subtle": "hsl(var(--vendor-subtle) / <alpha-value>)",
+          "surface": "hsl(var(--vendor-surface) / <alpha-value>)"
         },
         "success": {
           "50": "hsl(var(--hw-color-success-50) / <alpha-value>)",

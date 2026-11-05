@@ -21,14 +21,21 @@ describe("PromoCard", () => {
     expect(screen.getByRole("heading", { level: 4, name: "Blog" })).toBeInTheDocument();
   });
 
-  it("voz da Hywork: invertido, no laranja forte com texto branco, sem borda", () => {
+  it("voz da Hywork: invertido, no azul do guideline com texto branco, sem borda", () => {
     render(<PromoCard tone="vendor" title="Novo: módulo People" description="Frase." eyebrow="Módulo" />);
     const card = screen.getByRole("article");
-    expect(card).toHaveClass("bg-vendor-strong", "text-vendor-foreground");
+    expect(card).toHaveClass("bg-vendor-surface", "text-vendor-foreground");
     expect(card).not.toHaveClass("border");
-    // frase e rótulo herdam o branco: o cinza de apoio some sobre o laranja
+    // frase e rótulo herdam o branco: o cinza de apoio some sobre o azul
     expect(screen.getByText("Frase.")).not.toHaveClass("text-muted-foreground");
     expect(screen.getByText("Módulo")).not.toHaveClass("text-muted-foreground");
+  });
+
+  it("voz da Hywork: o laranja fica no detalhe, o quadrado do ícone", () => {
+    const { container } = render(
+      <PromoCard tone="vendor" title="Novo: módulo People" media={<svg data-icon="" />} />,
+    );
+    expect(container.querySelector("[data-icon]")?.parentElement).toHaveClass("bg-vendor-strong");
   });
 
   it("padrão: a moldura do card, com frase e rótulo em cinza de apoio", () => {

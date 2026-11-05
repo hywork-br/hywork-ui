@@ -16,8 +16,9 @@ import { cn } from "../../lib/cn";
  * tudo empilha, o título quebra linha e a ação ocupa a largura, alinhada no pé:
  * num carrossel, os botões ficam na mesma altura de um card para o outro.
  *
- * `tone="vendor"` é a voz da Hywork, como no `Banner`: fundo `vendor-strong`,
- * texto branco, ações em `Button variant="inverse"`. `tone="default"` é a
+ * `tone="vendor"` é a voz da Hywork, como no `Banner`: fundo `vendor-surface`
+ * (o azul do guideline), texto branco, o laranja só no quadrado do ícone e
+ * ações em `Button variant="inverse"`. `tone="default"` é a
  * moldura do card (raio 12, borda de 1px, sem sombra).
  *
  * `size="compact"` é para o pé do menu lateral (16rem): respiro de 16px e
@@ -76,7 +77,7 @@ const PromoCard = React.forwardRef<HTMLElement, PromoCardProps>(
           "relative flex h-full flex-col rounded-lg",
           compact ? "gap-3 p-4" : "gap-4 p-6",
           vendor
-            ? "bg-vendor-strong text-vendor-foreground"
+            ? "bg-vendor-surface text-vendor-foreground"
             : "border border-border bg-card text-card-foreground",
           className,
         )}
@@ -90,7 +91,7 @@ const PromoCard = React.forwardRef<HTMLElement, PromoCardProps>(
                 className={cn(
                   "grid shrink-0 place-items-center rounded-md",
                   compact ? "h-8 w-8 [&>svg]:h-4 [&>svg]:w-4" : "h-10 w-10 [&>svg]:h-5 [&>svg]:w-5",
-                  vendor ? "bg-vendor-foreground/15" : "bg-primary/10 text-primary-ink",
+                  vendor ? "bg-vendor-strong" : "bg-primary/10 text-primary-ink",
                 )}
               >
                 {media}

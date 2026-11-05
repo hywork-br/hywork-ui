@@ -53,7 +53,7 @@ export const Tamanhos: Story = {
  */
 export const SobreCor: Story = {
   render: () => (
-    <div className="flex flex-wrap items-center gap-3 rounded-lg bg-vendor-strong p-6 text-vendor-foreground">
+    <div className="flex flex-wrap items-center gap-3 rounded-lg bg-vendor-surface p-6 text-vendor-foreground">
       <Button variant="inverse">Agendar conversa</Button>
       <Button variant="inverse-outline">Ver o módulo</Button>
     </div>

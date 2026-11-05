@@ -13,9 +13,13 @@ existente quebra.
   intranet; `bg-vendor-*` e `text-vendor-*` no preset. É a secundária do
   guideline de marca, `#e9501b` (decisão de 12/08/2026), e não segue a marca do
   workspace.
-- Branco sobre `#e9501b` dá 3,7:1 e reprova texto de 14px: a superfície com
-  texto é `strong` (4,8:1); o texto laranja é `ink` (5,6:1 sobre o branco,
-  4,9:1 sobre `subtle`). Teste em `scripts/tokens.test.mjs`.
+- Branco sobre `#e9501b` dá 3,7:1 e reprova texto de 14px: o selo e o ícone
+  com traço branco usam `strong` (4,8:1); o texto laranja é `ink` (5,6:1 sobre
+  o branco, 4,9:1 sobre `subtle`). Teste em `scripts/tokens.test.mjs`.
+- **`--vendor-surface`** (`bg-vendor-surface`): o azul do guideline, `#104a74`,
+  a base das superfícies grandes da voz (branco a 9,3:1). O laranja fica no
+  detalhe. "Não curti esse laranjão, prefiro o azul como base" (Vitor,
+  20/10/2026).
 - **Consumidor:** a HyStore declarava `--vendor-orange` e `--vendor-orange-vivid`
   num `style` local, porque o design system não tinha a cor. Passa a usar as
   classes; `consumer-check` agora reprova quem declarar `--vendor*`.
@@ -24,8 +28,9 @@ existente quebra.
 
 - Faixa de destaque: `media`, `title`, `status`, `description`, `actions`,
   `tone` e `titleAs`. Região nomeada pelo título.
-- `tone="vendor"`: invertido, fundo `vendor-strong` com texto branco — o
-  convite para um módulo novo. `tone="default"`: a moldura do card.
+- `tone="vendor"`: invertido, fundo `vendor-surface` (azul do guideline) com
+  texto branco e o quadrado do ícone em `vendor-strong` (laranja) — o convite
+  para um módulo novo. `tone="default"`: a moldura do card.
 - Abaixo de 640px, o ícone sobe para cima do título e as ações ocupam a
   largura, com alvo de 44px e rótulo que quebra linha. 7 testes (com axe) e 4
   stories.
@@ -39,7 +44,7 @@ existente quebra.
 - Tudo empilha, o título quebra linha e a ação ocupa a largura no pé do card:
   num carrossel, os botões alinham de um card para o outro. O `Banner` deita a
   anatomia e espreme a frase numa coluna estreita; o `ItemCard` corta o título.
-- `tone="vendor"` como no `Banner`; `size="compact"` (respiro 16, ícone 32)
+- `tone="vendor"` como no `Banner` (azul, ícone laranja); `size="compact"` (respiro 16, ícone 32)
   para o menu lateral; `onDismiss` põe um X de 40px no canto. 10 testes (com
   axe) e 4 stories, uma delas dentro do `Carousel`.
 
@@ -48,7 +53,8 @@ existente quebra.
 - Para ações sobre superfície colorida, como o `Banner` da voz da Hywork:
   `inverse` usa o fundo da página como preenchimento; `inverse-outline`, contorno
   e texto na cor da superfície, com hover que escurece a superfície (clarear
-  derrubava o branco sobre `vendor-strong` para 3,8:1; escurecer dá 5,7:1).
+  derrubava o branco sobre `vendor-strong` para 3,8:1; escurecer dá 5,7:1; sobre
+  o azul `vendor-surface`, acima de 9:1).
   3 testes, 1 story.
 
 ### `Badge`: `variant="vendor"`

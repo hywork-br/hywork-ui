@@ -78,12 +78,17 @@
      o convite para um módulo novo. É a secundária do guideline de marca,
      #e9501b (decisão de 12/08/2026: o guideline vence o Figma), e não segue
      a marca do workspace. Branco sobre #e9501b dá 3,7:1 e reprova texto de
-     14px; por isso a superfície com texto usa `strong` (4,8:1) e o texto
-     laranja sobre o branco usa `ink` (5,6:1; 4,9:1 sobre `subtle`). */
+     14px; por isso o selo e o ícone com texto ou traço branco usam `strong`
+     (4,8:1) e o texto laranja sobre o branco usa `ink` (5,6:1; 4,9:1 sobre
+     `subtle`).
+     A superfície grande da voz (Banner, PromoCard) é o azul do guideline,
+     #104a74, com o laranja no detalhe: "não curti esse laranjão, prefiro o
+     azul como base" (Vitor, 20/10/2026). Branco sobre ela dá 9,3:1. */
   --hw-color-vendor-default: 15.4 82.4% 51%;
   --hw-color-vendor-strong: 15.4 82.4% 44%;
   --hw-color-vendor-ink: 15.4 82.4% 40%;
   --hw-color-vendor-subtle: 15.4 82.4% 95%;
+  --hw-color-vendor-surface: 205.2 75.8% 25.9%;
   --hw-color-vendor-foreground: 0 0% 100%;
   /* Cabeçalho e menu lateral do admin: #edf1f5 (PO, 07/10/2026; era #EFF0F1,
      "está tudo muito cinza"). */

@@ -36,6 +36,7 @@ const buttonVariants = cva(
         // cor do texto da superfície. Fora de superfície colorida, não usar.
         // O hover do contorno escurece a superfície: clarear derrubava o texto
         // branco sobre o laranja forte de 4,8:1 para 3,8:1; escurecer dá 5,7:1.
+        // Sobre o azul da voz (`vendor-surface`), escurecer mantém acima de 9:1.
         inverse: "bg-background text-foreground hover:bg-background/90",
         "inverse-outline":
           "border border-current bg-transparent hover:bg-foreground/10",
