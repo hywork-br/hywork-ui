@@ -28,8 +28,13 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
  * `card` entrou pela moldura: a PO decidiu raio 12 sem sombra, e o derivado
  * trazia raio 8 com `shadow-sm` — o que punha a decisão contra a base em 236
  * usos.
+ *
+ * `progress` entrou pela marca: o Rick decidiu (19/10/2026, DHO, HCK-259) que
+ * a barra mostra uma marca de referência, mais alta que ela, e um tom de
+ * aviso; o derivado corta tudo o que passa da barra e não tinha onde pô-la.
+ * Sem `marker` e sem `tone`, a barra segue igual à captura.
  */
-export const authoredNames = ['badge', 'tabs', 'label', 'skeleton', 'dialog', 'alert', 'card', 'breadcrumb', 'button', 'select', 'table'];
+export const authoredNames = ['badge', 'tabs', 'label', 'skeleton', 'dialog', 'alert', 'card', 'breadcrumb', 'button', 'select', 'table', 'progress'];
 
 export const componentNames = 'accordion alert-dialog alert avatar badge breadcrumb button card checkbox collapsible dialog dropdown-menu input label popover progress radio-group scroll-area select separator sheet skeleton slider switch table tabs textarea tooltip'.split(' ');
 
@@ -178,6 +183,30 @@ export function labelSheetClose(source) {
     .replace(sheetCloseSource, '<span className="sr-only">{closeLabel}</span>');
 }
 
+/**
+ * Estado misto da caixa com traço (Rick, 03/11/2026, HCK-258). A captura
+ * desenhava no estado misto o mesmo ✓ do marcado, sem preenchimento: a caixa do
+ * cabeçalho de uma listagem com parte das linhas marcadas parecia marcada. O
+ * misto passa a ser preenchido como o marcado e a mostrar um traço no lugar do ✓.
+ * Só entram classes que valem em `data-[state=indeterminate]`: marcada e
+ * desmarcada ficam como na captura, e o teste de paridade pixel a pixel prova.
+ * Falha se o trecho sumir da captura.
+ */
+const checkboxIconImport = 'import { CheckIcon } from "@radix-ui/react-icons"';
+const checkboxCheckedFill = 'data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground';
+const checkboxIndicator = 'className={cn("flex items-center justify-center text-current")}';
+const checkboxIcon = '<CheckIcon className="h-4 w-4" />';
+
+export function dashWhenIndeterminate(source) {
+  if (![checkboxIconImport, checkboxCheckedFill, checkboxIndicator, checkboxIcon].every((part) => source.includes(part)))
+    throw new Error('checkbox: indeterminate dash source not found');
+  return source
+    .replace(checkboxIconImport, 'import { CheckIcon, MinusIcon } from "@radix-ui/react-icons"')
+    .replace(checkboxCheckedFill, checkboxCheckedFill + ' data-[state=indeterminate]:bg-primary data-[state=indeterminate]:text-primary-foreground')
+    .replace(checkboxIndicator, 'className={cn("group flex items-center justify-center text-current")}')
+    .replace(checkboxIcon, '<CheckIcon className="h-4 w-4 group-data-[state=indeterminate]:hidden" />\n      <MinusIcon className="hidden h-4 w-4 group-data-[state=indeterminate]:block" />');
+}
+
 export function extractComponent(name, source) {
   // A referência congelada em provenance/ guarda os componentes como estavam
   // em src/components/<nome>.tsx. Eles passaram a viver em
@@ -204,6 +233,7 @@ export function extractComponent(name, source) {
   result = applyColorRoles(name, result);
   if (name === 'radio-group') result = checkRadioOnArrow(result);
   if (name === 'sheet') result = labelSheetClose(result);
+  if (name === 'checkbox') result = dashWhenIndeterminate(result);
   if (name === 'card') result = result.replace('<h3', '<h2');
   if (name === 'alert') result = result.replace('<h5', '<h2');
   if (name === 'slider') {

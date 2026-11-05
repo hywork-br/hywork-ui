@@ -60,12 +60,14 @@ export interface FilterBarProps extends React.HTMLAttributes<HTMLDivElement> {
   onClear: () => void;
   /** Desabilita os controles sem removê-los da tela. */
   loading?: boolean;
+  /** Texto do botão de limpar (padrão "Limpar"), traduzido pela tela. */
+  clearLabel?: React.ReactNode;
   /** Rótulo acessível da região. */
   "aria-label"?: string;
 }
 
 const FilterBarRoot = React.forwardRef<HTMLDivElement, FilterBarProps>(
-  ({ className, children, onClear, loading = false, ...props }, ref) => {
+  ({ className, children, onClear, loading = false, clearLabel = "Limpar", ...props }, ref) => {
     const [ativos, setAtivos] = React.useState<Record<string, boolean>>({});
 
     const registrar = React.useCallback<Registro>((id, ativo) => {
@@ -102,7 +104,7 @@ const FilterBarRoot = React.forwardRef<HTMLDivElement, FilterBarProps>(
               className="ml-auto h-10 gap-1.5 rounded-sm"
             >
               <X className="h-4 w-4" aria-hidden="true" />
-              Limpar
+              {clearLabel}
             </Button>
           )}
         </div>

@@ -110,6 +110,38 @@ export const ComFiltroAtivo: Story = {
   },
 };
 
+/**
+ * `clearLabel` troca o texto do botão de limpar — aqui, "Limpar filtros", como a
+ * tela de Pessoas do DHO pede. O padrão segue "Limpar".
+ */
+export const ComRotuloDeLimpar: Story = {
+  render: function Render() {
+    const [busca, setBusca] = React.useState("ana");
+    const [area, setArea] = React.useState("all");
+    return (
+      <FilterBar
+        clearLabel="Limpar filtros"
+        onClear={() => {
+          setBusca("");
+          setArea("all");
+        }}
+      >
+        <FilterBar.Search placeholder="Buscar por nome" value={busca} onChange={setBusca} />
+        <FilterBar.Select
+          label="Departamento"
+          value={area}
+          onChange={setArea}
+          options={[
+            { value: "all", label: "Todos os departamentos" },
+            { value: "ops", label: "Operações" },
+            { value: "fin", label: "Financeiro" },
+          ]}
+        />
+      </FilterBar>
+    );
+  },
+};
+
 /** Só dimensões, sem busca — a barra não exige um campo de texto. */
 export const SemBusca: Story = {
   render: function Render() {

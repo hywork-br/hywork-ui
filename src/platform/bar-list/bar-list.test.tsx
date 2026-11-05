@@ -173,8 +173,91 @@ describe("BarList", () => {
         <BarList items={areas} aria-label="Adesão por área" />
         <BarList items={areas.map((item) => ({ ...item, onSelect: () => undefined }))} aria-label="Áreas" />
         <BarList items={[]} aria-label="Vazia" />
+        <BarList items={competencias} max={5} aria-label="Time vs. empresa" />
+        <BarList items={competencias.map((item) => ({ ...item, onSelect: () => undefined }))} max={5} aria-label="Clicáveis" />
       </div>,
     );
     expect(await violations(container)).toEqual([]);
+  });
+});
+
+const competencias: BarListItem[] = [
+  { id: "ent", label: "Entrega e execução", value: 4, marker: 3.5, valueLabel: "4,0", markerLabel: "Empresa: 3,5" },
+  { id: "com", label: "Comunicação", value: 3, marker: 3.7, valueLabel: "3,0", markerLabel: "Empresa: 3,7", tone: "attention" },
+];
+
+/** Posição das marcas, na ordem das linhas. */
+const marcas = (container: HTMLElement) =>
+  [...container.querySelectorAll<HTMLElement>("[data-part=marker]")].map((m) => m.style.left);
+
+describe("BarList — marca de referência e atenção", () => {
+  it("a marca fica sobre o mesmo denominador da barra", () => {
+    const { container } = render(<BarList items={competencias} max={5} />);
+    expect(larguras(container)).toEqual(["80%", "60%"]);
+    expect(marcas(container)).toEqual(["70%", "74%"]);
+  });
+
+  it("vale o mesmo denominador em todos os casos: max do item, da lista ou o maior valor", () => {
+    const { container } = render(
+      <BarList
+        items={[
+          { id: "a", label: "Item", value: 10, max: 20, marker: 15 },
+          { id: "b", label: "Lista", value: 40, marker: 20 },
+          { id: "c", label: "Acima", value: 10, marker: 999 },
+        ]}
+      />,
+    );
+    // max do item 20; o maior valor (40) para as outras duas; a marca também se limita a 0–100%.
+    expect(marcas(container)).toEqual(["75%", "50%", "100%"]);
+  });
+
+  it("a marca é desenho, e o leitor de tela ouve o markerLabel depois do texto da direita", () => {
+    const { container } = render(<BarList items={competencias} max={5} />);
+    for (const m of container.querySelectorAll("[data-part=marker]")) expect(m).toHaveAttribute("aria-hidden", "true");
+    const [primeira] = screen.getAllByRole("listitem");
+    expect(primeira).toHaveTextContent("Entrega e execução 4,0 Empresa: 3,5");
+    expect(within(primeira).getByText("Empresa: 3,5")).toHaveClass("sr-only");
+  });
+
+  it("sem markerLabel, anuncia a referência com o número", () => {
+    render(<BarList items={[{ id: "a", label: "Colaboração", value: 4, marker: 3.9 }]} max={5} />);
+    expect(screen.getByRole("listitem")).toHaveTextContent("Colaboração 4 Referência: 3,9");
+  });
+
+  it("na linha clicável, a referência entra no nome do botão", () => {
+    render(<BarList items={[{ ...competencias[0], onSelect: () => undefined }]} max={5} />);
+    expect(screen.getByRole("button")).toHaveAccessibleName("Entrega e execução 4,0 Empresa: 3,5");
+  });
+
+  it("marker inválido ou ausente não desenha marca, e a linha segue como antes", () => {
+    const { container } = render(
+      <BarList items={[{ id: "a", label: "A", value: 2, marker: Number.NaN }, { id: "b", label: "B", value: 4 }]} />,
+    );
+    expect(marcas(container)).toEqual([]);
+    expect(container.innerHTML).not.toContain("NaN");
+    expect(screen.getAllByRole("listitem")[0].textContent?.trim()).toBe("A 2");
+    for (const barra of container.querySelectorAll("[data-part=bar]"))
+      expect(barra.parentElement).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("a marca passa da barra: a trilha segue cortando o preenchimento, e a marca fica por fora", () => {
+    const { container } = render(<BarList items={competencias} max={5} />);
+    const m = container.querySelector<HTMLElement>("[data-part=marker]")!;
+    expect(m).toHaveClass("absolute", "-inset-y-1", "w-0.5", "-translate-x-1/2", "bg-foreground");
+    expect(m.parentElement).toHaveClass("relative");
+    const trilha = container.querySelector("[data-part=bar]")!.parentElement!;
+    expect(trilha).toHaveClass("overflow-hidden", "bg-muted");
+    expect(trilha).not.toContainElement(m);
+  });
+
+  it("tone attention pinta a barra na cor de aviso; o padrão segue na tinta da marca", () => {
+    const { container } = render(<BarList items={competencias} max={5} />);
+    const [padrao, atencao] = container.querySelectorAll("[data-part=bar]");
+    expect(padrao).toHaveClass("bg-primary-ink");
+    expect(padrao).not.toHaveAttribute("data-tone");
+    expect(atencao).toHaveClass("bg-warning");
+    expect(atencao).not.toHaveClass("bg-primary-ink");
+    expect(atencao).toHaveAttribute("data-tone", "attention");
+    expect(container.innerHTML).not.toMatch(/#[0-9a-f]{3,8}\b|rgb\(/i);
   });
 });

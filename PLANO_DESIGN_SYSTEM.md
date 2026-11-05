@@ -193,8 +193,8 @@ lado, renderização do outro.
 4. **Escreva a story antes do componente.** Se a story fica confusa, a API está
    errada — descobrir ali custa uma hora.
 5. **Os dois consumidores sobem de versão na mesma sprint.**
-6. **Não suba na primeira vez que precisar.** Só quando o segundo consumidor
-   precisar do mesmo.
+6. **Componente genérico nasce aqui no primeiro uso**, na camada do produto que o
+   usa. Só vai para `core/` quando o segundo consumidor precisar do mesmo.
 
 ---
 

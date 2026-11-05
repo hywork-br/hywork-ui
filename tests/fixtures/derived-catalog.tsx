@@ -45,9 +45,7 @@ export function DerivedCatalog({ ui }: { ui: typeof API }) {
         <ui.Avatar data-parity="avatar">
           <ui.AvatarFallback>HW</ui.AvatarFallback>
         </ui.Avatar>
-        <div className="w-64">
-          <ui.Progress data-parity="progress" value={60} aria-label="Progresso" />
-        </div>
+        {/* Progress is authored since 19/10/2026 (marker and tone, HCK-259). */}
       </section>
 
       <section aria-label="Navegação" className="space-y-4">

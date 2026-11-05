@@ -14,7 +14,9 @@ export const Marcado: Story = { args: { defaultChecked: true } };
 
 /**
  * Parcial: alguns itens da página estão selecionados, mas não todos. É o estado
- * do cabeçalho de uma listagem com seleção.
+ * do cabeçalho de uma listagem com seleção. Preenchida como a marcada, com um
+ * traço no lugar do ✓ (Rick, 03/11/2026): com o ✓ sem preenchimento, a caixa
+ * parecia marcada.
  */
 export const Parcial: Story = { args: { checked: "indeterminate" } };
 

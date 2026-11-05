@@ -49,7 +49,7 @@ src/
 │   ├── table/
 │   ├── dialog/            ✅  botão de fechar "Fechar" (`closeLabel`), como o `Sheet`
 │   ├── badge/
-│   ├── tabs/
+│   ├── tabs/              ✅  sublinhado (PO); quando as abas não cabem, nenhuma fica mais estreita que o rótulo e a lista rola na horizontal, com a aba focada e a ativa trazidas à vista (HCK-258); 📋 `orientation="vertical"` — lista à esquerda em 240px, selo à direita, ativa no par suave da marca (HCK-308) — aval da PO pendente
 │   ├── breadcrumb/        ✅  níveis ocultos "Mais" (`label`), como o `closeLabel` do `Dialog`
 │   ├── pagination/
 │   ├── skeleton/
@@ -57,17 +57,20 @@ src/
 │   ├── label/
 │   ├── search-input/      ✅  raio 4, o mesmo dos campos e botões do filtro
 │   ├── form-message/      ✅  token --hw-error-text
-│   ├── brand-theme/       ✅  <BrandTheme> e useBrandTheme — cor do workspace
+│   ├── brand-theme/       ✅  <BrandTheme> e useBrandTheme — cor do workspace; par suave `primary-soft` (fundo/texto do item selecionado, 4.5:1) desde a HCK-308
 │   ├── date-picker/       📋  data única, calendário próprio — aguarda aval da PO
+│   ├── progress/          📋  autoral desde a 0.16.0: marca de referência (`marker`, `markerLabel`) e `tone="attention"` (HCK-259) — aval da PO pendente
 │   ├── progress-ring/     📋  anel de progresso, SVG — lançado na 0.13.0, aval da PO pendente
-│   ├── rating-scale/      📋  escala de resposta 1–N com rótulos — lançado na 0.13.0, aval da PO pendente
+│   ├── rating-scale/      📋  escala de resposta 1–N com rótulos — lançado na 0.13.0; `labelDisplay` (rótulo embaixo, escala de 1 a 10, HCK-235) na 0.16.0 — aval da PO pendente
 │   ├── radio-group/       ✅  setas mudam e marcam, também na tecla rápida
+│   ├── checkbox/          ✅  estado misto preenchido, com traço no lugar do ✓ (Rick, 03/11/2026, HCK-258) — derivada: a troca vive em `scripts/derive-platform.mjs`
 │   └── …                  demais primitivas — todas com story
 │
 ├── platform/              Padrões do admin (hywork-plataform)
-│   ├── filter-bar/        ✅  substitui 9 implementações
-│   ├── data-list/         ✅  substitui 44 telas
-│   ├── item-card/         ✅  substitui 21 implementações
+│   ├── filter-bar/        ✅  substitui 9 implementações; `clearLabel` (texto do "Limpar", HCK-308)
+│   ├── data-list/         ✅  substitui 44 telas; 📋 `selection` — coluna de caixas e "selecionar as linhas visíveis" no cabeçalho, controlada pela tela (HCK-258) — aval da PO pendente
+│   ├── selection-bar/     📋  ação em massa sobre a seleção: contagem, "Selecionar todas as N", ações, "Limpar seleção"; some guardando o lugar ou fica à vista (`persistent`) — forma B, proposta (HCK-258), aval da PO pendente
+│   ├── item-card/         ✅  substitui 21 implementações; 📋 `orientation="vertical"` — coluna centralizada para grade, mídia em 108px, ações no pé (HCK-308) — aval da PO pendente; na forma horizontal, ações no pé alinhadas entre os cards da grade (16/10)
 │   ├── banner/            📋  faixa de destaque, voz da Hywork — aguarda aval da PO
 │   ├── promo-card/        📋  card de convite em pé (Descubra, pé do menu) — aguarda aval da PO
 │   ├── list-pagination/   ✅  substitui 3
@@ -77,8 +80,10 @@ src/
 │   ├── row-actions/       ✅  substitui botões soltos em 15 telas
 │   ├── upload-area/       ✅
 │   ├── stepper/           📋  trilha de passos de wizard — aguarda aval da PO
-│   ├── stat-card/         📋  cartão de indicador — aguarda aval da PO
-│   ├── bar-list/          📋  lista de barras proporcionais — lançado na 0.13.0, aval da PO pendente
+│   ├── stat-card/         📋  cartão de indicador; `iconTone`, `tone="highlight"`, `valueDetail` e `progress` na 0.16.0 (HCK-255, HCK-259); cabeçalho de 2 linhas com ícone na 0.16.1 — aguarda aval da PO
+│   ├── bar-list/          📋  lista de barras proporcionais — lançado na 0.13.0; `marker`, `markerLabel` e `tone` por item na 0.16.0 (HCK-259) — aval da PO pendente
+│   ├── description-list/  📋  lista de leitura rótulo/valor (`<dl>`), 1 a 3 colunas com `span`, "—" no valor vazio — HCK-308; rótulo em peso normal e cor secundária, valor semibold (aval da PO, 03/11/2026, HCK-360); o resto do visual, aval da PO pendente
+│   ├── file-thumbnail/    📋  arquivo como miniatura clicável: imagem ou ícone do tipo, nome e tamanho; `src` opcional para URL que chega depois, imagem que falha cai no ícone — HCK-360, aval da PO pendente
 │   └── …                  multi-select, icon-select, rich-text-editor
 │
 ├── builder/               Padrões da intranet (hw-cloud-builder)
@@ -172,7 +177,32 @@ vazio — quando aplicáveis ao componente.
 - **Vitest** — comportamento de componente, colocalizado (`<nome>.test.tsx`)
 - **Playwright** — interação real em dois navegadores, em `tests/browser/`
   (os gráficos têm página própria, `tests/fixtures/charts.html`, com os números
-  do exemplo da HCK-256)
+  do exemplo da HCK-256; os indicadores do DHO — `StatCard`, marcas do
+  `Progress` e do `BarList`, escala de 1 a 10 — têm `tests/fixtures/indicators.html`,
+  com contraste APCA do destaque nos temas claro e escuro, a escala em 320/360px e,
+  com `?cards=226` ou `?cards=266`, fileiras de 4 `StatCard` com o valor na mesma altura;
+  o perfil da pessoa da HCK-308 tem `tests/fixtures/profile.html` — abas verticais ao lado
+  e acima do conteúdo, a horizontal intacta, a `DescriptionList` em 3, 2 e 1 colunas e o
+  contraste da aba ativa com marcas claras, por `?brand=f97316`; a grade de `ItemCard`
+  verticais e o "Limpar filtros" da `FilterBar` têm `tests/fixtures/people.html` — avatar
+  no quadro de 108px, título com reticências, ações alinhadas no pé da fileira; a seleção
+  de linhas do `DataList` tem `tests/fixtures/selection.html` — a linha marcada mantém a
+  altura com listra, `rowHeight` e `minWidth`, a coluna de seleção mede 40px também no
+  carregamento, o fundo `--hw-table-selected` vence listra e cursor, Tab/Espaço com o
+  anel de foco e axe com a marca do workspace por `?brand=f97316`; o `SelectionBar` acima
+  da lista — a tabela não se move quando a barra aparece, muda de texto e some, em 1280 e
+  390px, o foco fica na barra ao limpar e a forma `persistent`; as abas horizontais que
+  não cabem têm `tests/fixtures/tabs.html` — as seis abas da página do ciclo do DHO
+  (HCK-258) sem sobreposição a 390 e 768px e rolando a 390px, partes iguais a 1440px,
+  o indicador de 2px, a linha de 1px e o anel de foco inteiros no pixel enquanto a lista
+  rola, setas/Home/End trazendo a aba focada à vista, a ativa à vista ao abrir (`?ativa=`) e
+  ao mudar o valor de fora, sem rolar a página, e a vertical sem mudança, com o CSS do
+  admin e, por `?product=builder`, o da intranet; a miniatura de arquivo tem
+  `tests/fixtures/file-thumbnail.html` — imagem real que carrega e que falha, quadro que não
+  muda de tamanho do esqueleto à imagem, nome longo em uma linha sem alargar nada, coluna
+  estreita, grade, sem rolagem lateral de 320 a 768px, Tab/Enter/Espaço com o anel de foco
+  e axe com contraste, com a marca do workspace por `?brand=f97316` e no tema escuro por
+  `?theme=dark`)
 - **axe-core** — auditoria de acessibilidade, via `@storybook/addon-a11y` e nos testes
 - **smoke-consumer** — instala o tarball num projeto limpo e valida exports,
   declarações, diretiva de cliente e preset

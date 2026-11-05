@@ -88,6 +88,7 @@ passa com o componente quebrado não é teste.
 
 - Criar componente que conhece tenant, workspace ou colaborador.
 - Copiar um componente do consumidor sem passar pela classificação de §2.
-- Subir um componente na primeira vez que ele é necessário (regra do segundo consumidor).
+- Criar componente genérico dentro de um consumidor: ele nasce aqui, em `platform/` ou `builder/`.
+- Pôr em `core/` um componente que só um consumidor usa (regra do segundo consumidor).
 - Editar apenas a saída de uma transformação sem alterar a transformação.
 - Declarar cobertura de produto a partir do catálogo verde.

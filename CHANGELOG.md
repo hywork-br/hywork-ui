@@ -62,7 +62,7 @@ existente quebra.
   e o leitor de tela, fora do navegador, via dois "Fechar". Padrão `true`: nada
   muda para quem não passa a prop. 1 teste.
 
-### `ItemCard`: ações no pé, a 16px do texto
+### `ItemCard` horizontal: ações no pé, a 16px do texto
 
 - O card vira coluna com vão de 16px, e as ações ganham `mt-auto`: numa grade,
   os botões da linha alinham no pé. Antes a tela fazia isso com `mt-auto` por
@@ -70,6 +70,236 @@ existente quebra.
 - Visual igual fora da grade: o vão continua 16px.
 - **Consumidor:** pode tirar o `[&>div:last-child]:mt-auto` e o `pt-4` que
   somava; com os dois, o vão dobra.
+
+## 0.19.1 — `Select`: valor vazio não chega à tela
+
+Lançada em 04/11/2026 (HCK-365), com o aval do Rick. Nenhuma API muda.
+
+- Dentro de um `<form>`, o Radix desenha um `<select>` nativo que informa `""`
+  quando o valor e a opção chegam no mesmo render. A tela recebia `""` e perdia
+  um valor que ninguém mudou: foi a causa de "editar usuário zera a função"
+  (HCK-360). O `Select` deixa de repassar valor vazio. Um item não pode ter valor
+  vazio, então `""` nunca é escolha da pessoa.
+
+## 0.19.0 — `FileThumbnail` novo e `DescriptionList` com rótulo e valor diferenciados
+
+Lançada em 03/11/2026 para o DHO (HCK-360, validação da PO), com o aval do Rick.
+Nenhuma API existente muda.
+
+- **`FileThumbnail` (novo, `@hywork/ui/platform`):** mostra um arquivo como
+  miniatura clicável, com nome e tamanho. Imagem usa a própria prévia; PDF, vídeo
+  e outros tipos usam o ícone do tipo; imagem que falha cai no ícone. Props:
+  `name`, `mime`, `src?`, `sizeLabel?`, `loading?` e `onOpen`. É proposta
+  aguardando o aval da PO: ainda não é precedente para outra tela.
+- **`DescriptionList` (mudança visual):** o `dt` passa de `font-semibold
+  text-hw-label` para `font-normal text-muted-foreground`, e o `dd` continua
+  `font-semibold`. O nome do campo deixa de ter o mesmo peso da informação. O DOM
+  não muda. Vale para todas as telas que usam a lista.
+
+## 0.18.2 — `Tabs`: abas horizontais que não cabem rolam em vez de se sobrepor
+
+Lançada em 03/11/2026 para o DHO (HCK-258, conferência da página do ciclo, com
+seis abas sobrepostas a 390 e 768 px), com o aval do Rick. Nenhuma API muda e
+a orientação vertical não muda.
+
+- Quando as abas cabem na parte igual, nada muda: mesma largura, mesma linha e
+  o mesmo indicador de 2 px.
+- A coluna nunca fica mais estreita que o rótulo
+  (`auto-cols-[minmax(max-content,1fr)]`). Quando o total não cabe, a lista
+  rola na horizontal, com a barra de rolagem escondida e os 48 px de altura
+  inteiros. Rolar ou virar seletor segue "a definir" com a PO; a rolagem é a
+  correção da sobreposição.
+- A linha de baixo da lista passa a ser desenhada por dentro
+  (`shadow-[inset_0_-1px_0_hsl(var(--border))]`), para o indicador não ser
+  cortado pela rolagem. Em repouso, a imagem é a mesma.
+- A aba focada, e a ativa ao abrir e ao trocar, é trazida inteira à vista com a
+  rolagem mínima da própria lista, sem rolar a página.
+- O anel de foco da aba horizontal passa para dentro da aba
+  (`focus-visible:ring-inset`), porque por fora a rolagem o cortaria.
+- Consumidor que redesenha as abas com `border-b` próprio na lista e
+  `-mb-px border-b-2` nas abas fica com a linha dobrada: volte ao padrão do
+  componente.
+
+## 0.18.1 — `SelectionBar persistent`: "Limpar seleção" guarda o lugar
+
+Lançada em 03/11/2026 para o DHO (HCK-258, conferência da tela), com o aval do
+Rick. Nenhuma API muda.
+
+- Com `persistent` e nada selecionado, "Limpar seleção" fica no lugar,
+  invisível e desabilitado (`invisible`), em vez de sair do layout (`hidden`).
+  As ações não mudam de largura ao marcar o primeiro item, então a barra não
+  ganha uma linha num contêiner estreito e a lista não pula. Na conferência, a
+  barra dos avaliadores do assistente do ciclo, num cartão de ~400 px, pulava
+  44 px ao marcar alguém a 1024–1366 px.
+- O teste de navegador da forma `persistent` passa a conferir que o botão
+  ocupa espaço sem seleção e que a altura da barra não muda ao marcar.
+
+## 0.18.0 — Seleção no `DataList`, `SelectionBar` e traço no estado misto da `Checkbox`
+
+Lançada em 03/11/2026 para o DHO (HCK-258, lembrete do RH na aba Pendências do
+ciclo), com o aval do Rick (03/11). Nenhuma API existente quebra: sem
+`selection`, o `DataList` fica como estava. A forma da `SelectionBar` foi
+escolhida pelo Rick (forma B); a seleção do `DataList` segue na tabela de
+propostas aguardando o aval visual da PO no `DOMAIN_MODEL.md`.
+
+### `DataList`: seleção de linhas (`selection`)
+
+- Nova prop `selection?: { selectedKeys, onChange, getLabel, selectAllLabel?,
+  isSelectable? }`. `getLabel` dá o nome acessível de cada caixa.
+- Coluna de 40px à esquerda com a `Checkbox`; a célula inteira é o alvo. A
+  caixa do cabeçalho marca e desmarca só as linhas visíveis, com estado misto;
+  "todas as N" do filtro, em todas as páginas, fica com a tela.
+- Linha marcada no cinza de seleção da tabela (`--hw-table-selected`), sem
+  mudar a altura. Linha não selecionável mostra a caixa desabilitada; no
+  carregamento, a caixa do cabeçalho fica desabilitada e as linhas ficam sem
+  caixa.
+
+### `SelectionBar` (platform, novo)
+
+- Ação em massa sobre a seleção de uma listagem: a contagem escrita pela tela
+  (`label`), ao lado dela `detail` ("Selecionar todas as 57" ou uma nota), as
+  ações em `children` e "Limpar seleção" (`onClear`, `clearLabel?`).
+- Forma B (a barra de Bases de dados), só com tokens: `border-primary/30`,
+  `bg-primary/5`, `rounded-md`, ações `size="sm"`. As ações ficam desabilitadas
+  sozinhas com `count` 0.
+- Sem seleção, a barra some sem deslocar a lista; com `persistent`, fica à
+  vista sem a moldura da marca e com as ações desabilitadas. A contagem é
+  anunciada numa região viva; ao limpar, o foco fica na barra.
+- Substitui as quatro formas que o produto tinha (Usuários, avaliadores do
+  assistente do ciclo, Bases de dados, pessoas da Estrutura organizacional e
+  resultados individuais do ciclo). A migração dessas telas vem nos fronts.
+
+### `Checkbox`: traço no estado misto
+
+- O estado `indeterminate` passa a ser preenchido como o marcado, com um traço
+  no lugar do ✓. Antes desenhava o ✓ sem preenchimento. Vale para toda caixa em
+  estado misto.
+
+### Dependências de desenvolvimento
+
+- `storybook` e `@storybook/*` de 10.5.10 para 10.6.5 e `vite` de 8.2.2 para
+  8.3.5: o `audit:gate` (que também roda no `release.yml`) reprovava um aviso
+  crítico do Storybook e um alto do vite. O `npm audit fix` subiu
+  `markdown-it`, `postcss-selector-parser` e `undici` dentro das faixas. Nada
+  muda no pacote publicado.
+
+## 0.17.0 — Abas verticais, `DescriptionList`, `ItemCard` vertical e `clearLabel` na `FilterBar`
+
+Lançada em 26/10/2026 para o DHO (HCK-308, página Pessoas do líder), com o aval
+do Rick (26/10). Nenhuma API existente quebra: sem as props novas, os componentes
+ficam como estavam. Os três componentes novos estão na tabela de propostas
+aguardando o aval visual da PO no `DOMAIN_MODEL.md`.
+
+### Tema: par suave da marca (`--primary-soft` / `--primary-soft-foreground`)
+
+- O `brandThemeVars` passa a derivar também um par fundo/texto suave da cor do
+  workspace. O texto da marca sobre o fundo suave ficava entre 3,85 e 4,18:1
+  com marcas laranja, vermelha, verde ou azul médio; o par novo garante 4,5:1.
+- Só acrescenta variáveis; o consumidor continua passando só o hex. Sem marca,
+  o par é `primary-50` com o texto no primário.
+
+### `Tabs` com `orientation="vertical"` (core)
+
+- A lista vira uma coluna de 240px à esquerda a partir de 768px (32px até o
+  conteúdo) e fica acima do conteúdo em tela estreita.
+- Cada aba é uma linha de 44px, raio 4, texto à esquerda; o que vem depois do
+  rótulo (ex.: um `Badge` de contagem) vai para a direita e entra no nome
+  acessível. Ativa em `bg-primary-soft` com `text-primary-soft-foreground`.
+- Setas para cima/baixo, Home e End. A horizontal não muda (teste trava as
+  classes); `Tabs` passou de apelido do Radix a `forwardRef`, com as mesmas props.
+
+### `DescriptionList` (platform, novo)
+
+- Lista de leitura rótulo/valor: `items: { label, value?, span? }[]`,
+  `columns?: 1 | 2 | 3`, `emptyValue?` (padrão "—").
+- `<dl>` com `<dt>/<dd>`; valor vazio mostra o `emptyValue`, zero aparece.
+  Uma coluna abaixo de 640px; com 3 colunas, 2 até 1024px.
+
+### `ItemCard` com `orientation="vertical"` (platform)
+
+- Coluna centralizada para grades de cards: mídia num quadro de 108px, título
+  numa linha com reticências, descrição, estado, `children` e as ações em
+  largura total presas ao pé (alinhadas na mesma fileira).
+- A horizontal não muda: o HTML dela ficou travado em snapshot antes da mudança.
+
+### `FilterBar`: `clearLabel`
+
+- Nova prop `clearLabel?: ReactNode` (padrão "Limpar") para o botão interno de
+  limpar. Sem ela, nada muda.
+
+## 0.16.1 — `StatCard`: valores alinhados numa fileira quando o rótulo quebra
+
+Lançada em 20/10/2026 para o DHO, pelo aval permanente do Rick (14/10). Nenhuma
+API muda.
+
+### `StatCard`: cabeçalho de duas linhas com ícone (DHO, HCK-255 C1 e HCK-259 L4/L5, conferência de 20/10)
+
+- Com `icon`, o cabeçalho (ícone + rótulo) tem sempre a altura de duas linhas do
+  rótulo (`2 × --hw-leading-sm`), com os dois centralizados. Numa fileira de
+  cartões, o valor começa na mesma altura em todos, quer o rótulo caiba numa
+  linha, quer quebre em duas. Antes, em 1280px com o menu aberto (cartão de
+  226px), "Acima do esperado" e "Abaixo do esperado" quebravam e o valor descia
+  8px em relação aos vizinhos.
+- O rótulo nunca é cortado; um rótulo de três linhas faz o cabeçalho crescer.
+  Sem `icon`, nada muda.
+- Teste de navegador novo (`tests/fixtures/indicators.html?cards=226|266`):
+  fileiras de 4 `StatCard` com o topo do valor na mesma altura.
+
+## 0.16.0 — `StatCard` com cor do ícone e destaque, marca de referência em `Progress` e `BarList`, `RatingScale` de 1 a 10
+
+Lançada em 19/10/2026 para o DHO, pelo aval permanente do Rick (14/10) para os
+componentes que o DHO usa. O **aval visual da PO segue pendente**. Nenhuma API
+existente quebra: sem as props novas, os quatro componentes ficam como estavam.
+
+### `StatCard`: cor do ícone, cartão de destaque, detalhe e barra (DHO, HCK-255 C1 e HCK-259 L5, validação da PO de 19/10)
+
+- Nova prop `iconTone?: "primary" | "info" | "success" | "warning" | "danger" | "neutral"`:
+  o quadradinho do ícone no papel de estado, com fundo suave e traço (os pares
+  suaves do `Badge`). Sem ela, a primária (o aviso em `attention`), como antes.
+- `tone` ganha `"highlight"`: o cartão escuro da nota final, com fundo na tinta
+  do texto (`--foreground`) e valor na superfície (`--background`); rótulo,
+  detalhe e nota a 80%. APCA |Lc| ≥ 77 nos temas claro e escuro (no escuro o par
+  se inverte). Ícone e variação usam os pares preenchidos do `Badge`.
+- Nova prop `valueDetail?: ReactNode`: texto menor ao lado do valor ("4,2 / 5,0"),
+  pela linha de base, descendo de linha se faltar espaço.
+- Nova prop `progress?: number` (0–100): barra fina sob o valor, só desenho;
+  aviso em `attention`, trilha e preenchimento próprios no destaque.
+- Novos tipos: `StatCardTone`, `StatCardIconTone`. 13 testes novos (com axe e o
+  contraste APCA calculado dos tokens) e 8 stories.
+
+### `Progress`: marca de referência e tom de atenção (HCK-259 L6)
+
+- Novas props `marker?: number` (0–100; marca vertical fina, mais alta que a
+  barra), `markerLabel?: string` (descrição da barra para o leitor de tela;
+  padrão "Referência: N%") e `tone?: "default" | "attention"` (preenchimento na
+  cor de aviso). Novo tipo exportado: `ProgressProps`.
+- **O `Progress` passa de derivado a autoral** (`authoredNames`; `status:
+  "authored"` no `manifest.json`) e sai da página de paridade fonte × pacote:
+  a captura corta tudo o que passa da barra. Sem `marker` e sem `tone`, a barra
+  é a mesma, nó a nó. 7 testes novos e 5 stories.
+
+### `BarList`: marca de referência e atenção por item (HCK-259 L4)
+
+- `BarListItem` ganha `marker?: number` (na unidade do `value`, sobre o mesmo
+  denominador), `markerLabel?: string` (lido depois do texto da direita e, na
+  linha clicável, parte do nome do botão; padrão "Referência: N") e
+  `tone?: "default" | "attention"` (barra na cor de aviso). 8 testes novos e 3
+  stories, entre elas "Time vs. empresa".
+
+### `RatingScale`: escala de 1 a 10 com o rótulo embaixo (HCK-235 M1)
+
+- Nova prop `labelDisplay?: "auto" | "inline" | "selected"` (padrão `"auto"`:
+  `inline` até 5 notas, `selected` acima). Em `selected`, as notas ficam numa
+  linha compacta (alvo de 44px de altura, ≥ 24px de largura em 320px) e o
+  rótulo aparece embaixo: o da nota sob o cursor ou em foco, senão o da
+  escolhida, senão a legenda dos extremos. Nome acessível, teclado, `readOnly`,
+  referência e erro iguais aos de antes. 17 testes novos e 8 stories.
+
+### Testes
+
+- Nova página `tests/fixtures/indicators.html` no Playwright (Chromium e
+  Firefox): axe com contraste, APCA do destaque nos temas claro e escuro,
+  geometria da marca e escala de 10 em 320/360px sem rolagem horizontal.
 
 ## 0.15.0 — `DistributionBar` com legenda em lista
 
