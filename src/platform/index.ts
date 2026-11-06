@@ -10,6 +10,8 @@ export * from "./row-actions";
 export * from "./upload-area";
 export * from "./page-title";
 export * from "./item-card";
+export * from "./banner";
+export * from "./promo-card";
 export * from "./data-list";
 export * from "./selection-bar";
 export * from "./multi-select";

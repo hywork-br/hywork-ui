@@ -26,6 +26,11 @@ import { cn } from "../../lib/cn";
  *   pé do card, para ficarem alinhadas numa fileira da grade. Mesma moldura da
  *   decisão da PO. O visual aguarda o aval da PO.
  *
+ * Ações no pé (16/10/2026): na forma horizontal, numa grade, os cards da linha
+ * têm a mesma altura e as ações descem para o pé, alinhadas entre os cards,
+ * sempre a 16px do texto. Antes a tela fazia isso à mão com `mt-auto`, que
+ * anulava o `mt-4` das ações e colava o texto no botão (HyStore, Serviços).
+ *
  * O card não sabe o que mostra: mídia, título, descrição, estado, conteúdo e
  * ações chegam prontos da tela.
  */
@@ -128,7 +133,7 @@ const ItemCard = React.forwardRef<HTMLDivElement, ItemCardProps>(
     return (
       <Container
         ref={ref}
-        className={cn(frame, clicavel && clickable, className)}
+        className={cn(frame, "flex flex-col gap-4", clicavel && clickable, className)}
         {...props}
       >
         <div className="flex items-start gap-3">
@@ -157,10 +162,12 @@ const ItemCard = React.forwardRef<HTMLDivElement, ItemCardProps>(
           </div>
         </div>
 
-        {children && <div className="mt-4">{children}</div>}
+        {children && <div>{children}</div>}
 
         {actions && (
-          <div className="relative z-10 mt-4 flex flex-wrap items-center gap-2">{actions}</div>
+          // `mt-auto` leva as ações ao pé: numa grade, os cards da linha têm a mesma
+          // altura e os botões se alinham, sempre a 16px (`gap-4`) do texto.
+          <div className="relative z-10 mt-auto flex flex-wrap items-center gap-2">{actions}</div>
         )}
       </Container>
     );

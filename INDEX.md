@@ -70,7 +70,9 @@ src/
 │   ├── filter-bar/        ✅  substitui 9 implementações; `clearLabel` (texto do "Limpar", HCK-308)
 │   ├── data-list/         ✅  substitui 44 telas; 📋 `selection` — coluna de caixas e "selecionar as linhas visíveis" no cabeçalho, controlada pela tela (HCK-258) — aval da PO pendente
 │   ├── selection-bar/     📋  ação em massa sobre a seleção: contagem, "Selecionar todas as N", ações, "Limpar seleção"; some guardando o lugar ou fica à vista (`persistent`) — forma B, proposta (HCK-258), aval da PO pendente
-│   ├── item-card/         ✅  substitui 21 implementações; 📋 `orientation="vertical"` — coluna centralizada para grade, mídia em 108px, ações no pé (HCK-308) — aval da PO pendente
+│   ├── item-card/         ✅  substitui 21 implementações; 📋 `orientation="vertical"` — coluna centralizada para grade, mídia em 108px, ações no pé (HCK-308) — aval da PO pendente; na forma horizontal, ações no pé alinhadas entre os cards da grade (16/10)
+│   ├── banner/            📋  faixa de destaque, voz da Hywork — aguarda aval da PO
+│   ├── promo-card/        📋  card de convite em pé (Descubra, pé do menu) — aguarda aval da PO
 │   ├── list-pagination/   ✅  substitui 3
 │   ├── empty-state/       ✅  substitui 8 variações
 │   ├── error-state/       ✅  substitui 6 linhas de erro escritas à mão

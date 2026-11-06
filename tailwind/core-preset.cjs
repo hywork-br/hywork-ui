@@ -119,6 +119,14 @@ const config = {
           "DEFAULT": "hsl(var(--secondary) / <alpha-value>)",
           "foreground": "hsl(var(--secondary-foreground) / <alpha-value>)"
         },
+        "vendor": {
+          "DEFAULT": "hsl(var(--vendor) / <alpha-value>)",
+          "foreground": "hsl(var(--vendor-foreground) / <alpha-value>)",
+          "strong": "hsl(var(--vendor-strong) / <alpha-value>)",
+          "ink": "hsl(var(--vendor-ink) / <alpha-value>)",
+          "subtle": "hsl(var(--vendor-subtle) / <alpha-value>)",
+          "surface": "hsl(var(--vendor-surface) / <alpha-value>)"
+        },
         "success": {
           "50": "hsl(var(--hw-color-success-50) / <alpha-value>)",
           "100": "hsl(var(--hw-color-success-100) / <alpha-value>)",

@@ -59,6 +59,20 @@ describe("ItemCard — semântica do container", () => {
     const { container } = render(<ItemCard title="Item" as="article" />);
     expect(container.firstElementChild?.tagName).toBe("ARTICLE");
   });
+
+  it("ações no pé, a 16px do conteúdo, mesmo quando a grade estica o card", () => {
+    render(
+      <ItemCard as="article" title="Item" description="Uma linha" actions={<button>Abrir</button>}>
+        <p>Conteúdo</p>
+      </ItemCard>,
+    );
+    const card = screen.getByRole("article");
+    // O vão vem do gap do card: o `mt-auto` das ações não o anula.
+    expect(card).toHaveClass("flex", "flex-col", "gap-4");
+    const actions = screen.getByRole("button", { name: "Abrir" }).parentElement;
+    expect(actions).toHaveClass("mt-auto");
+    expect(actions?.className).not.toMatch(/\bmt-4\b/);
+  });
 });
 
 // A horizontal até a 0.16.1, gravada antes da vertical existir: qualquer
@@ -78,15 +92,17 @@ function Horizontal(props: Partial<React.ComponentProps<typeof ItemCard>>) {
   );
 }
 
-describe("ItemCard — horizontal intacta", () => {
-  it("mesmo HTML de antes, sem `onOpen`", () => {
+// HTML fixo da forma horizontal: a vertical (0.17.0) não pode mexer nela. A única mudança
+// desde então é a de 16/10 (coluna com vão de 16px e ações no pé, ver CHANGELOG).
+describe("ItemCard — horizontal fixa", () => {
+  it("HTML da forma horizontal, sem `onOpen`", () => {
     const { container } = render(<Horizontal />);
-    expect(container.innerHTML).toMatchInlineSnapshot(`"<div class="relative rounded-lg border border-border bg-card p-6 text-card-foreground"><div class="flex items-start gap-3"><div class="shrink-0"><span data-media="">RT</span></div><div class="min-w-0 flex-1"><div class="flex flex-wrap items-center gap-2"><h3 class="min-w-0 truncate text-base font-semibold">Relatório trimestral</h3><span data-status="">Ativo</span></div><p class="mt-1 text-sm text-muted-foreground">Atualizado há 2 dias</p></div></div><div class="mt-4"><p>Conteúdo próprio</p></div><div class="relative z-10 mt-4 flex flex-wrap items-center gap-2"><button type="button">Abrir</button></div></div>"`);
+    expect(container.innerHTML).toMatchInlineSnapshot(`"<div class="relative rounded-lg border border-border bg-card p-6 text-card-foreground flex flex-col gap-4"><div class="flex items-start gap-3"><div class="shrink-0"><span data-media="">RT</span></div><div class="min-w-0 flex-1"><div class="flex flex-wrap items-center gap-2"><h3 class="min-w-0 truncate text-base font-semibold">Relatório trimestral</h3><span data-status="">Ativo</span></div><p class="mt-1 text-sm text-muted-foreground">Atualizado há 2 dias</p></div></div><div><p>Conteúdo próprio</p></div><div class="relative z-10 mt-auto flex flex-wrap items-center gap-2"><button type="button">Abrir</button></div></div>"`);
   });
 
-  it("mesmo HTML de antes, com `onOpen`", () => {
+  it("HTML da forma horizontal, com `onOpen`", () => {
     const { container } = render(<Horizontal onOpen={() => undefined} as="article" />);
-    expect(container.innerHTML).toMatchInlineSnapshot(`"<article class="relative rounded-lg border border-border bg-card p-6 text-card-foreground cursor-pointer transition-colors motion-reduce:!transition-none hover:bg-accent/40 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"><div class="flex items-start gap-3"><div class="shrink-0"><span data-media="">RT</span></div><div class="min-w-0 flex-1"><div class="flex flex-wrap items-center gap-2"><h3 class="min-w-0 truncate text-base font-semibold"><button type="button" class="text-left outline-none after:absolute after:inset-0 after:content-['']">Relatório trimestral</button></h3><span data-status="">Ativo</span></div><p class="mt-1 text-sm text-muted-foreground">Atualizado há 2 dias</p></div></div><div class="mt-4"><p>Conteúdo próprio</p></div><div class="relative z-10 mt-4 flex flex-wrap items-center gap-2"><button type="button">Abrir</button></div></article>"`);
+    expect(container.innerHTML).toMatchInlineSnapshot(`"<article class="relative rounded-lg border border-border bg-card p-6 text-card-foreground flex flex-col gap-4 cursor-pointer transition-colors motion-reduce:!transition-none hover:bg-accent/40 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"><div class="flex items-start gap-3"><div class="shrink-0"><span data-media="">RT</span></div><div class="min-w-0 flex-1"><div class="flex flex-wrap items-center gap-2"><h3 class="min-w-0 truncate text-base font-semibold"><button type="button" class="text-left outline-none after:absolute after:inset-0 after:content-['']">Relatório trimestral</button></h3><span data-status="">Ativo</span></div><p class="mt-1 text-sm text-muted-foreground">Atualizado há 2 dias</p></div></div><div><p>Conteúdo próprio</p></div><div class="relative z-10 mt-auto flex flex-wrap items-center gap-2"><button type="button">Abrir</button></div></article>"`);
   });
 });
 
