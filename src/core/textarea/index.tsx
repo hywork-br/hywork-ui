@@ -25,7 +25,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         {...props}
         {...(showCount && props.maxLength != null
           ? {
-              "aria-describedby": cn(props["aria-describedby"], countId),
+              "aria-describedby": [props["aria-describedby"], countId].filter(Boolean).join(" "),
               onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => {
                 setTyped(e.target.value.length)
                 props.onChange?.(e)
