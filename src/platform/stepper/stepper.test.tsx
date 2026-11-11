@@ -53,6 +53,23 @@ describe("Stepper — horizontal", () => {
     const { container } = render(<Stepper steps={steps} />);
     expect(await violations(container)).toEqual([]);
   });
+
+  it("com showLabels, mostra número ou ✓ e o nome, sem repetir para o leitor de tela", async () => {
+    const { container } = render(<Stepper steps={steps} showLabels />);
+    const itens = within(screen.getByRole("list", { name: "Progresso" })).getAllByRole("listitem");
+    const visivel = (li: HTMLElement) => li.querySelector('[aria-hidden="true"].mt-2');
+    expect(visivel(itens[0])).toHaveTextContent("Informações");
+    expect(visivel(itens[0])?.querySelector("svg")).not.toBeNull();
+    expect(visivel(itens[1])).toHaveTextContent("2Público");
+    expect(itens[1]).toHaveTextContent("Passo 2 de 4: Público");
+    expect(await violations(container)).toEqual([]);
+  });
+
+  it("sem showLabels, não mostra rótulo visível", () => {
+    render(<Stepper steps={steps} />);
+    const itens = within(screen.getByRole("list", { name: "Progresso" })).getAllByRole("listitem");
+    expect(itens[0].querySelector('[aria-hidden="true"].mt-2')).toBeNull();
+  });
 });
 
 describe("Stepper — vertical", () => {
