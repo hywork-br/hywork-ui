@@ -19,6 +19,7 @@ export * from "./icon-select";
 export * from "./rich-text-editor";
 export * from "./stepper";
 export * from "./stat-card";
+export * from "./choice-card";
 export * from "./bar-list";
 export * from "./description-list";
 export * from "./file-thumbnail";
