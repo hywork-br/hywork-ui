@@ -33,8 +33,12 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
  * a barra mostra uma marca de referência, mais alta que ela, e um tom de
  * aviso; o derivado corta tudo o que passa da barra e não tinha onde pô-la.
  * Sem `marker` e sem `tone`, a barra segue igual à captura.
+ *
+ * `textarea` entrou pelo contador: a PO pede o enunciado do quiz do Academy
+ * "até 1.000 caracteres, com contador" (HCK-388, 11/11/2026), e o derivado não
+ * tinha onde pô-lo. Sem `showCount`, o campo segue igual à captura.
  */
-export const authoredNames = ['badge', 'tabs', 'label', 'skeleton', 'dialog', 'alert', 'card', 'breadcrumb', 'button', 'select', 'table', 'progress'];
+export const authoredNames = ['badge', 'tabs', 'label', 'skeleton', 'dialog', 'alert', 'card', 'breadcrumb', 'button', 'select', 'table', 'progress', 'textarea'];
 
 export const componentNames = 'accordion alert-dialog alert avatar badge breadcrumb button card checkbox collapsible dialog dropdown-menu input label popover progress radio-group scroll-area select separator sheet skeleton slider switch table tabs textarea tooltip'.split(' ');
 
