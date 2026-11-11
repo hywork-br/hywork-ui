@@ -57,6 +57,7 @@ src/
 │   ├── label/
 │   ├── search-input/      ✅  raio 4, o mesmo dos campos e botões do filtro
 │   ├── form-message/      ✅  token --hw-error-text
+│   ├── textarea/          ✅  `showCount` + `maxLength`: "N / 1.000 caracteres" (pt-BR), ligado por aria-describedby; `countLabel` (i18n)
 │   ├── brand-theme/       ✅  <BrandTheme> e useBrandTheme — cor do workspace; par suave `primary-soft` (fundo/texto do item selecionado, 4.5:1) desde a HCK-308
 │   ├── date-picker/       📋  data única, calendário próprio — aguarda aval da PO
 │   ├── progress/          📋  autoral desde a 0.16.0: marca de referência (`marker`, `markerLabel`) e `tone="attention"` (HCK-259) — aval da PO pendente

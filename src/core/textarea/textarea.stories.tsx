@@ -32,3 +32,8 @@ export const ComErro: Story = {
 
 /** Indisponível. */
 export const Desabilitado: Story = { args: { disabled: true, defaultValue: "Texto travado" } };
+
+/** Com contador de caracteres (exige `maxLength`). */
+export const ComContador: Story = {
+  args: { showCount: true, maxLength: 1000, defaultValue: "Qual é o valor central da nossa cultura?" },
+};
