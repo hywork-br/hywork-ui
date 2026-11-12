@@ -168,6 +168,12 @@ describe("DistributionBar", () => {
       await userEvent.click(screen.getByRole("button", { name: `Ver ${first.label}` }));
       expect(onSelect).toHaveBeenLastCalledWith(first.id);
       expect(segments(container)).toHaveLength(3);
+      if (legend === "list") {
+        // The inert row keeps an invisible "Ver", so its value lines up with the selectable rows.
+        const inert = container.querySelector('div[data-part="band"]');
+        const spacer = inert?.querySelector('span.invisible[aria-hidden="true"]');
+        expect(spacer?.textContent).toBe("Ver");
+      }
       unmount();
     }
   });

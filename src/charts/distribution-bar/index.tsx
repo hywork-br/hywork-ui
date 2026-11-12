@@ -128,6 +128,12 @@ function ListLegend({ bands, colors, values, formatValue, onSelect, selectLabel 
                 <span className="shrink-0 whitespace-nowrap text-xs font-semibold text-primary-ink">{selectLabel}</span>
               </>
             )}
+            {/* A band left out of a selectable chart keeps the label's room, so its columns line up. */}
+            {!select && onSelect && (
+              <span aria-hidden="true" className="invisible shrink-0 whitespace-nowrap text-xs font-semibold">
+                {selectLabel}
+              </span>
+            )}
           </>
         );
         return (
