@@ -153,4 +153,34 @@ describe("DistributionBar", () => {
     );
     expect((await axe.run(container, axeOptions)).violations).toEqual([]);
   });
+
+  it("keeps a band with selectable: false out of the buttons, and names the others by selectAriaLabel", async () => {
+    const onSelect = vi.fn();
+    const custom = calibratedBands.map((b) =>
+      b.value === 0 ? { ...b, selectable: false } : { ...b, selectAriaLabel: `Ver ${b.label}` },
+    );
+    const first = custom.find((b) => b.value > 0)!;
+    for (const legend of ["auto", "list"] as const) {
+      const { container, unmount } = render(<DistributionBar bands={custom} onSelect={onSelect} legend={legend} />);
+      expect(screen.getAllByRole("button").map((b) => b.getAttribute("aria-label"))).toEqual(
+        custom.filter((b) => b.value > 0).map((b) => `Ver ${b.label}`),
+      );
+      await userEvent.click(screen.getByRole("button", { name: `Ver ${first.label}` }));
+      expect(onSelect).toHaveBeenLastCalledWith(first.id);
+      expect(segments(container)).toHaveLength(3);
+      if (legend === "list") {
+        // The inert row keeps an invisible "Ver", so its value lines up with the selectable rows.
+        const inert = container.querySelector('div[data-part="band"]');
+        const spacer = inert?.querySelector('span.invisible[aria-hidden="true"]');
+        expect(spacer?.textContent).toBe("Ver");
+      }
+      unmount();
+    }
+  });
+
+  it("keeps every band a button without the new props", () => {
+    render(<DistributionBar bands={calibratedBands} onSelect={() => undefined} />);
+    expect(screen.getAllByRole("button")).toHaveLength(4);
+    expect(screen.getAllByRole("button").every((b) => !b.hasAttribute("aria-label"))).toBe(true);
+  });
 });

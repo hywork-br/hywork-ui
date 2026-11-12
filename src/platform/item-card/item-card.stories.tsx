@@ -61,6 +61,29 @@ export const ComAcoes: Story = {
   },
 };
 
+/**
+ * Numa grade: os cards da linha têm a mesma altura e as ações ficam no pé,
+ * alinhadas, a 16px do texto mesmo no card de texto mais longo.
+ */
+export const NaGrade: Story = {
+  render: () => (
+    <ul className="grid max-w-3xl grid-cols-2 gap-4">
+      <ItemCard
+        as="li"
+        title="Desafio de integração"
+        description="Encerra em 12 dias"
+        actions={<Button size="sm">Abrir</Button>}
+      />
+      <ItemCard
+        as="li"
+        title="Campanha de boas-vindas"
+        description="Missões da primeira semana, com pontos, ranking e prêmios para quem completar todas antes do fim do mês."
+        actions={<Button size="sm">Abrir</Button>}
+      />
+    </ul>
+  ),
+};
+
 /** Card inteiro clicável — o título vira o alvo acessível. */
 export const Clicavel: Story = {
   args: { description: "Encerra em 12 dias", onOpen: () => undefined },

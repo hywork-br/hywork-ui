@@ -51,4 +51,10 @@ describe("Badge", () => {
     );
     expect(screen.getByText("Inativo")).toHaveClass("bg-muted", "text-muted-foreground");
   });
+
+  it("a voz da Hywork é laranja do guideline, fora da marca do workspace", () => {
+    render(<Badge variant="vendor">Novidade</Badge>);
+    expect(screen.getByText("Novidade")).toHaveClass("bg-vendor-subtle", "text-vendor-ink");
+    expect(screen.getByText("Novidade").className).not.toMatch(/primary/);
+  });
 });
