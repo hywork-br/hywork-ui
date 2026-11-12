@@ -1,6 +1,27 @@
 # Changelog
 
-## Não lançada — voz da Hywork, `Banner`, `PromoCard` e ações do `ItemCard` no pé
+## 0.20.0 — Academy Quizzes (HCK-9) e voz da Hywork
+
+Lançada em 12/11/2026, com o aval do Rick. Nenhuma API existente quebra: as
+props novas são opcionais e, sem elas, o DOM fica igual.
+
+### Do épico HCK-9 (Academy Quizzes)
+
+- **`Textarea`:** contador de caracteres opcional (`showCount`, `countLabel`),
+  ligado ao campo por `aria-describedby`. O componente passa a ser autoral.
+- **`ChoiceCard` (novo, `@hywork/ui/platform`):** uma opção de `RadioGroup` com
+  o cartão inteiro como alvo (`title`, `description?`, `meta?`, `aside?`,
+  `icon?`). Proposta aguardando o aval visual da PO.
+- **`Stepper`:** `showLabels` mostra o nome de cada etapa no trilho horizontal.
+- **`DistributionBar`:** cada faixa aceita `selectable` (com `false`, não vira
+  botão) e `selectAriaLabel` (nome acessível do botão). A linha inerte guarda o
+  espaço do "Ver", invisível, para as colunas da legenda alinharem.
+- **`BarList`:** `BarListItem.ariaLabel` dá nome ao botão do item com
+  `onSelect`.
+- **`MultiSelect`:** aceita `id`, `aria-label` e `aria-labelledby` e os repassa
+  ao gatilho com `role="combobox"`, que antes não tinha nome acessível.
+
+### Voz da Hywork, `Banner`, `PromoCard` e ações do `ItemCard` no pé
 
 Pedido do Vitor (16/10/2026), a partir da HyStore nova do admin. O **aval
 visual da PO segue pendente** para o `Banner`, o `PromoCard` e os tokens novos. Nenhuma API
