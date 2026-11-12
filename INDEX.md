@@ -57,6 +57,7 @@ src/
 │   ├── label/
 │   ├── search-input/      ✅  raio 4, o mesmo dos campos e botões do filtro
 │   ├── form-message/      ✅  token --hw-error-text
+│   ├── textarea/          ✅  `showCount` + `maxLength`: "N / 1.000 caracteres" (pt-BR), ligado por aria-describedby; `countLabel` (i18n)
 │   ├── brand-theme/       ✅  <BrandTheme> e useBrandTheme — cor do workspace; par suave `primary-soft` (fundo/texto do item selecionado, 4.5:1) desde a HCK-308
 │   ├── date-picker/       📋  data única, calendário próprio — aguarda aval da PO
 │   ├── progress/          📋  autoral desde a 0.16.0: marca de referência (`marker`, `markerLabel`) e `tone="attention"` (HCK-259) — aval da PO pendente
@@ -80,6 +81,7 @@ src/
 │   ├── row-actions/       ✅  substitui botões soltos em 15 telas
 │   ├── upload-area/       ✅
 │   ├── stepper/           📋  trilha de passos de wizard — aguarda aval da PO
+│   ├── choice-card/       📋  cartão de escolha (rádio): título, descrição, `meta`, `aside`, `icon`; estados pelo próprio rádio — HCK-390, aval da PO pendente
 │   ├── stat-card/         📋  cartão de indicador; `iconTone`, `tone="highlight"`, `valueDetail` e `progress` na 0.16.0 (HCK-255, HCK-259); cabeçalho de 2 linhas com ícone na 0.16.1 — aguarda aval da PO
 │   ├── bar-list/          📋  lista de barras proporcionais — lançado na 0.13.0; `marker`, `markerLabel` e `tone` por item na 0.16.0 (HCK-259) — aval da PO pendente
 │   ├── description-list/  📋  lista de leitura rótulo/valor (`<dl>`), 1 a 3 colunas com `span`, "—" no valor vazio — HCK-308; rótulo em peso normal e cor secundária, valor semibold (aval da PO, 03/11/2026, HCK-360); o resto do visual, aval da PO pendente

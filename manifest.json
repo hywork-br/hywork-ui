@@ -258,7 +258,7 @@
     {
       "name": "textarea",
       "file": "src/core/textarea/index.tsx",
-      "status": "source-derived"
+      "status": "authored"
     },
     {
       "name": "tooltip",

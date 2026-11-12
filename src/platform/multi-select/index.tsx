@@ -33,6 +33,9 @@ interface MultiSelectProps {
   placeholder?: string;
   maxSelected?: number;
   disabled?: boolean;
+  id?: string;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
 }
 
 export function MultiSelect({
@@ -42,6 +45,9 @@ export function MultiSelect({
   placeholder = "Selecione",
   maxSelected,
   disabled = false,
+  id,
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledby,
 }: MultiSelectProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -68,7 +74,10 @@ export function MultiSelect({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
+          id={id}
           role="combobox"
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledby}
           aria-expanded={open}
           className="w-full justify-between items-center gap-2 h-auto min-h-[40px]"
           disabled={disabled}

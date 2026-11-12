@@ -47,6 +47,20 @@ export const HorizontalNoFim: Story = {
   },
 };
 
+/** Com rótulos visíveis, para janelas sem lista lateral (janela de vínculo do quiz, HCK-390). */
+export const HorizontalComRotulos: Story = {
+  args: {
+    orientation: "horizontal",
+    showLabels: true,
+    className: "w-[480px]",
+    steps: [
+      { id: "origem", label: "Origem", state: "complete" },
+      { id: "escolher", label: "Escolher quiz", state: "current" },
+      { id: "regras", label: "Regras no módulo", state: "upcoming" },
+    ],
+  },
+};
+
 /** Navegação lateral, só leitura: sem `onSelect`, nenhum passo é clicável. */
 export const Vertical: Story = {
   args: { orientation: "vertical", className: "w-[260px]" },

@@ -38,6 +38,11 @@ export interface StepperProps extends Omit<React.HTMLAttributes<HTMLOListElement
   /** Torna clicáveis os passos que não estão `locked` (só na forma vertical). */
   onSelect?: (id: string) => void;
   orientation?: "horizontal" | "vertical";
+  /**
+   * Horizontal only: shows "N Label" (✓ when complete) under each segment, for dialogs that
+   * have no side list naming the steps (HCK-390, "1 Origem › 2 Escolher quiz › 3 Regras").
+   */
+  showLabels?: boolean;
 }
 
 /** O que o leitor de tela ouve depois do nome do passo. O atual sai pelo `aria-current`. */
@@ -47,7 +52,7 @@ const stateText: Partial<Record<StepperStepState, string>> = {
 };
 
 const Stepper = React.forwardRef<HTMLOListElement, StepperProps>(
-  ({ steps, onSelect, orientation = "horizontal", className, ...props }, ref) => {
+  ({ steps, onSelect, orientation = "horizontal", showLabels = false, className, ...props }, ref) => {
     if (orientation === "horizontal") {
       // Preenchido até o passo atual pela posição, não pelo estado: quem volta
       // ao passo 2 depois de concluir o 3 está no passo 2. Sem passo atual, a
@@ -78,6 +83,25 @@ const Stepper = React.forwardRef<HTMLOListElement, StepperProps>(
                     preenchido ? "bg-primary" : "bg-primary/20",
                   )}
                 />
+                {showLabels && (
+                  // Visible copy of the step name; the reader gets the sr-only text below.
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      "mt-2 flex min-w-0 items-center gap-1.5 text-xs",
+                      step.state === "current"
+                        ? "font-semibold text-foreground"
+                        : "text-muted-foreground",
+                    )}
+                  >
+                    {step.state === "complete" ? (
+                      <Check className="h-3.5 w-3.5 shrink-0 text-primary-ink" />
+                    ) : (
+                      <span className="shrink-0 tabular-nums">{index + 1}</span>
+                    )}
+                    <span className="truncate">{step.label}</span>
+                  </span>
+                )}
                 <span className="sr-only">
                   {`Passo ${index + 1} de ${steps.length}: ${step.label}`}
                   {estado && `, ${estado}`}

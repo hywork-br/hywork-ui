@@ -94,7 +94,9 @@ export const Clicavel: Story = {
 /** Só algumas linhas clicáveis: as outras seguem só leitura. */
 export const ParcialmenteClicavel: Story = {
   args: {
-    items: areas.map((item, index) => (index % 2 === 0 ? { ...item, onSelect: () => undefined } : item)),
+    items: areas.map((item, index) => (index % 2 === 0
+        ? { ...item, onSelect: () => undefined, ariaLabel: `Ver pessoas de ${String(item.label)}` }
+        : item)),
   },
 };
 
