@@ -260,4 +260,19 @@ describe("BarList — marca de referência e atenção", () => {
     expect(atencao).toHaveAttribute("data-tone", "attention");
     expect(container.innerHTML).not.toMatch(/#[0-9a-f]{3,8}\b|rgb\(/i);
   });
+
+  it("names the button by ariaLabel, and by its text without it", () => {
+    render(
+      <BarList
+        aria-label="Adesão"
+        items={[
+          { ...areas[0], onSelect: () => undefined, ariaLabel: "Ver pessoas" },
+          { ...areas[1], onSelect: () => undefined },
+        ]}
+      />,
+    );
+    const [first, second] = screen.getAllByRole("button");
+    expect(first).toHaveAccessibleName("Ver pessoas");
+    expect(second).not.toHaveAttribute("aria-label");
+  });
 });

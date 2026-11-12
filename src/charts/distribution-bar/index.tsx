@@ -19,7 +19,15 @@ export interface DistributionBand {
    * produto e aguarda a PO.
    */
   color?: ChartColor;
+  /** Com `onSelect` no gráfico, `false` deixa esta faixa sem clique (ex.: faixa vazia). Padrão: `true`. */
+  selectable?: boolean;
+  /** Nome acessível do botão desta faixa, quando clicável. */
+  selectAriaLabel?: string;
 }
+
+/** O clique da faixa, ou nada se o gráfico não tem `onSelect` ou a faixa é `selectable: false`. */
+const bandSelect = (band: DistributionBand, onSelect?: (bandId: string) => void) =>
+  onSelect && band.selectable !== false ? () => onSelect(band.id) : undefined;
 
 /**
  * Distribuição em barra única empilhada (100%): uma fatia por faixa, na ordem
@@ -96,6 +104,7 @@ function ListLegend({ bands, colors, values, formatValue, onSelect, selectLabel 
   return (
     <ul data-part="legend" data-legend="list" className="flex flex-col">
       {bands.map((band, i) => {
+        const select = bandSelect(band, onSelect);
         const content = (
           <>
             <span
@@ -113,7 +122,7 @@ function ListLegend({ bands, colors, values, formatValue, onSelect, selectLabel 
             <span className="w-11 shrink-0 text-right text-xs tabular-nums text-muted-foreground">
               {formatValue(values[i])}
             </span>
-            {onSelect && (
+            {select && (
               <>
                 {" "}
                 <span className="shrink-0 whitespace-nowrap text-xs font-semibold text-primary-ink">{selectLabel}</span>
@@ -123,11 +132,12 @@ function ListLegend({ bands, colors, values, formatValue, onSelect, selectLabel 
         );
         return (
           <li key={band.id} className="min-w-0 border-t border-border">
-            {onSelect ? (
+            {select ? (
               <button
                 type="button"
                 data-part="band"
-                onClick={() => onSelect(band.id)}
+                aria-label={band.selectAriaLabel}
+                onClick={select}
                 className={cn("-mx-2 flex w-[calc(100%+1rem)] items-center gap-3 rounded-md px-2 py-2.5 text-left", FOCUS_RING)}
               >
                 {content}
@@ -156,6 +166,7 @@ function AutoLegend({ bands, colors, values, formatValue, onSelect }: LegendProp
       style={{ gridTemplateColumns: `repeat(${legendColumns(bands.length, legendWidth)}, minmax(0, 1fr))` }}
     >
       {bands.map((band, i) => {
+        const select = bandSelect(band, onSelect);
         const content = (
           <>
             <span className="flex items-baseline gap-2">
@@ -179,11 +190,12 @@ function AutoLegend({ bands, colors, values, formatValue, onSelect }: LegendProp
         );
         return (
           <li key={band.id} className="min-w-0">
-            {onSelect ? (
+            {select ? (
               <button
                 type="button"
                 data-part="band"
-                onClick={() => onSelect(band.id)}
+                aria-label={band.selectAriaLabel}
+                onClick={select}
                 className={cn("block w-full rounded-md px-2 py-1.5 text-left", FOCUS_RING)}
               >
                 {content}
@@ -226,10 +238,10 @@ const DistributionBar = React.forwardRef<HTMLDivElement, DistributionBarProps>(
                   data-part="segment"
                   className={cn(
                     "h-full min-w-[2px] transition-[flex-grow] duration-300 motion-reduce:!transition-none",
-                    onSelect && "cursor-pointer hover:opacity-80",
+                    bandSelect(band, onSelect) && "cursor-pointer hover:opacity-80",
                   )}
                   style={{ flexGrow: values[i], flexBasis: 0, backgroundColor: colors[i] }}
-                  onClick={onSelect ? () => onSelect(band.id) : undefined}
+                  onClick={bandSelect(band, onSelect)}
                 />
               ) : null,
             )

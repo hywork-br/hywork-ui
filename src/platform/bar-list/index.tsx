@@ -39,6 +39,8 @@ export interface BarListItem {
   valueLabel?: React.ReactNode;
   /** Com ele, a linha vira botão. */
   onSelect?: () => void;
+  /** Nome acessível do botão, quando há `onSelect`. Padrão: o texto da linha. */
+  ariaLabel?: string;
   /** Valor de referência, na unidade do `value` e sobre o mesmo denominador. */
   marker?: number;
   /** O que a marca é, para o leitor de tela — "Empresa: 3,7". Padrão: "Referência: N". */
@@ -132,6 +134,7 @@ const BarList = React.forwardRef<HTMLUListElement, BarListProps>(
               {item.onSelect ? (
                 <button
                   type="button"
+                  aria-label={item.ariaLabel}
                   // The click event stays here: onSelect takes no arguments.
                   onClick={() => item.onSelect?.()}
                   className={cn(

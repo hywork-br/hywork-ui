@@ -49,6 +49,16 @@ export const Clicavel: Story = {
   },
 };
 
+/** Clicável sem a faixa vazia: `selectable: false` nela e `selectAriaLabel` nas outras. */
+export const ClicavelSemFaixaVazia: Story = {
+  args: {
+    bands: calibratedBands.map((b) =>
+      b.value === 0 ? { ...b, selectable: false } : { ...b, selectAriaLabel: `Ver pessoas em ${b.label}` },
+    ),
+  },
+  render: Clicavel.render,
+};
+
 /**
  * Cor por faixa, por token. Exemplo de API, não proposta: a cor de cada faixa
  * aguarda a decisão da PO.
