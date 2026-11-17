@@ -19,6 +19,16 @@ export const allowlist = [
       'controla os globs é a configuração do próprio build.',
     reviewBy: '2026-12-31',
   },
+  {
+    id: 'GHSA-fc5q-39xc-vjpf',
+    package: 'picomatch',
+    reason:
+      'Sem versão corrigida (a 4.0.7 é a última e o aviso cobre <=4.0.7; a linha 2.x também não tem ' +
+      'correção). Chega só por ferramentas de build: Storybook (unplugin, @rollup/pluginutils) e o ' +
+      'chokidar do Tailwind 3; não vai no pacote publicado. É negação de serviço com extglob, e os ' +
+      'globs vêm da configuração do próprio build. Aval do Rick em 17/11/2026 (HCK-435).',
+    reviewBy: '2026-12-31',
+  },
 ];
 
 const BLOCKING = new Set(['high', 'critical']);

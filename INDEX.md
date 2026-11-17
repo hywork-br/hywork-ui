@@ -86,6 +86,8 @@ src/
 │   ├── bar-list/          📋  lista de barras proporcionais — lançado na 0.13.0; `marker`, `markerLabel` e `tone` por item na 0.16.0 (HCK-259) — aval da PO pendente
 │   ├── description-list/  📋  lista de leitura rótulo/valor (`<dl>`), 1 a 3 colunas com `span`, "—" no valor vazio — HCK-308; rótulo em peso normal e cor secundária, valor semibold (aval da PO, 03/11/2026, HCK-360); o resto do visual, aval da PO pendente
 │   ├── file-thumbnail/    📋  arquivo como miniatura clicável: imagem ou ícone do tipo, nome e tamanho; `src` opcional para URL que chega depois, imagem que falha cai no ícone — HCK-360, aval da PO pendente
+│   ├── search-combobox/   📋  busca com sugestões: o `SearchInput` com uma lista abaixo (combobox/listbox), itens filtrados e desenhados pela tela; ↑/↓, Enter, Esc fecha só a lista — HCK-435, aval da PO pendente
+│   ├── contained-sheet/   📋  painel que abre dentro do elemento, sem portal: ao lado (até 480px, não modal, sem fundo, o resto clicável) ou embaixo (modal, fundo só no elemento, alça, preso ao pé da tela); o `Sheet` não muda — HCK-435, aval da PO pendente
 │   └── …                  multi-select, icon-select, rich-text-editor
 │
 ├── builder/               Padrões da intranet (hw-cloud-builder)
@@ -204,7 +206,12 @@ vazio — quando aplicáveis ao componente.
   muda de tamanho do esqueleto à imagem, nome longo em uma linha sem alargar nada, coluna
   estreita, grade, sem rolagem lateral de 320 a 768px, Tab/Enter/Espaço com o anel de foco
   e axe com contraste, com a marca do workspace por `?brand=f97316` e no tema escuro por
-  `?theme=dark`)
+  `?theme=dark`; o painel contido e a busca com sugestões têm
+  `tests/fixtures/contained-sheet.html` — o painel ao lado dentro do elemento, com 480px e
+  sem fundo, a pessoa à esquerda dele ainda clicável; por `?side=bottom&tall=1`, o de baixo
+  preso ao pé da tela num elemento mais alto que ela, com o fundo só sobre o elemento, a
+  página sem crescer e o foco de volta à pessoa; por `?long=1`, no máximo 88% do elemento;
+  e as sugestões sob o campo, na largura dele, com a ativa à vista)
 - **axe-core** — auditoria de acessibilidade, via `@storybook/addon-a11y` e nos testes
 - **smoke-consumer** — instala o tarball num projeto limpo e valida exports,
   declarações, diretiva de cliente e preset

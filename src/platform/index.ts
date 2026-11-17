@@ -23,3 +23,5 @@ export * from "./choice-card";
 export * from "./bar-list";
 export * from "./description-list";
 export * from "./file-thumbnail";
+export * from "./search-combobox";
+export * from "./contained-sheet";
