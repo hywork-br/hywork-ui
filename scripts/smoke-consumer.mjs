@@ -13,7 +13,10 @@ env.npm_config_userconfig=join(dir,'.npmrc');
 writeFileSync(env.npm_config_userconfig,'');
 const run=(args,cwd=process.cwd())=>execFileSync('npm',args,{cwd,env,encoding:'utf8',stdio:['ignore','pipe','pipe']});
 run(['run','build:lib']);
-const [pack]=JSON.parse(run(['pack','--json','--ignore-scripts','--pack-destination',dir]));
+// npm 10.9 still runs `prepare` (tsup) on pack despite --ignore-scripts, and its log lands on
+// stdout before the JSON: read from the line where the JSON array starts.
+const packOut=run(['pack','--json','--ignore-scripts','--pack-destination',dir]);
+const [pack]=JSON.parse(packOut.slice(packOut.search(/^\[/m)));
 writeFileSync(join(dir,'package.json'),JSON.stringify({name:'platform-consumer-smoke',private:true,type:'module'}));
 // Peers opcionais (tiptap, cmdk, embla) não são instalados sozinhos pelo npm,
 // mas a entrada principal os importa desde a 0.10.0 — sem eles o import de
