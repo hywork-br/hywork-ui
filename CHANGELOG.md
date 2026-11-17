@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.21.0 — Organograma (HCK-435): busca com sugestões e painel contido
+
+Lançada em 17/11/2026, com o aval do Rick ("se precisamos disso pra configurar o
+organograma, vamos implementar. porém, siga o design system."). Nenhuma API
+existente muda: os dois componentes são novos e o `Sheet` fica como estava.
+
+- **`SearchCombobox` (novo, `@hywork/ui/platform`):** o `SearchInput` com uma
+  lista de sugestões que o consumidor desenha (`items`, `getKey`, `renderItem`,
+  `onPick`, `emptyLabel`). Setas navegam, Enter escolhe, Esc fecha só a lista,
+  clicar fora fecha; padrão ARIA combobox/listbox. Primeiro uso: a busca do
+  elemento Organograma do Page Builder.
+- **`ContainedSheet` (novo, `@hywork/ui/platform`):** painel que abre dentro do
+  contêiner, sem portal no `<body>`. `side="right"`: até 480px, não modal e sem
+  fundo escurecido; `side="bottom"`: modal, com o fundo do DS só sobre o
+  contêiner e alça. Primeiro uso: o painel da pessoa e os filtros do celular do
+  Organograma.
+- Os dois estão registrados como **proposta aguardando o aval visual da PO**
+  no `DOMAIN_MODEL.md`.
+- **`smoke:consumer`:** lê o JSON do `npm pack` depois do log do `prepare`
+  (o npm 10.9 roda o `prepare` mesmo com `--ignore-scripts`).
+- **`audit:gate`:** exceção para o `picomatch` (GHSA-fc5q-39xc-vjpf) até
+  31/12/2026, com o aval do Rick: sem versão corrigida e só em ferramentas de
+  build (Storybook, chokidar do Tailwind 3).
+
 ## 0.20.0 — Academy Quizzes (HCK-9) e voz da Hywork
 
 Lançada em 12/11/2026, com o aval do Rick. Nenhuma API existente quebra: as
