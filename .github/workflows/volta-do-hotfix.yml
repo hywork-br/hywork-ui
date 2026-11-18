@@ -3,7 +3,8 @@ name: Volta do hotfix para a develop
 # Gitflow (HCK-440): o que entra na produção sem vir da develop (hotfix) volta sozinho para a
 # develop, sem PR e sem ninguém aprovar. Num merge de release (develop → produção) não há nada a
 # voltar, e o job termina sem fazer nada.
-# A regra "develop protegida" deixa só o GitHub Actions publicar direto na develop, para isto.
+# Publica com a chave de deploy do repositório (segredo VOLTA_HOTFIX_SSH_KEY), a única exceção da regra
+# "develop protegida". O push pela chave dispara o deploy de staging da develop, como um merge comum.
 # Conflito: o job não força nada. Abre um PR produção → develop para alguém resolver e fica vermelho.
 
 on:
@@ -11,9 +12,8 @@ on:
     branches: [main]
 
 permissions:
-  contents: write
-  # Push feito pelo GITHUB_TOKEN não dispara workflow: o deploy de staging é disparado à mão.
-  actions: write
+  contents: read
+  # Conflito: abre o PR produção → develop para alguém resolver.
   pull-requests: write
 
 concurrency:
@@ -29,13 +29,12 @@ jobs:
         with:
           ref: develop
           fetch-depth: 0
+          ssh-key: ${{ secrets.VOLTA_HOTFIX_SSH_KEY }}
 
       - name: Merge da produção na develop
         env:
           GH_TOKEN: ${{ github.token }}
           PROD: main
-          # Workflow do deploy de staging; vazio = staging não sai pelo Actions (fronts: Vercel).
-          DEPLOY_STAGING: ""
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -48,7 +47,6 @@ jobs:
           if git merge --no-ff --no-edit "origin/$PROD" -m "chore: volta do hotfix da $PROD para a develop (automática)"; then
             git push origin HEAD:develop
             echo "### Hotfix voltou para a develop ($(git rev-parse --short HEAD))" >> "$GITHUB_STEP_SUMMARY"
-            if [ -n "$DEPLOY_STAGING" ]; then gh workflow run "$DEPLOY_STAGING" --ref develop; fi
           else
             git merge --abort
             gh pr create --base develop --head "$PROD" --title "Volta do hotfix: conflito com a develop" \
