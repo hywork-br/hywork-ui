@@ -11,7 +11,7 @@
 - [ ] `npm run test:browser`
 - [ ] `npm run smoke:consumer`
 - [ ] Capturas após a última edição, quando houver mudança visual.
-- [ ] Guia, inventário e integração coerentes com o código.
+- [ ] `docs/design-guide.md`, `INDEX.md` e `CROSS_STACK_CONVENTIONS.md` coerentes com o código.
 
 ## Risco
 
