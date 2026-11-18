@@ -88,7 +88,9 @@ com captura antes e depois nos mesmos dados, largura e tema.
 
 ## 7. Versão e propagação
 
-- Publicação por tag `v*`; o release gera o tarball como asset.
+- Publicação por tag `v*`; o release gera o tarball como asset. A tag vai no commit
+  da `main` depois do PR `develop` → `main` (1 aprovação); passo a passo em
+  [CONTRIBUTING.md](CONTRIBUTING.md#versão-e-propagação).
 - O consumidor instala uma versão fixa e versiona o lockfile.
 - **Nada se propaga sozinho.** Uma correção aqui só chega ao produto quando
   alguém sobe a versão no consumidor e abre PR.

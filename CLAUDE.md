@@ -21,8 +21,11 @@ rtk npm run smoke:consumer   # instala o tarball num consumidor limpo
 
 Verificação antes de abrir PR: `rtk npm run check && rtk npm run build`.
 
-Publicação: tag `v*` dispara o workflow `release.yml`, que gera o tarball como
-asset do GitHub Release. O pacote **não** vai para o npm (`private: true`).
+Publicação: PR `develop` → `main` (1 aprovação) e, depois do merge, a tag `vX.Y.Z`
+no commit da `main`, que dispara o `release.yml` e gera o tarball como asset do
+GitHub Release. Push direto na `develop` e na `main` é recusado. Passo a passo em
+[CONTRIBUTING.md](CONTRIBUTING.md#versão-e-propagação). O pacote **não** vai para o
+npm (`private: true`).
 
 ## Arquitetura
 

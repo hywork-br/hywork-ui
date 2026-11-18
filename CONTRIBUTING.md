@@ -12,8 +12,8 @@ Este repositório segue o mesmo fluxo do `hywork-plataform` e do `hw-cloud-build
 
 | Branch | Papel |
 |---|---|
-| `develop` | integração — base de toda tarefa |
-| `main` | o que está publicado; recebe merge da `develop` |
+| `develop` | integração — base de toda tarefa; recebe só PR, com os checks verdes |
+| `main` | o que está publicado; recebe a `develop` por PR, com 1 aprovação |
 | `feat/*`, `fix/*` | tarefa, sempre criada em worktree |
 
 **"Criar uma branch" significa criar a worktree com ela**, a partir da
@@ -73,6 +73,24 @@ referências visuais novas para encobrir uma regressão.
 
 Publicação por tag `v*`, com os gates da mesma revisão aprovados. Nunca apontar
 um consumidor para tag inexistente nem para branch flutuante.
+
+Push direto na `develop` e na `main` é recusado (HCK-440). Todo PR vai para a
+`develop`, com o card no título (ex.: `HCK-123`) ou o rótulo `sem-card`. A release:
+
+1. **Bump por PR na `develop`:** branch `release/vX.Y.Z` a partir da
+   `origin/develop`, com a versão em `package.json`, `package-lock.json` e
+   `manifest.json` e a entrada do `CHANGELOG.md`. PR para a `develop`; o merge é
+   pelo GitHub, com os checks verdes.
+2. **PR `develop` → `main`:** exige 1 aprovação. O check "release sem pendência"
+   barra o PR se a `main` tiver hotfix que não voltou para a `develop`.
+3. **Tag depois do merge,** no commit da `main` (push de tag não passa pela regra
+   de branch). A tag dispara o `release.yml`, que gera o tarball:
+
+   ```bash
+   rtk git -C hywork-ui fetch origin main
+   rtk git -C hywork-ui tag vX.Y.Z origin/main
+   rtk git -C hywork-ui push origin vX.Y.Z
+   ```
 
 **0.8.0** reorganiza o pacote em três camadas e muda os caminhos de importação:
 `@hywork/ui` passa a `@hywork/ui/platform` ou `@hywork/ui/builder`. A entrada

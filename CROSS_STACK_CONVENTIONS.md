@@ -275,7 +275,7 @@ Quando não for possível, o limite é **uma minor de atraso**, registrado no PR
 ```
 1. PR no hywork-ui        altera o componente e a story
 2. CI                     tipos, bundle, axe, Playwright em 2 navegadores
-3. Merge → tag v0.8.1     release com tarball
+3. Release v0.8.1         PR do bump e develop → main; a tag na main gera o tarball
 4. Bump no consumidor     PR com a nova versão            ← passo manual
 5. Preview na Vercel      validação visual do fluxo
 6. Merge
@@ -466,7 +466,8 @@ quando alguém sobe a versão.
 PR no hywork-ui
    → CI (tipos · bundle · axe · Playwright ×2)
    → merge na develop
-   → tag v0.8.x                      ← aqui o pacote existe
+   → PR develop → main (1 aprovação)
+   → tag v0.8.x no commit da main    ← aqui o pacote existe
    → PR no consumidor trocando a versão   ← passo manual, de propósito
    → preview da Vercel
    → merge
