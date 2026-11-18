@@ -1,0 +1,47 @@
+name: Regras do PR
+# HCK-440: todo PR para a develop cita o card; a release não leva para a main algo que a develop não tenha.
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, labeled, unlabeled]
+    branches: [develop, main]
+permissions:
+  contents: read
+concurrency:
+  group: regras-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  card:
+    name: PR tem card
+    if: github.base_ref == 'develop'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Título cita o card (HCK-n) ou o PR tem o rótulo sem-card
+        env:
+          TITULO: ${{ github.event.pull_request.title }}
+          ROTULOS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+          CABECA: ${{ github.head_ref }}
+        run: |
+          if echo "$TITULO" | grep -qE 'HCK-[0-9]+'; then echo "card: ok"; exit 0; fi
+          case "$CABECA" in release/*|main) echo "release ou volta da main: ok"; exit 0;; esac
+          case ",$ROTULOS," in *,sem-card,*) echo "rótulo sem-card: ok"; exit 0;; esac
+          echo "::error::Cite o card no título (ex.: HCK-123) ou ponha o rótulo sem-card (infra, chore)."
+          exit 1
+  release:
+    name: release sem pendência
+    if: github.base_ref == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: A main não tem mudança que a develop não tenha
+        run: |
+          git fetch -q origin develop main
+          if ! git diff --quiet origin/develop...origin/main; then
+            echo "::error::A main tem mudanças que a develop não tem (hotfix sem volta). Abra o PR main → develop antes da release."
+            git diff --stat origin/develop...origin/main
+            exit 1
+          fi
+          echo "main sem pendência em relação à develop"

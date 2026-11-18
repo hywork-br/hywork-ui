@@ -1,10 +1,43 @@
 name: checks
+# Só no PR: todo código chega à develop e à main por PR já testado (minutos de Actions).
 on:
-  push:
-    branches: [main]
   pull_request:
+
+# Commit novo no mesmo PR cancela o run anterior: só o último importa (minutos de Actions).
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 jobs:
+  # PR só de documentação (.md, docs/, .claude/) não precisa de build nem teste: os jobs pesados
+  # dependem deste e são pulados. Job pulado por `if` conta como sucesso no check obrigatório.
+  # Fora de PR, ou se a API falhar, roda tudo.
+  mudancas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      codigo: ${{ steps.f.outputs.codigo }}
+    steps:
+      - id: f
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENTO: ${{ github.event_name }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          codigo=true
+          if [ "$EVENTO" = pull_request ] \
+            && arquivos=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/files" --paginate --jq '.[].filename') \
+            && [ -n "$arquivos" ] && ! grep -qvE '\.md$|^docs/|^\.claude/' <<< "$arquivos"; then
+            codigo=false
+          fi
+          echo "codigo=$codigo" >> "$GITHUB_OUTPUT"
+          echo "Só documentação: $([ "$codigo" = false ] && echo 'sim, jobs pesados pulados' || echo 'não')" >> "$GITHUB_STEP_SUMMARY"
+
   quality:
+    needs: mudancas
+    if: needs.mudancas.outputs.codigo == 'true'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
@@ -18,6 +51,8 @@ jobs:
       - run: npm run build
       - run: npm run audit:gate
   browser:
+    needs: mudancas
+    if: needs.mudancas.outputs.codigo == 'true'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7

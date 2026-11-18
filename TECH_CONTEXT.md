@@ -71,14 +71,18 @@ declara as variáveis da aplicação e os presets as leem sem fallback —
 
 ## CI
 
-`.github/workflows/ci.yml` em cada PR e push na `main`:
+`.github/workflows/ci.yml` em cada PR para a `develop` e para a `main`:
 
 | Job | O que roda |
 |---|---|
 | `quality` | `npm run check` · `smoke:consumer` · `build` · `npm audit --audit-level=high` |
 | `browser` | Playwright em Chromium e Firefox, com artefatos de evidência |
 
-`release.yml` dispara em tag `v*`: roda os gates, `npm pack` e cria o Release.
+`pr-regras.yml`, no PR: para a `develop`, o título cita o card (`HCK-n`) ou o PR tem o
+rótulo `sem-card`; para a `main`, a `main` não tem mudança que a `develop` não tenha.
+
+`release.yml` dispara em tag `v*` (posta no commit da `main` depois do PR `develop` →
+`main`): roda os gates, `npm pack` e cria o Release.
 
 ## Ambientes
 

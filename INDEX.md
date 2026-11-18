@@ -232,6 +232,9 @@ exige evidência própria.
 | [docs/design-guide.md](docs/design-guide.md) | critérios visuais |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | branches, gates e versionamento |
 | [CHANGELOG.md](CHANGELOG.md) | histórico de versões |
+| [PLANO_DESIGN_SYSTEM.md](PLANO_DESIGN_SYSTEM.md) | status vivo da adoção nos fronts |
+| [MEMORY.md](MEMORY.md) | decisões e armadilhas já encerradas |
+| [.claude/skills/release-ds/SKILL.md](.claude/skills/release-ds/SKILL.md) | release (tag `v*`) e consumo nos fronts |
 
 ---
 

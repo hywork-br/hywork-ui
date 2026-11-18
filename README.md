@@ -73,4 +73,5 @@ rtk npm run smoke:consumer
 > Se o componente sabe o que é um tenant, um workspace ou um colaborador, ele
 > pertence ao consumidor. Se não sabe, pertence a este repositório.
 
-[Contribuição](CONTRIBUTING.md) · [Mudanças](CHANGELOG.md) · [Guia visual](docs/design-guide.md)
+[Contribuição](CONTRIBUTING.md) · [Mudanças](CHANGELOG.md) · [Guia visual](docs/design-guide.md) ·
+[Release](.claude/skills/release-ds/SKILL.md)

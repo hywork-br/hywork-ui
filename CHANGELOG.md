@@ -827,4 +827,4 @@ verdade".
   e preferência de movimento reduzido explícitos.
 
 Esta versão muda a API e os caminhos de CSS/preset de 0.6.x. Não é atualização
-automática: seguir [o handoff](docs/platform-handoff.md).
+automática: seguir o guia de adoção ([CROSS_STACK_CONVENTIONS.md](CROSS_STACK_CONVENTIONS.md)).
