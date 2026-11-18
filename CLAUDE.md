@@ -23,7 +23,8 @@ Verificação antes de abrir PR: `rtk npm run check && rtk npm run build`.
 
 Publicação: PR `develop` → `main` (1 aprovação) e, depois do merge, a tag `vX.Y.Z`
 no commit da `main`, que dispara o `release.yml` e gera o tarball como asset do
-GitHub Release. Push direto na `develop` e na `main` é recusado. Passo a passo em
+GitHub Release. Push direto na `develop` e na `main` é recusado. Passo a passo, com o
+consumo nos fronts, na skill [`release-ds`](.claude/skills/release-ds/SKILL.md) e em
 [CONTRIBUTING.md](CONTRIBUTING.md#versão-e-propagação). O pacote **não** vai para o
 npm (`private: true`).
 
@@ -150,6 +151,10 @@ localmente. Não propor Vercel nem URL fixa.
 - [Guia visual](docs/design-guide.md) — critérios de tipografia, cor e espaçamento
 - [Contribuição](CONTRIBUTING.md) — branches, gates e versionamento
 - [Mudanças](CHANGELOG.md) — histórico de versões
+- [Visão geral](README.md) — o que é o pacote, instalação rápida e estado
+- [Plano do design system](PLANO_DESIGN_SYSTEM.md) — status vivo da adoção
+- [Memória](MEMORY.md) — decisões e armadilhas já encerradas
+- Release e consumo nos fronts: skill [`release-ds`](.claude/skills/release-ds/SKILL.md)
 
 <!-- rtk-instructions v2 -->
 ## RTK — prefixe todo comando
