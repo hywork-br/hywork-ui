@@ -1,8 +1,12 @@
 name: checks
+# Só no PR: todo código chega à develop e à main por PR já testado (minutos de Actions).
 on:
-  push:
-    branches: [main, develop]
   pull_request:
+
+# Commit novo no mesmo PR cancela o run anterior: só o último importa (minutos de Actions).
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 jobs:
   quality:
     runs-on: ubuntu-24.04
