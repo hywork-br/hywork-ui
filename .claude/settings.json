@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "hywork-skills": {
+      "source": {
+        "source": "github",
+        "repo": "hywork-br/hywork-skills"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "hycloud@hywork-skills": true
+  }
+}
