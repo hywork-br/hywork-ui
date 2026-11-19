@@ -153,6 +153,7 @@
   --hw-field-placeholder: 113 113 122;
   --hw-color-admin-bg: 13 14 16;
   --hw-color-admin-surface: 26 26 26;
+  --hw-skeleton: 39 39 42;
   /* muted do modo escuro (179 10% 25%) a 50%, como era bg-muted/50 */
   --hw-filter-surface: 57 70 70 / 0.5;
 }

@@ -221,6 +221,10 @@
   /* Trilho de controle contínuo (Slider) — gray-100, o valor literal anterior. */
   --hw-control-track: 243 244 246;
 
+  /* Esqueleto de carregamento (Skeleton) — gray-200, o valor literal anterior;
+     o .dark o escurece (zinc-800). */
+  --hw-skeleton: 229 231 235;
+
   /* Véu atrás de diálogo, folha e alerta modal — preto, usado a 80%. */
   --hw-overlay: 0 0 0;
 }

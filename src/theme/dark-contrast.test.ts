@@ -68,3 +68,18 @@ describe("tema escuro: contraste AA", () => {
     expect(contrastRatio(color("--primary-foreground"), color("--primary"))).toBeGreaterThanOrEqual(AA_CONTRAST);
   });
 });
+
+// Todo --hw-color-* que o contrato (core.css) lê precisa existir no :root de
+// cada consumidor: o build do Builder não inclui platform.css.
+describe("tokens de cor do contrato existem em cada consumidor", () => {
+  const strip = (file: string) => readFileSync(file, "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  const used = new Set(strip("tokens/core.css").match(/--hw-color-[\w-]+/g));
+  for (const file of ["tokens/platform.css", "tokens/builder.css"]) {
+    it(`${file} define todos`, () => {
+      const root = /:root\s*\{([^{}]*)\}/.exec(strip(file))![1];
+      const defined = new Set([...root.matchAll(/(--hw-color-[\w-]+)\s*:/g)].map((m) => m[1]));
+      const own = new Set(strip("tokens/core.css").match(/(--hw-color-[\w-]+)\s*:/g)?.map((m) => m.slice(0, -1).trim()));
+      expect([...used].filter((t) => !defined.has(t) && !own.has(t))).toEqual([]);
+    });
+  }
+});

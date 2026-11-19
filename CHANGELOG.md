@@ -4,10 +4,11 @@
 
 O modo escuro deixa de ser só "referência técnica" e passa a cobrir o admin, com
 os valores do protótipo aprovado da Central de Engenharia, que não pode declarar
-cor própria. **Pendente de aprovação da PO/Vitor**; no tema claro nada muda.
+cor própria. **Pendente de aprovação da PO/Vitor**; no tema claro nada muda, nos
+dois consumidores (admin e Builder: os tokens novos também entram em `builder.css`).
 
 - **Dois tokens novos** (`--hw-color-primary-ink`,
-  `--hw-color-primary-soft-foreground`): `--primary-ink` e
+  `--hw-color-primary-soft-foreground`, em `platform.css` e `builder.css`): `--primary-ink` e
   `--primary-soft-foreground` passam a cair neles quando não há marca de
   workspace. No claro valem `200 57% 18%`, o mesmo de antes. A marca
   (`--hw-brand-*`) continua vencendo.
@@ -15,7 +16,9 @@ cor própria. **Pendente de aprovação da PO/Vitor**; no tema claro nada muda.
   borda, anel de foco, `chart-1`, voz da Hywork (`vendor-ink`, `vendor-subtle`),
   textos (`--hw-text-*`), estados (`--hw-status-*`, `--hw-error-text`), campos
   (`--hw-field-*`) e superfícies do admin (`--hw-color-admin-*`).
-- **`Skeleton`:** `dark:bg-zinc-800` no escuro; o claro segue `bg-gray-200`.
+- **`Skeleton`:** a cor vem do token novo `--hw-skeleton` (`bg-hw-skeleton`), como a
+  tabela com `--hw-table-*`, sem classe de paleta no componente. Claro `229 231 235`
+  (o gray-200 de antes) e escuro `39 39 42` (zinc-800).
 - **Teste de contraste** (`src/theme/dark-contrast.test.ts`): resolve o `.dark`
   a partir do CSS e exige AA (4,5:1) para tinta da marca, `muted-foreground`,
   títulos, rótulos, estados e `vendor-ink` sobre o fundo e sobre a superfície do

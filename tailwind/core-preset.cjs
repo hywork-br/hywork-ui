@@ -301,6 +301,7 @@ const config = {
         "hw-field-border": "rgb(var(--hw-field-border) / <alpha-value>)",
         "hw-field-placeholder": "rgb(var(--hw-field-placeholder) / <alpha-value>)",
         "hw-control-track": "rgb(var(--hw-control-track) / <alpha-value>)",
+        "hw-skeleton": "rgb(var(--hw-skeleton) / <alpha-value>)",
         "hw-overlay": "rgb(var(--hw-overlay) / <alpha-value>)"
       },
       "spacing": {
