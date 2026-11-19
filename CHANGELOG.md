@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.23.0 — Modo escuro do admin (Central de Engenharia), pendente de aprovação da PO
+
+O modo escuro deixa de ser só "referência técnica" e passa a cobrir o admin, com
+os valores do protótipo aprovado da Central de Engenharia, que não pode declarar
+cor própria. **Pendente de aprovação da PO/Vitor**; no tema claro nada muda.
+
+- **Dois tokens novos** (`--hw-color-primary-ink`,
+  `--hw-color-primary-soft-foreground`): `--primary-ink` e
+  `--primary-soft-foreground` passam a cair neles quando não há marca de
+  workspace. No claro valem `200 57% 18%`, o mesmo de antes. A marca
+  (`--hw-brand-*`) continua vencendo.
+- **`.dark` completo** em `tokens/platform.css`: tinta e fundo suave da marca,
+  borda, anel de foco, `chart-1`, voz da Hywork (`vendor-ink`, `vendor-subtle`),
+  textos (`--hw-text-*`), estados (`--hw-status-*`, `--hw-error-text`), campos
+  (`--hw-field-*`) e superfícies do admin (`--hw-color-admin-*`).
+- **`Skeleton`:** `dark:bg-zinc-800` no escuro; o claro segue `bg-gray-200`.
+- **Teste de contraste** (`src/theme/dark-contrast.test.ts`): resolve o `.dark`
+  a partir do CSS e exige AA (4,5:1) para tinta da marca, `muted-foreground`,
+  títulos, rótulos, estados e `vendor-ink` sobre o fundo e sobre a superfície do
+  admin, e para `primary-foreground` sobre `primary`.
+
 ## 0.22.0 — Rewards (HCK-382): pódio, linha do tempo, galeria, lista ordenável, StatCard lateral e Avatar com tom
 
 Lançada em 26/11/2026 com o aval do Rick ("pode rodar produção do hywork-ui; ele sempre deve ir
