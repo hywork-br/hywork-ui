@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react";
-import { Mark } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
@@ -32,65 +31,12 @@ import {
   Code,
 } from "lucide-react";
 
-// Declara o comando de cor no tipo do tiptap, como a biblioteca prevê para
-// extensões próprias.
-declare module "@tiptap/core" {
-  interface Commands<ReturnType> {
-    color: {
-      setColor: (color: string) => ReturnType;
-      unsetColor: () => ReturnType;
-    };
-  }
-}
+import { ColorMark } from "./color-mark";
 
 export interface RichTextEditorProps {
   value: string;
   onChange: (content: string) => void;
 }
-
-// Custom color mark extension
-const ColorMark = Mark.create({
-  name: "color",
-  addOptions() {
-    return {
-      types: ["textStyle"],
-    };
-  },
-  addAttributes() {
-    return {
-      color: {
-        default: null,
-        parseHTML: (element) => element.style.color.replaceAll(/['"]/g, ""),
-        renderHTML: (attributes) => {
-          if (!attributes.color) return {};
-          return {
-            style: `color: ${attributes.color}`,
-          };
-        },
-      },
-    };
-  },
-  parseHTML() {
-    return [
-      {
-        style: "color",
-      },
-    ];
-  },
-  renderHTML({ HTMLAttributes }) {
-    return ["span", HTMLAttributes, 0];
-  },
-  addCommands() {
-    return {
-      setColor: (color: string) => ({ commands }) => {
-        return commands.setMark(this.name, { color });
-      },
-      unsetColor: () => ({ commands }) => {
-        return commands.unsetMark(this.name);
-      },
-    };
-  },
-});
 
 const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
   const [showLinkInput, setShowLinkInput] = useState(false);
