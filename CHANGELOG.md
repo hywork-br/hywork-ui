@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- **`RichTextEditor` — correção da cor do texto (HCK-314 / SUP-305):** a marca de
+  cor (`ColorMark`) deixava de preservar a cor ao re-parsear o HTML salvo, então o
+  texto perdia a cor ao reselecionar o elemento no construtor (negrito, link e
+  tamanho não eram afetados). O parse passou de regra por `style` para `tag: "span"`
+  com cor inline, e o atributo foi endurecido contra `style.color` vazio. Nenhuma API
+  muda (`setColor`/`unsetColor` iguais); a extensão foi extraída para
+  `color-mark.ts`, com teste de round-trip (rgb/hex/nome).
+
 ## 0.21.0 — Organograma (HCK-435): busca com sugestões e painel contido
 
 Lançada em 17/11/2026, com o aval do Rick ("se precisamos disso pra configurar o
