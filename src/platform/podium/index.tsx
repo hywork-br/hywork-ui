@@ -49,7 +49,8 @@ export function Podium({ entries, crownLabel = "1º lugar", className, ...props 
             key={e.id}
             data-position={e.position}
             className={cn(
-              "flex min-w-0 flex-col items-center gap-2 text-center",
+              // row-start-1: explicit columns would otherwise push 2nd and 3rd to a new grid row.
+              "row-start-1 flex min-w-0 flex-col items-center gap-2 text-center",
               e.position === 3 && "col-start-3",
               e.position === 2 && "col-start-1",
               first && "col-start-2",
