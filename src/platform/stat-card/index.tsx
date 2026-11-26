@@ -42,7 +42,9 @@ import { cn } from "../../lib/cn";
  * `iconPlacement="side"` (HCK-487) troca o cabeçalho por um quadrado de 48px
  * (raio 12, ícone de 24px) à esquerda, alinhado ao topo; à direita ficam rótulo,
  * valor (com detalhe, `badge` e `delta` na mesma linha, com quebra), barra e
- * nota. Os tons do quadrado e do cartão são os mesmos do `header`.
+ * nota. Os tons do quadrado e do cartão são os mesmos do `header`. O rótulo
+ * também ocupa duas linhas, pelo mesmo motivo: numa fileira, o valor começa na
+ * mesma altura em todos os cartões.
  *
  * `badge` é um selo pill ao lado do valor, no par suave do papel (o mesmo do
  * quadrado do ícone; preenchido no `highlight`). Não é variação: não leva o
@@ -194,7 +196,12 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
             {rotulo}
           </div>
         )}
-        {lateral && rotulo}
+        {lateral && (
+          // Same two-line label as the header: in a row of cards, the value starts at the same height.
+          <div data-part="label" className="flex min-h-[calc(2*var(--hw-leading-sm))] min-w-0 items-center">
+            {rotulo}
+          </div>
+        )}
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
           {/* Valor e detalhe pela linha de base; o detalhe desce se faltar espaço. */}
           <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">

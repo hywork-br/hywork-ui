@@ -270,6 +270,10 @@ describe("StatCard — detalhe do valor e barra", () => {
     it("em side, o quadrado de 48px vai à esquerda e não há cabeçalho", () => {
       const { container } = render(<StatCard label="A" value="1" icon={<i />} iconTone="info" iconPlacement="side" />);
       expect(container.querySelector('[data-part="header"]')).toBeNull();
+      // Two-line label, as in the header: the values line up across a row of cards.
+      expect((container.querySelector('[data-part="label"]') as HTMLElement).className).toContain(
+        "min-h-[calc(2*var(--hw-leading-sm))]",
+      );
       const quadrado = container.querySelector("[data-icon-tone]") as HTMLElement;
       expect(quadrado.className).toContain("h-12 w-12");
       expect(quadrado.className).toContain("text-hw-status-info");
