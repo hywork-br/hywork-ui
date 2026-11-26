@@ -37,8 +37,11 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
  * `textarea` entrou pelo contador: a PO pede o enunciado do quiz do Academy
  * "até 1.000 caracteres, com contador" (HCK-388, 11/11/2026), e o derivado não
  * tinha onde pô-lo. Sem `showCount`, o campo segue igual à captura.
+ *
+ * `avatar` entrou pelo tom do fallback (HCK-487): iniciais em fundo suave no papel
+ * de estado. Sem `tone`, o fallback segue igual à captura.
  */
-export const authoredNames = ['badge', 'tabs', 'label', 'skeleton', 'dialog', 'alert', 'card', 'breadcrumb', 'button', 'select', 'table', 'progress', 'textarea'];
+export const authoredNames = ['avatar', 'badge', 'tabs', 'label', 'skeleton', 'dialog', 'alert', 'card', 'breadcrumb', 'button', 'select', 'table', 'progress', 'textarea'];
 
 export const componentNames = 'accordion alert-dialog alert avatar badge breadcrumb button card checkbox collapsible dialog dropdown-menu input label popover progress radio-group scroll-area select separator sheet skeleton slider switch table tabs textarea tooltip'.split(' ');
 

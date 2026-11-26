@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Avatar, AvatarFallback, AvatarImage } from "./index";
+import { Avatar, AvatarFallback, AvatarImage, avatarToneFor, type AvatarTone } from "./index";
 
 const meta = { title: "Core/Avatar", component: Avatar } satisfies Meta<typeof Avatar>;
 export default meta;
@@ -38,6 +38,37 @@ export const Empilhados: Story = {
           <AvatarFallback>{i}</AvatarFallback>
         </Avatar>
       ))}
+    </div>
+  ),
+};
+
+const tons: AvatarTone[] = ["primary", "info", "success", "warning", "danger", "neutral"];
+
+/** `tone` pinta o fallback com o papel de estado: fundo suave e iniciais no papel. */
+export const Tons: Story = {
+  render: () => (
+    <div className="flex gap-2">
+      {tons.map((t) => (
+        <Avatar key={t}>
+          <AvatarFallback tone={t}>{t.slice(0, 2).toUpperCase()}</AvatarFallback>
+        </Avatar>
+      ))}
+    </div>
+  ),
+};
+
+/** Lista de pessoas: `avatarToneFor(id)` dá a cada uma sempre a mesma cor. */
+export const CorPorPessoa: Story = {
+  render: () => (
+    <div className="flex gap-2">
+      {["u-101:AB", "u-102:CD", "u-103:EF", "u-104:GH", "u-105:IJ", "u-106:KL"].map((p) => {
+        const [id, iniciais] = p.split(":");
+        return (
+          <Avatar key={id}>
+            <AvatarFallback tone={avatarToneFor(id)}>{iniciais}</AvatarFallback>
+          </Avatar>
+        );
+      })}
     </div>
   ),
 };

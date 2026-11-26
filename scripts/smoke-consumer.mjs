@@ -28,6 +28,7 @@ const optionalPeers=Object.keys(own.peerDependenciesMeta??{})
 run(['install',join(dir,pack.filename),'react@18.3.1','react-dom@18.3.1','tailwindcss@3.4.17',...optionalPeers,'--ignore-scripts','--no-audit','--no-fund'],dir);
 execFileSync(process.execPath,['--input-type=module','-e',`
   import { Button, Input, Table, Dialog, Select, BrandTheme, RatingScale } from '@hywork/ui';
+  import { Podium, Timeline, ImagePicker, SortableList } from '@hywork/ui/platform';
   import { RatingScale as BuilderRatingScale } from '@hywork/ui/builder';
   import { brandThemeVars } from '@hywork/ui/theme';
   import { findTokenOverrides } from '@hywork/ui/consumer-check';
@@ -37,6 +38,7 @@ execFileSync(process.execPath,['--input-type=module','-e',`
   const require=createRequire(import.meta.url);
   const preset=require('@hywork/ui/tailwind/platform-preset.cjs');
   if (![Button,Input,Table,Dialog,Select,BrandTheme,RatingScale,BuilderRatingScale].every(Boolean)) throw Error('Missing export');
+  if (![Podium,Timeline,ImagePicker,SortableList].every(Boolean)) throw Error('Missing platform export');
   if (![ChartFrame,RadarChart,GroupedBarChart,LineChart,DistributionBar,DonutChart].every(Boolean)) throw Error('Missing chart export');
   // O design system declara as variáveis e o preset as lê sem fallback.
   // As cores vêm do preset base, que o do Platform compõe em presets.

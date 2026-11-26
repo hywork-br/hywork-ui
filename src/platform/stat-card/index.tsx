@@ -38,10 +38,22 @@ import { cn } from "../../lib/cn";
  * do rótulo, com os dois centralizados: numa fileira de cartões, o valor começa
  * na mesma altura em todos, quer o rótulo caiba numa linha, quer quebre em duas.
  * O rótulo nunca é cortado; um rótulo de três linhas faz o cabeçalho crescer.
+ *
+ * `iconPlacement="side"` (HCK-487) troca o cabeçalho por um quadrado de 48px
+ * (raio 12, ícone de 24px) à esquerda, alinhado ao topo; à direita ficam rótulo,
+ * valor (com detalhe, `badge` e `delta` na mesma linha, com quebra), barra e
+ * nota. Os tons do quadrado e do cartão são os mesmos do `header`. O rótulo
+ * também ocupa duas linhas, pelo mesmo motivo: numa fileira, o valor começa na
+ * mesma altura em todos os cartões.
+ *
+ * `badge` é um selo pill ao lado do valor, no par suave do papel (o mesmo do
+ * quadrado do ícone; preenchido no `highlight`). Não é variação: não leva o
+ * texto de leitor de tela do `delta`. Pode coexistir com ele.
  */
 export type StatCardDeltaTone = "positive" | "negative" | "neutral";
 export type StatCardTone = "default" | "attention" | "highlight";
 export type StatCardIconTone = "primary" | "info" | "success" | "warning" | "danger" | "neutral";
+export type StatCardIconPlacement = "header" | "side";
 
 export interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
   label: string;
@@ -59,6 +71,10 @@ export interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
   iconTone?: StatCardIconTone;
   /** Barra fina sob o valor, de 0 a 100. */
   progress?: number;
+  /** `header` (padrão): ícone pequeno ao lado do rótulo. `side`: quadrado de 48px à esquerda. */
+  iconPlacement?: StatCardIconPlacement;
+  /** Selo ao lado do valor. `tone` padrão: o `iconTone` do cartão. */
+  badge?: { value: React.ReactNode; tone?: StatCardIconTone };
 }
 
 const deltaVariants = cva(
@@ -113,7 +129,21 @@ const progressWidth = (n: number) => (Number.isFinite(n) ? Math.min(Math.max(n, 
 
 const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
   (
-    { label, value, valueDetail, note, delta, tone = "default", icon, iconTone, progress, className, ...props },
+    {
+      label,
+      value,
+      valueDetail,
+      note,
+      delta,
+      tone = "default",
+      icon,
+      iconTone,
+      progress,
+      iconPlacement = "header",
+      badge,
+      className,
+      ...props
+    },
     ref,
   ) => {
     const labelId = React.useId();
@@ -126,46 +156,52 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
         : "bg-background/15 text-background"
       : iconSoft[iconTone ?? (atencao ? "warning" : "primary")];
 
-    return (
-      <div
-        ref={ref}
-        role="group"
-        aria-labelledby={labelId}
-        data-tone={tone}
-        className={cn(
-          "flex min-w-0 flex-col gap-2 rounded-lg border border-border bg-card p-6 text-card-foreground",
-          atencao && "border-warning/50 bg-warning/10",
-          destaque && "border-foreground bg-foreground text-background",
-          className,
-        )}
-        {...props}
-      >
-        <div
-          data-part="header"
-          className={cn(
-            "flex min-w-0 items-center gap-2",
-            // Duas linhas do rótulo, na entrelinha do text-sm: ao lado dos 32px
-            // do ícone, "Abaixo do esperado" quebra num cartão de 226px.
-            icon && "min-h-[calc(2*var(--hw-leading-sm))]",
-          )}
-        >
-          {icon && (
-            <span
-              aria-hidden="true"
-              data-icon-tone={iconTone}
-              className={cn("flex h-8 w-8 shrink-0 items-center justify-center rounded-md", icone)}
-            >
-              {icon}
-            </span>
-          )}
-          <span
-            id={labelId}
-            className={cn("min-w-0 text-sm font-medium", destaque ? "text-background/80" : "text-muted-foreground")}
-          >
-            {label}
-          </span>
-        </div>
+    const lateral = iconPlacement === "side";
+    const selo = (destaque ? iconSolid : iconSoft)[badge?.tone ?? iconTone ?? (atencao ? "warning" : "primary")];
 
+    const rotulo = (
+      <span
+        id={labelId}
+        className={cn(
+          "min-w-0 text-sm font-medium",
+          lateral && "block",
+          destaque ? "text-background/80" : "text-muted-foreground",
+        )}
+      >
+        {label}
+      </span>
+    );
+
+    const corpo = (
+      <>
+        {!lateral && (
+          <div
+            data-part="header"
+            className={cn(
+              "flex min-w-0 items-center gap-2",
+              // Duas linhas do rótulo, na entrelinha do text-sm: ao lado dos 32px
+              // do ícone, "Abaixo do esperado" quebra num cartão de 226px.
+              icon && "min-h-[calc(2*var(--hw-leading-sm))]",
+            )}
+          >
+            {icon && (
+              <span
+                aria-hidden="true"
+                data-icon-tone={iconTone}
+                className={cn("flex h-8 w-8 shrink-0 items-center justify-center rounded-md", icone)}
+              >
+                {icon}
+              </span>
+            )}
+            {rotulo}
+          </div>
+        )}
+        {lateral && (
+          // Same two-line label as the header: in a row of cards, the value starts at the same height.
+          <div data-part="label" className="flex min-h-[calc(2*var(--hw-leading-sm))] min-w-0 items-center">
+            {rotulo}
+          </div>
+        )}
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
           {/* Valor e detalhe pela linha de base; o detalhe desce se faltar espaço. */}
           <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
@@ -184,6 +220,17 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
               </span>
             )}
           </div>
+          {badge && (
+            <span
+              data-part="badge"
+              className={cn(
+                "inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-semibold",
+                selo,
+              )}
+            >
+              {badge.value}
+            </span>
+          )}
           {delta && (
             <span
               data-tone={delta.tone}
@@ -221,6 +268,44 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
           >
             {note}
           </div>
+        )}
+      </>
+    );
+
+    return (
+      <div
+        ref={ref}
+        role="group"
+        aria-labelledby={labelId}
+        data-tone={tone}
+        className={cn(
+          "flex min-w-0 flex-col gap-2 rounded-lg border border-border bg-card p-6 text-card-foreground",
+          atencao && "border-warning/50 bg-warning/10",
+          destaque && "border-foreground bg-foreground text-background",
+          className,
+        )}
+        {...props}
+      >
+        {lateral ? (
+          <div className="flex min-w-0 items-start gap-4">
+            {icon && (
+              <span
+                aria-hidden="true"
+                data-icon-tone={iconTone}
+                className={cn(
+                  "flex h-12 w-12 shrink-0 items-center justify-center rounded-lg [&>svg]:h-6 [&>svg]:w-6",
+                  icone,
+                )}
+              >
+                {icon}
+              </span>
+            )}
+            <div data-part="content" className="flex min-w-0 flex-1 flex-col gap-2">
+              {corpo}
+            </div>
+          </div>
+        ) : (
+          corpo
         )}
       </div>
     );
