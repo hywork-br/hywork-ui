@@ -260,4 +260,52 @@ describe("StatCard — detalhe do valor e barra", () => {
     expect(trilha).toHaveClass("bg-background/20");
     expect(barra).toHaveClass("bg-background");
   });
+
+  describe("iconPlacement e badge (HCK-487)", () => {
+    it("o padrão continua com o cabeçalho", () => {
+      const { container } = render(<StatCard label="A" value="1" icon={<i />} />);
+      expect(container.querySelector('[data-part="header"]')).not.toBeNull();
+    });
+
+    it("em side, o quadrado de 48px vai à esquerda e não há cabeçalho", () => {
+      const { container } = render(<StatCard label="A" value="1" icon={<i />} iconTone="info" iconPlacement="side" />);
+      expect(container.querySelector('[data-part="header"]')).toBeNull();
+      const quadrado = container.querySelector("[data-icon-tone]") as HTMLElement;
+      expect(quadrado.className).toContain("h-12 w-12");
+      expect(quadrado.className).toContain("text-hw-status-info");
+      expect(screen.getByRole("group", { name: "A" })).toHaveTextContent("A1");
+    });
+
+    it("o selo usa o par do papel, sem texto de variação, e coexiste com delta", () => {
+      render(
+        <StatCard
+          label="A"
+          value="1"
+          iconTone="success"
+          badge={{ value: "Em dia" }}
+          delta={{ value: "+1", tone: "positive" }}
+        />,
+      );
+      const selo = screen.getByText("Em dia");
+      expect(selo.className).toContain("text-hw-status-success");
+      expect(selo).not.toHaveTextContent("Variação");
+      expect(screen.getByText("+1")).toHaveTextContent("Variação favorável");
+    });
+
+    it("o tom do selo vale sobre o do cartão; em attention o padrão é aviso; no highlight é preenchido", () => {
+      const { rerender } = render(<StatCard label="A" value="1" tone="attention" badge={{ value: "x" }} />);
+      expect(screen.getByText("x").className).toContain("text-hw-status-warning");
+      rerender(<StatCard label="A" value="1" iconTone="info" badge={{ value: "x", tone: "danger" }} />);
+      expect(screen.getByText("x").className).toContain("text-hw-status-danger");
+      rerender(<StatCard label="A" value="1" tone="highlight" badge={{ value: "x", tone: "success" }} />);
+      expect(screen.getByText("x").className).toContain("bg-hw-status-success ");
+    });
+
+    it("não tem violação de acessibilidade em side", async () => {
+      const { container } = render(
+        <StatCard label="A" value="1" icon={<i />} iconPlacement="side" badge={{ value: "x" }} note="n" />,
+      );
+      expect(await violations(container)).toEqual([]);
+    });
+  });
 });
