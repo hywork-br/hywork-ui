@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.22.0 — Rewards (HCK-382): pódio, linha do tempo, galeria, lista ordenável, StatCard lateral e Avatar com tom
+
+Lançada em 26/11/2026 com o aval do Rick ("pode rodar produção do hywork-ui; ele sempre deve ir
+direto pra produção"). Nenhuma API existente muda: os componentes são novos e as props novas
+são opcionais, com o comportamento de antes como padrão.
+
+- **`Podium` (novo, `@hywork/ui/platform`):** pódio do ranking, com o 2º à esquerda, o 1º no centro
+  (mais alto, na cor da marca, com coroa) e o 3º à direita, numa linha só. Aceita de 1 a 3 entradas;
+  na leitura, a ordem é 1º, 2º, 3º. Primeiro uso: o bloco "Ranking do mês" do Page Builder.
+- **`Timeline` (novo, `@hywork/ui/platform`):** lista ordenada de eventos, com título, descrição e data.
+- **`ImagePicker` (novo, `@hywork/ui/platform`):** conjunto de imagens com envio (`onUpload`, sobre o
+  `UploadArea`) e alteração da lista (`onChange`).
+- **`SortableList` (novo, `@hywork/ui/platform`):** lista reordenável sem arrastar, por botões
+  (`ctx.moveUp`/`moveDown`) e pelo teclado (Alt+↑/↓ no item focado), com anúncio em região aria-live.
+- **`StatCard`:**
+  - `iconPlacement="side"`: o ícone num quadrado de 48px à esquerda, com o rótulo em duas linhas para
+    os valores ficarem alinhados na fileira;
+  - `badge`: selo no par suave do papel, que não é variação.
+  - O padrão (`header`) não muda. Primeiro uso: o Início do Rewards no admin (HCK-487).
+- **`AvatarFallback`:** `tone` por papel de estado (fundo suave, texto no papel) e o helper
+  `avatarToneFor(seed)`, que escolhe uma cor determinística por pessoa. Sem `tone`, fica como antes.
+  O `avatar` passa a ser componente próprio no `derive-platform` (`authoredNames`).
+
 ## 0.21.0 — Organograma (HCK-435): busca com sugestões e painel contido
 
 Lançada em 17/11/2026, com o aval do Rick ("se precisamos disso pra configurar o

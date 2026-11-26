@@ -88,6 +88,10 @@ src/
 │   ├── file-thumbnail/    📋  arquivo como miniatura clicável: imagem ou ícone do tipo, nome e tamanho; `src` opcional para URL que chega depois, imagem que falha cai no ícone — HCK-360, aval da PO pendente
 │   ├── search-combobox/   📋  busca com sugestões: o `SearchInput` com uma lista abaixo (combobox/listbox), itens filtrados e desenhados pela tela; ↑/↓, Enter, Esc fecha só a lista — HCK-435, aval da PO pendente
 │   ├── contained-sheet/   📋  painel que abre dentro do elemento, sem portal: ao lado (até 480px, não modal, sem fundo, o resto clicável) ou embaixo (modal, fundo só no elemento, alça, preso ao pé da tela); o `Sheet` não muda — HCK-435, aval da PO pendente
+│   ├── podium/            📋  pódio 2º-1º-3º (1º em `primary`, com coroa), avatar com iniciais — HCK-382 (Rewards), aval da PO pendente
+│   ├── timeline/          📋  histórico em `<ol>` com ponto por tom — HCK-382, aval da PO pendente
+│   ├── image-picker/      📋  galeria + envio próprio com prévia, valida tipo/tamanho, `max` 1 substitui (usa `UploadArea` e `FileThumbnail`) — HCK-382, aval da PO pendente
+│   ├── sortable-list/     📋  lista reordenável por botões e Alt+↑/↓, anúncio aria-live, sem arrastar — HCK-382, aval da PO pendente
 │   └── …                  multi-select, icon-select, rich-text-editor
 │
 ├── builder/               Padrões da intranet (hw-cloud-builder)

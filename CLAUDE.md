@@ -7,6 +7,10 @@ Guia para Claude Code, Codex e demais agentes ao trabalhar neste repositório.
 > `hw-cloud-builder` vivem aqui. Nenhum dos dois consumidores cria componente
 > genérico próprio — ver [AGENTS.md](AGENTS.md) para a fronteira exata.
 
+> **Skills do HyCloud:** tarefa do Jira = `/hycloud:tarefa HCK-123`; release e deploy = `/hycloud:deploy`;
+> variável de ambiente = `/hycloud:envs`. O que cada uma faz, o que roda sozinho e as skills deste
+> repositório: seção "Claude Code neste repositório" do README.md.
+
 ## Comandos
 
 ```bash

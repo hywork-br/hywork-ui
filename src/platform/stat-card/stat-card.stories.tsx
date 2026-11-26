@@ -262,3 +262,50 @@ export const FileiraEstreita: Story = {
     </div>
   ),
 };
+
+/** Ícone à esquerda (`iconPlacement="side"`), com selo (`badge`) ao lado do valor. */
+export const LadoComSelo: Story = {
+  args: { className: undefined },
+  render: () => (
+    <div className="grid w-[1000px] grid-cols-2 gap-4">
+      <StatCard
+        iconPlacement="side"
+        label="Pontos distribuídos"
+        value="48.920"
+        valueDetail="pts"
+        badge={{ value: "+12%" }}
+        note="no mês"
+        icon={<Star />}
+        iconTone="primary"
+      />
+      <StatCard
+        iconPlacement="side"
+        label="Resgates"
+        value="132"
+        badge={{ value: "Em dia", tone: "success" }}
+        note="entregues no prazo"
+        icon={<Award />}
+        iconTone="success"
+      />
+      <StatCard
+        iconPlacement="side"
+        label="Participação"
+        value="82%"
+        valueDetail="9 de 11"
+        progress={82}
+        badge={{ value: "Meta 80%", tone: "info" }}
+        icon={<Users />}
+        iconTone="info"
+      />
+      <StatCard
+        iconPlacement="side"
+        label="Pedidos pendentes"
+        value="7"
+        badge={{ value: "Atrasados" }}
+        note="aguardam aprovação"
+        icon={<AlertTriangle />}
+        tone="attention"
+      />
+    </div>
+  ),
+};
