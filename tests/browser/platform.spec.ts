@@ -56,7 +56,10 @@ test("the parity page shows every source-derived primitive, and the overlays lis
   const {shown}=await captureDerived(page);
   expect([...shown].sort()).toEqual([...derived].sort());
 });
-for (const width of [1440,390]) for (const theme of ["light","dark","tenant"]) {
+// No dark here since 0.23.0: the dark is the Central's decided dark (pending the PO), not the frozen reference's.
+// It changes what the tokens are (the brand ink stops being --primary; fields and text get their own tones), so no
+// value handed to the reference reproduces it, as the border and the brand do above. dark-contrast.test.ts covers it.
+for (const width of [1440,390]) for (const theme of ["light","tenant"]) {
   test("source/package parity "+width+" "+theme, async({browser}, info) => {
     const errors:string[]=[];
     const captured:[string,Buffer][][]=[];
