@@ -1,11 +1,16 @@
 # Changelog
 
-## 0.23.0 — Modo escuro do admin (Central de Engenharia), pendente de aprovação da PO
+## 0.23.0 — Modo escuro do admin (só na Central de Engenharia) e Spinner sempre redondo
+
+Lançada em 26/11/2026. Nenhuma API muda; no tema claro, nada muda nos dois consumidores.
+
+### Modo escuro do admin
 
 O modo escuro deixa de ser só "referência técnica" e passa a cobrir o admin, com
 os valores do protótipo aprovado da Central de Engenharia, que não pode declarar
-cor própria. **Pendente de aprovação da PO/Vitor**; no tema claro nada muda, nos
-dois consumidores (admin e Builder: os tokens novos também entram em `builder.css`).
+cor própria. **Uso só na Central (Rick, 26/11/2026): "não é pra aplicar em nenhum
+outro ambiente ou repositório"** — o `hywork-plataform` força o claro e assim fica.
+**Pendente de aprovação da PO/Vitor**; os tokens novos também entram em `builder.css`.
 
 - **Dois tokens novos** (`--hw-color-primary-ink`,
   `--hw-color-primary-soft-foreground`, em `platform.css` e `builder.css`): `--primary-ink` e
@@ -23,6 +28,20 @@ dois consumidores (admin e Builder: os tokens novos também entram em `builder.c
   a partir do CSS e exige AA (4,5:1) para tinta da marca, `muted-foreground`,
   títulos, rótulos, estados e `vendor-ink` sobre o fundo e sobre a superfície do
   admin, e para `primary-foreground` sobre `primary`.
+- **Paridade fonte × pacote** (`tests/browser/platform.spec.ts`): sai do escuro. O `.dark`
+  decidido muda o papel dos tokens (a tinta da marca deixa de ser o `--primary`), e
+  nenhum valor dado à referência congelada o reproduz; o teste de contraste cobre o escuro.
+
+### `Spinner` sempre redondo e visível dentro de botão
+
+- **Forma:** só a largura vem do `size`; a altura vem do `aspect-square`, com `max-w-full`
+  e `max-h-full`. Dimensionado pela tela (`className="size-4"`) ou espremido numa linha
+  flex, continua redondo. Antes só a largura encolhia e ele virava oval (16×32).
+- **Cor:** segue `currentColor`: a tinta da marca por padrão (o visual de antes) e, dentro
+  de um `button`, a cor do texto do botão. Num botão preenchido o arco tinha a cor do
+  próprio fundo e sumia. O trilho é a mesma cor a 30%.
+- **Teste de navegador** (`tests/browser/spinner.spec.ts`): largura = altura em cada caso
+  e o arco no botão com a cor do texto.
 
 ## 0.22.0 — Rewards (HCK-382): pódio, linha do tempo, galeria, lista ordenável, StatCard lateral e Avatar com tom
 
