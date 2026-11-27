@@ -8,3 +8,5 @@ type Story = StoryObj<typeof meta>;
 /** Para ação em andamento. Conteúdo carregando usa `Skeleton`. */
 export const Padrao: Story = { args: { size: "md" } };
 export const Pequeno: Story = { args: { size: "sm" } };
+/** Dimensionado pela tela (`className="size-4"`) ou espremido numa linha: continua redondo. */
+export const DimensionadoPelaTela: Story = { args: { size: "md", className: "size-4" } };
