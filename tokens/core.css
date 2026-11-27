@@ -221,6 +221,10 @@
   /* Trilho de controle contínuo (Slider) — gray-100, o valor literal anterior. */
   --hw-control-track: 243 244 246;
 
+  /* Esqueleto de carregamento (Skeleton) — gray-200, o valor literal anterior;
+     o .dark o escurece (zinc-800). */
+  --hw-skeleton: 229 231 235;
+
   /* Véu atrás de diálogo, folha e alerta modal — preto, usado a 80%. */
   --hw-overlay: 0 0 0;
 }
@@ -277,13 +281,13 @@
   --primary-foreground: var(--hw-brand-primary-foreground, var(--hw-color-primary-foreground));
   --primary-hover: var(--hw-brand-primary-hover, var(--hw-brand-primary, var(--hw-color-primary-600)));
   --primary-active: var(--hw-brand-primary-active, var(--hw-brand-primary, var(--hw-color-primary-700)));
-  --primary-ink: var(--hw-brand-primary-ink, var(--hw-brand-primary, var(--hw-color-primary-default)));
+  --primary-ink: var(--hw-brand-primary-ink, var(--hw-brand-primary, var(--hw-color-primary-ink)));
   /* Par suave: item selecionado numa lista vertical (aba vertical, HCK-308).
      A tinta acima tem 4.5:1 só sobre o branco; sobre o fundo suave ela cai a
      3,9–4,2:1 em laranja, vermelho, verde e azul médio — por isso o texto tem
      a sua própria tinta, calculada contra o fundo suave. */
   --primary-soft: var(--hw-brand-primary-soft, var(--hw-color-primary-50));
-  --primary-soft-foreground: var(--hw-brand-primary-soft-foreground, var(--hw-color-primary-default));
+  --primary-soft-foreground: var(--hw-brand-primary-soft-foreground, var(--hw-color-primary-soft-foreground));
 
   --secondary: var(--hw-color-secondary-default);
   --secondary-foreground: var(--hw-color-secondary-foreground);

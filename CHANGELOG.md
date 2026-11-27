@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.23.0 — Modo escuro do admin (Central de Engenharia), pendente de aprovação da PO
+
+O modo escuro deixa de ser só "referência técnica" e passa a cobrir o admin, com
+os valores do protótipo aprovado da Central de Engenharia, que não pode declarar
+cor própria. **Pendente de aprovação da PO/Vitor**; no tema claro nada muda, nos
+dois consumidores (admin e Builder: os tokens novos também entram em `builder.css`).
+
+- **Dois tokens novos** (`--hw-color-primary-ink`,
+  `--hw-color-primary-soft-foreground`, em `platform.css` e `builder.css`): `--primary-ink` e
+  `--primary-soft-foreground` passam a cair neles quando não há marca de
+  workspace. No claro valem `200 57% 18%`, o mesmo de antes. A marca
+  (`--hw-brand-*`) continua vencendo.
+- **`.dark` completo** em `tokens/platform.css`: tinta e fundo suave da marca,
+  borda, anel de foco, `chart-1`, voz da Hywork (`vendor-ink`, `vendor-subtle`),
+  textos (`--hw-text-*`), estados (`--hw-status-*`, `--hw-error-text`), campos
+  (`--hw-field-*`) e superfícies do admin (`--hw-color-admin-*`).
+- **`Skeleton`:** a cor vem do token novo `--hw-skeleton` (`bg-hw-skeleton`), como a
+  tabela com `--hw-table-*`, sem classe de paleta no componente. Claro `229 231 235`
+  (o gray-200 de antes) e escuro `39 39 42` (zinc-800).
+- **Teste de contraste** (`src/theme/dark-contrast.test.ts`): resolve o `.dark`
+  a partir do CSS e exige AA (4,5:1) para tinta da marca, `muted-foreground`,
+  títulos, rótulos, estados e `vendor-ink` sobre o fundo e sobre a superfície do
+  admin, e para `primary-foreground` sobre `primary`.
+
 ## 0.22.0 — Rewards (HCK-382): pódio, linha do tempo, galeria, lista ordenável, StatCard lateral e Avatar com tom
 
 Lançada em 26/11/2026 com o aval do Rick ("pode rodar produção do hywork-ui; ele sempre deve ir
